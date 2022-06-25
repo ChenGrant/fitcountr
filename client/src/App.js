@@ -11,6 +11,7 @@ import { Provider } from "react-redux";
 import store from "./redux/store";
 
 const App = () => {
+  console.log(process.env.REACT_APP_SECRET)
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>

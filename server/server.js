@@ -15,8 +15,6 @@ app.use((req, res) => {
   res.sendFile(path.join(__dirname, "..", "client/build/index.html"));
 });
 
-console.log(config)
-
 const LOCALHOST_PORT = 5000;
 const PORT = process.env.PORT || LOCALHOST_PORT;
 app.listen(PORT, () => console.log(`server started on port ${PORT}`));

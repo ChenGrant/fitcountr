@@ -7,5 +7,4 @@ dotenv.config({
 
 module.exports = {
   NODE_ENV: process.env.NODE_ENV,
-  SECRET: process.env.SECRET,
 };

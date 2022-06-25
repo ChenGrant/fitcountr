@@ -10,9 +10,9 @@ const theme = createTheme({
   },
   palette: {
     primary: {
-      main: "#edf2f8", // light gray
-      dark: "#c3c8cf",
-      veryDark: "#6b7688",
+      main: "#FF6B00", // orange
+      dark: "#CC5600",
+      veryDark: "#B34B00",
     },
     secondary: {
       light: "#989ee2",

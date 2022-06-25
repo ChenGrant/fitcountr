@@ -2,16 +2,18 @@ import React, { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import Loading from "./Loading";
 import { useSelector } from "react-redux";
+import SignIn from "./SignIn";
 
 const Home = () => {
   const [loadingLogo, setLoadingLogo] = useState(true);
   const firebaseClientIsInitialized = useSelector(
     (state) => state.firebaseClient.isInitialized
   );
+  const loading = loadingLogo || !firebaseClientIsInitialized;
   return (
     <>
-      {(!firebaseClientIsInitialized || loadingLogo) && <Loading />}
-      <Box display={loadingLogo ? "none" : "flex"} height="100vh">
+      {loading && <Loading />}
+      <Box display={loading ? "none" : "flex"} height="100vh">
         <Box width="800px">
           <img
             style={{ height: "100px" }}
@@ -31,7 +33,7 @@ const Home = () => {
           fullWidth
         >
           <Box width="200px" bgcolor="white">
-            <Typography>Sign In</Typography>
+            <SignIn />
           </Box>
         </Box>
       </Box>

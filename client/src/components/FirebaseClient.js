@@ -7,7 +7,6 @@ const FirebaseClient = ({ children }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     (async () => {
-      await new Promise(r => setTimeout(r, 2000));
       const response = await fetch("/firebaseClientConfig");
       const firebaseClientConfig = await response.json();
       initializeApp(firebaseClientConfig);

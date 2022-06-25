@@ -1,6 +1,5 @@
 const path = require("path");
 const cors = require("cors");
-const config = require("./config/config");
 const express = require("express");
 const app = express();
 const firebaseClientConfigRoutes = require("./routes/firebaseClientConfigRoutes");

@@ -1,25 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import theme from "./mui/Theme";
 import { ThemeProvider } from "@mui/material";
-import Login from "./pages/Login";
-import { initializeFirebaseClient } from "./firebase";
-import Loading from "./pages/Loading";
+import Home from "./components/pages/Home";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import SignUp from "./components/pages/SignUp";
+import Dashboard from "./components/pages/Dashboard";
+import UnavailablePage from "./components/pages/UnavailablePage";
+import FirebaseClient from "./components/FirebaseClient";
 
 const App = () => {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const initializeFirebase = async () => {
-      await initializeFirebaseClient();
-      setLoading(false);
-    };
-
-    initializeFirebase();
-  }, []);
-
   return (
     <ThemeProvider theme={theme}>
-      {loading ? <Loading /> : <Login />}
+      <FirebaseClient>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="*" element={<UnavailablePage />} />
+          </Routes>
+        </Router>
+      </FirebaseClient>
     </ThemeProvider>
   );
 };

@@ -7,21 +7,25 @@ import SignUp from "./components/pages/SignUp";
 import Dashboard from "./components/pages/Dashboard";
 import UnavailablePage from "./components/pages/UnavailablePage";
 import FirebaseClient from "./components/FirebaseClient";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
 const App = () => {
   return (
-    <ThemeProvider theme={theme}>
-      <FirebaseClient>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="*" element={<UnavailablePage />} />
-          </Routes>
-        </Router>
-      </FirebaseClient>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <FirebaseClient>
+          <Router>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="*" element={<UnavailablePage />} />
+            </Routes>
+          </Router>
+        </FirebaseClient>
+      </ThemeProvider>
+    </Provider>
   );
 };
 

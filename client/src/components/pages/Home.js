@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import Loading from "./Loading";
+import { useSelector } from "react-redux";
 
 const Home = () => {
   const [loadingLogo, setLoadingLogo] = useState(true);
+  const firebaseClientIsInitialized = useSelector(
+    (state) => state.firebaseClient.isInitialized
+  );
   return (
     <>
-      {loadingLogo && <Loading />}
+      {(!firebaseClientIsInitialized || loadingLogo) && <Loading />}
       <Box display={loadingLogo ? "none" : "flex"} height="100vh">
         <Box width="800px">
           <img

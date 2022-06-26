@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Card, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Loading from "./Loading";
 import { useSelector } from "react-redux";
 import SignIn from "./SignIn";

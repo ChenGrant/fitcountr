@@ -1,22 +1,28 @@
-import { TextField } from "@mui/material";
+import { FormControl, InputLabel, OutlinedInput } from "@mui/material";
 import { ErrorMessage, Field } from "formik";
-import React from "react";
+import React, { useId } from "react";
 import TextError from "./TextError";
 
 const Input = (props) => {
   const { label, name, type, ...rest } = props;
+  const id = useId();
   return (
     <>
-      <Field name={name} {...rest}>
+      <Field name={name}>
         {({ field }) => {
           return (
-            <TextField
-              label={label}
-              type={type}
-              variant="outlined"
-              autoComplete={type}
-              {...field}
-            />
+            <FormControl variant="outlined" fullWidth>
+              <InputLabel htmlFor={id}>{label}</InputLabel>
+              <OutlinedInput
+                id={id}
+                label={label}
+                type={type}
+                variant="outlined"
+                autoComplete={type}
+                {...rest}
+                {...field}
+              />
+            </FormControl>
           );
         }}
       </Field>

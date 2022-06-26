@@ -1,4 +1,11 @@
-import { Button, IconButton, Typography } from "@mui/material";
+import {
+  Alert,
+  Button,
+  Card,
+  IconButton,
+  InputAdornment,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import FormikControl from "../formik/FormikControl";
@@ -13,7 +20,9 @@ const initialValues = {
 };
 
 const validationSchema = Yup.object({
-  email: Yup.string().required("Required").email("Invalid Email"),
+  email: Yup.string()
+    .required("Required")
+    .email("Email must be a valid email address"),
   password: Yup.string().required("Required"),
 });
 
@@ -22,41 +31,72 @@ const onSubmit = (values, formik) => console.log(values);
 const SignIn = () => {
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
   return (
-    <Box>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={onSubmit}
-      >
-        <Form>
-          <Box>
-            <Typography>Sign in to fitcoutnr</Typography>
-            <Box>
-              <FormikControl control="input" label="email" name="email" />
+    <Card sx={{ p: 3, borderRadius: "15px" }}>
+      <Box width="100%">
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={onSubmit}
+        >
+          <Form>
+            <Box display="flex" flexDirection="column" gap={3}>
+              <Typography variant="h1" gutterBottom>
+                Sign in
+              </Typography>
+              <Typography color="primary">
+                Use email: <b>guest@guest.ca</b> / password: <b>guest123</b> to
+                log in as a guest
+              </Typography>
+              <Box>
+                <FormikControl control="input" label="Email" name="email" />
+              </Box>
+              <Box flex={1}>
+                <FormikControl
+                  control="input"
+                  label="Password"
+                  name="password"
+                  type={!passwordIsVisible ? "password" : ""}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setPasswordIsVisible(!passwordIsVisible)}
+                      >
+                        {passwordIsVisible ? (
+                          <VisibilityIcon />
+                        ) : (
+                          <VisibilityOffIcon />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </Box>
+              <Box fullWidth>
+                <Typography
+                  textAlign="right"
+                  sx={{ cursor: "pointer", fontWeight: 600 }}
+                  color="primary"
+                >
+                  Forgot password?
+                </Typography>
+              </Box>
+              <Box>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  sx={{
+                    borderRadius: "10px",
+                  }}
+                >
+                  Login
+                </Button>
+              </Box>
             </Box>
-            <Box>
-              <FormikControl
-                control="input"
-                label="password"
-                name="password"
-                type={!passwordIsVisible && "password"}
-              />
-              <IconButton
-                onClick={() => setPasswordIsVisible(!passwordIsVisible)}
-              >
-                {passwordIsVisible ? <VisibilityIcon /> : <VisibilityOffIcon />}
-              </IconButton>
-            </Box>
-            <Box>
-              <Typography>Forgot password?</Typography>
-            </Box>
-            <Box>
-              <Button type="submit" variant = 'contained'>Login</Button>
-            </Box>
-          </Box>
-        </Form>
-      </Formik>
-    </Box>
+          </Form>
+        </Formik>
+      </Box>
+    </Card>
   );
 };
 

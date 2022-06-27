@@ -4,7 +4,7 @@ import React, { useId } from "react";
 import TextError from "./TextError";
 
 const Input = (props) => {
-  const { label, name, type, ...rest } = props;
+  const { label, name, type, errorHeight, ...rest } = props;
   const id = useId();
   return (
     <>
@@ -26,7 +26,11 @@ const Input = (props) => {
           );
         }}
       </Field>
-      <ErrorMessage name={name} component={TextError} />
+      <ErrorMessage name={name}>
+        {(errorMessage) => (
+          <TextError errorHeight={errorHeight}>{errorMessage}</TextError>
+        )}
+      </ErrorMessage>
     </>
   );
 };

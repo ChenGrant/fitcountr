@@ -11,11 +11,12 @@ const LAPTOP_IPHONE_SRC =
   "https://firebasestorage.googleapis.com/v0/b/fitcountr-staging.appspot.com/o/assets%2Flaptop_phone%2Flaptop_phone.svg?alt=media&token=8cb4f69c-2763-4459-8eb0-2ab6ed0a1a9a";
 const Home = () => {
   const [loadingLogo, setLoadingLogo] = useState(true);
+  const [loadingLaptopPhone, setLoadingLaptopPhone] = useState(true);
   const firebaseClientIsInitialized = useSelector(
     (state) => state.firebaseClient.isInitialized
   );
   const { desktop } = useScreenSize();
-  const loading = loadingLogo || !firebaseClientIsInitialized;
+  const loading = loadingLogo || !firebaseClientIsInitialized || loadingLaptopPhone;
   return (
     <Box height={desktop && "100vh"} py={!desktop && "8vh"} px="5vw">
       {loading && <Loading />}
@@ -47,12 +48,19 @@ const Home = () => {
             />
           </Box>
           <Box>
-            <Typography variant="h6" textAlign="center">
+            <Typography variant="h6" textAlign="center" onLoad = {() => console.log('hey')}>
               Counting calories couldn't be any easier.
             </Typography>
           </Box>
           <Box width="100%">
-            <img width="100%" src={LAPTOP_IPHONE_SRC} alt="laptop_iphone" />
+            <img
+              width="100%"
+              src={LAPTOP_IPHONE_SRC}
+              alt="laptop_iphone"
+              onLoad={() => {
+                setLoadingLaptopPhone(false);
+              }}
+            />
           </Box>
         </Box>
         <SignIn />

@@ -44,12 +44,18 @@ const SignIn = () => {
               </Typography>
               <Typography>ADD GOOGLE LOGIN </Typography>
               <Typography>FIX FORM VALIDATION ERROR MESSAGE</Typography>
-              <Typography>MAKE LOGIN TEXT LOWERCASE</Typography>
               <Typography>ADD PHONE DISPLAY</Typography>
               <Typography>HANDLE FORGOT PASSWORD</Typography>
-              <Typography>ADD ERROR HANDLING, make sure firebase response is not {}</Typography>
-              <Typography>WITH FOR LAPTOP AND PHONE IMAGES TO LOAD BEFORE RENDERING (useReducer)</Typography>
-              <Typography>MAKE FONT FAMILY BETWEEN WEBSITE AND LOGO CONSISTENT</Typography>
+              <Typography>
+                ADD ERROR HANDLING, make sure firebase response is not {}
+              </Typography>
+              <Typography>
+                WITH FOR LAPTOP AND PHONE IMAGES TO LOAD BEFORE RENDERING
+                (useReducer)
+              </Typography>
+              <Typography>
+                MAKE FONT FAMILY BETWEEN WEBSITE AND LOGO CONSISTENT
+              </Typography>
               <Typography color="primary">
                 Use email: <b>guest@guest.ca</b> / password: <b>guest123</b> to
                 sign in as a guest
@@ -94,6 +100,7 @@ const SignIn = () => {
                   fullWidth
                   sx={{
                     borderRadius: "10px",
+                    textTransform: "none",
                   }}
                 >
                   Login

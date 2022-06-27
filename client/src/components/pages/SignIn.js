@@ -44,7 +44,6 @@ const SignIn = () => {
               </Typography>
               <Typography>ADD GOOGLE LOGIN </Typography>
               <Typography>FIX FORM VALIDATION ERROR MESSAGE</Typography>
-              <Typography>ADD PHONE DISPLAY</Typography>
               <Typography>HANDLE FORGOT PASSWORD</Typography>
               <Typography>
                 ADD ERROR HANDLING, make sure firebase response is not {}

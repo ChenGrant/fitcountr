@@ -3,15 +3,12 @@ import { Box, Typography } from "@mui/material";
 import Loading from "./Loading";
 import { useSelector } from "react-redux";
 import SignIn from "./SignIn";
-import Laptop from "../Laptop";
 import useScreenSize from "../../hooks/useScreenSize";
 
 const LOGO_URL =
   "https://firebasestorage.googleapis.com/v0/b/fitcountr-staging.appspot.com/o/assets%2Flogo%2Flogo.svg?alt=media&token=e67a9e25-c187-4c85-a9f1-5d3d88e9cd90";
-
-const LAPTOP_BACKGROUND =
-  "https://store-wp.mui.com/wp-content/uploads/2021/12/preview-1.jpg";
-
+const LAPTOP_IPHONE_SRC =
+  "https://firebasestorage.googleapis.com/v0/b/fitcountr-staging.appspot.com/o/assets%2Flaptop_phone%2Flaptop_phone.svg?alt=media&token=8cb4f69c-2763-4459-8eb0-2ab6ed0a1a9a";
 const Home = () => {
   const [loadingLogo, setLoadingLogo] = useState(true);
   const firebaseClientIsInitialized = useSelector(
@@ -55,7 +52,7 @@ const Home = () => {
             </Typography>
           </Box>
           <Box width="100%">
-            <Laptop width="100%" imageURL={LAPTOP_BACKGROUND} />
+            <img width="100%" src={LAPTOP_IPHONE_SRC} alt="laptop_iphone" />
           </Box>
         </Box>
         <SignIn />

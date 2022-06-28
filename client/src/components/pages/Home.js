@@ -61,7 +61,7 @@ const Home = () => {
       false
     );
 
-  const [form, setForm] = useState(LOGIN_FORM);
+  const [form, setForm] = useState(SIGNUP_FORM);
 
   const toggleForm = () =>
     setForm(form === LOGIN_FORM ? SIGNUP_FORM : LOGIN_FORM);
@@ -77,7 +77,7 @@ const Home = () => {
         height={desktop && "100%"}
         justifyContent="center"
         alignItems="center"
-        gap={desktop ? "5vw" : 10}
+        gap={desktop ? "5vw" : "10vh"}
       >
         <Box
           width={desktop ? "700px" : "100%"}
@@ -117,7 +117,6 @@ const Home = () => {
           </Box>
         </Box>
         {/* toggle between LoginForm and SignupForm components */}
-        {/* <LoginForm /> */}
         {form === LOGIN_FORM ? (
           <LoginForm toggleForm={toggleForm} />
         ) : (

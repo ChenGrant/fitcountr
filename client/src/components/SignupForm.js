@@ -25,6 +25,12 @@ const BUTTON_STYLING = {
   color: "white",
 };
 
+// given a the name attribute of an input field, fieldName, and the
+// formik object, errorIsRendered returns true if there is an error
+// being rendered for the input field with a name attribute of fieldName
+const errorIsRendered = (fieldName, formik) =>
+  formik.errors[fieldName] && formik.touched[fieldName];
+
 // Formik
 const initialValues = {
   email: "",
@@ -38,8 +44,7 @@ const validationSchema = Yup.object({
     .email("Email must be a valid email address"),
   password: Yup.string()
     .required("Required")
-    .min(8, "Password must be at 8 characters.")
-    .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
+    .min(8, "Password must be at 8 characters."),
   confirmPassword: Yup.string()
     .required("Required")
     .oneOf([Yup.ref("password")], "Passwords must match"),
@@ -69,21 +74,14 @@ const SignupForm = ({ toggleForm }) => {
 
   const theme = useTheme();
 
-  const { desktop, tablet, phone } = useScreenSize();
-
-  // given a the name attribute of an input field, fieldName, and the
-  // formik object, errorIsRendered returns true if there is an error
-  // being rendered for the input field with a name attribute of fieldName
-  const errorIsRendered = (fieldName, formik) =>
-    formik.errors[fieldName] && formik.touched[fieldName];
+  const { desktop, tablet } = useScreenSize();
 
   return (
     <Card
       sx={{
         p: 3,
         borderRadius: "13px",
-        width: desktop ? "450px" : tablet ? "90%" : "auto",
-        maxWidth: "550px",
+        width: desktop ? "545px" : tablet ? "90%" : "auto",
       }}
       raised
     >
@@ -230,7 +228,13 @@ const SignupForm = ({ toggleForm }) => {
                     <Typography
                       display="inline"
                       color="primary"
-                      sx={{ cursor: "pointer", fontWeight: 600 }}
+                      sx={{
+                        cursor: "pointer",
+                        fontWeight: 600,
+                        "&:hover": {
+                          textDecoration: "underline",
+                        },
+                      }}
                       onClick={toggleForm}
                     >
                       Login

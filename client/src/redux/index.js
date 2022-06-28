@@ -1,1 +1,5 @@
-export {initializeFirebaseClient} from './firebaseClient/firebaseClientActions'
+export {
+  initializeFirebaseClient,
+  initializeFirebaseAuth,
+  signInUser,
+} from "./firebaseClient/firebaseClientActions";

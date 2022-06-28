@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import { useDispatch } from "react-redux";
-import { initializeFirebaseClient } from "../redux";
+import { initializeFirebaseAuth, initializeFirebaseClient } from "../redux";
+import { getAuth } from "firebase/auth";
 
 const FirebaseClientProvider = ({ children }) => {
   const dispatch = useDispatch();
@@ -9,8 +10,10 @@ const FirebaseClientProvider = ({ children }) => {
     (async () => {
       const response = await fetch("/firebaseClientConfig");
       const firebaseClientConfig = await response.json();
-      initializeApp(firebaseClientConfig);
+      const app = initializeApp(firebaseClientConfig);
       dispatch(initializeFirebaseClient());
+      const auth = getAuth(app);
+      dispatch(initializeFirebaseAuth(auth));
     })();
   }, [dispatch]);
 

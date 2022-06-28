@@ -15,6 +15,9 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useTheme } from "@emotion/react";
 import useScreenSize from "../hooks/useScreenSize";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { signInUser } from "../redux";
 
 // -------------------------------------- CONSTANTS --------------------------------------
 const INPUT_FIELD_ERROR_MESSAGE_HEIGHT = "15px";
@@ -25,13 +28,7 @@ const BUTTON_STYLING = {
   color: "white",
 };
 
-// given a the name attribute of an input field, fieldName, and the
-// formik object, errorIsRendered returns true if there is an error
-// being rendered for the input field with a name attribute of fieldName
-const errorIsRendered = (fieldName, formik) =>
-  formik.errors[fieldName] && formik.touched[fieldName];
-
-// Formik
+// -------------------------------------- FORMIK --------------------------------------
 const initialValues = {
   email: "",
   password: "",
@@ -50,22 +47,6 @@ const validationSchema = Yup.object({
     .oneOf([Yup.ref("password")], "Passwords must match"),
 });
 
-const onSubmit = (values, formik) => {
-  handleSignupWithEmailAndPassword(values);
-  console.log(values);
-};
-
-const handleSignupWithEmailAndPassword = ({ email, password }) => {
-  // send 'values' to server
-  // on server end:
-  // reapply validation schema. (if it fails to pass validation schema, render error messages)
-  // check if there exists a user with that email/password
-  // if no user with the entered email exists, errorMessage = 'email does not exist'
-  // elseif no password, errorMessage = 'password is incorrect'
-};
-
-const handleSignupWithGmail = () => {};
-
 // -------------------------------------- COMPONENT --------------------------------------
 const SignupForm = ({ toggleForm }) => {
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
@@ -74,7 +55,69 @@ const SignupForm = ({ toggleForm }) => {
 
   const theme = useTheme();
 
+  const auth = useSelector((state) => state.firebaseClient.auth);
+
+  const dispatch = useDispatch();
+
   const { desktop, tablet } = useScreenSize();
+
+  // -------------------------------------- FUNCTIONS --------------------------------------
+  // given a the name attribute of an input field, fieldName, and the
+  // formik object, errorIsRendered returns true if there is an error
+  // being rendered for the input field with a name attribute of fieldName
+  const errorIsRendered = (fieldName, formik) =>
+    formik.errors[fieldName] && formik.touched[fieldName];
+
+  const onSubmit = (values, formik) => {
+    handleSignupWithEmailAndPassword(values);
+    console.log(values);
+  };
+
+  const handleSignupWithEmailAndPassword = ({ email, password }) => {
+    // send 'values' to server
+    // on server end:
+    // reapply validation schema. (if it fails to pass validation schema, render error messages)
+    // check if there exists a user with that email/password
+    // if no user with the entered email exists, errorMessage = 'email does not exist'
+    // elseif no password, errorMessage = 'password is incorrect'
+  };
+
+  const handleSignupWithGmail = async () => {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+    const userIdToken = await user.getIdToken();
+
+    ////////////////////////
+    // server side validation
+
+    const response = await fetch("/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: "Bearer " + userIdToken,
+      },
+      body: JSON.stringify({
+        signInMethod: "Google",
+        user: {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+        },
+      }),
+    });
+
+    const data = await response.json()
+    console.log(data)
+
+    // send 'values' to server
+    // on server end:
+    // reapply validation schema. (if it fails to pass validation schema, render error messages)
+    // check if there exists a user with that email/password
+    // if no user with the entered email exists, errorMessage = 'email does not exist'
+    // elseif no password, errorMessage = 'password is incorrect'
+    dispatch(signInUser(user));
+  };
 
   return (
     <Card
@@ -103,6 +146,7 @@ const SignupForm = ({ toggleForm }) => {
                     fullWidth
                     variant="contained"
                     sx={BUTTON_STYLING}
+                    onClick={handleSignupWithGmail}
                     startIcon={
                       <GoogleIcon
                         sx={{ transform: "scale(1.5)", marginRight: "20px" }}

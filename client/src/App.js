@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignUp from "./components/pages/SignUp";
 import Dashboard from "./components/pages/Dashboard";
 import UnavailablePage from "./components/pages/UnavailablePage";
-import FirebaseClient from "./components/FirebaseClient";
+import FirebaseClientProvider from "./components/FirebaseClientProvider";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 
@@ -14,7 +14,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <FirebaseClient>
+        <FirebaseClientProvider>
           <Router>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -23,7 +23,7 @@ const App = () => {
               <Route path="*" element={<UnavailablePage />} />
             </Routes>
           </Router>
-        </FirebaseClient>
+        </FirebaseClientProvider>
       </ThemeProvider>
     </Provider>
   );

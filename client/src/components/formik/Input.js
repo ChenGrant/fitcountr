@@ -3,9 +3,9 @@ import { ErrorMessage, Field } from "formik";
 import React, { useId } from "react";
 import TextError from "./TextError";
 
-const Input = (props) => {
-  const { label, name, type, errorHeight, ...rest } = props;
+const Input = ({ label, name, type, errorHeight, ...rest }) => {
   const id = useId();
+
   return (
     <>
       <Field name={name}>
@@ -21,6 +21,25 @@ const Input = (props) => {
                 autoComplete={type}
                 {...rest}
                 {...field}
+                // sx={{
+                //   "& ": {
+                //     //color: "green",
+                //     //border: "2px solid green",
+                //     // "&:hover": {
+                //     //   //color: "blue",
+                //     //   border: "2px solid red",
+                //     // },
+                //     "> fieldset": {
+                //       borderColor: "red",
+                //       //border: "3px solid green",
+                //     },
+                //   },
+                //   "&:hover ": {
+                //     "> fieldset": {
+                //       border: "1px solid " + purple[500],
+                //     },
+                //   },
+                // }}
               />
             </FormControl>
           );

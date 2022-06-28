@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 import { useDispatch } from "react-redux";
 import { initializeFirebaseClient } from "../redux";
 
-const FirebaseClient = ({ children }) => {
+const FirebaseClientProvider = ({ children }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     (async () => {
@@ -17,4 +17,4 @@ const FirebaseClient = ({ children }) => {
   return <>{children}</>;
 };
 
-export default FirebaseClient;
+export default FirebaseClientProvider;

@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import FormikControl from "../formik/FormikControl";
+import FormikControl from "./formik/FormikControl";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";

@@ -2,7 +2,7 @@ import React, { useReducer } from "react";
 import { Box, Typography } from "@mui/material";
 import Loading from "./Loading";
 import { useSelector } from "react-redux";
-import LoginForm from "./LoginForm";
+import LoginForm from "../LoginForm";
 import useScreenSize from "../../hooks/useScreenSize";
 
 // -------------------------------------- CONSTANTS --------------------------------------

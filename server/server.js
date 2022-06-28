@@ -1,9 +1,15 @@
+require("./firebase/firebase");
 const path = require("path");
-const cors = require("cors");
-const morgan = require("morgan");
 const express = require("express");
 const config = require("./config/config");
 const app = express();
+const cors = require("cors");
+const morgan = require("morgan");
+
+// import middleware
+const authenticate = require("./middleware/authenticate");
+
+// import routes
 const firebaseClientConfigRoutes = require("./routes/firebaseClientConfigRoutes");
 const signupRoutes = require("./routes/signupRoutes");
 
@@ -16,7 +22,7 @@ app.use(morgan("dev"));
 
 // routes
 app.use("/firebaseClientConfig", firebaseClientConfigRoutes);
-app.use("/signup", signupRoutes);
+app.use("/signup", authenticate, signupRoutes);
 
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, "..", "client/build/index.html"));

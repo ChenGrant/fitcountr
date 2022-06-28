@@ -7,12 +7,26 @@ dotenv.config({
 
 module.exports = {
   NODE_ENV: process.env.NODE_ENV,
-  FIREBASE_CLIENT_CONFIG : {
+  FIREBASE_CLIENT_CONFIG: {
     apiKey: process.env.FIREBASE_CLIENT_CONFIG_API_KEY,
     authDomain: process.env.FIREBASE_CLIENT_CONFIG_AUTH_DOMAIN,
     projectId: process.env.FIREBASE_CLIENT_CONFIG_PROJECT_ID,
     storageBucket: process.env.FIREBASE_CLIENT_CONFIG_STORAGE_BUCKET,
     messagingSenderId: process.env.FIREBASE_CLIENT_CONFIG_MESSAGING_SENDER_ID,
     appId: process.env.FIREBASE_CLIENT_CONFIG_APP_ID,
+  },
+  FIREBASE_ADMIN_CREDENTIALS: {
+    type: process.env.FIREBASE_ADMIN_CREDENTIALS_TYPE,
+    project_id: process.env.FIREBASE_ADMIN_CREDENTIALS_PROJECT_ID,
+    private_key_id: process.env.FIREBASE_ADMIN_CREDENTIALS_PRIVATE_KEY_ID,
+    private_key: process.env.FIREBASE_ADMIN_CREDENTIALS_PRIVATE_KEY,
+    client_email: process.env.FIREBASE_ADMIN_CREDENTIALS_CLIENT_EMAIL,
+    client_id: process.env.FIREBASE_ADMIN_CREDENTIALS_CLIENT_ID,
+    auth_uri: process.env.FIREBASE_ADMIN_CREDENTIALS_AUTH_URI,
+    token_uri: process.env.FIREBASE_ADMIN_CREDENTIALS_TOKEN_URI,
+    auth_provider_x509_cert_url:
+      process.env.FIREBASE_ADMIN_CREDENTIALS_AUTH_PROVIDER_X509_CERT_URL,
+    client_x509_cert_url:
+      process.env.FIREBASE_ADMIN_CREDENTIALS_CLIENT_X509_CERT_URL,
   },
 };

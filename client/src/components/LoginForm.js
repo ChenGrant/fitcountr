@@ -54,7 +54,7 @@ const handleLoginWithEmailAndPassword = ({ email, password }) => {
 const handleLoginWithGmail = () => {};
 
 // -------------------------------------- COMPONENT --------------------------------------
-const LoginForm = () => {
+const LoginForm = ({ toggleForm }) => {
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
 
   const theme = useTheme();
@@ -66,7 +66,13 @@ const LoginForm = () => {
     formik.errors[fieldName] && formik.touched[fieldName];
 
   return (
-    <Card sx={{ p: 3, borderRadius: "13px" }} raised>
+    <Card
+      sx={{
+        p: 3,
+        borderRadius: "13px",
+      }}
+      raised
+    >
       <Box width="100%">
         <Formik
           initialValues={initialValues}
@@ -108,9 +114,9 @@ const LoginForm = () => {
                     <Box height="1px" flex={1} bgcolor="#B3B3B3" />
                   </Box>
                   {/* guest login credentials */}
-                  <Typography color="primary">
-                    Use email: <b>guest@guest.ca</b> / password: <b>guest123</b>{" "}
-                    to sign in as a guest
+                  <Typography color="primary" textAlign="center">
+                    Login as guest with email: <b>guest@guest.ca</b> and
+                    password: <b>guest123</b>
                   </Typography>
                   {/* email input field */}
                   <Box
@@ -161,7 +167,7 @@ const LoginForm = () => {
                     />
                   </Box>
                   {/* 'forgot password' text */}
-                  <Box fullWidth mb={INPUT_FIELD_ERROR_MESSAGE_HEIGHT}>
+                  <Box fullWidth>
                     <Typography
                       textAlign="right"
                       sx={{ cursor: "pointer", fontWeight: 600 }}
@@ -180,6 +186,20 @@ const LoginForm = () => {
                     >
                       Login
                     </Button>
+                  </Box>
+                  {/* Get started */}
+                  <Box>
+                    <Typography display="inline">
+                      Don't have an account?{" "}
+                    </Typography>
+                    <Typography
+                      display="inline"
+                      color="primary"
+                      sx={{ cursor: "pointer", fontWeight: 600 }}
+                      onClick={toggleForm}
+                    >
+                      Signup
+                    </Typography>
                   </Box>
                 </Box>
               </Form>

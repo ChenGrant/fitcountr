@@ -1,9 +1,10 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import Loading from "./Loading";
 import { useSelector } from "react-redux";
 import LoginForm from "../LoginForm";
 import useScreenSize from "../../hooks/useScreenSize";
+import SignupForm from "../SignupForm";
 
 // -------------------------------------- CONSTANTS --------------------------------------
 const LOGO_IMAGE_SRC =
@@ -15,6 +16,10 @@ const HERO_IMAGE_SRC =
 const LOADED_LOGO_IMAGE = "LOADED_LOGO_IMAGE";
 
 const LOADED_HERO_IMAGE = "LOADED_HERO_IMAGE";
+
+const SIGNUP_FORM = "SIGNUP_FORM";
+
+const LOGIN_FORM = "LOGIN_FORM";
 
 const initialLoadingState = {
   logoImageIsLoaded: false,
@@ -55,6 +60,11 @@ const Home = () => {
       (prev, curr) => !prev || !curr,
       false
     );
+
+  const [form, setForm] = useState(LOGIN_FORM);
+
+  const toggleForm = () =>
+    setForm(form === LOGIN_FORM ? SIGNUP_FORM : LOGIN_FORM);
 
   return (
     <Box height={desktop && "100vh"} py={!desktop && "8vh"} px="5vw">
@@ -106,8 +116,13 @@ const Home = () => {
             />
           </Box>
         </Box>
-        {/* LoginForm component */}
-        <LoginForm />
+        {/* toggle between LoginForm and SignupForm components */}
+        {/* <LoginForm /> */}
+        {form === LOGIN_FORM ? (
+          <LoginForm toggleForm={toggleForm} />
+        ) : (
+          <SignupForm toggleForm={toggleForm} />
+        )}
       </Box>
     </Box>
   );

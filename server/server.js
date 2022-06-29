@@ -1,13 +1,11 @@
-require("./firebase/firebase");
 const path = require("path");
-const express = require("express");
-const mongoose = require("mongoose");
 const config = require("./config/config");
-const app = express();
 const cors = require("cors");
 const morgan = require("morgan");
-
-// import middleware
+require("./firebase/firebase");
+const express = require("express");
+const mongoose = require("mongoose");
+const app = express();
 const isAuthenticated = require("./middleware/isAuthenticated");
 const {
   isAuthorized,
@@ -31,9 +29,9 @@ app.use(morgan("dev"));
 app.use("/firebaseClientConfig", firebaseClientConfigRoutes);
 app.use("/signup", isAuthenticated, isAuthorized(PRIVATE), signupRoutes);
 
-app.use((req, res) => {
-  res.sendFile(path.join(__dirname, "..", "client/build/index.html"));
-});
+app.use((req, res) =>
+  res.sendFile(path.join(__dirname, "..", "client/build/index.html"))
+);
 
 // mongoose and start server
 console.log(`NODE_ENV=${config.NODE_ENV}`);
@@ -41,8 +39,7 @@ mongoose
   .connect(config.MONGODB_ATLAS_URI)
   .then(() => {
     console.log("connected to mongodb atlas");
-    const LOCALHOST_PORT = 5000;
-    const PORT = process.env.PORT || LOCALHOST_PORT;
+    const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => {
       console.log(`server started on port ${PORT}`);
     });

@@ -3,7 +3,7 @@ const PRIVATE = "PRIVATE";
 const ADMIN = "ADMIN";
 
 const isAdmin = (uid) => {
-  // check db if uid is admin
+  // check db if uid is admin, return false for now as placeholder value
   return false;
 };
 

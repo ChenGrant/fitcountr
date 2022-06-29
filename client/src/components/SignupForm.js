@@ -47,6 +47,11 @@ const validationSchema = Yup.object({
     .oneOf([Yup.ref("password")], "Passwords must match"),
 });
 
+const onSubmit = (values, formik) => {
+  handleSignupWithEmailAndPassword(values);
+  console.log(values);
+};
+
 // -------------------------------------- COMPONENT --------------------------------------
 const SignupForm = ({ toggleForm }) => {
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
@@ -61,17 +66,11 @@ const SignupForm = ({ toggleForm }) => {
 
   const { desktop, tablet } = useScreenSize();
 
-  // -------------------------------------- FUNCTIONS --------------------------------------
   // given a the name attribute of an input field, fieldName, and the
   // formik object, errorIsRendered returns true if there is an error
   // being rendered for the input field with a name attribute of fieldName
   const errorIsRendered = (fieldName, formik) =>
     formik.errors[fieldName] && formik.touched[fieldName];
-
-  const onSubmit = (values, formik) => {
-    handleSignupWithEmailAndPassword(values);
-    console.log(values);
-  };
 
   const handleSignupWithEmailAndPassword = ({ email, password }) => {
     // send 'values' to server
@@ -88,11 +87,6 @@ const SignupForm = ({ toggleForm }) => {
     const user = result.user;
     const userIdToken = await user.getIdToken();
 
-    ////////////////////////
-    // server side validation
-
-    console.log(user);
-
     const response = await fetch("/signup", {
       method: "POST",
       headers: {
@@ -102,9 +96,8 @@ const SignupForm = ({ toggleForm }) => {
       body: JSON.stringify({ signup: { method: "Gmail" }, user: user }),
     });
 
-    const data = await response.json();
-    console.log(data);
-
+    const newUser = await response.json();
+    console.log(newUser);
     // send 'values' to server
     // on server end:
     // reapply validation schema. (if it fails to pass validation schema, render error messages)

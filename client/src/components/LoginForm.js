@@ -24,7 +24,7 @@ const BUTTON_STYLING = {
   color: "white",
 };
 
-// Formik
+// ---------------------------------------- FORMIK ----------------------------------------
 const initialValues = {
   email: "",
   password: "",
@@ -42,17 +42,6 @@ const onSubmit = (values, formik) => {
   console.log(values);
 };
 
-const handleLoginWithEmailAndPassword = ({ email, password }) => {
-  // send 'values' to server
-  // on server end:
-  // reapply validation schema. (if it fails to pass validation schema, render error messages)
-  // check if there exists a user with that email/password
-  // if no user with the entered email exists, errorMessage = 'email does not exist'
-  // elseif no password, errorMessage = 'password is incorrect'
-};
-
-const handleLoginWithGmail = () => {};
-
 // -------------------------------------- COMPONENT --------------------------------------
 const LoginForm = ({ toggleForm }) => {
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
@@ -64,6 +53,17 @@ const LoginForm = ({ toggleForm }) => {
   // being rendered for the input field with a name attribute of fieldName
   const errorIsRendered = (fieldName, formik) =>
     formik.errors[fieldName] && formik.touched[fieldName];
+
+  const handleLoginWithGmail = () => {};
+
+  const handleLoginWithEmailAndPassword = ({ email, password }) => {
+    // send 'values' to server
+    // on server end:
+    // reapply validation schema. (if it fails to pass validation schema, render error messages)
+    // check if there exists a user with that email/password
+    // if no user with the entered email exists, errorMessage = 'email does not exist'
+    // elseif no password, errorMessage = 'password is incorrect'
+  };
 
   return (
     <Card

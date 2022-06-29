@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import theme from "./mui/Theme";
 import { ThemeProvider } from "@mui/material";
-import FirebaseClientProvider from "./components/FirebaseClientProvider";
+import FirebaseClientInitializer from "./components/FirebaseClientInitializer";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import Home from "./components/pages/Home";
@@ -13,7 +13,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <FirebaseClientProvider>
+        <FirebaseClientInitializer>
           <Router>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -21,7 +21,7 @@ const App = () => {
               <Route path="*" element={<UnavailableResource />} />
             </Routes>
           </Router>
-        </FirebaseClientProvider>
+        </FirebaseClientInitializer>
       </ThemeProvider>
     </Provider>
   );

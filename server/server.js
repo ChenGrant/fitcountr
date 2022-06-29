@@ -7,7 +7,13 @@ const cors = require("cors");
 const morgan = require("morgan");
 
 // import middleware
-const authenticate = require("./middleware/authenticate");
+const isAuthenticated = require("./middleware/isAuthenticated");
+const {
+  isAuthorized,
+  ADMIN,
+  PRIVATE,
+  PUBLIC,
+} = require("./middleware/isAuthorized");
 
 // import routes
 const firebaseClientConfigRoutes = require("./routes/firebaseClientConfigRoutes");
@@ -22,7 +28,7 @@ app.use(morgan("dev"));
 
 // routes
 app.use("/firebaseClientConfig", firebaseClientConfigRoutes);
-app.use("/signup", authenticate, signupRoutes);
+app.use("/signup", isAuthenticated, isAuthorized(PRIVATE), signupRoutes);
 
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, "..", "client/build/index.html"));

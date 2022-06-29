@@ -24,12 +24,6 @@ const BUTTON_STYLING = {
   color: "white",
 };
 
-// given a the name attribute of an input field, fieldName, and the
-// formik object, errorIsRendered returns true if there is an error
-// being rendered for the input field with a name attribute of fieldName
-const errorIsRendered = (fieldName, formik) =>
-  formik.errors[fieldName] && formik.touched[fieldName];
-
 // Formik
 const initialValues = {
   email: "",
@@ -64,6 +58,12 @@ const LoginForm = ({ toggleForm }) => {
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
 
   const theme = useTheme();
+
+  // given a the name attribute of an input field, fieldName, and the
+  // formik object, errorIsRendered returns true if there is an error
+  // being rendered for the input field with a name attribute of fieldName
+  const errorIsRendered = (fieldName, formik) =>
+    formik.errors[fieldName] && formik.touched[fieldName];
 
   return (
     <Card
@@ -170,13 +170,7 @@ const LoginForm = ({ toggleForm }) => {
                   <Box fullWidth>
                     <Typography
                       textAlign="right"
-                      sx={{
-                        cursor: "pointer",
-                        fontWeight: 600,
-                        "&:hover": {
-                          textDecoration: "underline",
-                        },
-                      }}
+                      sx={{ cursor: "pointer", fontWeight: 600 }}
                       color="primary"
                     >
                       Forgot password?
@@ -201,13 +195,7 @@ const LoginForm = ({ toggleForm }) => {
                     <Typography
                       display="inline"
                       color="primary"
-                      sx={{
-                        cursor: "pointer",
-                        fontWeight: 600,
-                        "&:hover": {
-                          textDecoration: "underline",
-                        },
-                      }}
+                      sx={{ cursor: "pointer", fontWeight: 600 }}
                       onClick={toggleForm}
                     >
                       Signup

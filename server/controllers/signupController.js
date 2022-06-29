@@ -25,7 +25,7 @@ const createUser = async (req, res) => {
   }
 
   if (!objectIsEmpty(errors))
-    return res.json({ error: { message: `Email already in use` } });
+    return res.json(errors);
 
   const newUser = await User.create({ uid: uid, email: email });
 

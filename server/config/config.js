@@ -7,6 +7,7 @@ dotenv.config({
 
 module.exports = {
   NODE_ENV: process.env.NODE_ENV,
+  MONGODB_ATLAS_URI: process.env.MONGODB_ATLAS_URI,
   FIREBASE_CLIENT_CONFIG: {
     apiKey: process.env.FIREBASE_CLIENT_CONFIG_API_KEY,
     authDomain: process.env.FIREBASE_CLIENT_CONFIG_AUTH_DOMAIN,

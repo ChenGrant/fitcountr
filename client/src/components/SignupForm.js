@@ -91,8 +91,7 @@ const SignupForm = ({ toggleForm }) => {
     ////////////////////////
     // server side validation
 
-    console.log(userIdToken);
-    console.log(user.uid);
+    console.log(user);
 
     const response = await fetch("/signup", {
       method: "POST",
@@ -100,9 +99,7 @@ const SignupForm = ({ toggleForm }) => {
         "Content-Type": "application/json",
         authorization: "Bearer " + userIdToken,
       },
-      body: JSON.stringify({
-        uid: user.uid,
-      }),
+      body: JSON.stringify({ signup: { method: "Gmail" }, user: user }),
     });
 
     const data = await response.json();

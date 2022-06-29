@@ -1,6 +1,7 @@
 require("./firebase/firebase");
 const path = require("path");
 const express = require("express");
+const mongoose = require("mongoose");
 const config = require("./config/config");
 const app = express();
 const cors = require("cors");
@@ -34,9 +35,16 @@ app.use((req, res) => {
   res.sendFile(path.join(__dirname, "..", "client/build/index.html"));
 });
 
-const LOCALHOST_PORT = 5000;
-const PORT = process.env.PORT || LOCALHOST_PORT;
-app.listen(PORT, () => {
-  console.log(`NODE_ENV=${config.NODE_ENV}`);
-  console.log(`server started on port ${PORT}`);
-});
+// mongoose and start server
+console.log(`NODE_ENV=${config.NODE_ENV}`);
+mongoose
+  .connect(config.MONGODB_ATLAS_URI)
+  .then(() => {
+    console.log("connected to mongodb atlas");
+    const LOCALHOST_PORT = 5000;
+    const PORT = process.env.PORT || LOCALHOST_PORT;
+    app.listen(PORT, () => {
+      console.log(`server started on port ${PORT}`);
+    });
+  })
+  .catch((error) => console.log("failed to connect to mongodb atlas ", error));

@@ -9,7 +9,7 @@ const isAdmin = (uid) => {
 
 const isAuthorized = (privacyStatus = PUBLIC) => {
   return (req, res, next) => {
-    const { uid } = req.body;
+    const { uid } = req.body.user;
 
     if (isAdmin(uid)) return next();
 

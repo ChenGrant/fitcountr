@@ -38,7 +38,6 @@ const validationSchema = Yup.object({
 });
 
 const onSubmit = (values, formik) => {
-  handleLoginWithEmailAndPassword(values);
   console.log(values);
 };
 

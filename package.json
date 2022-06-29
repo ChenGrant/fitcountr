@@ -22,7 +22,5 @@
     "url": "https://github.com/ChenGrant/fitcountr/issues"
   },
   "homepage": "https://github.com/ChenGrant/fitcountr#readme",
-  "dependencies": {
-    "morgan": "^1.10.0"
-  }
+  "dependencies": {}
 }

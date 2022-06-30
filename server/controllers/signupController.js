@@ -1,32 +1,33 @@
 const User = require("../models/User");
 const { objectIsEmpty } = require("../utils/utils");
 
+const EMAIL_ALREADY_IN_USE = "Email already in use";
+
 //---------------------------------- UTILS ----------------------------------
-const EmailInUse = async (email) =>
+const emailInUse = async (email) =>
   (await User.countDocuments({ email: email })) !== 0;
 
 // ------------------------------- CONTROLLERS -------------------------------
 const createUser = async (req, res) => {
-  const { user, signup } = req.body;
+  const { user, signInMethod } = req.body;
   const { uid, email } = user;
 
-  // validate form from server side
-  if (signup.method === "emailAndPassword") {
-    const validateSignupForm = (email, password, confirmPassword) => {
-      // do same form validation that client side does
-      return {};
-    };
-    const errors = validateSignupForm();
-    if (!objectIsEmpty(errors)) return res.json(errors);
+  if (signInMethod === "emailPassword") {
+    if (await emailInUse(email))
+      return res.json({ formErrors: { email: EMAIL_ALREADY_IN_USE } });
+
+    await User.create({ uid: uid, email: email });
+    return res.json(req.body);
   }
 
-  if (await EmailInUse(email)) {
-    return res.json({ email: "Email already in use" });
+  if (signInMethod === "gmail") {
+    if (!(await emailInUse(email))) {
+      await User.create({ uid: uid, email: email });
+      return res.json(req.body);
+    }
+
+    return res.json({ userAlreadyCreated: true });
   }
-
-  const newUser = await User.create({ uid: uid, email: email });
-
-  return res.json({ uid: newUser.uid, email: newUser.email });
 };
 
 module.exports = { createUser };

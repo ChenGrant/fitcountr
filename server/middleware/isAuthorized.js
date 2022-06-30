@@ -2,16 +2,18 @@ const PUBLIC = "PUBLIC";
 const PRIVATE = "PRIVATE";
 const ADMIN = "ADMIN";
 
-const isAdmin = (uid) => {
-  // check db if uid is admin, return false for now as placeholder value
-  return false;
+const User = require("../models/User");
+
+const isAdmin = async (uid) => {
+  const user = await User.findOne({ uid: uid });
+  return user && user.isAdmin;
 };
 
 const isAuthorized = (privacyStatus = PUBLIC) => {
-  return (req, res, next) => {
+  return async (req, res, next) => {
     const { uid } = req.body.user;
 
-    if (isAdmin(uid)) return next();
+    if (await isAdmin(uid)) return next();
 
     if (privacyStatus === PRIVATE && req.headerAuthUid === uid) return next();
 

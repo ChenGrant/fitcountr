@@ -23,15 +23,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "..", "client/build")));
 app.use(cors());
-app.use(morgan("dev"));
+if (config.NODE_ENV !== "production") {
+  app.use(morgan("dev"));
+}
 
 // routes
 app.use("/firebaseClientConfig", firebaseClientConfigRoutes);
 app.use("/signup", isAuthenticated, isAuthorized(PRIVATE), signupRoutes);
-
-app.use((req, res) =>
-  res.sendFile(path.join(__dirname, "..", "client/build/index.html"))
-);
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, "..", "client/build/index.html"));
+});
 
 // mongoose and start server
 console.log(`NODE_ENV=${config.NODE_ENV}`);

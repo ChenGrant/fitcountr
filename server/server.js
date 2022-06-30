@@ -13,28 +13,24 @@ const {
   PRIVATE,
   PUBLIC,
 } = require("./middleware/isAuthorized");
-
-// import routes
 const firebaseClientConfigRoutes = require("./routes/firebaseClientConfigRoutes");
 const signupRoutes = require("./routes/signupRoutes");
 
-// middleware
+// -------------------------- MIDDLEWARE --------------------------
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "..", "client/build")));
 app.use(cors());
-if (config.NODE_ENV !== "production") {
-  app.use(morgan("dev"));
-}
+app.use(morgan("dev"));
 
-// routes
+// ----------------------------- ROUTES -----------------------------
 app.use("/firebaseClientConfig", firebaseClientConfigRoutes);
 app.use("/signup", isAuthenticated, isAuthorized(PRIVATE), signupRoutes);
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, "..", "client/build/index.html"));
 });
 
-// mongoose and start server
+// connect to mongodb atlas, then start server
 console.log(`NODE_ENV=${config.NODE_ENV}`);
 mongoose
   .connect(config.MONGODB_ATLAS_URI)

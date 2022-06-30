@@ -14,8 +14,6 @@ const FirebaseClientInitializer = ({ children }) => {
       dispatch(initializeFirebaseClient());
       const auth = getAuth(app);
       dispatch(initializeFirebaseAuth(auth));
-
-      // set up onAuthChange listener
     })();
   }, [dispatch]);
 

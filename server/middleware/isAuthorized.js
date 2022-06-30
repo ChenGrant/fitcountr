@@ -1,8 +1,8 @@
+const User = require("../models/User");
+
 const PUBLIC = "PUBLIC";
 const PRIVATE = "PRIVATE";
 const ADMIN = "ADMIN";
-
-const User = require("../models/User");
 
 const isAdmin = async (uid) => {
   const user = await User.findOne({ uid: uid });

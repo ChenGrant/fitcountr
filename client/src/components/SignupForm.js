@@ -27,9 +27,11 @@ import { signInUser } from "../redux";
 // -------------------------------------- CONSTANTS --------------------------------------
 const INPUT_FIELD_ERROR_MESSAGE_HEIGHT = "15px";
 
-const FIREBASE_EMAIL_IN_USE = "Firebase: Error (auth/email-already-in-use).";
-
 const EMAIL_ALREADY_IN_USE = "Email already in use";
+
+const GMAIL_SIGN_IN_METHOD = "gmail as sign in method";
+
+const EMAIL_PASSWORD_SIGN_IN_METHOD = "email and password as sign in method";
 
 const BUTTON_STYLING = {
   borderRadius: "10px",
@@ -37,24 +39,28 @@ const BUTTON_STYLING = {
   color: "white",
 };
 
+// -------------------------------------- FUNCTIONS --------------------------------------
 // given a the name attribute of an input field, fieldName, and the
 // formik object, errorIsRendered returns true if there is an error
 // being rendered for the input field with a name attribute of fieldName
+// and false otherwise
 const errorIsRendered = (fieldName, formik) =>
   formik.errors[fieldName] && formik.touched[fieldName];
 
+// ***************************************************************************************
 // -------------------------------------- COMPONENT --------------------------------------
+// ***************************************************************************************
 const SignupForm = ({ toggleForm }) => {
+  // ------ HOOKS ------
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
   const [password2IsVisible, setPassword2IsVisible] = useState(false);
   const [signupButtonIsDisabled, setSignupButtonIsDisabled] = useState(false);
-
   const theme = useTheme();
   const auth = useSelector((state) => state.firebaseClient.auth);
   const dispatch = useDispatch();
   const { desktop, tablet } = useScreenSize();
 
-  // -------------------------------------- FORMIK --------------------------------------
+  // ------ FORMIK ------
   const initialValues = {
     email: "",
     password: "",
@@ -77,9 +83,12 @@ const SignupForm = ({ toggleForm }) => {
     await handleEmailPasswordSignup(email, password, formik);
   };
 
+  // ------ FUNCTIONS ------
+  // given a user object and a signInMethod string, a POST request
+  // is sent to the server to the '/signup' endpoint and this function
+  // returns the json data that the server responds with
   const sendSignupRequest = async (user, signInMethod) => {
     const userIdToken = await user.getIdToken();
-
     const response = await fetch("/signup", {
       method: "POST",
       headers: {
@@ -87,34 +96,32 @@ const SignupForm = ({ toggleForm }) => {
         authorization: "Bearer " + userIdToken,
       },
       body: JSON.stringify({
-        user: { uid: user.uid, email: user.email },
-        signInMethod: signInMethod,
+        user,
+        signInMethod,
+        constants: {
+          EMAIL_ALREADY_IN_USE,
+          GMAIL_SIGN_IN_METHOD,
+          EMAIL_PASSWORD_SIGN_IN_METHOD,
+        },
       }),
     });
-
     const data = await response.json();
-
     return data;
   };
 
+  // handleGmailSignup signs in the user via their gmail account and
+  // creates an account for them if it is their first time signing in
   const handleGmailSignup = async () => {
     const result = await signInWithPopup(auth, new GoogleAuthProvider());
     const { user } = result;
-    const data = await sendSignupRequest(user, "gmail");
-
-    // if there was an authentication or authorization error
+    const data = await sendSignupRequest(user, GMAIL_SIGN_IN_METHOD);
+    // if there is an authentication or authorization error
     if (data.message) return;
-
-    if (data.userAlreadyCreated) {
-      console.log("user already created");
-    } else {
-      console.log("successfully created user");
-      console.log(user.uid);
-      console.log(user.email);
-    }
     dispatch(signInUser(user));
   };
 
+  // handleEmailPasswordSignup uses the given  email string, password string,
+  // and the formik object to either create a new user or render signup errors
   const handleEmailPasswordSignup = async (email, password, formik) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -123,12 +130,9 @@ const SignupForm = ({ toggleForm }) => {
         password
       );
       const { user } = userCredential;
-
-      const data = await sendSignupRequest(user, "emailPassword");
-
-      // if there was an authentication or authorization error
+      const data = await sendSignupRequest(user, EMAIL_PASSWORD_SIGN_IN_METHOD);
+      // if there is an authentication or authorization error
       if (data.message) return;
-
       // if there was an error with the form
       if (data.formErrors) {
         Object.entries(data.formErrors).forEach(({ fieldName, fieldError }) => {
@@ -136,18 +140,17 @@ const SignupForm = ({ toggleForm }) => {
         });
         return;
       }
-
-      console.log("successfully created user");
-      console.log(user.uid);
-      console.log(user.email);
+      // successfully created user
       dispatch(signInUser(user));
     } catch (error) {
-      if (error.message === FIREBASE_EMAIL_IN_USE) {
+      if (error.message === "Firebase: Error (auth/email-already-in-use).") {
         formik.setFieldError("email", EMAIL_ALREADY_IN_USE);
       }
     }
   };
 
+  // given a callback function, disableFormWrapper returns a function that
+  // disables the form's signup button while the callback function executes
   const disableFormWrapper = (callback) => {
     return async (...args) => {
       setSignupButtonIsDisabled(true);
@@ -156,6 +159,7 @@ const SignupForm = ({ toggleForm }) => {
     };
   };
 
+  // ------ RENDER ------
   return (
     <Card
       sx={{

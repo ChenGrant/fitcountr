@@ -11,15 +11,19 @@ const isAdmin = async (uid) => {
 
 const isAuthorized = (privacyStatus = PUBLIC) => {
   return async (req, res, next) => {
-    const { uid } = req.body.user;
+    try {
+      const { uid } = req.body.user;
 
-    if (await isAdmin(uid)) return next();
+      if (await isAdmin(uid)) return next();
 
-    if (privacyStatus === PRIVATE && req.headerAuthUid === uid) return next();
+      if (privacyStatus === PRIVATE && req.headerAuthUid === uid) return next();
 
-    if (privacyStatus === PUBLIC) return next();
+      if (privacyStatus === PUBLIC) return next();
 
-    return res.send({ message: "Could not authorize" }).status(403);
+      throw new Error();
+    } catch (err) {
+      return res.send({ message: "Could not authorize" }).status(403);
+    }
   };
 };
 

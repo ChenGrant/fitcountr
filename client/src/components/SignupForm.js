@@ -25,7 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { signInUser } from "../redux";
 
 // -------------------------------------- CONSTANTS --------------------------------------
-const INPUT_FIELD_ERROR_MESSAGE_HEIGHT = "15px";
+const FORM_ERROR_HEIGHT = "15px";
 
 const EMAIL_ALREADY_IN_USE = "Email already in use";
 
@@ -93,7 +93,7 @@ const SignupForm = ({ toggleForm }) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        authorization: "Bearer " + userIdToken,
+        authorization: userIdToken,
       },
       body: JSON.stringify({
         user,
@@ -212,23 +212,19 @@ const SignupForm = ({ toggleForm }) => {
                   </Box>
                   {/* email input field */}
                   <Box
-                    mb={
-                      !errorIsRendered("email", formik) &&
-                      INPUT_FIELD_ERROR_MESSAGE_HEIGHT
-                    }
+                    mb={!errorIsRendered("email", formik) && FORM_ERROR_HEIGHT}
                   >
                     <FormikControl
                       control="input"
                       label="Email"
                       name="email"
-                      errorHeight={INPUT_FIELD_ERROR_MESSAGE_HEIGHT}
+                      errorHeight={FORM_ERROR_HEIGHT}
                     />
                   </Box>
                   {/* password input field */}
                   <Box
                     mb={
-                      !errorIsRendered("password", formik) &&
-                      INPUT_FIELD_ERROR_MESSAGE_HEIGHT
+                      !errorIsRendered("password", formik) && FORM_ERROR_HEIGHT
                     }
                   >
                     <FormikControl
@@ -236,7 +232,7 @@ const SignupForm = ({ toggleForm }) => {
                       label="Password"
                       name="password"
                       type={!passwordIsVisible ? "password" : ""}
-                      errorHeight={INPUT_FIELD_ERROR_MESSAGE_HEIGHT}
+                      errorHeight={FORM_ERROR_HEIGHT}
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton
@@ -261,8 +257,7 @@ const SignupForm = ({ toggleForm }) => {
                   {/* confirm password input field */}
                   <Box
                     mb={
-                      !errorIsRendered("password2", formik) &&
-                      INPUT_FIELD_ERROR_MESSAGE_HEIGHT
+                      !errorIsRendered("password2", formik) && FORM_ERROR_HEIGHT
                     }
                   >
                     <FormikControl
@@ -270,7 +265,7 @@ const SignupForm = ({ toggleForm }) => {
                       label="Confirm Password"
                       name="password2"
                       type={!password2IsVisible ? "password" : ""}
-                      errorHeight={INPUT_FIELD_ERROR_MESSAGE_HEIGHT}
+                      errorHeight={FORM_ERROR_HEIGHT}
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton

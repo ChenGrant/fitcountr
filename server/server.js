@@ -6,13 +6,6 @@ require("./firebase/firebase");
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
-const isAuthenticated = require("./middleware/isAuthenticated");
-const {
-  isAuthorized,
-  ADMIN,
-  PRIVATE,
-  PUBLIC,
-} = require("./middleware/isAuthorized");
 const firebaseClientConfigRoutes = require("./routes/firebaseClientConfigRoutes");
 const signupRoutes = require("./routes/signupRoutes");
 
@@ -25,7 +18,7 @@ app.use(morgan("dev"));
 
 // ----------------------------- ROUTES -----------------------------
 app.use("/firebaseClientConfig", firebaseClientConfigRoutes);
-app.use("/signup", isAuthenticated, isAuthorized(PRIVATE), signupRoutes);
+app.use("/signup", signupRoutes);
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, "..", "client/build/index.html"));
 });

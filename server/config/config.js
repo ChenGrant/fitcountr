@@ -33,4 +33,8 @@ module.exports = {
     client_x509_cert_url:
       process.env.FIREBASE_ADMIN_CREDENTIALS_CLIENT_X509_CERT_URL,
   },
+  NODEMAILER: {
+    GMAIL_USERNAME: process.env.NODEMAILER_GMAIL_USERNAME,
+    GMAIL_PASSWORD: process.env.NODEMAILER_GMAIL_PASSWORD,
+  },
 };

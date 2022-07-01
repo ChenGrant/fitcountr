@@ -20,6 +20,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   createUserWithEmailAndPassword,
+  sendEmailVerification,
 } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { signInUser } from "../redux";
@@ -80,7 +81,9 @@ const SignupForm = ({ toggleForm }) => {
   });
 
   const onSubmit = async ({ email, password }, formik) => {
+    setSignupButtonIsDisabled(true);
     await handleEmailPasswordSignup(email, password, formik);
+    setSignupButtonIsDisabled(false);
   };
 
   // ------ FUNCTIONS ------
@@ -140,23 +143,13 @@ const SignupForm = ({ toggleForm }) => {
         });
         return;
       }
-      // successfully created user
-      dispatch(signInUser(user));
+      console.log("verification email sent");
+      // redirect user to verification email page
     } catch (error) {
       if (error.message === "Firebase: Error (auth/email-already-in-use).") {
         formik.setFieldError("email", EMAIL_ALREADY_IN_USE);
       }
     }
-  };
-
-  // given a callback function, disableFormWrapper returns a function that
-  // disables the form's signup button while the callback function executes
-  const disableFormWrapper = (callback) => {
-    return async (...args) => {
-      setSignupButtonIsDisabled(true);
-      await callback(...args);
-      setSignupButtonIsDisabled(false);
-    };
   };
 
   // ------ RENDER ------
@@ -173,7 +166,7 @@ const SignupForm = ({ toggleForm }) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={disableFormWrapper(onSubmit)}
+          onSubmit={onSubmit}
         >
           {(formik) => {
             return (

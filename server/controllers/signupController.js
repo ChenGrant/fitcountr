@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const admin = require("firebase-admin");
 const { sendEmailVerificationAsync } = require("../nodemailer/nodemailer");
+const { numberOfDigits } = require("../utils/utils");
 
 // ------------------------------- createUser -------------------------------
 const createUser = async (req, res) => {
@@ -62,12 +63,22 @@ const verifyEmail = async (req, res) => {
     const { email, pin } = req.body;
 
     // verify email corresponds to a user in the database
-    if (!(await User.emailInUse(email))) throw new Error();
+    if (!(await User.emailInUse(email))) {
+      return res.json({ message: "Email does not exist" });
+    }
 
     const user = await User.findUserByEmail(email);
 
     if (user.emailVerification.isVerified) {
-      return res.json({message: `${email} is already verified`})
+      return res.json({ message: "Email already verified" });
+    }
+
+    if (!pin) {
+      console.log("bet");
+      return res.json({
+        message: "Number of digits in pin",
+        pinLength: numberOfDigits(user.emailVerification.pin),
+      });
     }
 
     // verify that the pins match

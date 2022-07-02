@@ -8,4 +8,11 @@ const objectIsEmpty = (object) => Object.keys(object).length === 0;
 const generateRandomInteger = (min, max) =>
   Math.floor(Math.random() * (max - min)) + min;
 
-module.exports = { emailIsValid, objectIsEmpty, generateRandomInteger };
+const numberOfDigits = (integer) => integer.toString().length;
+
+module.exports = {
+  emailIsValid,
+  objectIsEmpty,
+  generateRandomInteger,
+  numberOfDigits,
+};

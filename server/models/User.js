@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { emailIsValid, generateRandomInteger } = require("../utils/utils");
 
-const EMAIL_VERIFICATION_CODE_NUM_DIGITS = 5;
+const EMAIL_VERIFICATION_PIN_NUM_DIGITS = 5;
 
 const userSchema = new mongoose.Schema({
   uid: {
@@ -24,13 +24,13 @@ const userSchema = new mongoose.Schema({
   },
   emailVerification: {
     type: {
-      code: {
+      pin: {
         type: Number,
         immutable: true,
         default: () =>
           generateRandomInteger(
-            Math.pow(10, EMAIL_VERIFICATION_CODE_NUM_DIGITS - 1),
-            Math.pow(10, EMAIL_VERIFICATION_CODE_NUM_DIGITS)
+            Math.pow(10, EMAIL_VERIFICATION_PIN_NUM_DIGITS - 1),
+            Math.pow(10, EMAIL_VERIFICATION_PIN_NUM_DIGITS)
           ),
       },
       isVerified: {

@@ -30,7 +30,7 @@ const createUser = async (req, res) => {
       // send email verification
       await sendEmailVerificationAsync(
         createdUser.email,
-        createdUser.emailVerification.code
+        createdUser.emailVerification.pin
       );
       return res.json(req.body);
     }
@@ -41,11 +41,11 @@ const createUser = async (req, res) => {
         await User.create({
           uid,
           email,
-          emailVerification: { emailVerification: true },
+          emailVerification: { isVerified: true },
         });
       return res.json(req.body);
     }
-    throw new Error();
+    throw new Error('No sign in method provided');
   } catch (err) {
     console.log(err)
     return res.json({ message: "Could not create user" });
@@ -55,22 +55,21 @@ const createUser = async (req, res) => {
 // ------------------------------- verifyEmail -------------------------------
 const verifyEmail = async (req, res) => {
   try {
-    const { email, code } = req.body;
+    const { email, pin } = req.body;
 
     // verify email corresponds to a user in the database
     if (!(await User.emailInUse(email))) throw new Error();
 
     const user = await User.findUserByEmail(email);
 
-    console.log(email, user.emailVerification.code)
-    // verify that the codes match
-    if (user.emailVerification.code === code) {
+    // verify that the pins match
+    if (user.emailVerification.pin === pin) {
       user.emailVerification.isVerified = true;
       await user.save();
       return res.json({ message: `Verified email: ${email}`, success: true });
     }
 
-    throw new Error();
+    throw new Error('Email verification pins do not match');
   } catch (err) {
     console.log(err)
     return res.json({ message: "Could not verify email" });

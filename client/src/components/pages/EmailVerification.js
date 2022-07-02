@@ -14,11 +14,11 @@ const EmailVerification = () => {
   const theme = useTheme();
 
 
-  const [verifyingCode, setVerifyingCode] = useState(false);
-  const [incorrectCode, setIncorrectCode] = useState(false);
-  const [verifiedCode, setVerifiedCode] = useState(false);
+  const [verifyingPin, setVerifyingPin] = useState(false);
+  const [incorrectPin, setIncorrectPin] = useState(false);
+  const [verifiedPin, setVerifiedPin] = useState(false);
 
-  const verifyEmail = async (email, code) => {
+  const verifyEmail = async (email, pin) => {
     const response = await fetch("/signup/emailverification", {
       method: "POST",
       headers: {
@@ -26,7 +26,7 @@ const EmailVerification = () => {
       },
       body: JSON.stringify({
         email,
-        code,
+        pin,
       }),
     });
     const data = await response.json();
@@ -35,10 +35,10 @@ const EmailVerification = () => {
       // if current user's email matches this page's email, sign in,
       // otherwise redirect to sign in page
       console.log("email is verified");
-      setIncorrectCode(false);
-      setVerifiedCode(true);
+      setIncorrectPin(false);
+      setVerifiedPin(true);
     } else {
-      setIncorrectCode(true);
+      setIncorrectPin(true);
       console.log("failed to verify");
     }
   };
@@ -53,10 +53,10 @@ const EmailVerification = () => {
       height="90vh"
       p = {3}
     >
-      {verifiedCode ? (
+      {verifiedPin ? (
         <Box display="flex" alignItems="center" gap={2}>
           <CheckCircleOutlineIcon sx={{ fontSize: "60px" }} />
-          <Typography variant="h1">Code successfully verified.</Typography>
+          <Typography variant="h1">Email successfully verified.</Typography>
         </Box>
       ) : (
         <>
@@ -65,10 +65,10 @@ const EmailVerification = () => {
             <span style={{ color: theme.palette.primary.main }}> {email}</span>.
           </Typography>
           <Typography variant="h6" textAlign="center" mb={8}>
-            Enter the code found within the email. Check your spam.
+            Enter the pin found within the email. Check your spam.
           </Typography>
           <Box height="100px" alignItems="center" justifyContent="center">
-            {verifyingCode ? (
+            {verifyingPin ? (
               <Box>
                 <CircularProgress />
               </Box>
@@ -93,9 +93,9 @@ const EmailVerification = () => {
                   fontFamily: theme.typography.fontFamily,
                 }}
                 onComplete={async (value) => {
-                  setVerifyingCode(true);
+                  setVerifyingPin(true);
                   await verifyEmail(email, parseInt(value));
-                  setVerifyingCode(false);
+                  setVerifyingPin(false);
                 }}
                 autoSelect={true}
                 regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
@@ -106,7 +106,7 @@ const EmailVerification = () => {
             display="flex"
             alignItems="center"
             gap={1}
-            visibility={incorrectCode ? "visibile" : "hidden"}
+            visibility={incorrectPin ? "visibile" : "hidden"}
           >
             <ErrorOutlineIcon sx={{ color: "red" }} />
             <Typography
@@ -115,7 +115,7 @@ const EmailVerification = () => {
                 color: "red",
               }}
             >
-              Incorrect code.
+              Incorrect Pin.
             </Typography>
           </Box>
         </>

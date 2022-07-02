@@ -32,16 +32,16 @@ const sendMailAsync = ({ from = GMAIL_USERNAME, ...rest }) => {
 
 const sendEmailVerificationAsync = async (
   receiverEmail,
-  emailVerificationCode
+  emailVerificationPin
 ) => {
   await sendMailAsync({
     to: receiverEmail,
     subject: "Email Verification fitcountr",
     html: `<p>Hi</h1>
     <br>
-    <p>To complete the signup process, please verify your email with the following code.</p>
+    <p>To complete the signup process, please verify your email with the following pin.</p>
     <a href = '${config.WEBSITE}emailverification/${receiverEmail}'>Click here to verify email</a>
-    <p><b>Code: ${emailVerificationCode.toString()}</b></p>
+    <p><b>Pin: ${emailVerificationPin.toString()}</b></p>
     <br>
     <p>Best regards,</p>
     <p>fitcountr</p>`,

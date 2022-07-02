@@ -2,7 +2,7 @@ const dotenv = require("dotenv");
 const path = require("path");
 
 dotenv.config({
-  path: path.resolve(__dirname, `..\\env\\${process.env.NODE_ENV}.env`),
+  path: path.resolve(__dirname, `..\\..\\env\\${process.env.NODE_ENV}.env`),
 });
 
 module.exports = {
@@ -37,5 +37,12 @@ module.exports = {
   NODEMAILER: {
     GMAIL_USERNAME: process.env.NODEMAILER_GMAIL_USERNAME,
     GMAIL_PASSWORD: process.env.NODEMAILER_GMAIL_PASSWORD,
+  },
+  ASSETS: {
+    LOGO: process.env.ASSET_LOGO,
+    LAPTOP_PHONE: process.env.ASSET_LAPTOP_PHONE,
+    EMAIL_DENIED: process.env.ASSET_EMAIL_DENIED,
+    EMAIL_PENDING: process.env.ASSET_EMAIL_PENDING,
+    EMAIL_VERIFIED: process.env.ASSET_EMAIL_VERIFIED,
   },
 };

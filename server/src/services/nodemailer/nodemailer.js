@@ -1,4 +1,4 @@
-const config = require("../config/config");
+const config = require("../../config/config");
 const nodemailer = require("nodemailer");
 
 const GMAIL_USERNAME = config.NODEMAILER.GMAIL_USERNAME;

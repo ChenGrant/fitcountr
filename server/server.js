@@ -1,13 +1,14 @@
 const path = require("path");
-const config = require("./config/config");
+const config = require("./src/config/config");
 const cors = require("cors");
 const morgan = require("morgan");
-require("./firebase/firebase");
+require("./src/services/firebase/firebase");
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
-const firebaseClientConfigRoutes = require("./routes/firebaseClientConfigRoutes");
-const signupRoutes = require("./routes/signupRoutes");
+const firebaseClientConfigRoutes = require("./src/routes/firebaseClientConfigRoutes");
+const signupRoutes = require("./src/routes/signupRoutes");
+const assetRoutes = require("./src/routes/assetRoutes");
 
 // -------------------------- MIDDLEWARE --------------------------
 app.use(express.urlencoded({ extended: true }));
@@ -18,6 +19,7 @@ app.use(morgan("dev"));
 
 // ----------------------------- ROUTES -----------------------------
 app.use("/firebaseClientConfig", firebaseClientConfigRoutes);
+app.use("/asset", assetRoutes);
 app.use("/signup", signupRoutes);
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, "..", "client/build/index.html"));

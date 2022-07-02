@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const admin = require("firebase-admin");
-const { sendEmailVerificationAsync } = require("../nodemailer/nodemailer");
+const { sendEmailVerificationAsync } = require("../services/nodemailer/nodemailer");
 const { numberOfDigits } = require("../utils/utils");
 
 // ------------------------------- createUser -------------------------------

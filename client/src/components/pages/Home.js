@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import Loading from "./Loading";
 import { useSelector } from "react-redux";
@@ -7,31 +7,47 @@ import useScreenSize from "../../hooks/useScreenSize";
 import SignupForm from "../SignupForm";
 
 // -------------------------------------- CONSTANTS --------------------------------------
-const LOGO_IMAGE_SRC =
-  "https://firebasestorage.googleapis.com/v0/b/fitcountr-staging.appspot.com/o/assets%2Flogo%2Flogo.svg?alt=media&token=e67a9e25-c187-4c85-a9f1-5d3d88e9cd90";
-
-const HERO_IMAGE_SRC =
-  "https://firebasestorage.googleapis.com/v0/b/fitcountr-staging.appspot.com/o/assets%2Flaptop_phone%2Flaptop_phone.svg?alt=media&token=8cb4f69c-2763-4459-8eb0-2ab6ed0a1a9a";
-
-const LOADED_LOGO_IMAGE = "LOADED_LOGO_IMAGE";
-
-const LOADED_HERO_IMAGE = "LOADED_HERO_IMAGE";
-
 const SIGNUP_FORM = "SIGNUP_FORM";
-
 const LOGIN_FORM = "LOGIN_FORM";
 
-const initialLoadingState = {
-  logoImageIsLoaded: false,
-  heroImageIsLoaded: false,
+const ASSETS_ACTIONS = {
+  FETCHED_LOGO_IMAGE_SRC: "FETCHED_LOGO_IMAGE_SRC",
+  FETCHED_LAPTOP_PHONE_IMAGE_SRC: "FETCHED_LAPTOP_PHONE_IMAGE_SRC",
+  LOADED_LOGO_IMAGE: "LOADED_LOGO_IMAGE",
+  LOADED_LAPTOP_PHONE_IMAGE: "LOADED_LAPTOP_PHONE_IMAGE",
+};
+
+const initialAssetsState = {
+  logo: {
+    name: "logo",
+    src: "",
+    isLoaded: false,
+    fetchAction: ASSETS_ACTIONS.FETCHED_LOGO_IMAGE_SRC,
+  },
+  laptopPhone: {
+    name: "laptop_phone",
+    src: "",
+    isLoaded: false,
+    fetchAction: ASSETS_ACTIONS.FETCHED_LAPTOP_PHONE_IMAGE_SRC,
+  },
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case LOADED_LOGO_IMAGE:
-      return { ...state, logoImageIsLoaded: true };
-    case LOADED_HERO_IMAGE:
-      return { ...state, heroImageIsLoaded: true };
+    case ASSETS_ACTIONS.FETCHED_LOGO_IMAGE_SRC:
+      return { ...state, logo: { ...state.logo, src: action.payload } };
+    case ASSETS_ACTIONS.FETCHED_LAPTOP_PHONE_IMAGE_SRC:
+      return {
+        ...state,
+        laptopPhone: { ...state.laptopPhone, src: action.payload },
+      };
+    case ASSETS_ACTIONS.LOADED_LOGO_IMAGE:
+      return { ...state, logo: { ...state.logo, isLoaded: true } };
+    case ASSETS_ACTIONS.LOADED_LAPTOP_PHONE_IMAGE:
+      return {
+        ...state,
+        laptopPhone: { ...state.laptopPhone, isLoaded: true },
+      };
     default:
       return state;
   }
@@ -40,28 +56,39 @@ const reducer = (state, action) => {
 // -------------------------------------- COMPONENT --------------------------------------
 const Home = () => {
   const { desktop } = useScreenSize();
-
+  const [form, setForm] = useState(SIGNUP_FORM);
   const firebaseClientIsInitialized = useSelector(
     (state) => state.firebaseClient.isInitialized
   );
-
   // loadingDependencies represents the loading status
   // for each image on the home page
-  const [loadingDependencies, dispatch] = useReducer(
-    reducer,
-    initialLoadingState
-  );
+  const [assets, dispatch] = useReducer(reducer, initialAssetsState);
+
+  useEffect(() => {
+    const fetchAssets = async () => {
+      Object.values(initialAssetsState).forEach(
+        async ({ name, fetchAction }) => {
+          const response = await fetch(`/asset/${name}`);
+          const data = await response.json();
+          const { assetURL } = data;
+          dispatch({
+            type: fetchAction,
+            payload: assetURL,
+          });
+        }
+      );
+    };
+    fetchAssets();
+  }, []);
 
   // loading is false when all images have been fetched and
   // when the client firebase SDK has been initialized.
   const loading =
     !firebaseClientIsInitialized ||
-    Object.values(loadingDependencies).reduce(
-      (prev, curr) => !prev || !curr,
+    Object.values(assets).reduce(
+      (prev, curr) => !prev || !curr.isLoaded,
       false
     );
-
-  const [form, setForm] = useState(SIGNUP_FORM);
 
   const toggleForm = () =>
     setForm(form === LOGIN_FORM ? SIGNUP_FORM : LOGIN_FORM);
@@ -95,9 +122,11 @@ const Home = () => {
                 height: desktop && "60px",
                 width: !desktop && "min(340px,100%)",
               }}
+              src={assets.logo.src}
               alt="logo"
-              onLoad={() => dispatch({ type: LOADED_LOGO_IMAGE })}
-              src={LOGO_IMAGE_SRC}
+              onLoad={() =>
+                dispatch({ type: ASSETS_ACTIONS.LOADED_LOGO_IMAGE })
+              }
             />
           </Box>
           <Box>
@@ -105,14 +134,16 @@ const Home = () => {
               Counting calories couldn't be any easier.
             </Typography>
           </Box>
-          {/* Hero Image */}
+          {/* Laptop Phone Image */}
           <Box width="100%">
             <Box
               component="img"
               width="100%"
-              src={HERO_IMAGE_SRC}
-              alt="hero"
-              onLoad={() => dispatch({ type: LOADED_HERO_IMAGE })}
+              src={assets.laptopPhone.src}
+              alt="laptop phone"
+              onLoad={() =>
+                dispatch({ type: ASSETS_ACTIONS.LOADED_LAPTOP_PHONE_IMAGE })
+              }
             />
           </Box>
         </Box>

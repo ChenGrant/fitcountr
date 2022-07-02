@@ -36,24 +36,27 @@ const sendEmailVerificationAsync = async (
 ) => {
   await sendMailAsync({
     to: receiverEmail,
-    subject: "Email Verification fitcountr",
-    html: `<p>Hi</h1>
-    <br>
-    <p>To complete the signup process, please verify your email with the following pin.</p>
-    <a href = '${config.WEBSITE}emailverification/${receiverEmail}' style = 'display: block;
-    width: max-content;
-    background: #FF6B00;
-    padding: 10px;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 5px;
-    color: white;
-    font-weight: bold;
-    line-height: 25px;'>Click here to verify email</a>
-    <p><b>Pin: ${emailVerificationPin.toString()}</b></p>
-    <br>
-    <p>Best regards,</p>
-    <p>fitcountr</p>`,
+    subject: "fitcountr Email Verification",
+    html: `<p>Hi,</p>
+      <br>
+      <p>To complete the signup process, please verify your email with the following pin.</p>
+      <a href = '${config.WEBSITE}emailverification/${receiverEmail}' 
+      style = '
+      display: block;
+      width: max-content;
+      background: #FF6B00;
+      padding: 10px;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      line-height: 25px;
+      '>Click here to verify email</a>
+      <p><b>Pin: ${emailVerificationPin.toString()}</b></p>
+      <br>
+      <p>Best regards,</p>
+      <p>fitcountr</p>`,
   });
 };
 

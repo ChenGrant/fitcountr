@@ -43,6 +43,11 @@ const userSchema = new mongoose.Schema({
 });
 
 // --------------------------- STATICS ---------------------------
+userSchema.statics.isAdmin = async function (uid) {
+  const user = await this.findOne({ uid: uid });
+  return user && user.isAdmin;
+}
+
 userSchema.statics.emailInUse = async function (email) {
   return (await this.countDocuments({ email: email })) !== 0;
 };

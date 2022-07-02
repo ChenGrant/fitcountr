@@ -43,6 +43,11 @@ theme.typography.h4[theme.breakpoints.up("md")] = {
   fontWeight: 600,
 };
 
+theme.typography.h6[theme.breakpoints.up("md")] = {
+  fontSize: "23px",
+  fontWeight: 500,
+};
+
 theme.typography.body1[theme.breakpoints.up("md")] = { fontSize: "16px" };
 
 theme.typography.button[theme.breakpoints.up("md")] = { fontSize: "25px" };
@@ -53,8 +58,13 @@ theme.typography.h1[theme.breakpoints.only("sm")] = {
 };
 
 theme.typography.h4[theme.breakpoints.only("sm")] = {
-  fontSize: "31px",
+  fontSize: "30px",
   fontWeight: 600,
+};
+
+theme.typography.h6[theme.breakpoints.only("sm")] = {
+  fontSize: "23px",
+  fontWeight: 500,
 };
 
 theme.typography.body1[theme.breakpoints.only("sm")] = { fontSize: "16px" };
@@ -69,6 +79,11 @@ theme.typography.h1[theme.breakpoints.only("xs")] = {
 theme.typography.h4[theme.breakpoints.only("xs")] = {
   fontSize: "24px",
   fontWeight: 600,
+};
+
+theme.typography.h6[theme.breakpoints.only("xs")] = {
+  fontSize: "20px",
+  fontWeight: 500,
 };
 
 theme.typography.body1[theme.breakpoints.only("xs")] = { fontSize: "16px" };

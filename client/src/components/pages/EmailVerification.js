@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import PinInput from "react-pin-input";
-import { CircularProgress, Typography } from "@mui/material";
+import { Button, CircularProgress, Typography } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { Box } from "@mui/system";
 import useScreenSize from "../../hooks/useScreenSize";
@@ -10,9 +10,9 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 const EmailVerification = () => {
   const { email } = useParams();
-  const { phone } = useScreenSize();
+  const { phone, tablet, desktop } = useScreenSize();
   const theme = useTheme();
-
+  const navigate = useNavigate();
 
   const [verifyingPin, setVerifyingPin] = useState(false);
   const [incorrectPin, setIncorrectPin] = useState(false);
@@ -51,23 +51,44 @@ const EmailVerification = () => {
       justifyContent="center"
       fullWidth
       height="90vh"
-      p = {3}
+      p={3}
     >
       {verifiedPin ? (
-        <Box display="flex" alignItems="center" gap={2}>
+        <Box
+          display="flex"
+          alignItems="center"
+          gap={2}
+          mb={6}
+          color="primary.main"
+        >
+          <Typography variant="h1">Email verified</Typography>
           <CheckCircleOutlineIcon sx={{ fontSize: "60px" }} />
-          <Typography variant="h1">Email successfully verified.</Typography>
         </Box>
       ) : (
         <>
-          <Typography variant="h4" textAlign="center" mb={2}>
-            A verification email has been sent to
-            <span style={{ color: theme.palette.primary.main }}> {email}</span>.
+          <Typography
+            variant={desktop ? "h4" : tablet ? "h6" : "body2"}
+            textAlign="center"
+            mb={2}
+          >
+            A verification email was sent to{" "}
+            <span style={{ color: theme.palette.primary.main }}>
+              <b>{email}</b>
+            </span>
+            .
           </Typography>
-          <Typography variant="h6" textAlign="center" mb={8}>
+          <Typography
+            variant={desktop ? "h6" : tablet ? "body1" : "body2"}
+            textAlign="center"
+          >
             Enter the pin found within the email. Check your spam.
           </Typography>
-          <Box height="100px" alignItems="center" justifyContent="center">
+          <Box
+            height={desktop ? "200px" : tablet ? "200px" : "100px"}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
             {verifyingPin ? (
               <Box>
                 <CircularProgress />
@@ -86,10 +107,10 @@ const EmailVerification = () => {
                 }}
                 inputStyle={{
                   border: `3px solid ${theme.palette.primary.main}`,
-                  borderRadius: "10px",
-                  height: phone ? "40px" : "70px",
-                  width: phone ? "40px" : "70px",
-                  fontSize: phone ? "20px" : "30px",
+                  borderRadius: phone ? "7px" : "10px",
+                  height: phone ? "35px" : "70px",
+                  width: phone ? "35px" : "70px",
+                  fontSize: phone ? "18px" : "30px",
                   fontFamily: theme.typography.fontFamily,
                 }}
                 onComplete={async (value) => {
@@ -107,19 +128,29 @@ const EmailVerification = () => {
             alignItems="center"
             gap={1}
             visibility={incorrectPin ? "visibile" : "hidden"}
+            mb={phone ? 6 : 8}
           >
             <ErrorOutlineIcon sx={{ color: "red" }} />
             <Typography
-              variant="h6"
+              variant={desktop ? "h6" : tablet ? "body1" : "body2"}
               sx={{
                 color: "red",
               }}
             >
-              Incorrect Pin.
+              Incorrect Pin
             </Typography>
           </Box>
         </>
       )}
+      <Box mt={5}>
+        <Button
+          variant="contained"
+          sx={{ textTransform: "none", color: "white" }}
+          onClick={() => navigate("/")}
+        >
+          Return Home
+        </Button>
+      </Box>
     </Box>
   );
 };

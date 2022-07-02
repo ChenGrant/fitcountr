@@ -21,17 +21,20 @@ const createUser = async (req, res) => {
       // verify email does not already exist in mongodb atlas
       if (await User.emailInUse(email))
         return res.json({ formErrors: { email: EMAIL_ALREADY_IN_USE } });
+
       // create user in mongodb atlas
       const createdUser = await User.create({
         uid,
         email,
         emailVerification: { isVerified: false },
       });
+
       // send email verification
       await sendEmailVerificationAsync(
         createdUser.email,
         createdUser.emailVerification.pin
       );
+
       return res.json(req.body);
     }
 
@@ -43,11 +46,12 @@ const createUser = async (req, res) => {
           email,
           emailVerification: { isVerified: true },
         });
+
       return res.json(req.body);
     }
-    throw new Error('No sign in method provided');
+    throw new Error("No sign in method provided");
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return res.json({ message: "Could not create user" });
   }
 };
@@ -62,6 +66,10 @@ const verifyEmail = async (req, res) => {
 
     const user = await User.findUserByEmail(email);
 
+    if (user.emailVerification.isVerified) {
+      return res.json({message: `${email} is already verified`})
+    }
+
     // verify that the pins match
     if (user.emailVerification.pin === pin) {
       user.emailVerification.isVerified = true;
@@ -69,9 +77,9 @@ const verifyEmail = async (req, res) => {
       return res.json({ message: `Verified email: ${email}`, success: true });
     }
 
-    throw new Error('Email verification pins do not match');
+    throw new Error("Email verification pins do not match");
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return res.json({ message: "Could not verify email" });
   }
 };

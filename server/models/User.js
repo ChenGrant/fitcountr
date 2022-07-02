@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { emailIsValid, generateRandomInteger } = require("../utils/utils");
 
-const EMAIL_VERIFICATION_CODE_LENGTH = 5;
+const EMAIL_VERIFICATION_CODE_NUM_DIGITS = 5;
 
 const userSchema = new mongoose.Schema({
   uid: {
@@ -29,8 +29,8 @@ const userSchema = new mongoose.Schema({
         immutable: true,
         default: () =>
           generateRandomInteger(
-            0,
-            Math.pow(10, EMAIL_VERIFICATION_CODE_LENGTH)
+            Math.pow(10, EMAIL_VERIFICATION_CODE_NUM_DIGITS - 1),
+            Math.pow(10, EMAIL_VERIFICATION_CODE_NUM_DIGITS)
           ),
       },
       isVerified: {
@@ -41,5 +41,14 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 });
+
+// --------------------------- STATICS ---------------------------
+userSchema.statics.emailInUse = async function (email) {
+  return (await this.countDocuments({ email: email })) !== 0;
+};
+
+userSchema.statics.findUserByEmail = async function (email) {
+  return await this.findOne({ email: email });
+};
 
 module.exports = mongoose.model("Users", userSchema);

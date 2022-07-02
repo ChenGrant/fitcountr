@@ -15,7 +15,6 @@ const FirebaseClientInitializer = ({ children }) => {
       const auth = getAuth(app);
       dispatch(initializeFirebaseAuth(auth));
       const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-        console.log(user);
       });
       return unsubscribeAuth
     })();

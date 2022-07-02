@@ -12,14 +12,12 @@ const transport = nodemailer.createTransport({
   },
 });
 
-const sendMailAsync = ({ from = GMAIL_USERNAME, to, subject, text }) => {
+const sendMailAsync = ({ from = GMAIL_USERNAME, ...rest }) => {
   return new Promise((res, rej) => {
     transport.sendMail(
       {
         from,
-        to,
-        subject,
-        text,
+        ...rest,
       },
       (err, data) => {
         if (err) {
@@ -39,7 +37,14 @@ const sendEmailVerificationAsync = async (
   await sendMailAsync({
     to: receiverEmail,
     subject: "Email Verification fitcountr",
-    text: emailVerificationCode.toString(),
+    html: `<p>Hi</h1>
+    <br>
+    <p>To complete the signup process, please verify your email with the following code.</p>
+    <a href = '${config.WEBSITE}emailverification/${receiverEmail}'>Click here to verify email</a>
+    <p><b>Code: ${emailVerificationCode.toString()}</b></p>
+    <br>
+    <p>Best regards,</p>
+    <p>fitcountr</p>`,
   });
 };
 

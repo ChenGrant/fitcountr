@@ -13,6 +13,7 @@ const EmailVerification = () => {
   const { phone } = useScreenSize();
   const theme = useTheme();
 
+
   const [verifyingCode, setVerifyingCode] = useState(false);
   const [incorrectCode, setIncorrectCode] = useState(false);
   const [verifiedCode, setVerifiedCode] = useState(false);
@@ -50,6 +51,7 @@ const EmailVerification = () => {
       justifyContent="center"
       fullWidth
       height="90vh"
+      p = {3}
     >
       {verifiedCode ? (
         <Box display="flex" alignItems="center" gap={2}>
@@ -62,7 +64,7 @@ const EmailVerification = () => {
             A verification email has been sent to
             <span style={{ color: theme.palette.primary.main }}> {email}</span>.
           </Typography>
-          <Typography variant="h6" mb={8}>
+          <Typography variant="h6" textAlign="center" mb={8}>
             Enter the code found within the email. Check your spam.
           </Typography>
           <Box height="100px" alignItems="center" justifyContent="center">

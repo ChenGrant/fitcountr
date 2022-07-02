@@ -6,6 +6,8 @@ const { sendEmailVerificationAsync } = require("../nodemailer/nodemailer");
 const emailInUse = async (email) =>
   (await User.countDocuments({ email: email })) !== 0;
 
+const getUserByEmail = async (email) => await User.findOne({ email: email });
+
 // ------------------------------- CONTROLLERS -------------------------------
 const createUser = async (req, res) => {
   try {
@@ -49,9 +51,32 @@ const createUser = async (req, res) => {
         });
       return res.json(req.body);
     }
+    throw new Error();
   } catch (err) {
     return res.json({ message: "Could not create user" });
   }
 };
 
-module.exports = { createUser };
+const verifyEmail = async (req, res) => {
+  try {
+    const { email, code } = req.body;
+
+    // verify email corresponds to a user in the database
+    if (!(await emailInUse(email))) throw new Error();
+
+    const user = await getUserByEmail(email);
+
+    // verify that the codes match
+    if (user.emailVerification.code === code) {
+      user.emailVerification.isVerified = true;
+      await user.save();
+      return res.json({ message: `Verified email: ${email}`, success: true });
+    }
+
+    throw new Error();
+  } catch (err) {
+    return res.json({ message: "Could not verify email" });
+  }
+};
+
+module.exports = { createUser, verifyEmail };

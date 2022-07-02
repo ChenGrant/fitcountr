@@ -20,10 +20,9 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   createUserWithEmailAndPassword,
-  sendEmailVerification,
 } from "firebase/auth";
-import { useDispatch, useSelector } from "react-redux";
-import { signInUser } from "../redux";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 // -------------------------------------- CONSTANTS --------------------------------------
 const FORM_ERROR_HEIGHT = "15px";
@@ -58,7 +57,7 @@ const SignupForm = ({ toggleForm }) => {
   const [signupButtonIsDisabled, setSignupButtonIsDisabled] = useState(false);
   const theme = useTheme();
   const auth = useSelector((state) => state.firebaseClient.auth);
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { desktop, tablet } = useScreenSize();
 
   // ------ FORMIK ------
@@ -120,7 +119,6 @@ const SignupForm = ({ toggleForm }) => {
     const data = await sendSignupRequest(user, GMAIL_SIGN_IN_METHOD);
     // if there is an authentication or authorization error
     if (data.message) return;
-    dispatch(signInUser(user));
   };
 
   // handleEmailPasswordSignup uses the given  email string, password string,
@@ -144,6 +142,7 @@ const SignupForm = ({ toggleForm }) => {
         return;
       }
       console.log("verification email sent");
+      navigate(`/emailverification/${email}`);
       // redirect user to verification email page
     } catch (error) {
       if (error.message === "Firebase: Error (auth/email-already-in-use).") {

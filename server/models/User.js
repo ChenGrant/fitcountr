@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const { emailIsValid } = require("../utils/utils");
-const uuid = require('uuid')
+const { emailIsValid, generateRandomInteger } = require("../utils/utils");
 
+const EMAIL_VERIFICATION_CODE_LENGTH = 5;
 
 const userSchema = new mongoose.Schema({
   uid: {
@@ -25,17 +25,21 @@ const userSchema = new mongoose.Schema({
   emailVerification: {
     type: {
       code: {
-        type: String,
+        type: Number,
         immutable: true,
-        default: () => uuid.v4()
+        default: () =>
+          generateRandomInteger(
+            0,
+            Math.pow(10, EMAIL_VERIFICATION_CODE_LENGTH)
+          ),
       },
       isVerified: {
         type: Boolean,
-        required: true
-      }
+        required: true,
+      },
     },
-    required: true
-  }
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Users", userSchema);

@@ -3,4 +3,9 @@ const emailIsValid = (email) =>
 
 const objectIsEmpty = (object) => Object.keys(object).length === 0;
 
-module.exports = { emailIsValid, objectIsEmpty };
+// generateRandomInteger generates a random integer between min(inclusive)
+// and max(exclusive)
+const generateRandomInteger = (min, max) =>
+  Math.floor(Math.random() * (max - min)) + min;
+
+module.exports = { emailIsValid, objectIsEmpty, generateRandomInteger };

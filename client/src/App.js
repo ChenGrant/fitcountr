@@ -8,6 +8,7 @@ import store from "./redux/store";
 import Home from "./components/pages/Home";
 import Dashboard from "./components/pages/Dashboard";
 import UnavailableResource from "./components/pages/UnavailableResource";
+import EmailVerification from "./components/pages/EmailVerification";
 
 const App = () => {
   return (
@@ -18,6 +19,10 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route
+                path="/emailverification/:email"
+                element={<EmailVerification />}
+              />
               <Route path="*" element={<UnavailableResource />} />
             </Routes>
           </Router>

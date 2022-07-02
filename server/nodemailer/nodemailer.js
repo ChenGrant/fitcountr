@@ -39,7 +39,7 @@ const sendEmailVerificationAsync = async (
   await sendMailAsync({
     to: receiverEmail,
     subject: "Email Verification fitcountr",
-    text: emailVerificationCode,
+    text: emailVerificationCode.toString(),
   });
 };
 

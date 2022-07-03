@@ -8,7 +8,7 @@ const getAsset = (req, res) => {
     assert(assetURL);
     res.json({ assetURL });
   } catch (err) {
-    res.json({ message: "Asset not found" });
+    res.json({ message: "Could not retrieve asset" });
   }
 };
 

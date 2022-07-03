@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Card,
   IconButton,
   InputAdornment,
@@ -14,15 +13,10 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useTheme } from "@emotion/react";
+import CustomButton from "../mui/CustomButton";
 
 // -------------------------------------- CONSTANTS --------------------------------------
 const INPUT_FIELD_ERROR_MESSAGE_HEIGHT = "15px";
-
-const BUTTON_STYLING = {
-  borderRadius: "10px",
-  textTransform: "none",
-  color: "white",
-};
 
 // ---------------------------------------- FORMIK ----------------------------------------
 const initialValues = {
@@ -86,10 +80,9 @@ const LoginForm = ({ toggleForm }) => {
                     Login
                   </Typography>
                   {/* "Login with Gmail" button */}
-                  <Button
+                  <CustomButton
                     fullWidth
                     variant="contained"
-                    sx={BUTTON_STYLING}
                     startIcon={
                       <GoogleIcon
                         sx={{ transform: "scale(1.5)", marginRight: "20px" }}
@@ -97,7 +90,7 @@ const LoginForm = ({ toggleForm }) => {
                     }
                   >
                     Login with Gmail
-                  </Button>
+                  </CustomButton>
                   {/* login form divider */}
                   <Box
                     my={1}
@@ -177,14 +170,9 @@ const LoginForm = ({ toggleForm }) => {
                   </Box>
                   {/* Login button */}
                   <Box>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      fullWidth
-                      sx={BUTTON_STYLING}
-                    >
+                    <CustomButton type="submit" variant="contained" fullWidth>
                       Login
-                    </Button>
+                    </CustomButton>
                   </Box>
                   {/* Get started */}
                   <Box>
@@ -194,7 +182,13 @@ const LoginForm = ({ toggleForm }) => {
                     <Typography
                       display="inline"
                       color="primary"
-                      sx={{ cursor: "pointer", fontWeight: 600 }}
+                      sx={{
+                        cursor: "pointer",
+                        fontWeight: 600,
+                        "&:hover": {
+                          textDecoration: "underline",
+                        },
+                      }}
                       onClick={toggleForm}
                     >
                       Signup

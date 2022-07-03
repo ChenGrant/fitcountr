@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Card,
   CircularProgress,
   IconButton,
@@ -23,6 +22,7 @@ import {
 } from "firebase/auth";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import CustomButton from "../mui/CustomButton";
 
 // -------------------------------------- CONSTANTS --------------------------------------
 const FORM_ERROR_HEIGHT = "15px";
@@ -32,12 +32,6 @@ const EMAIL_ALREADY_IN_USE = "Email already in use";
 const GMAIL_SIGN_IN_METHOD = "gmail as sign in method";
 
 const EMAIL_PASSWORD_SIGN_IN_METHOD = "email and password as sign in method";
-
-const BUTTON_STYLING = {
-  borderRadius: "10px",
-  textTransform: "none",
-  color: "white",
-};
 
 // -------------------------------------- FUNCTIONS --------------------------------------
 // given a the name attribute of an input field, fieldName, and the
@@ -175,10 +169,9 @@ const SignupForm = ({ toggleForm }) => {
                     Signup
                   </Typography>
                   {/* "Login with Gmail" button */}
-                  <Button
+                  <CustomButton
                     fullWidth
                     variant="contained"
-                    sx={BUTTON_STYLING}
                     onClick={handleGmailSignup}
                     startIcon={
                       <GoogleIcon
@@ -187,7 +180,7 @@ const SignupForm = ({ toggleForm }) => {
                     }
                   >
                     Signup with Gmail
-                  </Button>
+                  </CustomButton>
                   {/* login form divider */}
                   <Box
                     my={1}
@@ -288,14 +281,9 @@ const SignupForm = ({ toggleForm }) => {
                     {signupButtonIsDisabled ? (
                       <CircularProgress />
                     ) : (
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        fullWidth
-                        sx={BUTTON_STYLING}
-                      >
+                      <CustomButton type="submit" variant="contained" fullWidth>
                         Signup
-                      </Button>
+                      </CustomButton>
                     )}
                   </Box>
                   {/* Get started */}

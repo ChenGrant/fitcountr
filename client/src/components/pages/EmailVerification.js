@@ -1,13 +1,14 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import PinInput from "react-pin-input";
-import { Button, CircularProgress, Typography } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { Box } from "@mui/system";
 import useScreenSize from "../../hooks/useScreenSize";
 import Loading from "./Loading";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import useAsset from "../../hooks/useAsset";
+import CustomButton from "../../mui/CustomButton";
 
 const PIN_ACTIONS = {
   VERIFYING: "VERIFYING",
@@ -230,13 +231,9 @@ const EmailVerification = () => {
             </Box>
           </>
         )}
-        <Button
-          sx={{ textTransform: "none", color: "white" }}
-          variant="contained"
-          onClick={() => navigate("/")}
-        >
+        <CustomButton variant="contained" onClick={() => navigate("/")}>
           Home
-        </Button>
+        </CustomButton>
       </Box>
     </>
   );

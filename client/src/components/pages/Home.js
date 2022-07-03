@@ -1,57 +1,15 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import Loading from "./Loading";
 import { useSelector } from "react-redux";
 import LoginForm from "../LoginForm";
 import useScreenSize from "../../hooks/useScreenSize";
 import SignupForm from "../SignupForm";
+import useAsset from "../../hooks/useAsset";
 
 // -------------------------------------- CONSTANTS --------------------------------------
 const SIGNUP_FORM = "SIGNUP_FORM";
 const LOGIN_FORM = "LOGIN_FORM";
-
-const ASSETS_ACTIONS = {
-  FETCHED_LOGO_IMAGE_SRC: "FETCHED_LOGO_IMAGE_SRC",
-  FETCHED_LAPTOP_PHONE_IMAGE_SRC: "FETCHED_LAPTOP_PHONE_IMAGE_SRC",
-  LOADED_LOGO_IMAGE: "LOADED_LOGO_IMAGE",
-  LOADED_LAPTOP_PHONE_IMAGE: "LOADED_LAPTOP_PHONE_IMAGE",
-};
-
-const initialAssetsState = {
-  logo: {
-    name: "logo",
-    src: "",
-    isLoaded: false,
-    fetchAction: ASSETS_ACTIONS.FETCHED_LOGO_IMAGE_SRC,
-  },
-  laptopPhone: {
-    name: "laptop_phone",
-    src: "",
-    isLoaded: false,
-    fetchAction: ASSETS_ACTIONS.FETCHED_LAPTOP_PHONE_IMAGE_SRC,
-  },
-};
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case ASSETS_ACTIONS.FETCHED_LOGO_IMAGE_SRC:
-      return { ...state, logo: { ...state.logo, src: action.payload } };
-    case ASSETS_ACTIONS.FETCHED_LAPTOP_PHONE_IMAGE_SRC:
-      return {
-        ...state,
-        laptopPhone: { ...state.laptopPhone, src: action.payload },
-      };
-    case ASSETS_ACTIONS.LOADED_LOGO_IMAGE:
-      return { ...state, logo: { ...state.logo, isLoaded: true } };
-    case ASSETS_ACTIONS.LOADED_LAPTOP_PHONE_IMAGE:
-      return {
-        ...state,
-        laptopPhone: { ...state.laptopPhone, isLoaded: true },
-      };
-    default:
-      return state;
-  }
-};
 
 // -------------------------------------- COMPONENT --------------------------------------
 const Home = () => {
@@ -60,35 +18,15 @@ const Home = () => {
   const firebaseClientIsInitialized = useSelector(
     (state) => state.firebaseClient.isInitialized
   );
-  // loadingDependencies represents the loading status
-  // for each image on the home page
-  const [assets, dispatch] = useReducer(reducer, initialAssetsState);
 
-  useEffect(() => {
-    const fetchAssets = async () => {
-      Object.values(initialAssetsState).forEach(
-        async ({ name, fetchAction }) => {
-          const response = await fetch(`/asset/${name}`);
-          const data = await response.json();
-          const { assetURL } = data;
-          dispatch({
-            type: fetchAction,
-            payload: assetURL,
-          });
-        }
-      );
-    };
-    fetchAssets();
-  }, []);
+  const { assets, assetsDispatchers, loadingAssets } = useAsset({
+    logo: { name: "logo" },
+    laptopPhone: { name: "laptop_phone" },
+  });
 
   // loading is false when all images have been fetched and
   // when the client firebase SDK has been initialized.
-  const loading =
-    !firebaseClientIsInitialized ||
-    Object.values(assets).reduce(
-      (prev, curr) => !prev || !curr.isLoaded,
-      false
-    );
+  const loading = !firebaseClientIsInitialized || loadingAssets;
 
   const toggleForm = () =>
     setForm(form === LOGIN_FORM ? SIGNUP_FORM : LOGIN_FORM);
@@ -124,9 +62,7 @@ const Home = () => {
               }}
               src={assets.logo.src}
               alt="logo"
-              onLoad={() =>
-                dispatch({ type: ASSETS_ACTIONS.LOADED_LOGO_IMAGE })
-              }
+              onLoad={() => assetsDispatchers.logo.setLoading(false)}
             />
           </Box>
           <Box>
@@ -141,9 +77,7 @@ const Home = () => {
               width="100%"
               src={assets.laptopPhone.src}
               alt="laptop phone"
-              onLoad={() =>
-                dispatch({ type: ASSETS_ACTIONS.LOADED_LAPTOP_PHONE_IMAGE })
-              }
+              onLoad={() => assetsDispatchers.laptopPhone.setLoading(false)}
             />
           </Box>
         </Box>

@@ -7,15 +7,7 @@ import { Box } from "@mui/system";
 import useScreenSize from "../../hooks/useScreenSize";
 import Loading from "./Loading";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-
-const EMAIL_PENDING_IMAGE_SRC =
-  "https://firebasestorage.googleapis.com/v0/b/fitcountr-staging.appspot.com/o/assets%2Femail%2Femail_pending.svg?alt=media&token=60a9d98a-0af3-49e2-846f-2fb2df7b7533";
-
-const EMAIL_VERIFIED_IMAGE_SRC =
-  "https://firebasestorage.googleapis.com/v0/b/fitcountr-staging.appspot.com/o/assets%2Femail%2Femail_verified.svg?alt=media&token=1ce048b8-24bf-4d25-a229-3adac6724549";
-
-const EMAIL_DENIED_IMAGE_SRC =
-  "https://firebasestorage.googleapis.com/v0/b/fitcountr-staging.appspot.com/o/assets%2Femail%2Femail_denied.svg?alt=media&token=7ddd7136-fb54-4558-9c51-0b357aa58737";
+import useAsset from "../../hooks/useAsset";
 
 const PIN_ACTIONS = {
   VERIFYING: "VERIFYING",
@@ -54,11 +46,15 @@ const EmailVerification = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { desktop, tablet, phone } = useScreenSize();
+  const { assets, assetsDispatchers, loadingAssets } = useAsset({
+    emailPending: { name: "email_pending" },
+    emailVerified: { name: "email_verified" },
+    emailDenied: { name: "email_denied" },
+  });
 
   const [pin, dispatch] = useReducer(pinReducer, initialPinState);
 
   const [loading, setLoading] = useState(true);
-  const [loadingAssets, setLoadingAssets] = useState(true);
   const [emailAlreadyVerified, setEmailAlreadyVerified] = useState(false);
   const [emailDoesNotExist, setEmailDoesNotExist] = useState(false);
 
@@ -124,12 +120,12 @@ const EmailVerification = () => {
           height={phone ? "100px" : "200px"}
           src={
             emailDoesNotExist
-              ? EMAIL_DENIED_IMAGE_SRC
+              ? assets.emailDenied.src
               : emailAlreadyVerified || pin.verified
-              ? EMAIL_VERIFIED_IMAGE_SRC
-              : EMAIL_PENDING_IMAGE_SRC
+              ? assets.emailVerified.src
+              : assets.emailPending.src
           }
-          onLoad={() => setLoadingAssets(false)}
+          onLoad={() => assetsDispatchers.setAllLoading(false)}
         />
         <Typography variant={phone ? "h4" : "h1"} textAlign="center">
           Email Verification

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Box, Typography } from "@mui/material";
-import Loading from "./Loading";
+import Loading from "../Loading/Loading";
 import { useSelector } from "react-redux";
-import LoginForm from "../LoginForm";
-import useScreenSize from "../../hooks/useScreenSize";
-import SignupForm from "../SignupForm";
-import useAsset from "../../hooks/useAsset";
+import LoginForm from "./LoginForm";
+import useScreenSize from "../../../hooks/useScreenSize";
+import SignupForm from "./SignupForm";
+import useAsset from "../../../hooks/useAsset";
 
 // -------------------------------------- CONSTANTS --------------------------------------
 const SIGNUP_FORM = "SIGNUP_FORM";
@@ -26,16 +26,17 @@ const Home = () => {
 
   // loading is false when all images have been fetched and
   // when the client firebase SDK has been initialized.
-  const loading = !firebaseClientIsInitialized || loadingAssets;
+  const loading = !firebaseClientIsInitialized || loadingAssets ;
 
   const toggleForm = () =>
     setForm(form === LOGIN_FORM ? SIGNUP_FORM : LOGIN_FORM);
 
   return (
-    <Box height={desktop && "100vh"} py={!desktop && "8vh"} px="5vw">
+    <Box height={desktop && "100vh"} px="5vw">
       {/* render Loading component when loading */}
       {loading && <Loading />}
       <Box
+        py={!desktop && "8vh"}
         // display home page when no longer loading
         display={loading ? "none" : "flex"}
         flexDirection={desktop ? "row" : "column"}

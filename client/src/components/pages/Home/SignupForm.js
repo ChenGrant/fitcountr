@@ -7,14 +7,14 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import FormikControl from "./formik/FormikControl";
+import FormikControl from "../../formik/FormikControl";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useTheme } from "@emotion/react";
-import useScreenSize from "../hooks/useScreenSize";
+import useScreenSize from "../../../hooks/useScreenSize";
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -22,7 +22,7 @@ import {
 } from "firebase/auth";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import CustomButton from "../mui/CustomButton";
+import CustomButton from "../../../mui/CustomButton";
 
 // -------------------------------------- CONSTANTS --------------------------------------
 const FORM_ERROR_HEIGHT = "15px";

@@ -4,12 +4,22 @@ import PinInput from "react-pin-input";
 import { CircularProgress, Typography } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { Box } from "@mui/system";
-import useScreenSize from "../../hooks/useScreenSize";
-import Loading from "./Loading";
+import useScreenSize from "../../../hooks/useScreenSize";
+import Loading from "../Loading/Loading";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import useAsset from "../../hooks/useAsset";
-import CustomButton from "../../mui/CustomButton";
+import useAsset from "../../../hooks/useAsset";
+import CustomButton from "../../../mui/CustomButton";
+import EmailVerificationPopup from "./EmailVerificationPopup";
 
+// -------------------------------- CONSTANTS --------------------------------
+const EMAIL_VERIFICATION_POPUP_STATES = {
+  CLOSED: "CLOSED",
+  SENDING: "SENDING",
+  SENT_SUCCESS: "SENT_SUCCESS",
+  SENT_FAILED: "SENT_FAILED",
+};
+
+// --------------------------------- REDUCERS ---------------------------------
 const PIN_ACTIONS = {
   VERIFYING: "VERIFYING",
   FINISHED_VERIFYING: "FINISHED_VERIFYING",
@@ -42,6 +52,7 @@ const pinReducer = (state, action) => {
   }
 };
 
+// -------------------------------- COMPONENT ---------------------------------
 const EmailVerification = () => {
   const { email } = useParams();
   const theme = useTheme();
@@ -52,16 +63,40 @@ const EmailVerification = () => {
     emailVerified: { name: "email_verified" },
     emailDenied: { name: "email_denied" },
   });
-
   const [pin, dispatch] = useReducer(pinReducer, initialPinState);
-
-  const [loading, setLoading] = useState(true);
+  const [fetchingVerificationStatus, setFetchingVerificationStatus] =
+    useState(true);
   const [emailAlreadyVerified, setEmailAlreadyVerified] = useState(false);
   const [emailDoesNotExist, setEmailDoesNotExist] = useState(false);
+  const [sendingEmailPopup, setSendingEmailPopup] = useState(
+    EMAIL_VERIFICATION_POPUP_STATES.CLOSED
+  );
+
+  const loading = fetchingVerificationStatus || loadingAssets;
 
   useEffect(() => {
     verifyEmail(email);
   }, [email]);
+
+  const sendVerificationEmail = async (email) => {
+    setSendingEmailPopup(EMAIL_VERIFICATION_POPUP_STATES.SENDING);
+
+    const response = await fetch("/signup/emailverification/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+
+    if (data.message === "Could not send verification email") {
+      return setSendingEmailPopup(EMAIL_VERIFICATION_POPUP_STATES.SENT_FAILED);
+    }
+
+    return setSendingEmailPopup(EMAIL_VERIFICATION_POPUP_STATES.SENT_SUCCESS);
+  };
 
   const verifyEmail = async (email, pin) => {
     dispatch({ type: PIN_ACTIONS.VERIFYING });
@@ -101,16 +136,15 @@ const EmailVerification = () => {
     if (data.success) dispatch({ type: PIN_ACTIONS.VERIFIED });
 
     dispatch({ type: PIN_ACTIONS.FINISHED_VERIFYING });
-    setLoading(false);
+    setFetchingVerificationStatus(false);
   };
 
   return (
-    <>
-      {(loading || loadingAssets) && <Loading />}
+    <Box display="grid" sx={{ placeItems: "center" }} height="100vh">
+      {loading && <Loading />}
       <Box
         p={3}
-        pt="15vh"
-        display="flex"
+        display={loading ? "none" : "flex"}
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
@@ -118,7 +152,7 @@ const EmailVerification = () => {
       >
         <Box
           component="img"
-          height={phone ? "100px" : "200px"}
+          height={phone ? "100px" : "150px"}
           src={
             emailDoesNotExist
               ? assets.emailDenied.src
@@ -128,9 +162,15 @@ const EmailVerification = () => {
           }
           onLoad={() => assetsDispatchers.setAllLoading(false)}
         />
-        <Typography variant={phone ? "h4" : "h1"} textAlign="center">
+        {/* Header */}
+        <Typography
+          variant={phone ? "h4" : "h1"}
+          textAlign="center"
+          gutterBottom
+        >
           Email Verification
         </Typography>
+        {/* Body */}
         {emailAlreadyVerified ? (
           // ----------- email is already verified ------------------
           <Typography
@@ -174,11 +214,26 @@ const EmailVerification = () => {
               variant={desktop ? "h4" : tablet ? "h6" : "body2"}
               textAlign="center"
               sx={{ fontWeight: phone && 500 }}
+              gutterBottom
             >
               Please enter the {pin.length} digit pin sent to{" "}
               <span style={{ color: theme.palette.primary.main }}>
                 <b>{email}</b>.
+              </span>
+            </Typography>
+            <Typography
+              mt={phone ? -3 : -5}
+              variant={desktop ? "h6" : tablet ? "body1" : "body2"}
+              textAlign="center"
+            >
+              Click{" "}
+              <span
+                style={{ color: theme.palette.primary.main, cursor: "pointer" }}
+                onClick={() => sendVerificationEmail(email)}
+              >
+                <b>here</b>
               </span>{" "}
+              to resend verification email.
             </Typography>
             <Box
               height={desktop ? "75px" : tablet ? "75px" : "40px"}
@@ -231,11 +286,19 @@ const EmailVerification = () => {
             </Box>
           </>
         )}
+        {/* Home Button */}
         <CustomButton variant="contained" onClick={() => navigate("/")}>
           Home
         </CustomButton>
+        {/* Resend Email Verification Popup */}
+        <EmailVerificationPopup
+          email={email}
+          sendingEmailPopup={sendingEmailPopup}
+          setSendingEmailPopup={setSendingEmailPopup}
+          EMAIL_VERIFICATION_POPUP_STATES={EMAIL_VERIFICATION_POPUP_STATES}
+        />
       </Box>
-    </>
+    </Box>
   );
 };
 

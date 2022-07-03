@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { emailIsValid, generateRandomInteger } = require("../utils/utils");
 
-const EMAIL_VERIFICATION_PIN_NUM_DIGITS = 5;
+const EMAIL_VERIFICATION_PIN_NUM_DIGITS = 4;
 
 const userSchema = new mongoose.Schema({
   uid: {

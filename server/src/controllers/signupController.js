@@ -1,6 +1,8 @@
 const User = require("../models/User");
 const admin = require("firebase-admin");
-const { sendEmailVerificationAsync } = require("../services/nodemailer/nodemailer");
+const {
+  sendEmailVerificationAsync,
+} = require("../services/nodemailer/nodemailer");
 const { numberOfDigits } = require("../utils/utils");
 
 // ------------------------------- createUser -------------------------------
@@ -74,7 +76,6 @@ const verifyEmail = async (req, res) => {
     }
 
     if (!pin) {
-      console.log("bet");
       return res.json({
         message: "Number of digits in pin",
         pinLength: numberOfDigits(user.emailVerification.pin),
@@ -95,4 +96,17 @@ const verifyEmail = async (req, res) => {
   }
 };
 
-module.exports = { createUser, verifyEmail };
+// --------------------------- sendVerificationEmail ---------------------------
+const sendVerificationEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findUserByEmail(email);
+    await sendEmailVerificationAsync(user.email, user.emailVerification.pin);
+    return res.json({ message: "Verification Email Sent", success: true });
+  } catch (err) {
+    console.log(err);
+    return res.json({ message: "Could not send verification email" });
+  }
+};
+
+module.exports = { createUser, verifyEmail, sendVerificationEmail };

@@ -5,10 +5,10 @@ import { ThemeProvider } from "@mui/material";
 import FirebaseClientInitializer from "./components/FirebaseClientInitializer";
 import { Provider } from "react-redux";
 import store from "./redux/store";
-import Home from "./components/pages/Home";
-import Dashboard from "./components/pages/Dashboard";
-import UnavailableResource from "./components/pages/UnavailableResource";
-import EmailVerification from "./components/pages/EmailVerification";
+import Home from "./components/pages/Home/Home";
+import Dashboard from "./components/pages/Dashboard/Dashboard";
+import UnavailableResource from "./components/pages/UnavailableResource/UnavailableResource";
+import EmailVerification from "./components/pages/EmailVerification/EmailVerification";
 
 const App = () => {
   return (

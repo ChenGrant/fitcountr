@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import Loading from "../Loading/Loading";
 import { useSelector } from "react-redux";
@@ -6,6 +6,7 @@ import LoginForm from "./LoginForm";
 import useScreenSize from "../../../hooks/useScreenSize";
 import SignupForm from "./SignupForm";
 import useAsset from "../../../hooks/useAsset";
+import { FontLoaderContext } from "../../FontLoader";
 
 // -------------------------------------- CONSTANTS --------------------------------------
 const SIGNUP_FORM = "SIGNUP_FORM";
@@ -15,6 +16,7 @@ const LOGIN_FORM = "LOGIN_FORM";
 const Home = () => {
   const { desktop } = useScreenSize();
   const [form, setForm] = useState(SIGNUP_FORM);
+  const loadingFonts = useContext(FontLoaderContext)
   const firebaseClientIsInitialized = useSelector(
     (state) => state.firebaseClient.isInitialized
   );
@@ -26,7 +28,7 @@ const Home = () => {
 
   // loading is false when all images have been fetched and
   // when the client firebase SDK has been initialized.
-  const loading = !firebaseClientIsInitialized || loadingAssets ;
+  const loading = !firebaseClientIsInitialized || loadingAssets || loadingFonts;
 
   const toggleForm = () =>
     setForm(form === LOGIN_FORM ? SIGNUP_FORM : LOGIN_FORM);

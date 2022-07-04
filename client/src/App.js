@@ -9,23 +9,26 @@ import Home from "./components/pages/Home/Home";
 import Dashboard from "./components/pages/Dashboard/Dashboard";
 import UnavailableResource from "./components/pages/UnavailableResource/UnavailableResource";
 import EmailVerification from "./components/pages/EmailVerification/EmailVerification";
+import FontLoader from "./components/FontLoader";
 
 const App = () => {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <FirebaseClientInitializer>
-          <Router>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route
-                path="/emailverification/:email"
-                element={<EmailVerification />}
-              />
-              <Route path="*" element={<UnavailableResource />} />
-            </Routes>
-          </Router>
+          <FontLoader>
+            <Router>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route
+                  path="/emailverification/:email"
+                  element={<EmailVerification />}
+                />
+                <Route path="*" element={<UnavailableResource />} />
+              </Routes>
+            </Router>
+          </FontLoader>
         </FirebaseClientInitializer>
       </ThemeProvider>
     </Provider>

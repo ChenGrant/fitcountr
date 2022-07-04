@@ -11,7 +11,8 @@ const EmailVerificationPopup = ({
   setSendingEmailPopup,
   EMAIL_VERIFICATION_POPUP_STATES,
 }) => {
-  const { CLOSED, SENDING, SENT_SUCCESS } = EMAIL_VERIFICATION_POPUP_STATES;
+  const { CLOSED, SENDING, SENT_SUCCESS, SENT_FAILED } =
+    EMAIL_VERIFICATION_POPUP_STATES;
   const theme = useTheme();
   return (
     <Dialog
@@ -72,7 +73,7 @@ const EmailVerificationPopup = ({
               Close
             </CustomButton>
           </>
-        ) : (
+        ) : sendingEmailPopup === SENT_FAILED ? (
           <>
             {/* Verification Email Failed To Send */}
             <Typography variant="h4" gutterBottom>
@@ -101,6 +102,8 @@ const EmailVerificationPopup = ({
               Close
             </CustomButton>
           </>
+        ) : (
+          <></>
         )}
       </Box>
     </Dialog>

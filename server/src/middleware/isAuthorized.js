@@ -1,8 +1,8 @@
 const User = require("../models/User");
 
-const PUBLIC = "PUBLIC";
-const PRIVATE = "PRIVATE";
 const ADMIN = "ADMIN";
+const PRIVATE = "PRIVATE";
+const PUBLIC = "PUBLIC";
 
 const isAuthorized = (privacyStatus = PUBLIC) => {
   return async (req, res, next) => {
@@ -15,7 +15,7 @@ const isAuthorized = (privacyStatus = PUBLIC) => {
 
       if (privacyStatus === PUBLIC) return next();
 
-      throw new Error('Not authorized');
+      throw new Error("Not authorized");
     } catch (err) {
       return res.send({ message: "Could not authorize" }).status(403);
     }

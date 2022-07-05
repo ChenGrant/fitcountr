@@ -3,7 +3,7 @@ const admin = require("firebase-admin");
 const {
   sendEmailVerificationAsync,
 } = require("../services/nodemailer/nodemailer");
-const { numberOfDigits } = require("../utils/utils");
+const { NumberUtils } = require("../utils/index");
 
 // ------------------------------- createUser -------------------------------
 const createUser = async (req, res) => {
@@ -42,7 +42,7 @@ const createUser = async (req, res) => {
     }
 
     if (signInMethod === GMAIL_SIGN_IN_METHOD) {
-      // create user in mongodb atlas if there are no users with the same email
+      // create user in mongodb atlas if no users with the same email exist
       if (!(await User.emailInUse(email)))
         await User.create({
           uid,
@@ -71,14 +71,16 @@ const verifyEmail = async (req, res) => {
 
     const user = await User.findUserByEmail(email);
 
+    // check if email is already verified
     if (user.emailVerification.isVerified) {
       return res.json({ message: "Email already verified" });
     }
 
+    // check if the request object's body contains a 'pin' property
     if (!pin) {
       return res.json({
         message: "Number of digits in pin",
-        pinLength: numberOfDigits(user.emailVerification.pin),
+        pinLength: NumberUtils.getIntegerLength(user.emailVerification.pin),
       });
     }
 
@@ -101,6 +103,7 @@ const sendVerificationEmail = async (req, res) => {
   try {
     const { email } = req.body;
     const user = await User.findUserByEmail(email);
+    // send verification email
     await sendEmailVerificationAsync(user.email, user.emailVerification.pin);
     return res.json({ message: "Verification Email Sent", success: true });
   } catch (err) {

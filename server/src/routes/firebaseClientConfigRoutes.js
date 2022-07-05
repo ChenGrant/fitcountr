@@ -4,6 +4,7 @@ const {
   getFirebaseClientConfig,
 } = require("../controllers/firebaseClientConfigController");
 
+// responds with the Firebase client configuration object
 router.get("/", getFirebaseClientConfig);
 
 module.exports = router;

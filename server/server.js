@@ -10,14 +10,14 @@ const firebaseClientConfigRoutes = require("./src/routes/firebaseClientConfigRou
 const signupRoutes = require("./src/routes/signupRoutes");
 const assetRoutes = require("./src/routes/assetRoutes");
 
-// -------------------------- MIDDLEWARE --------------------------
+// ------------------------------------ MIDDLEWARE ------------------------------------
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "../client/build")));
 app.use(cors());
 app.use(morgan("dev"));
 
-// ----------------------------- ROUTES -----------------------------
+// -------------------------------------- ROUTES --------------------------------------
 app.use("/firebaseClientConfig", firebaseClientConfigRoutes);
 app.use("/asset", assetRoutes);
 app.use("/signup", signupRoutes);
@@ -25,7 +25,7 @@ app.use((req, res) => {
   res.sendFile(path.join(__dirname, "../client/build/index.html"));
 });
 
-// connect to mongodb atlas, then start server
+// ---------------------- MONGODB ATLAS CONNECTION, START SERVER ----------------------
 console.log(`NODE_ENV=${config.NODE_ENV}`);
 mongoose
   .connect(config.MONGODB_ATLAS_URI)

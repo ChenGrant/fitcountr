@@ -4,6 +4,7 @@ const nodemailer = require("nodemailer");
 const GMAIL_USERNAME = config.NODEMAILER.GMAIL_USERNAME;
 const GMAIL_PASSWORD = config.NODEMAILER.GMAIL_PASSWORD;
 
+// create reusable transporter object using the default SMTP transport
 const transport = nodemailer.createTransport({
   service: "Gmail",
   auth: {
@@ -12,24 +13,23 @@ const transport = nodemailer.createTransport({
   },
 });
 
+// ------------------------------------- FUNCTIONS -------------------------------------
+// sendMailAsync promisifies the transport.sendMail method
 const sendMailAsync = ({ from = GMAIL_USERNAME, ...rest }) => {
   return new Promise((res, rej) => {
-    transport.sendMail(
-      {
-        from,
-        ...rest,
-      },
-      (err, data) => {
-        if (err) {
-          err && rej(err);
-          return;
-        }
-        res(data);
+    transport.sendMail({ from, ...rest }, (err, data) => {
+      if (err) {
+        rej(err);
+        return;
       }
-    );
+      res(data);
+    });
   });
 };
 
+// given a receiver email and an email verification pin, sendEmailVerificationAsync
+// sends an email to the receiver email that includes the email verification pin and
+// a button that redirects them to the /emailverification page on the frontend
 const sendEmailVerificationAsync = async (
   receiverEmail,
   emailVerificationPin

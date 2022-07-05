@@ -1,6 +1,6 @@
-const EmailUtils = require("./EmailUtils");
-const ObjectUtils = require("./ObjectUtils");
-const NumberUtils = require("./NumberUtils");
+const EmailUtils = require("./emailUtils");
+const ObjectUtils = require("./objectUtils");
+const NumberUtils = require("./numberUtils");
 
 module.exports = {
   EmailUtils,

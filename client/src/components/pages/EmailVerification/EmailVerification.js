@@ -10,6 +10,7 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import useAsset from "../../../hooks/useAsset";
 import CustomButton from "../../../mui/CustomButton";
 import EmailVerificationPopup from "./EmailVerificationPopup";
+import { useSelector } from "react-redux";
 
 // -------------------------------- CONSTANTS --------------------------------
 const EMAIL_VERIFICATION_POPUP_STATES = {
@@ -63,24 +64,31 @@ const EmailVerification = () => {
     emailVerified: { name: "email_verified" },
     emailDenied: { name: "email_denied" },
   });
+  const loadingFonts = useSelector((state) => state.fonts.loading);
   const [pin, dispatch] = useReducer(pinReducer, initialPinState);
-  const [fetchingVerificationStatus, setFetchingVerificationStatus] =
-    useState(true);
   const [emailAlreadyVerified, setEmailAlreadyVerified] = useState(false);
   const [emailDoesNotExist, setEmailDoesNotExist] = useState(false);
+  const [emailAwaitsVerification, setEmailAwaitsVerification] = useState(false);
+  const [fetchingVerificationStatus, setFetchingVerificationStatus] =
+    useState(true);
   const [sendingEmailPopup, setSendingEmailPopup] = useState(
     EMAIL_VERIFICATION_POPUP_STATES.CLOSED
   );
 
-  const loading = fetchingVerificationStatus || loadingAssets;
+  const pageIsLoading =
+    fetchingVerificationStatus || loadingAssets || loadingFonts;
 
+  // ----------------------------- USE EFFECT -----------------------------
   useEffect(() => {
     verifyEmail(email);
   }, [email]);
 
+  // ------------------------------ FUNCTIONS ------------------------------
+  // given a receiver email, sendVerificationEmail opens the
+  // EmailVerificationPopup component and sends a verification email to the
+  // receiver email with the email verification pin
   const sendVerificationEmail = async (email) => {
     setSendingEmailPopup(EMAIL_VERIFICATION_POPUP_STATES.SENDING);
-
     const response = await fetch("/signup/emailverification/send", {
       method: "POST",
       headers: {
@@ -88,19 +96,19 @@ const EmailVerification = () => {
       },
       body: JSON.stringify({ email }),
     });
-
     const data = await response.json();
-
     if (data.message === "Could not send verification email") {
       return setSendingEmailPopup(EMAIL_VERIFICATION_POPUP_STATES.SENT_FAILED);
     }
-
     return setSendingEmailPopup(EMAIL_VERIFICATION_POPUP_STATES.SENT_SUCCESS);
   };
 
+  // given an email and a pin, verifyEmail determines if the email
+  // does not exist, is already verified, or is pending verification.
+  // If the email is pending verification, this function also provides
+  // the number of digits in email's verification pin.
   const verifyEmail = async (email, pin) => {
     dispatch({ type: PIN_ACTIONS.VERIFYING });
-
     const response = await fetch("/signup/emailverification", {
       method: "POST",
       headers: {
@@ -108,9 +116,7 @@ const EmailVerification = () => {
       },
       body: JSON.stringify({ email, pin }),
     });
-
     const data = await response.json();
-
     if (data.message) {
       switch (data.message) {
         case "Email does not exist":
@@ -123,6 +129,7 @@ const EmailVerification = () => {
           dispatch({ type: PIN_ACTIONS.DENIED });
           break;
         case "Number of digits in pin":
+          setEmailAwaitsVerification(true);
           dispatch({
             type: PIN_ACTIONS.INITIALIZE_LENGTH,
             payload: data.pinLength,
@@ -132,19 +139,18 @@ const EmailVerification = () => {
           break;
       }
     }
-
     if (data.success) dispatch({ type: PIN_ACTIONS.VERIFIED });
-
     dispatch({ type: PIN_ACTIONS.FINISHED_VERIFYING });
     setFetchingVerificationStatus(false);
   };
 
+  // ----------------------------- RENDER -----------------------------
   return (
     <Box display="grid" sx={{ placeItems: "center" }} height="100vh">
-      {loading && <Loading />}
+      {pageIsLoading && <Loading />}
       <Box
         p={3}
-        display={loading ? "none" : "flex"}
+        display={pageIsLoading ? "none" : "flex"}
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
@@ -158,7 +164,9 @@ const EmailVerification = () => {
               ? assets.emailDenied.src
               : emailAlreadyVerified || pin.verified
               ? assets.emailVerified.src
-              : assets.emailPending.src
+              : emailAwaitsVerification
+              ? assets.emailPending.src
+              : ""
           }
           onLoad={() => assetsDispatchers.setAllLoading(false)}
         />

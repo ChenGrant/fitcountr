@@ -9,14 +9,14 @@ import Home from "./components/pages/Home/Home";
 import Dashboard from "./components/pages/Dashboard/Dashboard";
 import UnavailableResource from "./components/pages/UnavailableResource/UnavailableResource";
 import EmailVerification from "./components/pages/EmailVerification/EmailVerification";
-import FontLoader from "./components/FontLoader";
+import FontsLoader from "./components/FontsLoader";
 
 const App = () => {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <FirebaseClientInitializer>
-          <FontLoader>
+          <FontsLoader>
             <Router>
               <Routes>
                 <Route path="/" element={<Home />} />
@@ -28,7 +28,7 @@ const App = () => {
                 <Route path="*" element={<UnavailableResource />} />
               </Routes>
             </Router>
-          </FontLoader>
+          </FontsLoader>
         </FirebaseClientInitializer>
       </ThemeProvider>
     </Provider>

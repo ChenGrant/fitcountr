@@ -34,7 +34,7 @@ const sendEmailVerificationAsync = async (
   receiverEmail,
   emailVerificationPin
 ) => {
-  await sendMailAsync({
+  return await sendMailAsync({
     to: receiverEmail,
     subject: "fitcountr Email Verification",
     html: `<p>Hi,</p>

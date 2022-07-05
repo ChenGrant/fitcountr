@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import WebFont from "webfontloader";
 import { loadedFonts } from "../redux";
 
-const FontLoader = ({ children }) => {
+const FontsLoader = ({ children }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -16,4 +16,4 @@ const FontLoader = ({ children }) => {
   return <>{children}</>;
 };
 
-export default FontLoader;
+export default FontsLoader;

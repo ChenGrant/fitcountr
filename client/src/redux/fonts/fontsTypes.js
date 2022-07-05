@@ -1,0 +1,1 @@
+export const LOADED_FONTS = 'LOADED_FONTS'

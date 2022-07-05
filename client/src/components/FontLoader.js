@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import WebFont from "webfontloader";
-
-export const FontLoaderContext = React.createContext();
-const FontLoaderProvider = FontLoaderContext.Provider;
+import { loadedFonts } from "../redux";
 
 const FontLoader = ({ children }) => {
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     WebFont.load({
-      google: {
-        families: ["DM Sans", "Koulen", "Montserrat"],
-      },
-      active: () => setLoading(false),
+      google: { families: ["DM Sans", "Koulen", "Montserrat"] },
+      active: () => dispatch(loadedFonts()),
     });
   }, []);
-  return <FontLoaderProvider value={loading}>{children}</FontLoaderProvider>;
+
+  return <>{children}</>;
 };
 
 export default FontLoader;

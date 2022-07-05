@@ -6,7 +6,6 @@ import LoginForm from "./LoginForm";
 import useScreenSize from "../../../hooks/useScreenSize";
 import SignupForm from "./SignupForm";
 import useAsset from "../../../hooks/useAsset";
-import { FontLoaderContext } from "../../FontLoader";
 
 // -------------------------------------- CONSTANTS --------------------------------------
 const SIGNUP_FORM = "SIGNUP_FORM";
@@ -16,7 +15,7 @@ const LOGIN_FORM = "LOGIN_FORM";
 const Home = () => {
   const { desktop } = useScreenSize();
   const [form, setForm] = useState(SIGNUP_FORM);
-  const loadingFonts = useContext(FontLoaderContext)
+  const loadingFonts = useSelector((state) => state.fonts.loading);
   const firebaseClientIsInitialized = useSelector(
     (state) => state.firebaseClient.isInitialized
   );
@@ -26,9 +25,10 @@ const Home = () => {
     laptopPhone: { name: "laptop_phone" },
   });
 
-  // loading is false when all images have been fetched and
-  // when the client firebase SDK has been initialized.
-  const loading = !firebaseClientIsInitialized || loadingAssets || loadingFonts;
+  // pageIsLoading is false when all images have been fetched, the client firebase SDK
+  // has been initialized, and font have loaded
+  const pageIsLoading =
+    !firebaseClientIsInitialized || loadingAssets || loadingFonts;
 
   const toggleForm = () =>
     setForm(form === LOGIN_FORM ? SIGNUP_FORM : LOGIN_FORM);
@@ -36,11 +36,11 @@ const Home = () => {
   return (
     <Box height={desktop && "100vh"} px="5vw">
       {/* render Loading component when loading */}
-      {loading && <Loading />}
+      {pageIsLoading && <Loading />}
       <Box
         py={!desktop && "8vh"}
         // display home page when no longer loading
-        display={loading ? "none" : "flex"}
+        display={pageIsLoading ? "none" : "flex"}
         flexDirection={desktop ? "row" : "column"}
         height={desktop && "100%"}
         justifyContent="center"

@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useCallback, useEffect, useReducer, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import PinInput from "react-pin-input";
 import { CircularProgress, Typography } from "@mui/material";
@@ -75,13 +75,10 @@ const EmailVerification = () => {
     EMAIL_VERIFICATION_POPUP_STATES.CLOSED
   );
 
+  const [imageSrc, setImageSrc] = useState("");
+
   const pageIsLoading =
     fetchingVerificationStatus || loadingAssets || loadingFonts;
-
-  // ----------------------------- USE EFFECT -----------------------------
-  useEffect(() => {
-    verifyEmail(email);
-  }, [email]);
 
   // ------------------------------ FUNCTIONS ------------------------------
   // given a receiver email, sendVerificationEmail opens the
@@ -107,42 +104,75 @@ const EmailVerification = () => {
   // does not exist, is already verified, or is pending verification.
   // If the email is pending verification, this function also provides
   // the number of digits in email's verification pin.
-  const verifyEmail = async (email, pin) => {
-    dispatch({ type: PIN_ACTIONS.VERIFYING });
-    const response = await fetch("/signup/emailverification", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, pin }),
-    });
-    const data = await response.json();
-    if (data.message) {
-      switch (data.message) {
-        case "Email does not exist":
-          setEmailDoesNotExist(true);
-          break;
-        case "Email already verified":
-          setEmailAlreadyVerified(true);
-          break;
-        case "Could not verify email":
-          dispatch({ type: PIN_ACTIONS.DENIED });
-          break;
-        case "Number of digits in pin":
-          setEmailAwaitsVerification(true);
-          dispatch({
-            type: PIN_ACTIONS.INITIALIZE_LENGTH,
-            payload: data.pinLength,
-          });
-          break;
-        default:
-          break;
+  const verifyEmail = useCallback(
+    async (email, pin) => {
+      dispatch({ type: PIN_ACTIONS.VERIFYING });
+      const response = await fetch("/signup/emailverification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, pin }),
+      });
+      const data = await response.json();
+      // if correct pin was entered
+      if (data.success) {
+        setImageSrc(assets.emailVerified.src);
+        console.log("pin is correct");
+        return;
       }
-    }
-    if (data.success) dispatch({ type: PIN_ACTIONS.VERIFIED });
-    dispatch({ type: PIN_ACTIONS.FINISHED_VERIFYING });
-    setFetchingVerificationStatus(false);
-  };
+
+      if (data.message) {
+        switch (data.message) {
+          case "Email does not exist":
+            setEmailDoesNotExist(true);
+            break;
+          case "Email already verified":
+            setEmailAlreadyVerified(true);
+            break;
+          case "Could not verify email":
+            dispatch({ type: PIN_ACTIONS.DENIED });
+            break;
+          case "Number of digits in pin":
+            setEmailAwaitsVerification(true);
+            dispatch({
+              type: PIN_ACTIONS.INITIALIZE_LENGTH,
+              payload: data.pinLength,
+            });
+            break;
+          default:
+        }
+        dispatch({ type: PIN_ACTIONS.FINISHED_VERIFYING });
+        setFetchingVerificationStatus(false);
+      }
+    },
+    [assets.emailVerified.src]
+  );
+
+  // ----------------------------- USE EFFECT -----------------------------
+  useEffect(() => {
+    verifyEmail(email);
+  }, [verifyEmail, email]);
+
+  useEffect(() => {
+    setImageSrc(
+      emailDoesNotExist
+        ? assets.emailDenied.src
+        : emailAlreadyVerified || pin.verified
+        ? assets.emailVerified.src
+        : emailAwaitsVerification
+        ? assets.emailPending.src
+        : ""
+    );
+  }, [
+    emailDoesNotExist,
+    assets.emailDenied.src,
+    emailAlreadyVerified,
+    pin.verified,
+    assets.emailVerified.src,
+    emailAwaitsVerification,
+    assets.emailPending.src,
+  ]);
 
   // ----------------------------- RENDER -----------------------------
   return (
@@ -159,16 +189,17 @@ const EmailVerification = () => {
         <Box
           component="img"
           height={phone ? "100px" : "150px"}
-          src={
-            emailDoesNotExist
-              ? assets.emailDenied.src
-              : emailAlreadyVerified || pin.verified
-              ? assets.emailVerified.src
-              : emailAwaitsVerification
-              ? assets.emailPending.src
-              : ""
-          }
-          onLoad={() => assetsDispatchers.setAllLoading(false)}
+          src={imageSrc}
+          onLoad={() => {
+            assetsDispatchers.setAllLoading(false);
+            console.log(imageSrc);
+            console.log("loaded image");
+            if (imageSrc === assets.emailVerified.src) {
+              console.log("stopped progress circle");
+              dispatch({ type: PIN_ACTIONS.VERIFIED });
+              setFetchingVerificationStatus(false);
+            }
+          }}
         />
         {/* Header */}
         <Typography

@@ -19,10 +19,11 @@ const App = () => {
           <FontsLoader>
             <Router>
               <Routes>
+                {/* Routes */}
                 <Route path="/" element={<Home />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route
-                  path="/emailverification/:email"
+                  path="/emailVerification/:email"
                   element={<EmailVerification />}
                 />
                 <Route path="*" element={<UnavailableResource />} />

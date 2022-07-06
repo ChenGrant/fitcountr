@@ -9,6 +9,7 @@ const app = express();
 const firebaseClientConfigRoutes = require("./src/routes/firebaseClientConfigRoutes");
 const signupRoutes = require("./src/routes/signupRoutes");
 const assetRoutes = require("./src/routes/assetRoutes");
+const emailVerificationRoutes = require("./src/routes/emailVerificationRoutes");
 
 // ------------------------------------ MIDDLEWARE ------------------------------------
 app.use(express.urlencoded({ extended: true }));
@@ -21,6 +22,7 @@ app.use(morgan("dev"));
 app.use("/firebaseClientConfig", firebaseClientConfigRoutes);
 app.use("/asset", assetRoutes);
 app.use("/signup", signupRoutes);
+app.use("/emailVerification", emailVerificationRoutes);
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, "../client/build/index.html"));
 });

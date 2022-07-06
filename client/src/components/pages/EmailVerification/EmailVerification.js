@@ -86,7 +86,7 @@ const EmailVerification = () => {
   // receiver email with the email verification pin
   const sendVerificationEmail = async (email) => {
     setSendingEmailPopup(EMAIL_VERIFICATION_POPUP_STATES.SENDING);
-    const response = await fetch("/signup/emailverification/send", {
+    const response = await fetch("/emailVerification/send", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -107,7 +107,7 @@ const EmailVerification = () => {
   const verifyEmail = useCallback(
     async (email, pin) => {
       dispatch({ type: PIN_ACTIONS.VERIFYING });
-      const response = await fetch("/signup/emailverification", {
+      const response = await fetch("/emailVerification/verify", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

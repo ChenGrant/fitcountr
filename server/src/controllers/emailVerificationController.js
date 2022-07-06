@@ -24,7 +24,6 @@ const verifyEmail = async (req, res) => {
     // check if the request object's body contains a 'pin' property
     if (!pin) {
       return res.json({
-        message: "Number of digits in pin",
         pinLength: NumberUtils.getIntegerLength(user.emailVerification.pin),
       });
     }
@@ -36,7 +35,7 @@ const verifyEmail = async (req, res) => {
       return res.json({ message: `Verified email: ${email}`, success: true });
     }
 
-    throw new Error("Email verification pins do not match");
+    return res.json({ message: "Incorrect email verification" });
   } catch (err) {
     console.log(err);
     return res.json({ message: "Could not verify email" });

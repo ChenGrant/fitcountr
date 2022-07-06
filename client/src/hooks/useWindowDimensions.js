@@ -5,6 +5,10 @@ const getWindowDimensions = () => {
   return { width, height };
 };
 
+const RESIZE_EVENT_NAME = "RESIZE";
+
+// returns an object with 'width' and 'height' properties that
+// represent the width and height of the window in pixels respectively
 const useWindowDimensions = () => {
   const [windowDimensions, setWindowDimensions] = useState(
     getWindowDimensions()
@@ -13,8 +17,8 @@ const useWindowDimensions = () => {
   const handleResize = () => setWindowDimensions(getWindowDimensions());
 
   useEffect(() => {
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener(RESIZE_EVENT_NAME, handleResize);
+    return () => window.removeEventListener(RESIZE_EVENT_NAME, handleResize);
   }, []);
 
   return windowDimensions;

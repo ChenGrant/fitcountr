@@ -26,6 +26,7 @@ const theme = createTheme({
   },
 });
 
+// ---------------------------- theme.breakpoints.up("md") ----------------------------
 theme.typography.h1[theme.breakpoints.up("md")] = {
   fontSize: "56px",
   fontWeight: 700,
@@ -45,6 +46,7 @@ theme.typography.body1[theme.breakpoints.up("md")] = { fontSize: "16px" };
 
 theme.typography.button[theme.breakpoints.up("md")] = { fontSize: "25px" };
 
+// --------------------------- theme.breakpoints.only("sm") ---------------------------
 theme.typography.h1[theme.breakpoints.only("sm")] = {
   fontSize: "44px",
   fontWeight: 700,
@@ -64,6 +66,7 @@ theme.typography.body1[theme.breakpoints.only("sm")] = { fontSize: "16px" };
 
 theme.typography.button[theme.breakpoints.only("sm")] = { fontSize: "22px" };
 
+// --------------------------- theme.breakpoints.only("xs") ---------------------------
 theme.typography.h1[theme.breakpoints.only("xs")] = {
   fontSize: "32px",
   fontWeight: 700,

@@ -21,6 +21,7 @@ const Input = ({ label, name, type, errorHeight, ...rest }) => {
                 autoComplete={type}
                 {...rest}
                 {...field}
+                // BELOW IS POSSIBLE STYLING FOR THE LABEL AND BORDER
                 // sx={{
                 //   "& ": {
                 //     //color: "green",

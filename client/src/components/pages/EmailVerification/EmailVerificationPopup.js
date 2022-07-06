@@ -14,6 +14,8 @@ const EmailVerificationPopup = ({
   const { CLOSED, SENDING, SENT_SUCCESS, SENT_FAILED } =
     EMAIL_VERIFICATION_POPUP_STATES;
   const theme = useTheme();
+
+  // ------------------------------------- RENDER -------------------------------------
   return (
     <Dialog
       open={sendingEmailPopup !== CLOSED}

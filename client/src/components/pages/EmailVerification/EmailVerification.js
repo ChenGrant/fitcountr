@@ -53,13 +53,15 @@ const pinReducer = (state, action) => {
   }
 };
 
-// -------------------------------- COMPONENT ---------------------------------
+// ************************************************************************************
+// ------------------------------------ COMPONENT -------------------------------------
+// ************************************************************************************
 const EmailVerification = () => {
   const { email } = useParams();
   const theme = useTheme();
   const navigate = useNavigate();
   const { desktop, tablet, phone } = useScreenSize();
-  const { assets, assetsDispatchers, loadingAssets } = useAsset({
+  const [assets, assetsDispatchers, loadingAssets] = useAsset({
     emailPending: { name: "email_pending" },
     emailVerified: { name: "email_verified" },
     emailDenied: { name: "email_denied" },
@@ -80,7 +82,7 @@ const EmailVerification = () => {
   const pageIsLoading =
     fetchingVerificationStatus || loadingAssets || loadingFonts;
 
-  // ------------------------------ FUNCTIONS ------------------------------
+  // ----------------------------------- FUNCTIONS -----------------------------------
   // given a receiver email, sendVerificationEmail opens the
   // EmailVerificationPopup component and sends a verification email to the
   // receiver email with the email verification pin
@@ -94,9 +96,11 @@ const EmailVerification = () => {
       body: JSON.stringify({ email }),
     });
     const data = await response.json();
+    // verification email failed to send
     if (data.message === "Could not send verification email") {
       return setSendingEmailPopup(EMAIL_VERIFICATION_POPUP_STATES.SENT_FAILED);
     }
+    // verification email successfully sent
     return setSendingEmailPopup(EMAIL_VERIFICATION_POPUP_STATES.SENT_SUCCESS);
   };
 
@@ -106,6 +110,7 @@ const EmailVerification = () => {
   // the number of digits in email's verification pin.
   const verifyEmail = useCallback(
     async (email, pin) => {
+      // render loading spinner for pin input
       dispatch({ type: PIN_ACTIONS.VERIFYING });
       const response = await fetch("/emailVerification/verify", {
         method: "POST",
@@ -121,7 +126,17 @@ const EmailVerification = () => {
         console.log("pin is correct");
         return;
       }
+      // if email needs to be verified 
+      if (data.pinLength) {
+        setEmailAwaitsVerification(true);
+        dispatch({
+          type: PIN_ACTIONS.INITIALIZE_LENGTH,
+          payload: data.pinLength,
+        });
+      }
 
+      // if email does not exist, is already verified, pin is 
+      // incorrect, or if email could not be verified
       if (data.message) {
         switch (data.message) {
           case "Email does not exist":
@@ -130,26 +145,22 @@ const EmailVerification = () => {
           case "Email already verified":
             setEmailAlreadyVerified(true);
             break;
+          case "Incorrect email verification":
           case "Could not verify email":
             dispatch({ type: PIN_ACTIONS.DENIED });
             break;
-          case "Number of digits in pin":
-            setEmailAwaitsVerification(true);
-            dispatch({
-              type: PIN_ACTIONS.INITIALIZE_LENGTH,
-              payload: data.pinLength,
-            });
-            break;
           default:
         }
-        dispatch({ type: PIN_ACTIONS.FINISHED_VERIFYING });
-        setFetchingVerificationStatus(false);
       }
+      // stop rendering loading spinner for pin input
+      dispatch({ type: PIN_ACTIONS.FINISHED_VERIFYING });
+      // no longer fetching verification status for initial page load
+      setFetchingVerificationStatus(false);
     },
     [assets.emailVerified.src]
   );
 
-  // ----------------------------- USE EFFECT -----------------------------
+  // ----------------------------------- USE EFFECT -----------------------------------
   useEffect(() => {
     verifyEmail(email);
   }, [verifyEmail, email]);
@@ -174,7 +185,7 @@ const EmailVerification = () => {
     assets.emailPending.src,
   ]);
 
-  // ----------------------------- RENDER -----------------------------
+  // ------------------------------------- RENDER -------------------------------------
   return (
     <Box display="grid" sx={{ placeItems: "center" }} height="100vh">
       {pageIsLoading && <Loading />}
@@ -192,11 +203,12 @@ const EmailVerification = () => {
           src={imageSrc}
           onLoad={() => {
             assetsDispatchers.setAllLoading(false);
-            console.log(imageSrc);
-            console.log("loaded image");
+            // if user inputs correct pin, first wait for the verifiedEmail image
+            // to load and then dispatch the VERIFIED action to the pin reducer
             if (imageSrc === assets.emailVerified.src) {
-              console.log("stopped progress circle");
+              // stop rendering loading spinner for pin input
               dispatch({ type: PIN_ACTIONS.VERIFIED });
+              // no longer fetching verification status for initial page load
               setFetchingVerificationStatus(false);
             }
           }}

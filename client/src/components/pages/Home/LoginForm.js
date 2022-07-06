@@ -35,12 +35,14 @@ const onSubmit = (values, formik) => {
   console.log(values);
 };
 
-// -------------------------------------- COMPONENT --------------------------------------
+// ************************************************************************************
+// ------------------------------------ COMPONENT -------------------------------------
+// ************************************************************************************
 const LoginForm = ({ toggleForm }) => {
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
-
   const theme = useTheme();
 
+  // ----------------------------------- FUNCTIONS -----------------------------------
   // given a the name attribute of an input field, fieldName, and the
   // formik object, errorIsRendered returns true if there is an error
   // being rendered for the input field with a name attribute of fieldName
@@ -58,6 +60,7 @@ const LoginForm = ({ toggleForm }) => {
     // elseif no password, errorMessage = 'password is incorrect'
   };
 
+  // ------------------------------------- RENDER -------------------------------------
   return (
     <Card
       sx={{

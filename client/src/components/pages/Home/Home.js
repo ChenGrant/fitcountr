@@ -7,13 +7,13 @@ import useScreenSize from "../../../hooks/useScreenSize";
 import SignupForm from "./SignupForm";
 import useAsset from "../../../hooks/useAsset";
 
-// ----------------------------- CONSTANTS -----------------------------
+// ------------------------------------ CONSTANTS ------------------------------------
 const SIGNUP_FORM = "SIGNUP_FORM";
 const LOGIN_FORM = "LOGIN_FORM";
 
-// **********************************************************************
-// ------------------------------ COMPONENT ------------------------------
-// **********************************************************************
+// ************************************************************************************
+// ------------------------------------ COMPONENT -------------------------------------
+// ************************************************************************************
 const Home = () => {
   const { desktop } = useScreenSize();
   const [form, setForm] = useState(SIGNUP_FORM);
@@ -21,7 +21,7 @@ const Home = () => {
   const firebaseClientIsInitialized = useSelector(
     (state) => state.firebaseClient.isInitialized
   );
-  const { assets, assetsDispatchers, loadingAssets } = useAsset({
+  const [assets, assetsDispatchers, loadingAssets] = useAsset({
     logo: { name: "logo" },
     laptopPhone: { name: "laptop_phone" },
   });
@@ -31,13 +31,13 @@ const Home = () => {
   const pageIsLoading =
     !firebaseClientIsInitialized || loadingAssets || loadingFonts;
 
-  // ------------------------------ FUNCTIONS ------------------------------
+  // ----------------------------------- FUNCTIONS -----------------------------------
   // toggleForm toggles the value of the 'form' state variable between
   // SIGNUP_FORM and LOGIN_FORM
   const toggleForm = () =>
     setForm(form === LOGIN_FORM ? SIGNUP_FORM : LOGIN_FORM);
 
-  // ------------------------------ RENDER ------------------------------
+  // ------------------------------------- RENDER -------------------------------------
   return (
     <Box height={desktop && "100vh"} px="5vw">
       {/* render Loading component when loading */}

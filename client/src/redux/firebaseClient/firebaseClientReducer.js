@@ -1,6 +1,6 @@
 import {
-  INITIALIZE_FIREBASE_AUTH,
-  INITIALIZE_FIREBASE_CLIENT,
+  INITIALIZED_FIREBASE_AUTH,
+  INITIALIZED_FIREBASE_CLIENT,
 } from "./firebaseClientTypes";
 
 const initialState = {
@@ -10,12 +10,12 @@ const initialState = {
 
 const firebaseClientReducer = (state = initialState, action) => {
   switch (action.type) {
-    case INITIALIZE_FIREBASE_CLIENT:
+    case INITIALIZED_FIREBASE_CLIENT:
       return {
         ...state,
         isInitialized: true,
       };
-    case INITIALIZE_FIREBASE_AUTH:
+    case INITIALIZED_FIREBASE_AUTH:
       return {
         ...state,
         auth: action.payload,

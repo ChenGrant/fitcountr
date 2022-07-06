@@ -33,7 +33,6 @@ const GMAIL_SIGN_IN_METHOD = "gmail as sign in method";
 
 const EMAIL_PASSWORD_SIGN_IN_METHOD = "email and password as sign in method";
 
-// -------------------------------------- FUNCTIONS --------------------------------------
 // given a the name attribute of an input field, fieldName, and the
 // formik object, errorIsRendered returns true if there is an error
 // being rendered for the input field with a name attribute of fieldName
@@ -41,11 +40,10 @@ const EMAIL_PASSWORD_SIGN_IN_METHOD = "email and password as sign in method";
 const errorIsRendered = (fieldName, formik) =>
   formik.errors[fieldName] && formik.touched[fieldName];
 
-// ***************************************************************************************
-// -------------------------------------- COMPONENT --------------------------------------
-// ***************************************************************************************
+// ************************************************************************************
+// ------------------------------------ COMPONENT -------------------------------------
+// ************************************************************************************
 const SignupForm = ({ toggleForm }) => {
-  // ------ HOOKS ------
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
   const [password2IsVisible, setPassword2IsVisible] = useState(false);
   const [signupButtonIsDisabled, setSignupButtonIsDisabled] = useState(false);
@@ -54,7 +52,7 @@ const SignupForm = ({ toggleForm }) => {
   const navigate = useNavigate();
   const { desktop, tablet } = useScreenSize();
 
-  // ------ FORMIK ------
+  // ------------------------------------- FORMIK -------------------------------------
   const initialValues = {
     email: "",
     password: "",
@@ -79,7 +77,7 @@ const SignupForm = ({ toggleForm }) => {
     setSignupButtonIsDisabled(false);
   };
 
-  // ------ FUNCTIONS ------
+  // ----------------------------------- FUNCTIONS -----------------------------------
   // given a user object and a signInMethod string, a POST request
   // is sent to the server to the '/signup' endpoint and this function
   // returns the json data that the server responds with
@@ -119,6 +117,7 @@ const SignupForm = ({ toggleForm }) => {
   // and the formik object to either create a new user or render signup errors
   const handleEmailPasswordSignup = async (email, password, formik) => {
     try {
+      // create user in firebase client authentication
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -135,9 +134,8 @@ const SignupForm = ({ toggleForm }) => {
         });
         return;
       }
-      console.log("verification email sent");
-      navigate(`/emailverification/${email}`);
       // redirect user to verification email page
+      navigate(`/emailverification/${email}`);
     } catch (error) {
       if (error.message === "Firebase: Error (auth/email-already-in-use).") {
         formik.setFieldError("email", EMAIL_ALREADY_IN_USE);
@@ -145,7 +143,7 @@ const SignupForm = ({ toggleForm }) => {
     }
   };
 
-  // ------ RENDER ------
+  // ------------------------------------- RENDER -------------------------------------
   return (
     <Card
       sx={{

@@ -76,10 +76,8 @@ const EmailVerification = () => {
   const [sendingEmailPopup, setSendingEmailPopup] = useState(
     EMAIL_VERIFICATION_POPUP_STATES.CLOSED
   );
-
   const [imageSrc, setImageSrc] = useState("");
-
-  const [fetchedData, setFetchedData] = useState({})
+  const [verifyEmailData, setVerifyEmailData] = useState({});
 
   const pageIsLoading =
     fetchingVerificationStatus || loadingAssets || loadingFonts;
@@ -122,16 +120,13 @@ const EmailVerification = () => {
         body: JSON.stringify({ email, pin }),
       });
       const data = await response.json();
-      
-      setFetchedData(data)
+
+      setVerifyEmailData(data);
 
       // if correct pin was entered
-      if (data.success) {
-        setImageSrc(assets.emailVerified.src);
-        console.log("pin is correct");
-        return;
-      }
-      // if email needs to be verified 
+      if (data.success) return setImageSrc(assets.emailVerified.src);
+
+      // if email needs to be verified
       if (data.pinLength) {
         setEmailAwaitsVerification(true);
         dispatch({
@@ -140,19 +135,15 @@ const EmailVerification = () => {
         });
       }
 
-
-      // if email does not exist, is already verified, pin is 
+      // if email does not exist, is already verified, pin is
       // incorrect, or if email could not be verified
       if (data.message) {
         switch (data.message) {
+          case "Email already verified":
+            return setImageSrc(assets.emailVerified.src);
           case "Email does not exist":
             setEmailDoesNotExist(true);
             break;
-          case "Email already verified":
-            //setAyo(true)
-            setImageSrc(assets.emailVerified.src);
-            // setEmailAlreadyVerified(true);
-            return;
           case "Incorrect email verification":
           case "Could not verify email":
             dispatch({ type: PIN_ACTIONS.DENIED });
@@ -193,7 +184,6 @@ const EmailVerification = () => {
     assets.emailPending.src,
   ]);
 
-  console.log(fetchedData)
   // ------------------------------------- RENDER -------------------------------------
   return (
     <Box display="grid" sx={{ placeItems: "center" }} height="100vh">
@@ -213,10 +203,14 @@ const EmailVerification = () => {
           onLoad={() => {
             assetsDispatchers.setAllLoading(false);
             // if user inputs correct pin, first wait for the verifiedEmail image
-            // to load and then dispatch the VERIFIED action to the pin reducer
+            // to load and then dispatch the VERIFIED action to the pin reducer.
             if (imageSrc === assets.emailVerified.src) {
-              if (fetchedData.message === 'Email already verified') {
-                setEmailAlreadyVerified(true)
+              // case where user has two email verification tabs open and both need a pin
+              // to be entered. When the pin is correctly entered on one tab, any pin input 
+              // on the other tab causes the image to swap to the emailVerified image. When 
+              // this image finishes loading, then render 'email is already verified'.
+              if (verifyEmailData.message === "Email already verified") {
+                setEmailAlreadyVerified(true);
               }
               // stop rendering loading spinner for pin input
               dispatch({ type: PIN_ACTIONS.VERIFIED });

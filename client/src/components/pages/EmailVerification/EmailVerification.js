@@ -79,6 +79,8 @@ const EmailVerification = () => {
 
   const [imageSrc, setImageSrc] = useState("");
 
+  const [fetchedData, setFetchedData] = useState({})
+
   const pageIsLoading =
     fetchingVerificationStatus || loadingAssets || loadingFonts;
 
@@ -120,6 +122,9 @@ const EmailVerification = () => {
         body: JSON.stringify({ email, pin }),
       });
       const data = await response.json();
+      
+      setFetchedData(data)
+
       // if correct pin was entered
       if (data.success) {
         setImageSrc(assets.emailVerified.src);
@@ -135,6 +140,7 @@ const EmailVerification = () => {
         });
       }
 
+
       // if email does not exist, is already verified, pin is 
       // incorrect, or if email could not be verified
       if (data.message) {
@@ -143,8 +149,10 @@ const EmailVerification = () => {
             setEmailDoesNotExist(true);
             break;
           case "Email already verified":
-            setEmailAlreadyVerified(true);
-            break;
+            //setAyo(true)
+            setImageSrc(assets.emailVerified.src);
+            // setEmailAlreadyVerified(true);
+            return;
           case "Incorrect email verification":
           case "Could not verify email":
             dispatch({ type: PIN_ACTIONS.DENIED });
@@ -185,6 +193,7 @@ const EmailVerification = () => {
     assets.emailPending.src,
   ]);
 
+  console.log(fetchedData)
   // ------------------------------------- RENDER -------------------------------------
   return (
     <Box display="grid" sx={{ placeItems: "center" }} height="100vh">
@@ -206,6 +215,9 @@ const EmailVerification = () => {
             // if user inputs correct pin, first wait for the verifiedEmail image
             // to load and then dispatch the VERIFIED action to the pin reducer
             if (imageSrc === assets.emailVerified.src) {
+              if (fetchedData.message === 'Email already verified') {
+                setEmailAlreadyVerified(true)
+              }
               // stop rendering loading spinner for pin input
               dispatch({ type: PIN_ACTIONS.VERIFIED });
               // no longer fetching verification status for initial page load

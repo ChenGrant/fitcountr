@@ -3,7 +3,7 @@ import { useEffect, useReducer } from "react";
 const ACTIONS = {
   ADD_ASSET: "ADD_ASSET",
   SET_SRC: "SET_SRC",
-  SET_LOADING: "SET_LOADING",
+  SET_IS_LOADING: "SET_IS_LOADING",
 };
 
 const reducer = (state, action) => {
@@ -20,7 +20,7 @@ const reducer = (state, action) => {
         },
       };
 
-    case ACTIONS.SET_LOADING:
+    case ACTIONS.SET_IS_LOADING:
       return {
         ...state,
         [action.payload.key]: {
@@ -61,7 +61,7 @@ const initializeDispatchers = (assets, dispatch) => {
     dispatchers[asset] = {
       setLoading: (newLoadingStatus) => {
         dispatch({
-          type: ACTIONS.SET_LOADING,
+          type: ACTIONS.SET_IS_LOADING,
           payload: {
             key: asset,
             isLoading: newLoadingStatus,
@@ -73,7 +73,7 @@ const initializeDispatchers = (assets, dispatch) => {
   dispatchers["setAllLoading"] = (newLoadingStatus) => {
     Object.keys(assets).forEach((asset) => {
       dispatch({
-        type: ACTIONS.SET_LOADING,
+        type: ACTIONS.SET_IS_LOADING,
         payload: { key: asset, isLoading: newLoadingStatus },
       });
     });

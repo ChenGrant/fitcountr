@@ -12,6 +12,7 @@ const FontsLoader = ({ children }) => {
     WebFont.load({
       google: { families: ["DM Sans", "Koulen", "Montserrat"] },
       active: () => dispatch(loadedFonts()),
+      inactive: () => dispatch(loadedFonts()),
     });
   }, []);
 

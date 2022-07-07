@@ -14,7 +14,7 @@ const FontsLoader = ({ children }) => {
       active: () => dispatch(loadedFonts()),
       inactive: () => dispatch(loadedFonts()),
     });
-  }, []);
+  }, [dispatch]);
 
   return <>{children}</>;
 };

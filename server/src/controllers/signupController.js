@@ -7,22 +7,17 @@ const {
 // ------------------------------- createUser -------------------------------
 const createUser = async (req, res) => {
   try {
-    const { user, signInMethod, constants } = req.body;
-    const {
-      EMAIL_ALREADY_IN_USE,
-      GMAIL_SIGN_IN_METHOD,
-      EMAIL_PASSWORD_SIGN_IN_METHOD,
-    } = constants;
+    const { user, signUpMethod } = req.body;
     const { uid, email } = user;
 
     // verify uid and email exists in firebase auth
     await admin.auth().getUser(uid);
     await admin.auth().getUserByEmail(email);
 
-    if (signInMethod === EMAIL_PASSWORD_SIGN_IN_METHOD) {
+    if (signUpMethod === "email and password") {
       // verify email does not already exist in mongodb atlas
       if (await User.emailInUse(email))
-        return res.json({ formErrors: { email: EMAIL_ALREADY_IN_USE } });
+        return res.json({ formErrors: { email: "Email already in use" } });
 
       // create user in mongodb atlas
       const createdUser = await User.create({
@@ -40,14 +35,22 @@ const createUser = async (req, res) => {
       return res.json(req.body);
     }
 
-    if (signInMethod === GMAIL_SIGN_IN_METHOD) {
-      // create user in mongodb atlas if no users with the same email exist
-      if (!(await User.emailInUse(email)))
-        await User.create({
-          uid,
-          email,
-          emailVerification: { isVerified: true },
+    if (signUpMethod === "gmail") {
+      // if user with the same gmail already exists, override their login
+      // method to use gmail
+      if (await User.emailInUse(email)) {
+        const existingUser = await User.findUserByEmail(email);
+        existingUser.emailVerification.isVerified = true;
+        return res.json({
+          message: "Login method overridden to now use Gmail",
         });
+      }
+      // create user in mongodb atlas if no users with the same email exist
+      await User.create({
+        uid,
+        email,
+        emailVerification: { isVerified: true },
+      });
 
       return res.json(req.body);
     }

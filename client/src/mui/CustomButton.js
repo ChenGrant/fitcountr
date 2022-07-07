@@ -1,7 +1,10 @@
 import { Button } from "@mui/material";
 import React from "react";
 
-const CustomButton = ({ sx, ...rest }) => {
+const CustomButton = (props) => {
+  if (props.variant !== "contained") return <Button {...props} />;
+
+  const { sx, ...rest } = props;
   return (
     <Button
       sx={{

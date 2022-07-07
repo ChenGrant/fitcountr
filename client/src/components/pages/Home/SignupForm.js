@@ -23,15 +23,16 @@ import {
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../../mui/CustomButton";
+import GmailOverridePopup from "./GmailOverridePopup";
 
 // -------------------------------------- CONSTANTS --------------------------------------
 const FORM_ERROR_HEIGHT = "15px";
 
 const EMAIL_ALREADY_IN_USE = "Email already in use";
 
-const GMAIL_SIGN_IN_METHOD = "gmail as sign in method";
+const GMAIL_SIGN_UP_METHOD = "gmail";
 
-const EMAIL_PASSWORD_SIGN_IN_METHOD = "email and password as sign in method";
+const EMAIL_PASSWORD_SIGN_UP_METHOD = "email and password";
 
 // given a the name attribute of an input field, fieldName, and the
 // formik object, errorIsRendered returns true if there is an error
@@ -44,13 +45,21 @@ const errorIsRendered = (fieldName, formik) =>
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const SignupForm = ({ toggleForm }) => {
-  const [passwordIsVisible, setPasswordIsVisible] = useState(false);
-  const [password2IsVisible, setPassword2IsVisible] = useState(false);
-  const [signupButtonIsDisabled, setSignupButtonIsDisabled] = useState(false);
   const theme = useTheme();
   const auth = useSelector((state) => state.firebaseClient.auth);
   const navigate = useNavigate();
   const { desktop, tablet } = useScreenSize();
+  const [passwordIsVisible, setPasswordIsVisible] = useState(false);
+  const [password2IsVisible, setPassword2IsVisible] = useState(false);
+  const [passwordSignupButtonIsDisabled, setPasswordSignupButtonIsDisabled] =
+    useState(false);
+  const [gmailSignupButtonIsDisabled, setGmailSignupButtonIsDisabled] =
+    useState(false);
+  const [gmailOverridePopupIsOpen, setGmailOverridePopupIsOpen] =
+    useState(false);
+  // overriddenGmailAddress is the gmail address of the account whose login
+  // method got overridden to use gmail
+  const [overriddenGmailAddress, setOverriddenGmailAddress] = useState("");
 
   // ------------------------------------- FORMIK -------------------------------------
   const initialValues = {
@@ -72,16 +81,16 @@ const SignupForm = ({ toggleForm }) => {
   });
 
   const onSubmit = async ({ email, password }, formik) => {
-    setSignupButtonIsDisabled(true);
+    setPasswordSignupButtonIsDisabled(true);
     await handleEmailPasswordSignup(email, password, formik);
-    setSignupButtonIsDisabled(false);
+    setPasswordSignupButtonIsDisabled(false);
   };
 
   // ----------------------------------- FUNCTIONS -----------------------------------
-  // given a user object and a signInMethod string, a POST request
+  // given a user object and a signUpMethod string, a POST request
   // is sent to the server to the '/signup' endpoint and this function
   // returns the json data that the server responds with
-  const sendSignupRequest = async (user, signInMethod) => {
+  const sendSignupRequest = async (user, signUpMethod) => {
     const userIdToken = await user.getIdToken();
     const response = await fetch("/signup", {
       method: "POST",
@@ -91,26 +100,33 @@ const SignupForm = ({ toggleForm }) => {
       },
       body: JSON.stringify({
         user,
-        signInMethod,
-        constants: {
-          EMAIL_ALREADY_IN_USE,
-          GMAIL_SIGN_IN_METHOD,
-          EMAIL_PASSWORD_SIGN_IN_METHOD,
-        },
+        signUpMethod,
       }),
     });
     const data = await response.json();
     return data;
   };
 
-  // handleGmailSignup signs in the user via their gmail account and
-  // creates an account for them if it is their first time signing in
+  // handleGmailSignup signs in the user via their gmail account,
+  // creates an account for them if it is their first time signing in.
+  // If an account associated with the gmail already exists, the login
+  // method will be overridden to use gmail.
   const handleGmailSignup = async () => {
     const result = await signInWithPopup(auth, new GoogleAuthProvider());
     const { user } = result;
-    const data = await sendSignupRequest(user, GMAIL_SIGN_IN_METHOD);
-    // if there is an authentication or authorization error
-    if (data.message) return;
+    setGmailSignupButtonIsDisabled(true);
+    const data = await sendSignupRequest(user, GMAIL_SIGN_UP_METHOD);
+    setGmailSignupButtonIsDisabled(false);
+    if (data.message) {
+      switch (data.message) {
+        case "Login method overridden to now use Gmail":
+          setOverriddenGmailAddress(user.email);
+          setGmailOverridePopupIsOpen(true);
+          return;
+        default:
+          break;
+      }
+    }
   };
 
   // handleEmailPasswordSignup uses the given  email string, password string,
@@ -124,9 +140,7 @@ const SignupForm = ({ toggleForm }) => {
         password
       );
       const { user } = userCredential;
-      const data = await sendSignupRequest(user, EMAIL_PASSWORD_SIGN_IN_METHOD);
-      // if there is an authentication or authorization error
-      if (data.message) return;
+      const data = await sendSignupRequest(user, EMAIL_PASSWORD_SIGN_UP_METHOD);
       // if there was an error with the form
       if (data.formErrors) {
         Object.entries(data.formErrors).forEach(({ fieldName, fieldError }) => {
@@ -167,18 +181,32 @@ const SignupForm = ({ toggleForm }) => {
                     Signup
                   </Typography>
                   {/* "Login with Gmail" button */}
-                  <CustomButton
-                    fullWidth
-                    variant="contained"
-                    onClick={handleGmailSignup}
-                    startIcon={
-                      <GoogleIcon
-                        sx={{ transform: "scale(1.5)", marginRight: "20px" }}
-                      />
-                    }
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    sx={{ height: "56px" }}
                   >
-                    Signup with Gmail
-                  </CustomButton>
+                    {gmailSignupButtonIsDisabled ? (
+                      <CircularProgress />
+                    ) : (
+                      <CustomButton
+                        fullWidth
+                        variant="contained"
+                        onClick={handleGmailSignup}
+                        startIcon={
+                          <GoogleIcon
+                            sx={{
+                              transform: "scale(1.5)",
+                              marginRight: "20px",
+                            }}
+                          />
+                        }
+                      >
+                        Signup with Gmail
+                      </CustomButton>
+                    )}
+                  </Box>
+
                   {/* login form divider */}
                   <Box
                     my={1}
@@ -276,7 +304,7 @@ const SignupForm = ({ toggleForm }) => {
                     justifyContent="center"
                     sx={{ height: "56px" }}
                   >
-                    {signupButtonIsDisabled ? (
+                    {passwordSignupButtonIsDisabled ? (
                       <CircularProgress />
                     ) : (
                       <CustomButton type="submit" variant="contained" fullWidth>
@@ -304,6 +332,11 @@ const SignupForm = ({ toggleForm }) => {
                       Login
                     </Typography>
                   </Box>
+                  {/* Gmail override popup */}
+                  <GmailOverridePopup
+                    gmailOverridePopupIsOpen={gmailOverridePopupIsOpen}
+                    overriddenGmailAddress={overriddenGmailAddress}
+                  />
                 </Box>
               </Form>
             );

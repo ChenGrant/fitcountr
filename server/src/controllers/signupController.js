@@ -41,6 +41,7 @@ const createUser = async (req, res) => {
       if (await User.emailInUse(email)) {
         const existingUser = await User.findUserByEmail(email);
         existingUser.emailVerification.isVerified = true;
+        await existingUser.save();
         return res.json({
           message: "Login method overridden to now use Gmail",
         });

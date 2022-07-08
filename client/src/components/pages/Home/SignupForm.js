@@ -30,9 +30,9 @@ const FORM_ERROR_HEIGHT = "15px";
 
 const EMAIL_ALREADY_IN_USE = "Email already in use";
 
-const GMAIL_SIGN_UP_METHOD = "gmail";
+const GMAIL_PROVIDER = "GMAIL_PROVIDER";
 
-const EMAIL_PASSWORD_SIGN_UP_METHOD = "email and password";
+const EMAIL_PASSWORD_PROVIDER = "EMAIL_PASSWORD_PROVIDER";
 
 // given a the name attribute of an input field, fieldName, and the
 // formik object, errorIsRendered returns true if there is an error
@@ -57,8 +57,8 @@ const SignupForm = ({ toggleForm }) => {
     useState(false);
   const [gmailOverridePopupIsOpen, setGmailOverridePopupIsOpen] =
     useState(false);
-  // overriddenGmailAddress is the gmail address of the account whose login
-  // method got overridden to use gmail
+  // overriddenGmailAddress is the gmail address of the account whose email 
+  // verification provider got overridden to use gmail
   const [overriddenGmailAddress, setOverriddenGmailAddress] = useState("");
 
   // ------------------------------------- FORMIK -------------------------------------
@@ -87,10 +87,10 @@ const SignupForm = ({ toggleForm }) => {
   };
 
   // ----------------------------------- FUNCTIONS -----------------------------------
-  // given a user object and a signUpMethod string, a POST request
-  // is sent to the server to the '/signup' endpoint and this function
+  // given a user object and a email verification provider string, a POST 
+  // request is sent to the server to the '/signup' endpoint and this function
   // returns the json data that the server responds with
-  const sendSignupRequest = async (user, signUpMethod) => {
+  const sendSignupRequest = async (user, provider) => {
     const userIdToken = await user.getIdToken();
     const response = await fetch("/signup", {
       method: "POST",
@@ -100,7 +100,7 @@ const SignupForm = ({ toggleForm }) => {
       },
       body: JSON.stringify({
         user,
-        signUpMethod,
+        provider,
       }),
     });
     const data = await response.json();
@@ -115,11 +115,11 @@ const SignupForm = ({ toggleForm }) => {
     const result = await signInWithPopup(auth, new GoogleAuthProvider());
     const { user } = result;
     setGmailSignupButtonIsDisabled(true);
-    const data = await sendSignupRequest(user, GMAIL_SIGN_UP_METHOD);
+    const data = await sendSignupRequest(user, GMAIL_PROVIDER);
     setGmailSignupButtonIsDisabled(false);
     if (data.message) {
       switch (data.message) {
-        case "Login method overridden to now use Gmail":
+        case "Provider overridden to now use Gmail":
           setOverriddenGmailAddress(user.email);
           setGmailOverridePopupIsOpen(true);
           return;
@@ -140,7 +140,7 @@ const SignupForm = ({ toggleForm }) => {
         password
       );
       const { user } = userCredential;
-      const data = await sendSignupRequest(user, EMAIL_PASSWORD_SIGN_UP_METHOD);
+      const data = await sendSignupRequest(user, EMAIL_PASSWORD_PROVIDER);
       // if there was an error with the form
       if (data.formErrors) {
         Object.entries(data.formErrors).forEach(({ fieldName, fieldError }) => {

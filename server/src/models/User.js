@@ -38,6 +38,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         required: true,
       },
+      provider: {
+        type: String,
+        required: true,
+      },
     },
     required: true,
   },

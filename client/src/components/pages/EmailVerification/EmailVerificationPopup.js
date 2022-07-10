@@ -9,7 +9,7 @@ import CustomDialog from "../../../mui/CustomDialog";
 const EmailVerificationPopup = ({
   email,
   sendingEmailPopup,
-  setSendingEmailPopup,
+  setEmailVerificationPopup,
   EMAIL_VERIFICATION_POPUP_STATES,
 }) => {
   const { CLOSED, SENDING, SENT_SUCCESS, SENT_FAILED } =
@@ -21,7 +21,7 @@ const EmailVerificationPopup = ({
     <CustomDialog
       open={sendingEmailPopup !== CLOSED}
       onClose={() => {
-        sendingEmailPopup !== SENDING && setSendingEmailPopup(CLOSED);
+        sendingEmailPopup !== SENDING && setEmailVerificationPopup(CLOSED);
       }}
     >
       {sendingEmailPopup === SENDING ? (
@@ -58,7 +58,7 @@ const EmailVerificationPopup = ({
           <CustomButton
             variant="contained"
             fullWidth
-            onClick={() => setSendingEmailPopup(CLOSED)}
+            onClick={() => setEmailVerificationPopup(CLOSED)}
           >
             Close
           </CustomButton>
@@ -87,7 +87,7 @@ const EmailVerificationPopup = ({
           <CustomButton
             variant="contained"
             fullWidth
-            onClick={() => setSendingEmailPopup(CLOSED)}
+            onClick={() => setEmailVerificationPopup(CLOSED)}
           >
             Close
           </CustomButton>

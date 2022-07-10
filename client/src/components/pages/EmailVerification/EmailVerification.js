@@ -1,6 +1,6 @@
 import { useTheme } from "@mui/styles";
 import React, { useEffect, useReducer, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useAsset from "../../../hooks/useAsset";
 import useScreenSize from "../../../hooks/useScreenSize";
 import { useSelector } from "react-redux";
@@ -9,6 +9,7 @@ import Loading from "../Loading/Loading";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import PinInput from "react-pin-input";
 import EmailVerificationPopup from "./EmailVerificationPopup";
+import CustomButton from "../../../mui/CustomButton";
 
 // -------------------------------- CONSTANTS --------------------------------
 const EMAIL_VERIFICATION_POPUP_STATES = {
@@ -18,18 +19,15 @@ const EMAIL_VERIFICATION_POPUP_STATES = {
   SENT_FAILED: "SENT_FAILED",
 };
 
-const FETCH_PIN_LENGTH_FAILED_LENGTH = -1;
-
 const PIN_ACTIONS = {
-  VERIFYING: "VERIFYING",
+  VALIDATING: "VALIDATING",
   VERIFIED: "VERIFIED",
   DENIED: "DENIED",
   INITIALIZE_LENGTH: "INITIALIZE_LENGTH",
-  FETCH_LENGTH_FAILED: "FETCH_LENGTH_FAILED",
 };
 
 const initialPinState = {
-  verifying: false,
+  validating: false,
   verified: false,
   denied: false,
   length: null,
@@ -37,16 +35,14 @@ const initialPinState = {
 
 const pinReducer = (state, action) => {
   switch (action.type) {
-    case PIN_ACTIONS.VERIFYING:
-      return { ...state, verifying: true };
+    case PIN_ACTIONS.VALIDATING:
+      return { ...state, validating: true };
     case PIN_ACTIONS.VERIFIED:
-      return { ...state, verifying: false, verified: true, denied: false };
+      return { ...state, validating: false, verified: true, denied: false };
     case PIN_ACTIONS.DENIED:
-      return { ...state, verifying: false, verified: false, denied: true };
+      return { ...state, validating: false, verified: false, denied: true };
     case PIN_ACTIONS.INITIALIZE_LENGTH:
       return { ...state, length: action.payload };
-    case PIN_ACTIONS.FETCH_LENGTH_FAILED:
-      return { ...state, length: FETCH_PIN_LENGTH_FAILED_LENGTH };
     default:
       return state;
   }
@@ -58,6 +54,7 @@ const pinReducer = (state, action) => {
 const EmailVerification = () => {
   const { email } = useParams();
   const theme = useTheme();
+  const navigate = useNavigate();
   const { desktop, tablet, phone } = useScreenSize();
   const [assets, assetsDispatchers, loadingAssets, fetchingAssetSources] =
     useAsset({
@@ -68,7 +65,7 @@ const EmailVerification = () => {
   const loadingFonts = useSelector((state) => state.fonts.loading);
   const [pin, dispatch] = useReducer(pinReducer, initialPinState);
   const [imageSrc, setImageSrc] = useState("");
-  const [sendingEmailPopup, setSendingEmailPopup] = useState(
+  const [emailVerificationPopup, setEmailVerificationPopup] = useState(
     EMAIL_VERIFICATION_POPUP_STATES.CLOSED
   );
   // initial value of null, then true or false depending on api response
@@ -76,6 +73,7 @@ const EmailVerification = () => {
   // initial value of null, then true or false depending on api response
   const [emailIsVerified, setEmailIsVerified] = useState();
   const [initializingPageData, setInitializingPageData] = useState(true);
+  // when true, loading spinner for pin validation is rendered
   const [handlingPinValidation, setHandlingPinValidation] = useState(false);
 
   const pageIsLoading = initializingPageData || loadingAssets || loadingFonts;
@@ -123,16 +121,16 @@ const EmailVerification = () => {
   };
 
   const sendVerificationEmailHandler = async () => {
-    setSendingEmailPopup(EMAIL_VERIFICATION_POPUP_STATES.SENDING);
+    setEmailVerificationPopup(EMAIL_VERIFICATION_POPUP_STATES.SENDING);
     const responseData = await fetchSendVerificationEmail(email);
     if (responseData.error) {
       console.log(responseData.error.message);
-      setSendingEmailPopup(EMAIL_VERIFICATION_POPUP_STATES.SENT_FAILED);
+      setEmailVerificationPopup(EMAIL_VERIFICATION_POPUP_STATES.SENT_FAILED);
       return;
     }
     switch (responseData.message) {
       case "Verification email sent":
-        setSendingEmailPopup(EMAIL_VERIFICATION_POPUP_STATES.SENT_SUCCESS);
+        setEmailVerificationPopup(EMAIL_VERIFICATION_POPUP_STATES.SENT_SUCCESS);
         return;
       default:
         break;
@@ -148,7 +146,7 @@ const EmailVerification = () => {
       return;
     }
 
-    dispatch({ type: PIN_ACTIONS.VERIFYING });
+    dispatch({ type: PIN_ACTIONS.VALIDATING });
     const responseData = await fetchValidatePin(email, parseInt(enteredPin));
     if (responseData.error) {
       console.log(responseData.error.message);
@@ -207,7 +205,6 @@ const EmailVerification = () => {
               if (fetchedPinLength.error) {
                 console.log(fetchedPinLength.error);
                 setImageSrc(assets.emailDenied.src);
-                dispatch({ type: PIN_ACTIONS.FETCH_LENGTH_FAILED });
                 return;
               }
 
@@ -234,10 +231,6 @@ const EmailVerification = () => {
     assets.emailDenied.src,
   ]);
 
-  useEffect(() => {
-    console.log(initializingPageData, loadingAssets, loadingFonts);
-  }, [initializingPageData, loadingAssets, loadingFonts]);
-
   // ------------------------------------- RENDER -------------------------------------
   return (
     <Box display="grid" sx={{ placeItems: "center" }} height="100vh">
@@ -257,13 +250,13 @@ const EmailVerification = () => {
           onLoad={() => {
             assetsDispatchers.setAllLoading(false);
             if (imageSrc === assets.emailVerified.src) {
-              if (pin.verifying) {
+              if (pin.validating) {
                 dispatch({ type: PIN_ACTIONS.VERIFIED });
                 setEmailIsVerified(true);
                 setHandlingPinValidation(false);
                 return;
               }
-              if (!pin.verifying) {
+              if (!pin.validating) {
                 setEmailIsVerified(true);
                 setHandlingPinValidation(false);
                 return;
@@ -280,7 +273,8 @@ const EmailVerification = () => {
           Email Verification
         </Typography>
         {/* Body */}
-        {emailIsInUse === undefined || emailIsVerified === undefined ? (
+        {emailIsInUse === undefined ||
+        (emailIsInUse && emailIsVerified === undefined) ? (
           <Typography
             variant={desktop ? "h4" : tablet ? "h6" : "body2"}
             textAlign="center"
@@ -390,10 +384,14 @@ const EmailVerification = () => {
             </Box>
           </>
         )}
+        {/* Home Button, make it display 'proceed to dashboard' if user is logged in and email verified */}
+        <CustomButton variant="contained" onClick={() => navigate("/")}>
+          Home
+        </CustomButton>
         <EmailVerificationPopup
           email={email}
-          sendingEmailPopup={sendingEmailPopup}
-          setSendingEmailPopup={setSendingEmailPopup}
+          sendingEmailPopup={emailVerificationPopup}
+          setEmailVerificationPopup={setEmailVerificationPopup}
           EMAIL_VERIFICATION_POPUP_STATES={EMAIL_VERIFICATION_POPUP_STATES}
         />
       </Box>

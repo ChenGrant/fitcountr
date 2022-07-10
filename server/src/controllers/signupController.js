@@ -17,10 +17,15 @@ const createUser = async (req, res) => {
     await admin.auth().getUser(uid);
     await admin.auth().getUserByEmail(email);
 
+    if (!provider) throw new Error("No provider provided");
+
     if (provider === EMAIL_PASSWORD_PROVIDER) {
       // verify email does not already exist in mongodb atlas
       if (await User.emailInUse(email))
-        return res.json({ formErrors: { email: "Email already in use" } });
+        return res.json({
+          userIsCreated: false,
+          message: "Email already in use",
+        });
 
       // create user in mongodb atlas
       const createdUser = await User.create({
@@ -38,7 +43,7 @@ const createUser = async (req, res) => {
         createdUser.emailVerification.pin
       );
 
-      return res.json(req.body);
+      return res.json({ userIsCreated: true });
     }
 
     if (provider === GMAIL_PROVIDER) {
@@ -50,9 +55,11 @@ const createUser = async (req, res) => {
         existingUser.emailVerification.provider = GMAIL_PROVIDER;
         await existingUser.save();
         return res.json({
-          message: "Provider overridden to now use Gmail",
+          userIsCreated: true,
+          message: "Email already in use, provider overridden to now use Gmail",
         });
       }
+
       // create user in mongodb atlas if no users with the same email exist
       await User.create({
         uid,
@@ -60,12 +67,13 @@ const createUser = async (req, res) => {
         emailVerification: { isVerified: true, provider: GMAIL_PROVIDER },
       });
 
-      return res.json(req.body);
+      return res.json({ userIsCreated: true });
     }
-    throw new Error("No provider provided");
+
+    throw new Error("No provider matched");
   } catch (err) {
     console.log(err);
-    return res.json({ message: "Could not create user" });
+    return res.json({ error: { message: "Could not create user" } });
   }
 };
 

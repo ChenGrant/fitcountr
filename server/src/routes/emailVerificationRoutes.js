@@ -1,17 +1,34 @@
 const express = require("express");
 const router = express.Router();
 const {
-  verifyEmail,
+  getEmailIsInUse,
+  getVerificationStatus,
+  getPinLength,
+  validatePin,
   sendVerificationEmail,
 } = require("../controllers/emailVerificationController");
 
-// handles a POST request containing an email and an email verification pin.
-// responds with the verification status of the email or possible the number of
-// digits in the email verification pin.
-router.post("/verify", verifyEmail);
+// -------------------------------------- ROUTES --------------------------------------
+// handles a GET request containing an email.
+// responds with if the email is in use or not
+router.get("/emailInUse/:email", getEmailIsInUse);
+
+// handles a GET request containing an email.
+// responds with the length of the pin associated with the email
+router.get("/pinLength/:email", getPinLength);
+
+// handles a GET request containing an email.
+// responds with the verification status of the email
+router.get("/verificationStatus/:email", getVerificationStatus);
 
 // handles a POST request containing an email.
 // sends a verification email containing the email verification pin to the email.
-router.post("/send", sendVerificationEmail);
+// responds with if the verification email was sent or not
+router.post("/sendVerificationEmail", sendVerificationEmail);
+
+// handles a POST request containing an email and an email verification pin.
+// if pin is valid, the verification status of the email is updated
+// responds with if the pin is valid or not
+router.post("/validatePin", validatePin);
 
 module.exports = router;

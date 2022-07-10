@@ -57,7 +57,7 @@ const SignupForm = ({ toggleForm }) => {
     useState(false);
   const [gmailOverridePopupIsOpen, setGmailOverridePopupIsOpen] =
     useState(false);
-  // overriddenGmailAddress is the gmail address of the account whose email 
+  // overriddenGmailAddress is the gmail address of the account whose email
   // verification provider got overridden to use gmail
   const [overriddenGmailAddress, setOverriddenGmailAddress] = useState("");
 
@@ -80,17 +80,11 @@ const SignupForm = ({ toggleForm }) => {
       .oneOf([Yup.ref("password")], "Passwords must match"),
   });
 
-  const onSubmit = async ({ email, password }, formik) => {
-    setPasswordSignupButtonIsDisabled(true);
-    await handleEmailPasswordSignup(email, password, formik);
-    setPasswordSignupButtonIsDisabled(false);
-  };
-
   // ----------------------------------- FUNCTIONS -----------------------------------
-  // given a user object and a email verification provider string, a POST 
+  // given a user object and a email verification provider string, a POST
   // request is sent to the server to the '/signup' endpoint and this function
   // returns the json data that the server responds with
-  const sendSignupRequest = async (user, provider) => {
+  const postSignupData = async (user, provider) => {
     const userIdToken = await user.getIdToken();
     const response = await fetch("/signup", {
       method: "POST",
@@ -114,15 +108,13 @@ const SignupForm = ({ toggleForm }) => {
   const handleGmailSignup = async () => {
     const result = await signInWithPopup(auth, new GoogleAuthProvider());
     const { user } = result;
-    setGmailSignupButtonIsDisabled(true);
-    const data = await sendSignupRequest(user, GMAIL_PROVIDER);
-    setGmailSignupButtonIsDisabled(false);
-    if (data.message) {
-      switch (data.message) {
-        case "Provider overridden to now use Gmail":
+    const fetchedSignupData = await postSignupData(user, GMAIL_PROVIDER);
+    if (fetchedSignupData.message) {
+      switch (fetchedSignupData.message) {
+        case "Email already in use, provider overridden to now use Gmail":
           setOverriddenGmailAddress(user.email);
           setGmailOverridePopupIsOpen(true);
-          return;
+          break;
         default:
           break;
       }
@@ -140,16 +132,25 @@ const SignupForm = ({ toggleForm }) => {
         password
       );
       const { user } = userCredential;
-      const data = await sendSignupRequest(user, EMAIL_PASSWORD_PROVIDER);
-      // if there was an error with the form
-      if (data.formErrors) {
-        Object.entries(data.formErrors).forEach(({ fieldName, fieldError }) => {
-          formik.setFieldError(fieldName, fieldError);
-        });
+      const fetchedSignupData = await postSignupData(
+        user,
+        EMAIL_PASSWORD_PROVIDER
+      );
+
+      // if user was successfully created
+      if (fetchedSignupData.userIsCreated) {
+        navigate(`/emailVerification/${email}`);
         return;
       }
-      // redirect user to verification email page
-      navigate(`/emailverification/${email}`);
+
+      // if there was error creating user
+      switch (fetchedSignupData.message) {
+        case "Email already in use":
+          formik.setFieldError("email", EMAIL_ALREADY_IN_USE);
+          break;
+        default:
+          break;
+      }
     } catch (error) {
       if (error.message === "Firebase: Error (auth/email-already-in-use).") {
         formik.setFieldError("email", EMAIL_ALREADY_IN_USE);
@@ -171,7 +172,11 @@ const SignupForm = ({ toggleForm }) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={onSubmit}
+          onSubmit={async ({ email, password }, formik) => {
+            setPasswordSignupButtonIsDisabled(true);
+            await handleEmailPasswordSignup(email, password, formik);
+            setPasswordSignupButtonIsDisabled(false);
+          }}
         >
           {(formik) => {
             return (
@@ -192,7 +197,11 @@ const SignupForm = ({ toggleForm }) => {
                       <CustomButton
                         fullWidth
                         variant="contained"
-                        onClick={handleGmailSignup}
+                        onClick={async () => {
+                          setGmailSignupButtonIsDisabled(true);
+                          await handleGmailSignup();
+                          setGmailSignupButtonIsDisabled(false);
+                        }}
                         startIcon={
                           <GoogleIcon
                             sx={{

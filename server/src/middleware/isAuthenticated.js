@@ -3,12 +3,14 @@ const auth = admin.auth();
 
 const isAuthenticated = async (req, res, next) => {
   try {
-    const idToken = req.headers.authorization
+    const idToken = req.headers.authorization;
     const user = await auth.verifyIdToken(idToken);
     req.headerAuthUid = user.uid;
     next();
   } catch (error) {
-    return res.send({ message: "Could not authenticate" }).status(401);
+    return res
+      .json({ error: { message: "Could not authenticate" } })
+      .status(401);
   }
 };
 

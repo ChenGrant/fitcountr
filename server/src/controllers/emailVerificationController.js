@@ -4,56 +4,124 @@ const {
   sendEmailVerificationAsync,
 } = require("../services/nodemailer/nodemailer");
 
-// ------------------------------- verifyEmail -------------------------------
-const verifyEmail = async (req, res) => {
+const EMAIL_NOT_IN_USE = "EMAIL_NOT_IN_USE";
+
+const verifyEmailIsInUse = async (email) => {
+  if (!(await User.emailInUse(email))) throw new Error(EMAIL_NOT_IN_USE);
+};
+
+// ************************************************************************************
+// ----------------------------------- CONTROLLERS ------------------------------------
+// ************************************************************************************
+
+// --------------------------------- getEmailIsInUse ---------------------------------
+const getEmailIsInUse = async (req, res) => {
+  try {
+    const { email } = req.params;
+    return (await User.emailInUse(email))
+      ? res.json({ emailIsInUse: true })
+      : res.json({ emailIsInUse: false });
+  } catch (err) {
+    console.log(err);
+    console.log({
+      error: { message: "Could not determine if email is in use" },
+    });
+  }
+};
+
+// ------------------------------ getVerificationStatus ------------------------------
+const getVerificationStatus = async (req, res) => {
+  try {
+    const { email } = req.params;
+
+    // verify email corresponds to a user in the database
+    await verifyEmailIsInUse(email);
+
+    const user = await User.findUserByEmail(email);
+
+    console.log(user)
+
+    if (user.emailVerification.isVerified)
+      return res.json({ verificationStatus: "Verified" });
+
+    return res.json({ verificationStatus: "Not verified" });
+  } catch (err) {
+    console.log(err);
+    return res.json({
+      error: { message: "Could not get email verification status" },
+    });
+  }
+};
+
+// ----------------------------------- getPinLength -----------------------------------
+const getPinLength = async (req, res) => {
+  try {
+    const { email } = req.params;
+
+    await verifyEmailIsInUse(email);
+
+    const user = await User.findUserByEmail(email);
+
+    return res.json({
+      pinLength: NumberUtils.getIntegerLength(user.emailVerification.pin),
+    });
+  } catch (err) {
+    console.log(err);
+    return res.json({ error: { message: "Could not get pin length" } });
+  }
+};
+
+// ----------------------------------- validatePin -----------------------------------
+const validatePin = async (req, res) => {
   try {
     const { email, pin } = req.body;
 
     // verify email corresponds to a user in the database
-    if (!(await User.emailInUse(email))) {
-      return res.json({ message: "Email does not exist" });
-    }
+    await verifyEmailIsInUse(email);
 
     const user = await User.findUserByEmail(email);
 
-    // check if email is already verified
-    if (user.emailVerification.isVerified) {
-      return res.json({ message: "Email already verified" });
-    }
-
     // check if the request object's body contains a 'pin' property
-    if (!pin) {
-      return res.json({
-        pinLength: NumberUtils.getIntegerLength(user.emailVerification.pin),
-      });
-    }
+    if (!pin) throw new Error("No pin provided");
 
-    // verify that the pins match
+    // if the pins match
     if (user.emailVerification.pin === pin) {
       user.emailVerification.isVerified = true;
       await user.save();
-      return res.json({ message: `Verified email: ${email}`, success: true });
+      return res.json({ message: "Pin is valid" });
     }
 
-    return res.json({ message: "Incorrect email verification" });
+    return res.json({ message: "Pin is invalid" });
   } catch (err) {
     console.log(err);
-    return res.json({ message: "Could not verify email" });
+    return res.json({ error: { message: "Could not validate pin" } });
   }
 };
 
-// --------------------------- sendVerificationEmail ---------------------------
+// ------------------------------- sendVerificationEmail -------------------------------
 const sendVerificationEmail = async (req, res) => {
   try {
     const { email } = req.body;
+
+    // verify email corresponds to a user in the database
+    await verifyEmailIsInUse(email);
+
     const user = await User.findUserByEmail(email);
     // send verification email
     await sendEmailVerificationAsync(user.email, user.emailVerification.pin);
-    return res.json({ message: "Verification Email Sent", success: true });
+    return res.json({ message: "Verification email sent" });
   } catch (err) {
     console.log(err);
-    return res.json({ message: "Could not send verification email" });
+    return res.json({
+      error: { message: "Could not send verification email" },
+    });
   }
 };
 
-module.exports = { verifyEmail, sendVerificationEmail };
+module.exports = {
+  getEmailIsInUse,
+  getVerificationStatus,
+  getPinLength,
+  validatePin,
+  sendVerificationEmail,
+};

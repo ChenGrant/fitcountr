@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { EmailUtils, NumberUtils } = require("../utils/index");
 
-const EMAIL_VERIFICATION_PIN_LENGTH = 4;
+const EMAIL_VERIFICATION_PIN_LENGTH = 5;
 
 // -------------------------------------- SCHEMA --------------------------------------
 const userSchema = new mongoose.Schema({
@@ -64,7 +64,9 @@ userSchema.statics.emailInUse = async function (email) {
 
 // given an email, this function returns the user with the corresponding email
 userSchema.statics.findUserByEmail = async function (email) {
-  return await this.findOne({ email: email });
+  const user = await this.findOne({ email: email });
+  if (!user || user.email !== email) return null;
+  return user;
 };
 
 module.exports = mongoose.model("Users", userSchema);

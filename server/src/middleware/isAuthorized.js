@@ -17,7 +17,10 @@ const isAuthorized = (privacyStatus = PUBLIC) => {
 
       throw new Error("Not authorized");
     } catch (err) {
-      return res.send({ message: "Could not authorize" }).status(403);
+      console.log(err);
+      return res
+        .json({ error: { message: "Could not authorize" } })
+        .status(403);
     }
   };
 };

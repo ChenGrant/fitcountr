@@ -3,7 +3,6 @@ import React, { useEffect, useReducer, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useAsset from "../../../hooks/useAsset";
 import useScreenSize from "../../../hooks/useScreenSize";
-import { useSelector } from "react-redux";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import Loading from "../Loading/Loading";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
@@ -62,7 +61,6 @@ const EmailVerification = () => {
       emailVerified: { name: "email_verified" },
       emailDenied: { name: "email_denied" },
     });
-  const loadingFonts = useSelector((state) => state.fonts.loading);
   const [pin, dispatch] = useReducer(pinReducer, initialPinState);
   const [imageSrc, setImageSrc] = useState("");
   const [emailVerificationPopup, setEmailVerificationPopup] = useState(
@@ -76,7 +74,7 @@ const EmailVerification = () => {
   // when true, loading spinner for pin validation is rendered
   const [handlingPinValidation, setHandlingPinValidation] = useState(false);
 
-  const pageIsLoading = initializingPageData || loadingAssets || loadingFonts;
+  const pageIsLoading = initializingPageData || loadingAssets;
 
   // ----------------------------------- FUNCTIONS -----------------------------------
   const fetchEmailIsInUse = async (email) => {

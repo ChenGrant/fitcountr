@@ -1,10 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { useDispatch } from "react-redux";
-import { initializedFirebaseAuth, initializedFirebaseClient } from "../redux";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {
+  initializedFirebaseAuth,
+  initializedFirebaseClient,
+} from "../../redux";
+import { getAuth } from "firebase/auth";
 
 const FirebaseClientInitializer = ({ children }) => {
+  const [initializingFirebaseClient, setInitializingFirebaseClient] =
+    useState(true);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -23,11 +28,11 @@ const FirebaseClientInitializer = ({ children }) => {
       const auth = getAuth(app);
       dispatch(initializedFirebaseAuth(auth));
 
-      // add listener for changes to user's sign-in state
-      const unsubscribeAuth = onAuthStateChanged(auth, (user) => {});
-      return unsubscribeAuth;
+      setInitializingFirebaseClient(false);
     })();
   }, [dispatch]);
+
+  if (initializingFirebaseClient) return null;
 
   return <>{children}</>;
 };

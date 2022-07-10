@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import Loading from "../Loading/Loading";
-import { useSelector } from "react-redux";
 import LoginForm from "./LoginForm";
 import useScreenSize from "../../../hooks/useScreenSize";
 import SignupForm from "./SignupForm";
@@ -17,10 +16,6 @@ const LOGIN_FORM = "LOGIN_FORM";
 const Home = () => {
   const { desktop } = useScreenSize();
   const [form, setForm] = useState(SIGNUP_FORM);
-  const loadingFonts = useSelector((state) => state.fonts.loading);
-  const firebaseClientIsInitialized = useSelector(
-    (state) => state.firebaseClient.isInitialized
-  );
   const [assets, assetsDispatchers, loadingAssets] = useAsset({
     logo: { name: "logo" },
     laptopPhone: { name: "laptop_phone" },
@@ -28,8 +23,7 @@ const Home = () => {
   // pageIsLoading is false when all images have been fetched, the client
   // firebase SDK has been initialized, and font have loaded. Otherwise
   // it is true
-  const pageIsLoading =
-    !firebaseClientIsInitialized || loadingAssets || loadingFonts;
+  const pageIsLoading = loadingAssets;
 
   // ----------------------------------- FUNCTIONS -----------------------------------
   // toggleForm toggles the value of the 'form' state variable between

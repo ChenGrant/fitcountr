@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import WebFont from "webfontloader";
-import { loadedFonts } from "../redux";
 
 const FontsLoader = ({ children }) => {
+  const [loadingFonts, setLoadingFonts] = useState(true);
   const dispatch = useDispatch();
 
   // load fonts and when fonts are loaded, dispatch the loadedFonts
@@ -11,10 +11,12 @@ const FontsLoader = ({ children }) => {
   useEffect(() => {
     WebFont.load({
       google: { families: ["DM Sans", "Koulen", "Montserrat"] },
-      active: () => dispatch(loadedFonts()),
-      inactive: () => dispatch(loadedFonts()),
+      active: () => setLoadingFonts(false),
+      inactive: () => setLoadingFonts(false),
     });
   }, [dispatch]);
+
+  if (loadingFonts) return null;
 
   return <>{children}</>;
 };

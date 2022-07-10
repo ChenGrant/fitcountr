@@ -24,7 +24,7 @@ router.get("/verificationStatus/:email", getVerificationStatus);
 // handles a POST request containing an email.
 // sends a verification email containing the email verification pin to the email.
 // responds with if the verification email was sent or not
-router.post("/sendVerificationEmail", sendVerificationEmail);
+router.post("/sendVerificationEmail/:email", sendVerificationEmail);
 
 // handles a POST request containing an email and an email verification pin.
 // if pin is valid, the verification status of the email is updated

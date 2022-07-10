@@ -49,16 +49,16 @@ const LoginForm = ({ toggleForm }) => {
   const errorIsRendered = (fieldName, formik) =>
     formik.errors[fieldName] && formik.touched[fieldName];
 
-  const handleLoginWithGmail = () => {};
+  // const handleLoginWithGmail = () => {};
 
-  const handleLoginWithEmailAndPassword = ({ email, password }) => {
-    // send 'values' to server
-    // on server end:
-    // reapply validation schema. (if it fails to pass validation schema, render error messages)
-    // check if there exists a user with that email/password
-    // if no user with the entered email exists, errorMessage = 'email does not exist'
-    // elseif no password, errorMessage = 'password is incorrect'
-  };
+  // const handleLoginWithEmailAndPassword = ({ email, password }) => {
+  //   // send 'values' to server
+  //   // on server end:
+  //   // reapply validation schema. (if it fails to pass validation schema, render error messages)
+  //   // check if there exists a user with that email/password
+  //   // if no user with the entered email exists, errorMessage = 'email does not exist'
+  //   // elseif no password, errorMessage = 'password is incorrect'
+  // };
 
   // ------------------------------------- RENDER -------------------------------------
   return (

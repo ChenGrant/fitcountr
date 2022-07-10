@@ -1,16 +1,14 @@
-import React, { useCallback, useEffect, useReducer, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import PinInput from "react-pin-input";
-import { CircularProgress, Typography } from "@mui/material";
-import { useTheme } from "@emotion/react";
-import { Box } from "@mui/system";
+import { useTheme } from "@mui/styles";
+import React, { useEffect, useReducer, useState } from "react";
+import { useParams } from "react-router-dom";
+import useAsset from "../../../hooks/useAsset";
 import useScreenSize from "../../../hooks/useScreenSize";
+import { useSelector } from "react-redux";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import Loading from "../Loading/Loading";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import useAsset from "../../../hooks/useAsset";
-import CustomButton from "../../../mui/CustomButton";
+import PinInput from "react-pin-input";
 import EmailVerificationPopup from "./EmailVerificationPopup";
-import { useSelector } from "react-redux";
 
 // -------------------------------- CONSTANTS --------------------------------
 const EMAIL_VERIFICATION_POPUP_STATES = {
@@ -20,34 +18,35 @@ const EMAIL_VERIFICATION_POPUP_STATES = {
   SENT_FAILED: "SENT_FAILED",
 };
 
-// --------------------------------- REDUCERS ---------------------------------
+const FETCH_PIN_LENGTH_FAILED_LENGTH = -1;
+
 const PIN_ACTIONS = {
   VERIFYING: "VERIFYING",
-  FINISHED_VERIFYING: "FINISHED_VERIFYING",
   VERIFIED: "VERIFIED",
   DENIED: "DENIED",
   INITIALIZE_LENGTH: "INITIALIZE_LENGTH",
+  FETCH_LENGTH_FAILED: "FETCH_LENGTH_FAILED",
 };
 
 const initialPinState = {
   verifying: false,
   verified: false,
   denied: false,
-  length: 0,
+  length: null,
 };
 
 const pinReducer = (state, action) => {
   switch (action.type) {
     case PIN_ACTIONS.VERIFYING:
       return { ...state, verifying: true };
-    case PIN_ACTIONS.FINISHED_VERIFYING:
-      return { ...state, verifying: false };
     case PIN_ACTIONS.VERIFIED:
       return { ...state, verifying: false, verified: true, denied: false };
     case PIN_ACTIONS.DENIED:
       return { ...state, verifying: false, verified: false, denied: true };
     case PIN_ACTIONS.INITIALIZE_LENGTH:
       return { ...state, length: action.payload };
+    case PIN_ACTIONS.FETCH_LENGTH_FAILED:
+      return { ...state, length: FETCH_PIN_LENGTH_FAILED_LENGTH };
     default:
       return state;
   }
@@ -59,130 +58,185 @@ const pinReducer = (state, action) => {
 const EmailVerification = () => {
   const { email } = useParams();
   const theme = useTheme();
-  const navigate = useNavigate();
   const { desktop, tablet, phone } = useScreenSize();
-  const [assets, assetsDispatchers, loadingAssets] = useAsset({
-    emailPending: { name: "email_pending" },
-    emailVerified: { name: "email_verified" },
-    emailDenied: { name: "email_denied" },
-  });
+  const [assets, assetsDispatchers, loadingAssets, fetchingAssetSources] =
+    useAsset({
+      emailPending: { name: "email_pending" },
+      emailVerified: { name: "email_verified" },
+      emailDenied: { name: "email_denied" },
+    });
   const loadingFonts = useSelector((state) => state.fonts.loading);
   const [pin, dispatch] = useReducer(pinReducer, initialPinState);
-  const [emailAlreadyVerified, setEmailAlreadyVerified] = useState(false);
-  const [emailDoesNotExist, setEmailDoesNotExist] = useState(false);
-  const [emailAwaitsVerification, setEmailAwaitsVerification] = useState(false);
-  const [fetchingVerificationStatus, setFetchingVerificationStatus] =
-    useState(true);
+  const [imageSrc, setImageSrc] = useState("");
   const [sendingEmailPopup, setSendingEmailPopup] = useState(
     EMAIL_VERIFICATION_POPUP_STATES.CLOSED
   );
-  const [imageSrc, setImageSrc] = useState("");
-  const [verifyEmailData, setVerifyEmailData] = useState({});
+  // initial value of null, then true or false depending on api response
+  const [emailIsInUse, setEmailIsInUse] = useState();
+  // initial value of null, then true or false depending on api response
+  const [emailIsVerified, setEmailIsVerified] = useState();
+  const [initializingPageData, setInitializingPageData] = useState(true);
+  const [handlingPinValidation, setHandlingPinValidation] = useState(false);
 
-  const pageIsLoading =
-    fetchingVerificationStatus || loadingAssets || loadingFonts;
+  const pageIsLoading = initializingPageData || loadingAssets || loadingFonts;
 
   // ----------------------------------- FUNCTIONS -----------------------------------
-  // given a receiver email, sendVerificationEmail opens the
-  // EmailVerificationPopup component and sends a verification email to the
-  // receiver email with the email verification pin
-  const sendVerificationEmail = async (email) => {
-    setSendingEmailPopup(EMAIL_VERIFICATION_POPUP_STATES.SENDING);
-    const response = await fetch("/emailVerification/send", {
+  const fetchEmailIsInUse = async (email) => {
+    const response = await fetch(`/emailVerification/emailInUse/${email}`);
+    const data = await response.json();
+    return data;
+  };
+
+  const fetchVerificationStatus = async (email) => {
+    const response = await fetch(
+      `/emailVerification/verificationStatus/${email}`
+    );
+    const data = await response.json();
+    return data;
+  };
+
+  const fetchPinLength = async (email) => {
+    const response = await fetch(`/emailVerification/pinLength/${email}`);
+    const data = await response.json();
+    return data;
+  };
+
+  const fetchSendVerificationEmail = async (email) => {
+    const response = await fetch(
+      `/emailVerification/sendVerificationEmail/${email}`,
+      { method: "POST" }
+    );
+    const data = await response.json();
+    return data;
+  };
+
+  const fetchValidatePin = async (email, pin) => {
+    const response = await fetch("/emailVerification/validatePin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, pin }),
     });
     const data = await response.json();
-    // verification email failed to send
-    if (data.message === "Could not send verification email") {
-      return setSendingEmailPopup(EMAIL_VERIFICATION_POPUP_STATES.SENT_FAILED);
-    }
-    // verification email successfully sent
-    return setSendingEmailPopup(EMAIL_VERIFICATION_POPUP_STATES.SENT_SUCCESS);
+    return data;
   };
 
-  // given an email and a pin, verifyEmail determines if the email
-  // does not exist, is already verified, or is pending verification.
-  // If the email is pending verification, this function also provides
-  // the number of digits in email's verification pin.
-  const verifyEmail = useCallback(
-    async (email, pin) => {
-      // render loading spinner for pin input
-      dispatch({ type: PIN_ACTIONS.VERIFYING });
-      const response = await fetch("/emailVerification/verify", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, pin }),
-      });
-      const data = await response.json();
+  const sendVerificationEmailHandler = async () => {
+    setSendingEmailPopup(EMAIL_VERIFICATION_POPUP_STATES.SENDING);
+    const responseData = await fetchSendVerificationEmail(email);
+    if (responseData.error) {
+      console.log(responseData.error.message);
+      setSendingEmailPopup(EMAIL_VERIFICATION_POPUP_STATES.SENT_FAILED);
+      return;
+    }
+    switch (responseData.message) {
+      case "Verification email sent":
+        setSendingEmailPopup(EMAIL_VERIFICATION_POPUP_STATES.SENT_SUCCESS);
+        return;
+      default:
+        break;
+    }
+  };
 
-      setVerifyEmailData(data);
+  const validatePinHandler = async (enteredPin) => {
+    setHandlingPinValidation(true);
+    // check if email is already verified
+    const fetchedVerificationStatus = await fetchVerificationStatus(email);
+    if (fetchedVerificationStatus.verificationStatus === "Verified") {
+      setImageSrc(assets.emailVerified.src);
+      return;
+    }
 
-      // if correct pin was entered
-      if (data.success) return setImageSrc(assets.emailVerified.src);
-
-      // if email needs to be verified
-      if (data.pinLength) {
-        setEmailAwaitsVerification(true);
-        dispatch({
-          type: PIN_ACTIONS.INITIALIZE_LENGTH,
-          payload: data.pinLength,
-        });
-      }
-
-      // if email does not exist, is already verified, pin is
-      // incorrect, or if email could not be verified
-      if (data.message) {
-        switch (data.message) {
-          case "Email already verified":
-            return setImageSrc(assets.emailVerified.src);
-          case "Email does not exist":
-            setEmailDoesNotExist(true);
-            break;
-          case "Incorrect email verification":
-          case "Could not verify email":
-            dispatch({ type: PIN_ACTIONS.DENIED });
-            break;
-          default:
-        }
-      }
-      // stop rendering loading spinner for pin input
-      dispatch({ type: PIN_ACTIONS.FINISHED_VERIFYING });
-      // no longer fetching verification status for initial page load
-      setFetchingVerificationStatus(false);
-    },
-    [assets.emailVerified.src]
-  );
+    dispatch({ type: PIN_ACTIONS.VERIFYING });
+    const responseData = await fetchValidatePin(email, parseInt(enteredPin));
+    if (responseData.error) {
+      console.log(responseData.error.message);
+      return;
+      // handle the case where pin was unable to be validated
+    }
+    switch (responseData.message) {
+      case "Pin is valid":
+        setImageSrc(assets.emailVerified.src);
+        return;
+      case "Pin is invalid":
+        dispatch({ type: PIN_ACTIONS.DENIED });
+        break;
+      default:
+        break;
+    }
+    setHandlingPinValidation(false);
+  };
 
   // ----------------------------------- USE EFFECT -----------------------------------
   useEffect(() => {
-    verifyEmail(email);
-  }, [verifyEmail, email]);
+    !fetchingAssetSources &&
+      (async () => {
+        await (async () => {
+          // determining if email is in use
+          const fetchedEmailIsInUse = await fetchEmailIsInUse(email);
+          if (fetchedEmailIsInUse.error) {
+            console.log(fetchedEmailIsInUse.error);
+            setImageSrc(assets.emailDenied.src);
+            return;
+          }
+          if (!fetchedEmailIsInUse.emailIsInUse) {
+            setImageSrc(assets.emailDenied.src);
+            setEmailIsInUse(false);
+            return;
+          }
+          setEmailIsInUse(true);
+
+          // determine verification status of email
+          const fetchedVerificationStatus = await fetchVerificationStatus(
+            email
+          );
+          if (fetchedVerificationStatus.error) {
+            console.log(fetchedVerificationStatus.error);
+            setImageSrc(assets.emailDenied.src);
+            return;
+          }
+          switch (fetchedVerificationStatus.verificationStatus) {
+            case "Verified":
+              setEmailIsVerified(true);
+              setImageSrc(assets.emailVerified.src);
+              return;
+            case "Not verified":
+              const fetchedPinLength = await fetchPinLength(email);
+              setEmailIsVerified(false);
+              if (fetchedPinLength.error) {
+                console.log(fetchedPinLength.error);
+                setImageSrc(assets.emailDenied.src);
+                dispatch({ type: PIN_ACTIONS.FETCH_LENGTH_FAILED });
+                return;
+              }
+
+              if (fetchedPinLength.pinLength !== undefined) {
+                dispatch({
+                  type: PIN_ACTIONS.INITIALIZE_LENGTH,
+                  payload: fetchedPinLength.pinLength,
+                });
+                setImageSrc(assets.emailPending.src);
+                return;
+              }
+              break;
+            default:
+              break;
+          }
+        })();
+        setInitializingPageData(false);
+      })();
+  }, [
+    email,
+    fetchingAssetSources,
+    assets.emailVerified.src,
+    assets.emailPending.src,
+    assets.emailDenied.src,
+  ]);
 
   useEffect(() => {
-    setImageSrc(
-      emailDoesNotExist
-        ? assets.emailDenied.src
-        : emailAlreadyVerified || pin.verified
-        ? assets.emailVerified.src
-        : emailAwaitsVerification
-        ? assets.emailPending.src
-        : ""
-    );
-  }, [
-    emailDoesNotExist,
-    assets.emailDenied.src,
-    emailAlreadyVerified,
-    pin.verified,
-    assets.emailVerified.src,
-    emailAwaitsVerification,
-    assets.emailPending.src,
-  ]);
+    console.log(initializingPageData, loadingAssets, loadingFonts);
+  }, [initializingPageData, loadingAssets, loadingFonts]);
 
   // ------------------------------------- RENDER -------------------------------------
   return (
@@ -202,20 +256,18 @@ const EmailVerification = () => {
           src={imageSrc}
           onLoad={() => {
             assetsDispatchers.setAllLoading(false);
-            // if user inputs correct pin, first wait for the verifiedEmail image
-            // to load and then dispatch the VERIFIED action to the pin reducer.
             if (imageSrc === assets.emailVerified.src) {
-              // case where user has two email verification tabs open and both need a pin
-              // to be entered. When the pin is correctly entered on one tab, any pin input 
-              // on the other tab causes the image to swap to the emailVerified image. When 
-              // this image finishes loading, then render 'email is already verified'.
-              if (verifyEmailData.message === "Email already verified") {
-                setEmailAlreadyVerified(true);
+              if (pin.verifying) {
+                dispatch({ type: PIN_ACTIONS.VERIFIED });
+                setEmailIsVerified(true);
+                setHandlingPinValidation(false);
+                return;
               }
-              // stop rendering loading spinner for pin input
-              dispatch({ type: PIN_ACTIONS.VERIFIED });
-              // no longer fetching verification status for initial page load
-              setFetchingVerificationStatus(false);
+              if (!pin.verifying) {
+                setEmailIsVerified(true);
+                setHandlingPinValidation(false);
+                return;
+              }
             }
           }}
         />
@@ -228,44 +280,44 @@ const EmailVerification = () => {
           Email Verification
         </Typography>
         {/* Body */}
-        {emailAlreadyVerified ? (
-          // ----------- email is already verified ------------------
+        {emailIsInUse === undefined || emailIsVerified === undefined ? (
           <Typography
             variant={desktop ? "h4" : tablet ? "h6" : "body2"}
             textAlign="center"
             sx={{ fontWeight: phone && 500 }}
           >
-            <span style={{ color: theme.palette.primary.main }}>
-              <b>{email}</b>
-            </span>{" "}
-            is already verified.
+            Unable to verify
+            <b style={{ color: theme.palette.primary.main }}> {email}</b>, try
+            again later.
           </Typography>
-        ) : emailDoesNotExist ? (
-          // ----------------- email does not exist -----------------
+        ) : !emailIsInUse ? (
           <Typography
             variant={desktop ? "h4" : tablet ? "h6" : "body2"}
             textAlign="center"
             sx={{ fontWeight: phone && 500 }}
           >
-            <span style={{ color: theme.palette.primary.main }}>
-              <b>{email}</b>
-            </span>{" "}
-            does not exist in our records.
+            <b style={{ color: theme.palette.primary.main }}>{email}</b> is not
+            in use.
           </Typography>
-        ) : pin.verified ? (
-          // --------------- pin successfully verified ---------------
+        ) : emailIsVerified && !pin.verified ? (
           <Typography
             variant={desktop ? "h4" : tablet ? "h6" : "body2"}
             textAlign="center"
             sx={{ fontWeight: phone && 500 }}
           >
-            <span style={{ color: theme.palette.primary.main }}>
-              <b>{email}</b>
-            </span>{" "}
-            has been successfully verified.
+            <b style={{ color: theme.palette.primary.main }}> {email} </b> is
+            already verified.
+          </Typography>
+        ) : emailIsVerified ? (
+          <Typography
+            variant={desktop ? "h4" : tablet ? "h6" : "body2"}
+            textAlign="center"
+            sx={{ fontWeight: phone && 500 }}
+          >
+            <b style={{ color: theme.palette.primary.main }}> {email} </b> has
+            been successfully verified.
           </Typography>
         ) : (
-          // -------------------- enter email pin --------------------
           <>
             <Typography
               variant={desktop ? "h4" : tablet ? "h6" : "body2"}
@@ -274,9 +326,7 @@ const EmailVerification = () => {
               gutterBottom
             >
               Please enter the {pin.length} digit pin sent to{" "}
-              <span style={{ color: theme.palette.primary.main }}>
-                <b>{email}</b>.
-              </span>
+              <b style={{ color: theme.palette.primary.main }}>{email}</b>.
             </Typography>
             <Typography
               mt={phone ? -3 : -5}
@@ -284,12 +334,12 @@ const EmailVerification = () => {
               textAlign="center"
             >
               Click{" "}
-              <span
+              <b
                 style={{ color: theme.palette.primary.main, cursor: "pointer" }}
-                onClick={() => sendVerificationEmail(email)}
+                onClick={sendVerificationEmailHandler}
               >
-                <b>here</b>
-              </span>{" "}
+                here
+              </b>{" "}
               to resend verification email.
             </Typography>
             <Box
@@ -298,7 +348,7 @@ const EmailVerification = () => {
               alignItems="flex-end"
               justifyContent="center"
             >
-              {pin.verifying ? (
+              {handlingPinValidation ? (
                 <CircularProgress />
               ) : (
                 <PinInput
@@ -320,10 +370,7 @@ const EmailVerification = () => {
                     fontSize: phone ? "18px" : "30px",
                     fontFamily: theme.typography.fontFamily,
                   }}
-                  onComplete={async (value) => {
-                    dispatch({ type: PIN_ACTIONS.VERIFYING });
-                    await verifyEmail(email, parseInt(value));
-                  }}
+                  onComplete={validatePinHandler}
                   autoSelect={true}
                   regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
                 />
@@ -343,11 +390,6 @@ const EmailVerification = () => {
             </Box>
           </>
         )}
-        {/* Home Button */}
-        <CustomButton variant="contained" onClick={() => navigate("/")}>
-          Home
-        </CustomButton>
-        {/* Resend Email Verification Popup */}
         <EmailVerificationPopup
           email={email}
           sendingEmailPopup={sendingEmailPopup}

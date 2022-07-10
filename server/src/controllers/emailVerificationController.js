@@ -39,8 +39,6 @@ const getVerificationStatus = async (req, res) => {
 
     const user = await User.findUserByEmail(email);
 
-    console.log(user)
-
     if (user.emailVerification.isVerified)
       return res.json({ verificationStatus: "Verified" });
 
@@ -101,13 +99,14 @@ const validatePin = async (req, res) => {
 // ------------------------------- sendVerificationEmail -------------------------------
 const sendVerificationEmail = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email } = req.params;
 
     // verify email corresponds to a user in the database
     await verifyEmailIsInUse(email);
 
     const user = await User.findUserByEmail(email);
     // send verification email
+
     await sendEmailVerificationAsync(user.email, user.emailVerification.pin);
     return res.json({ message: "Verification email sent" });
   } catch (err) {

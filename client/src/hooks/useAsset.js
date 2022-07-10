@@ -139,15 +139,16 @@ const useAsset = (input) => {
   // assetsDispatchers is second item in the array that this hook returns
   const assetsDispatchers = initializeDispatchers(assets, dispatch);
   // loadingAssets is third item in the array that this hook returns
-  const loadingAssets = Object.values(assets).reduce(
-    (prev, curr) => prev || curr.isLoading,
-    false
+  const loadingAssets = Object.values(assets).some((asset) => asset.isLoading);
+
+  const fetchingAssetSources = Object.values(assets).some(
+    (asset) => asset.src === ""
   );
 
   // populate the src field from a value of "" to their corresponding src URL
   useEffect(() => populateSrcField(assets, dispatch), [assets]);
 
-  return [assets, assetsDispatchers, loadingAssets];
+  return [assets, assetsDispatchers, loadingAssets, fetchingAssetSources];
 };
 
 export default useAsset;

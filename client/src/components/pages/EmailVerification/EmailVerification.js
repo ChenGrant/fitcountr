@@ -16,6 +16,8 @@ import {
   sendVerificationEmail,
   fetchValidatePin,
 } from "../../../utils";
+import { useDispatch, useSelector } from "react-redux";
+import { setVerificationStatus } from "../../../redux";
 
 // -------------------------------- CONSTANTS --------------------------------
 const EMAIL_VERIFICATION_POPUP_STATES = {
@@ -62,13 +64,15 @@ const EmailVerification = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { desktop, tablet, phone } = useScreenSize();
+  const { user } = useSelector((state) => state);
+  const dispatch = useDispatch();
   const [assets, assetsDispatchers, loadingAssets, fetchingAssetSources] =
     useAsset({
       emailPending: { name: "email_pending" },
       emailVerified: { name: "email_verified" },
       emailDenied: { name: "email_denied" },
     });
-  const [pin, dispatch] = useReducer(pinReducer, initialPinState);
+  const [pin, pinDispatch] = useReducer(pinReducer, initialPinState);
   const [imageSrc, setImageSrc] = useState("");
   const [emailVerificationPopup, setEmailVerificationPopup] = useState(
     EMAIL_VERIFICATION_POPUP_STATES.CLOSED
@@ -110,7 +114,7 @@ const EmailVerification = () => {
       return;
     }
 
-    dispatch({ type: PIN_ACTIONS.VALIDATING });
+    pinDispatch({ type: PIN_ACTIONS.VALIDATING });
     const responseData = await fetchValidatePin(email, parseInt(enteredPin));
     if (responseData.error) {
       console.log(responseData.error.message);
@@ -122,7 +126,7 @@ const EmailVerification = () => {
         setImageSrc(assets.emailVerified.src);
         return;
       case "Pin is invalid":
-        dispatch({ type: PIN_ACTIONS.DENIED });
+        pinDispatch({ type: PIN_ACTIONS.DENIED });
         break;
       default:
         break;
@@ -173,7 +177,7 @@ const EmailVerification = () => {
               }
 
               if (fetchedPinLength.pinLength !== undefined) {
-                dispatch({
+                pinDispatch({
                   type: PIN_ACTIONS.INITIALIZE_LENGTH,
                   payload: fetchedPinLength.pinLength,
                 });
@@ -214,12 +218,16 @@ const EmailVerification = () => {
           onLoad={() => {
             assetsDispatchers.setAllLoading(false);
             if (imageSrc === assets.emailVerified.src) {
+              if (user.isInitialized && user.user !== null)
+                dispatch(setVerificationStatus("Verified"));
+
               if (pin.validating) {
-                dispatch({ type: PIN_ACTIONS.VERIFIED });
+                pinDispatch({ type: PIN_ACTIONS.VERIFIED });
                 setEmailIsVerified(true);
                 setHandlingPinValidation(false);
                 return;
               }
+              
               if (!pin.validating) {
                 setEmailIsVerified(true);
                 setHandlingPinValidation(false);
@@ -349,9 +357,18 @@ const EmailVerification = () => {
           </>
         )}
         {/* Home Button, make it display 'proceed to dashboard' if user is logged in and email verified */}
-        <CustomButton variant="contained" onClick={() => navigate("/")}>
-          Home
-        </CustomButton>
+        {user.isInitialized && user.isVerified && user.user !== null ? (
+          <CustomButton
+            variant="contained"
+            onClick={() => navigate("/dashboard")}
+          >
+            Dashboard
+          </CustomButton>
+        ) : (
+          <CustomButton variant="contained" onClick={() => navigate("/")}>
+            Home
+          </CustomButton>
+        )}
         <EmailVerificationPopup
           email={email}
           sendingEmailPopup={emailVerificationPopup}

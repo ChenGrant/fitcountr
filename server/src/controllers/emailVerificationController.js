@@ -4,6 +4,7 @@ const {
   sendEmailVerificationAsync,
 } = require("../services/nodemailer/nodemailer");
 
+// ------------------------------------ CONSTANTS ------------------------------------
 const EMAIL_NOT_IN_USE = "EMAIL_NOT_IN_USE";
 
 const verifyEmailIsInUse = async (email) => {
@@ -23,9 +24,9 @@ const getEmailIsInUse = async (req, res) => {
       : res.json({ emailIsInUse: false });
   } catch (err) {
     console.log(err);
-    console.log({
+    res.json({
       error: { message: "Could not determine if email is in use" },
-    });
+    }).status(404);
   }
 };
 
@@ -47,12 +48,12 @@ const getVerificationStatus = async (req, res) => {
     console.log(err);
     return res.json({
       error: { message: "Could not get email verification status" },
-    });
+    }).status(404);
   }
 };
 
-// ----------------------------------- getEmailProvider -----------------------------------
-const getEmailProvider = async (req, res) => {
+// --------------------------- getEmailVerificationProvider ---------------------------
+const getEmailVerificationProvider = async (req, res) => {
   try {
     const { email } = req.params;
 
@@ -63,7 +64,7 @@ const getEmailProvider = async (req, res) => {
     return res.json({ emailProvider: user.emailVerification.provider });
   } catch (err) {
     console.log(err);
-    return res.json({ error: { message: "Could not get email provider" } });
+    return res.json({ error: { message: "Could not get email provider" } }).status(404);
   }
 };
 
@@ -81,7 +82,7 @@ const getPinLength = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    return res.json({ error: { message: "Could not get pin length" } });
+    return res.json({ error: { message: "Could not get pin length" } }).status(404);
   }
 };
 
@@ -108,7 +109,7 @@ const validatePin = async (req, res) => {
     return res.json({ message: "Pin is invalid" });
   } catch (err) {
     console.log(err);
-    return res.json({ error: { message: "Could not validate pin" } });
+    return res.json({ error: { message: "Could not validate pin" } }).status(404);
   }
 };
 
@@ -129,14 +130,14 @@ const sendVerificationEmail = async (req, res) => {
     console.log(err);
     return res.json({
       error: { message: "Could not send verification email" },
-    });
+    }).status(404);
   }
 };
 
 module.exports = {
   getEmailIsInUse,
   getVerificationStatus,
-  getEmailProvider,
+  getEmailVerificationProvider,
   getPinLength,
   validatePin,
   sendVerificationEmail,

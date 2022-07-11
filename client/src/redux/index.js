@@ -1,4 +1,4 @@
-export { setUser, setVerificationStatus } from "./user/userActions";
+export { resetUser, setUser, setVerificationStatus } from "./user/userActions";
 
 export {
   initializedFirebaseClient,

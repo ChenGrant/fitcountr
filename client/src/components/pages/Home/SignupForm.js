@@ -25,23 +25,33 @@ import { useNavigate } from "react-router-dom";
 import CustomButton from "../../../mui/CustomButton";
 import GmailOverridePopup from "./GmailOverridePopup";
 import { postSignupData } from "../../../utils";
-import { setUser, setVerificationStatus } from "../../../redux";
+import { resetUser, setUser, setVerificationStatus } from "../../../redux";
+import {
+  GMAIL_PROVIDER,
+  EMAIL_ALREADY_IN_USE,
+  EMAIL_PASSWORD_PROVIDER,
+  FORM_ERROR_HEIGHT,
+  errorIsRendered,
+} from "../../../utils";
 
-// -------------------------------------- CONSTANTS --------------------------------------
-const FORM_ERROR_HEIGHT = "15px";
+// ------------------------------------- FORMIK -------------------------------------
+const initialValues = {
+  email: "",
+  password: "",
+  password2: "",
+};
 
-const EMAIL_ALREADY_IN_USE = "Email already in use";
-
-const GMAIL_PROVIDER = "GMAIL_PROVIDER";
-
-const EMAIL_PASSWORD_PROVIDER = "EMAIL_PASSWORD_PROVIDER";
-
-// given a the name attribute of an input field, fieldName, and the
-// formik object, errorIsRendered returns true if there is an error
-// being rendered for the input field with a name attribute of fieldName
-// and false otherwise
-const errorIsRendered = (fieldName, formik) =>
-  formik.errors[fieldName] && formik.touched[fieldName];
+const validationSchema = Yup.object({
+  email: Yup.string()
+    .required("Required")
+    .email("Email must be a valid email address"),
+  password: Yup.string()
+    .required("Required")
+    .min(8, "Password must be at 8 characters."),
+  password2: Yup.string()
+    .required("Required")
+    .oneOf([Yup.ref("password")], "Passwords must match"),
+});
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
@@ -50,7 +60,7 @@ const SignupForm = ({ toggleForm }) => {
   const theme = useTheme();
   const auth = useSelector((state) => state.firebaseClient.auth);
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const { desktop, tablet } = useScreenSize();
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
   const [password2IsVisible, setPassword2IsVisible] = useState(false);
@@ -64,25 +74,6 @@ const SignupForm = ({ toggleForm }) => {
   // verification provider got overridden to use gmail
   const [overriddenGmailUser, setOverriddenGmailUser] = useState();
 
-  // ------------------------------------- FORMIK -------------------------------------
-  const initialValues = {
-    email: "",
-    password: "",
-    password2: "",
-  };
-
-  const validationSchema = Yup.object({
-    email: Yup.string()
-      .required("Required")
-      .email("Email must be a valid email address"),
-    password: Yup.string()
-      .required("Required")
-      .min(8, "Password must be at 8 characters."),
-    password2: Yup.string()
-      .required("Required")
-      .oneOf([Yup.ref("password")], "Passwords must match"),
-  });
-
   // ----------------------------------- FUNCTIONS -----------------------------------
   // handleGmailSignup signs in the user via their gmail account,
   // creates an account for them if it is their first time signing in.
@@ -91,12 +82,13 @@ const SignupForm = ({ toggleForm }) => {
   const handleGmailSignup = async () => {
     try {
       const result = await signInWithPopup(auth, new GoogleAuthProvider());
+      dispatch(resetUser());
       const { user } = result;
       const fetchedSignupData = await postSignupData(user, GMAIL_PROVIDER);
-      if (fetchedSignupData.message) {
+      if (fetchedSignupData.userIsCreated) {
         switch (fetchedSignupData.message) {
-          case "User created":
-          case "Email already in use, provider is already Gmail":
+          case undefined:
+          case "Email already in use, provider already uses Gmail":
             dispatch(setUser(user));
             dispatch(setVerificationStatus("Verified"));
             navigate("/dashboard");
@@ -104,7 +96,7 @@ const SignupForm = ({ toggleForm }) => {
           case "Email already in use, provider overridden to now use Gmail":
             setOverriddenGmailUser(user);
             setGmailOverridePopupIsOpen(true);
-            break;
+            return;
           default:
             break;
         }
@@ -114,7 +106,7 @@ const SignupForm = ({ toggleForm }) => {
     }
   };
 
-  // handleEmailPasswordSignup uses the given  email string, password string,
+  // handleEmailPasswordSignup uses the given email string, password string,
   // and the formik object to either create a new user or render signup errors
   const handleEmailPasswordSignup = async (email, password, formik) => {
     try {
@@ -124,6 +116,7 @@ const SignupForm = ({ toggleForm }) => {
         email,
         password
       );
+      dispatch(resetUser());
       const { user } = userCredential;
       const fetchedSignupData = await postSignupData(
         user,
@@ -140,15 +133,13 @@ const SignupForm = ({ toggleForm }) => {
       // if there was error creating user
       switch (fetchedSignupData.message) {
         case "Email already in use":
-          formik.setFieldError("email", EMAIL_ALREADY_IN_USE);
-          break;
+          return formik.setFieldError("email", EMAIL_ALREADY_IN_USE);
         default:
           break;
       }
     } catch (error) {
-      if (error.message === "Firebase: Error (auth/email-already-in-use).") {
-        formik.setFieldError("email", EMAIL_ALREADY_IN_USE);
-      }
+      if (error.message === "Firebase: Error (auth/email-already-in-use).")
+        return formik.setFieldError("email", EMAIL_ALREADY_IN_USE);
     }
   };
 
@@ -209,7 +200,6 @@ const SignupForm = ({ toggleForm }) => {
                       </CustomButton>
                     )}
                   </Box>
-
                   {/* login form divider */}
                   <Box
                     my={1}

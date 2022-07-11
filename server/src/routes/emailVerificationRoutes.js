@@ -3,7 +3,7 @@ const router = express.Router();
 const {
   getEmailIsInUse,
   getVerificationStatus,
-  getEmailProvider,
+  getEmailVerificationProvider,
   getPinLength,
   validatePin,
   sendVerificationEmail,
@@ -14,8 +14,9 @@ const {
 // responds with if the email is in use or not
 router.get("/emailInUse/:email", getEmailIsInUse);
 
-
-router.get("/provider/:email", getEmailProvider);
+// handles a GET request containing an email.
+// responds with the email verification provider for the email
+router.get("/provider/:email", getEmailVerificationProvider);
 
 // handles a GET request containing an email.
 // responds with the length of the pin associated with the email

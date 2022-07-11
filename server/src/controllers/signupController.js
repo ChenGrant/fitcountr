@@ -4,8 +4,13 @@ const {
   sendEmailVerificationAsync,
 } = require("../services/nodemailer/nodemailer");
 
+// ------------------------------------ CONSTANTS ------------------------------------
 const EMAIL_PASSWORD_PROVIDER = "EMAIL_PASSWORD_PROVIDER";
 const GMAIL_PROVIDER = "GMAIL_PROVIDER";
+
+// ************************************************************************************
+// ----------------------------------- CONTROLLERS ------------------------------------
+// ************************************************************************************
 
 // ------------------------------- createUser -------------------------------
 const createUser = async (req, res) => {
@@ -47,16 +52,17 @@ const createUser = async (req, res) => {
     }
 
     if (provider === GMAIL_PROVIDER) {
-      // if user with the same gmail already exists, override their
-      // email verification provider to use gmail
+      // if the email is already in use
       if (await User.emailInUse(email)) {
         const existingUser = await User.findUserByEmail(email);
+        // if the existing user's email provider is already gmail
         if (existingUser.emailVerification.provider === GMAIL_PROVIDER) {
           return res.json({
             userIsCreated: true,
-            message: "Email already in use, provider is already Gmail",
+            message: "Email already in use, provider already uses Gmail",
           });
         }
+        // if the existing user's email provider is not gmail
         existingUser.emailVerification.isVerified = true;
         existingUser.emailVerification.provider = GMAIL_PROVIDER;
         await existingUser.save();
@@ -73,13 +79,15 @@ const createUser = async (req, res) => {
         emailVerification: { isVerified: true, provider: GMAIL_PROVIDER },
       });
 
-      return res.json({ userIsCreated: true, message: "User created" });
+      return res.json({ userIsCreated: true });
     }
 
     throw new Error("No provider matched");
   } catch (err) {
     console.log(err);
-    return res.json({ error: { message: "Could not create user" } });
+    return res
+      .json({ error: { message: "Could not create user" } })
+      .status(404);
   }
 };
 

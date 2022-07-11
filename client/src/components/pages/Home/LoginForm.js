@@ -26,20 +26,14 @@ import {
   fetchVerificationStatus,
   postSignupData,
 } from "../../../utils";
-import { setUser, setVerificationStatus } from "../../../redux";
+import { resetUser, setUser, setVerificationStatus } from "../../../redux";
 import { useNavigate } from "react-router-dom";
 import GmailOverridePopup from "./GmailOverridePopup";
-
-// -------------------------------------- CONSTANTS --------------------------------------
-const INPUT_FIELD_ERROR_MESSAGE_HEIGHT = "15px";
-
-const GMAIL_PROVIDER = "GMAIL_PROVIDER";
-
-// given a the name attribute of an input field, fieldName, and the
-// formik object, errorIsRendered returns true if there is an error
-// being rendered for the input field with a name attribute of fieldName
-const errorIsRendered = (fieldName, formik) =>
-  formik.errors[fieldName] && formik.touched[fieldName];
+import {
+  GMAIL_PROVIDER,
+  FORM_ERROR_HEIGHT,
+  errorIsRendered,
+} from "../../../utils";
 
 // ---------------------------------------- FORMIK ----------------------------------------
 const initialValues = {
@@ -73,17 +67,16 @@ const LoginForm = ({ toggleForm }) => {
   const [overriddenGmailUser, setOverriddenGmailUser] = useState();
 
   // ----------------------------------- FUNCTIONS -----------------------------------
-
   const handleLoginWithGmail = async () => {
     try {
       const result = await signInWithPopup(auth, new GoogleAuthProvider());
+      dispatch(resetUser());
       const { user } = result;
-
-      const fetchedSignupData = await postSignupData(user, "GMAIL_PROVIDER");
+      const fetchedSignupData = await postSignupData(user, GMAIL_PROVIDER);
       if (fetchedSignupData.message) {
         switch (fetchedSignupData.message) {
           case "User created":
-          case "Email already in use, provider is already Gmail":
+          case "Email already in use, provider already uses Gmail":
             dispatch(setUser(user));
             dispatch(setVerificationStatus("Verified"));
             navigate("/dashboard");
@@ -112,6 +105,7 @@ const LoginForm = ({ toggleForm }) => {
         email,
         password
       );
+      dispatch(resetUser());
       const { user } = userCredential;
       dispatch(setUser(user));
       const fetchedVerificationStatus = await fetchVerificationStatus(email);
@@ -130,13 +124,9 @@ const LoginForm = ({ toggleForm }) => {
           break;
       }
     } catch (error) {
-      console.log(error.message);
       switch (error.message) {
         case "Login attempt via password when provider is Gmail":
-          return formik.setFieldError(
-            "email",
-            "Gmail login must be used for this account"
-          );
+          return formik.setFieldError("email", "Account uses Gmail login");
         case "Firebase: Error (auth/user-not-found).":
           return formik.setFieldError("email", "Email not in use");
         case "Firebase: Error (auth/wrong-password).":
@@ -225,23 +215,19 @@ const LoginForm = ({ toggleForm }) => {
                   </Typography>
                   {/* email input field */}
                   <Box
-                    mb={
-                      !errorIsRendered("email", formik) &&
-                      INPUT_FIELD_ERROR_MESSAGE_HEIGHT
-                    }
+                    mb={!errorIsRendered("email", formik) && FORM_ERROR_HEIGHT}
                   >
                     <FormikControl
                       control="input"
                       label="Email"
                       name="email"
-                      errorHeight={INPUT_FIELD_ERROR_MESSAGE_HEIGHT}
+                      errorHeight={FORM_ERROR_HEIGHT}
                     />
                   </Box>
                   {/* password input field */}
                   <Box
                     mb={
-                      !errorIsRendered("password", formik) &&
-                      INPUT_FIELD_ERROR_MESSAGE_HEIGHT
+                      !errorIsRendered("password", formik) && FORM_ERROR_HEIGHT
                     }
                   >
                     <FormikControl
@@ -249,7 +235,7 @@ const LoginForm = ({ toggleForm }) => {
                       label="Password"
                       name="password"
                       type={!passwordIsVisible ? "password" : ""}
-                      errorHeight={INPUT_FIELD_ERROR_MESSAGE_HEIGHT}
+                      errorHeight={FORM_ERROR_HEIGHT}
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton

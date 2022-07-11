@@ -7,9 +7,9 @@ const getFirebaseClientConfig = (req, res) => {
     res.json(config.FIREBASE_CLIENT_CONFIG);
   } catch (err) {
     console.log(err);
-    console.log({
+    res.json({
       error: { message: "Could not get Firebase client configuration object" },
-    });
+    }).status(404);
   }
 };
 

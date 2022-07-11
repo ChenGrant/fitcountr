@@ -20,10 +20,12 @@ import {
   signInWithPopup,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../../mui/CustomButton";
 import GmailOverridePopup from "./GmailOverridePopup";
+import { postSignupData } from "../../../utils";
+import { setUser, setVerificationStatus } from "../../../redux";
 
 // -------------------------------------- CONSTANTS --------------------------------------
 const FORM_ERROR_HEIGHT = "15px";
@@ -48,6 +50,7 @@ const SignupForm = ({ toggleForm }) => {
   const theme = useTheme();
   const auth = useSelector((state) => state.firebaseClient.auth);
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const { desktop, tablet } = useScreenSize();
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
   const [password2IsVisible, setPassword2IsVisible] = useState(false);
@@ -59,7 +62,7 @@ const SignupForm = ({ toggleForm }) => {
     useState(false);
   // overriddenGmailAddress is the gmail address of the account whose email
   // verification provider got overridden to use gmail
-  const [overriddenGmailAddress, setOverriddenGmailAddress] = useState("");
+  const [overriddenGmailUser, setOverriddenGmailUser] = useState();
 
   // ------------------------------------- FORMIK -------------------------------------
   const initialValues = {
@@ -81,43 +84,33 @@ const SignupForm = ({ toggleForm }) => {
   });
 
   // ----------------------------------- FUNCTIONS -----------------------------------
-  // given a user object and a email verification provider string, a POST
-  // request is sent to the server to the '/signup' endpoint and this function
-  // returns the json data that the server responds with
-  const postSignupData = async (user, provider) => {
-    const userIdToken = await user.getIdToken();
-    const response = await fetch("/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: userIdToken,
-      },
-      body: JSON.stringify({
-        user,
-        provider,
-      }),
-    });
-    const data = await response.json();
-    return data;
-  };
-
   // handleGmailSignup signs in the user via their gmail account,
   // creates an account for them if it is their first time signing in.
   // If an account associated with the gmail already exists, the login
   // method will be overridden to use gmail.
   const handleGmailSignup = async () => {
-    const result = await signInWithPopup(auth, new GoogleAuthProvider());
-    const { user } = result;
-    const fetchedSignupData = await postSignupData(user, GMAIL_PROVIDER);
-    if (fetchedSignupData.message) {
-      switch (fetchedSignupData.message) {
-        case "Email already in use, provider overridden to now use Gmail":
-          setOverriddenGmailAddress(user.email);
-          setGmailOverridePopupIsOpen(true);
-          break;
-        default:
-          break;
+    try {
+      const result = await signInWithPopup(auth, new GoogleAuthProvider());
+      const { user } = result;
+      const fetchedSignupData = await postSignupData(user, GMAIL_PROVIDER);
+      if (fetchedSignupData.message) {
+        switch (fetchedSignupData.message) {
+          case "User created":
+          case "Email already in use, provider is already Gmail":
+            dispatch(setUser(user));
+            dispatch(setVerificationStatus("Verified"));
+            navigate("/dashboard");
+            return;
+          case "Email already in use, provider overridden to now use Gmail":
+            setOverriddenGmailUser(user);
+            setGmailOverridePopupIsOpen(true);
+            break;
+          default:
+            break;
+        }
       }
+    } catch (error) {
+      console.log(error.code);
     }
   };
 
@@ -139,6 +132,7 @@ const SignupForm = ({ toggleForm }) => {
 
       // if user was successfully created
       if (fetchedSignupData.userIsCreated) {
+        dispatch(setUser(user));
         navigate(`/emailVerification/${email}`);
         return;
       }
@@ -344,7 +338,7 @@ const SignupForm = ({ toggleForm }) => {
                   {/* Gmail override popup */}
                   <GmailOverridePopup
                     gmailOverridePopupIsOpen={gmailOverridePopupIsOpen}
-                    overriddenGmailAddress={overriddenGmailAddress}
+                    overriddenGmailUser={overriddenGmailUser}
                   />
                 </Box>
               </Form>

@@ -15,14 +15,25 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useTheme } from "@emotion/react";
 import CustomButton from "../../../mui/CustomButton";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchVerificationStatus } from "../../../utils";
+import {
+  fetchEmailProvider,
+  fetchVerificationStatus,
+  postSignupData,
+} from "../../../utils";
 import { setUser, setVerificationStatus } from "../../../redux";
 import { useNavigate } from "react-router-dom";
+import GmailOverridePopup from "./GmailOverridePopup";
 
 // -------------------------------------- CONSTANTS --------------------------------------
 const INPUT_FIELD_ERROR_MESSAGE_HEIGHT = "15px";
+
+const GMAIL_PROVIDER = "GMAIL_PROVIDER";
 
 // given a the name attribute of an input field, fieldName, and the
 // formik object, errorIsRendered returns true if there is an error
@@ -51,21 +62,51 @@ const LoginForm = ({ toggleForm }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [gmailLoginButtonIsDisabled, setGmailLoginButtonIsDisabled] =
+    useState(false);
   const [passwordLoginButtonIsDisabled, setPasswordLoginButtonIsDisabled] =
     useState(false);
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
+  const [gmailOverridePopupIsOpen, setGmailOverridePopupIsOpen] =
+    useState(false);
+  //const [overriddenGmailAddress, setOverriddenGmailAddress] = useState("");
+  const [overriddenGmailUser, setOverriddenGmailUser] = useState();
 
   // ----------------------------------- FUNCTIONS -----------------------------------
 
   const handleLoginWithGmail = async () => {
-    // sign user in,
-    // if user doesn't have a record, create one for them
-    // setUser(user), setVerificationStatus('Verified')
-    // navigate to dashboard
+    try {
+      const result = await signInWithPopup(auth, new GoogleAuthProvider());
+      const { user } = result;
+
+      const fetchedSignupData = await postSignupData(user, "GMAIL_PROVIDER");
+      if (fetchedSignupData.message) {
+        switch (fetchedSignupData.message) {
+          case "User created":
+          case "Email already in use, provider is already Gmail":
+            dispatch(setUser(user));
+            dispatch(setVerificationStatus("Verified"));
+            navigate("/dashboard");
+            return;
+          case "Email already in use, provider overridden to now use Gmail":
+            setOverriddenGmailUser(user);
+            setGmailOverridePopupIsOpen(true);
+            return;
+          default:
+            break;
+        }
+      }
+    } catch (error) {
+      console.log(error.code);
+    }
   };
 
   const handleLoginWithEmailAndPassword = async (email, password, formik) => {
     try {
+      const fetchedEmailProvider = await fetchEmailProvider(email);
+      if (fetchedEmailProvider.emailProvider === GMAIL_PROVIDER)
+        throw new Error("Login attempt via password when provider is Gmail");
+
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
@@ -88,11 +129,17 @@ const LoginForm = ({ toggleForm }) => {
         default:
           break;
       }
-    } catch (err) {
-      switch (err.code) {
-        case "auth/user-not-found":
+    } catch (error) {
+      console.log(error.message);
+      switch (error.message) {
+        case "Login attempt via password when provider is Gmail":
+          return formik.setFieldError(
+            "email",
+            "Gmail login must be used for this account"
+          );
+        case "Firebase: Error (auth/user-not-found).":
           return formik.setFieldError("email", "Email not in use");
-        case "auth/wrong-password":
+        case "Firebase: Error (auth/wrong-password).":
           return formik.setFieldError("password", "Incorrect password");
         default:
           break;
@@ -127,18 +174,36 @@ const LoginForm = ({ toggleForm }) => {
                     Login
                   </Typography>
                   {/* "Login with Gmail" button */}
-                  <CustomButton
-                    fullWidth
-                    variant="contained"
-                    onClick={handleLoginWithGmail}
-                    startIcon={
-                      <GoogleIcon
-                        sx={{ transform: "scale(1.5)", marginRight: "20px" }}
-                      />
-                    }
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    sx={{ height: "56px" }}
                   >
-                    Login with Gmail
-                  </CustomButton>
+                    {gmailLoginButtonIsDisabled ? (
+                      <CircularProgress />
+                    ) : (
+                      <CustomButton
+                        fullWidth
+                        variant="contained"
+                        onClick={async () => {
+                          setGmailLoginButtonIsDisabled(true);
+                          await handleLoginWithGmail();
+                          setGmailLoginButtonIsDisabled(false);
+                        }}
+                        startIcon={
+                          <GoogleIcon
+                            sx={{
+                              transform: "scale(1.5)",
+                              marginRight: "20px",
+                            }}
+                          />
+                        }
+                      >
+                        Login with Gmail
+                      </CustomButton>
+                    )}
+                  </Box>
+
                   {/* login form divider */}
                   <Box
                     my={1}
@@ -250,6 +315,11 @@ const LoginForm = ({ toggleForm }) => {
                       Signup
                     </Typography>
                   </Box>
+                  {/* Gmail override popup */}
+                  <GmailOverridePopup
+                    gmailOverridePopupIsOpen={gmailOverridePopupIsOpen}
+                    overriddenGmailUser={overriddenGmailUser}
+                  />
                 </Box>
               </Form>
             );

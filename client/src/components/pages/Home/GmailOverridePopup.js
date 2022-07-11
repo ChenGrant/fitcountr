@@ -1,14 +1,21 @@
 import { useTheme } from "@emotion/react";
 import { Typography } from "@mui/material";
 import React from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import CustomButton from "../../../mui/CustomButton";
 import CustomDialog from "../../../mui/CustomDialog";
+import { setUser, setVerificationStatus } from "../../../redux";
 
 const GmailOverridePopup = ({
   gmailOverridePopupIsOpen,
-  overriddenGmailAddress,
+  overriddenGmailUser,
 }) => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  if (overriddenGmailUser === undefined) return null;
 
   return (
     <CustomDialog open={gmailOverridePopupIsOpen}>
@@ -19,7 +26,7 @@ const GmailOverridePopup = ({
         The email
         <b style={{ color: theme.palette.primary.main }}>
           {" "}
-          {overriddenGmailAddress}{" "}
+          {overriddenGmailUser.email}{" "}
         </b>
         is used by an existing account. This account's login method has been
         overridden to now use Gmail.
@@ -30,7 +37,9 @@ const GmailOverridePopup = ({
       <CustomButton
         variant="contained"
         onClick={() => {
-          // navigate to dashboard
+          dispatch(setUser(overriddenGmailUser));
+          dispatch(setVerificationStatus("Verified"));
+          navigate("/dashboard");
         }}
       >
         I understand

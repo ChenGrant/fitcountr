@@ -51,6 +51,12 @@ const createUser = async (req, res) => {
       // email verification provider to use gmail
       if (await User.emailInUse(email)) {
         const existingUser = await User.findUserByEmail(email);
+        if (existingUser.emailVerification.provider === GMAIL_PROVIDER) {
+          return res.json({
+            userIsCreated: true,
+            message: "Email already in use, provider is already Gmail",
+          });
+        }
         existingUser.emailVerification.isVerified = true;
         existingUser.emailVerification.provider = GMAIL_PROVIDER;
         await existingUser.save();
@@ -67,7 +73,7 @@ const createUser = async (req, res) => {
         emailVerification: { isVerified: true, provider: GMAIL_PROVIDER },
       });
 
-      return res.json({ userIsCreated: true });
+      return res.json({ userIsCreated: true, message: "User created" });
     }
 
     throw new Error("No provider matched");

@@ -51,6 +51,22 @@ const getVerificationStatus = async (req, res) => {
   }
 };
 
+// ----------------------------------- getEmailProvider -----------------------------------
+const getEmailProvider = async (req, res) => {
+  try {
+    const { email } = req.params;
+
+    await verifyEmailIsInUse(email);
+
+    const user = await User.findUserByEmail(email);
+
+    return res.json({ emailProvider: user.emailVerification.provider });
+  } catch (err) {
+    console.log(err);
+    return res.json({ error: { message: "Could not get email provider" } });
+  }
+};
+
 // ----------------------------------- getPinLength -----------------------------------
 const getPinLength = async (req, res) => {
   try {
@@ -120,6 +136,7 @@ const sendVerificationEmail = async (req, res) => {
 module.exports = {
   getEmailIsInUse,
   getVerificationStatus,
+  getEmailProvider,
   getPinLength,
   validatePin,
   sendVerificationEmail,

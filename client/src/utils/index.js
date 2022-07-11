@@ -1,6 +1,7 @@
 export {
   GMAIL_PROVIDER,
   EMAIL_PASSWORD_PROVIDER,
+  fetchFirebaseClientConfig,
   fetchEmailProvider,
   fetchEmailIsInUse,
   fetchVerificationStatus,
@@ -15,3 +16,5 @@ export {
   EMAIL_ALREADY_IN_USE,
   errorIsRendered,
 } from "./inputFieldUtils";
+
+export {handleAuthWithGmail} from './authUtils'

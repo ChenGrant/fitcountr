@@ -15,16 +15,12 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useTheme } from "@emotion/react";
 import CustomButton from "../../../mui/CustomButton";
-import {
-  GoogleAuthProvider,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-} from "firebase/auth";
-import { useDispatch, useSelector } from "react-redux";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useDispatch } from "react-redux";
 import {
   fetchEmailProvider,
   fetchVerificationStatus,
-  postSignupData,
+  handleAuthWithGmail,
 } from "../../../utils";
 import { resetUser, setUser, setVerificationStatus } from "../../../redux";
 import { useNavigate } from "react-router-dom";
@@ -52,7 +48,7 @@ const validationSchema = Yup.object({
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const LoginForm = ({ toggleForm }) => {
-  const { auth } = useSelector((state) => state.firebaseClient);
+  const auth = getAuth();
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -67,33 +63,6 @@ const LoginForm = ({ toggleForm }) => {
   const [overriddenGmailUser, setOverriddenGmailUser] = useState();
 
   // ----------------------------------- FUNCTIONS -----------------------------------
-  const handleLoginWithGmail = async () => {
-    try {
-      const result = await signInWithPopup(auth, new GoogleAuthProvider());
-      dispatch(resetUser());
-      const { user } = result;
-      const fetchedSignupData = await postSignupData(user, GMAIL_PROVIDER);
-      if (fetchedSignupData.message) {
-        switch (fetchedSignupData.message) {
-          case "User created":
-          case "Email already in use, provider already uses Gmail":
-            dispatch(setUser(user));
-            dispatch(setVerificationStatus("Verified"));
-            navigate("/dashboard");
-            return;
-          case "Email already in use, provider overridden to now use Gmail":
-            setOverriddenGmailUser(user);
-            setGmailOverridePopupIsOpen(true);
-            return;
-          default:
-            break;
-        }
-      }
-    } catch (error) {
-      console.log(error.code);
-    }
-  };
-
   const handleLoginWithEmailAndPassword = async (email, password, formik) => {
     try {
       const fetchedEmailProvider = await fetchEmailProvider(email);
@@ -177,7 +146,13 @@ const LoginForm = ({ toggleForm }) => {
                         variant="contained"
                         onClick={async () => {
                           setGmailLoginButtonIsDisabled(true);
-                          await handleLoginWithGmail();
+                          await handleAuthWithGmail({
+                            auth,
+                            dispatch,
+                            navigate,
+                            setOverriddenGmailUser,
+                            setGmailOverridePopupIsOpen,
+                          });
                           setGmailLoginButtonIsDisabled(false);
                         }}
                         startIcon={

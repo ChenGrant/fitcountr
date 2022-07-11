@@ -11,6 +11,7 @@ import UnavailableResource from "./components/pages/UnavailableResource/Unavaila
 import EmailVerification from "./components/pages/EmailVerification/EmailVerification";
 import FontsLoader from "./components/wrappers/FontsLoader";
 import FirebaseAuthListener from "./components/wrappers/FirebaseAuthListener";
+import AppInitializer from "./components/wrappers/AppInitializer";
 
 const App = () => {
   return (
@@ -18,20 +19,22 @@ const App = () => {
       <MUIThemeProvider theme={theme}>
         <FontsLoader>
           <FirebaseClientInitializer>
-            <FirebaseAuthListener>
-              <Router>
-                <Routes>
-                  {/* Routes */}
-                  <Route path="/" element={<Home />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route
-                    path="/emailVerification/:email"
-                    element={<EmailVerification />}
-                  />
-                  <Route path="*" element={<UnavailableResource />} />
-                </Routes>
-              </Router>
-            </FirebaseAuthListener>
+            <AppInitializer>
+              <FirebaseAuthListener>
+                <Router>
+                  <Routes>
+                    {/* Routes */}
+                    <Route path="/" element={<Home />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route
+                      path="/emailVerification/:email"
+                      element={<EmailVerification />}
+                    />
+                    <Route path="*" element={<UnavailableResource />} />
+                  </Routes>
+                </Router>
+              </FirebaseAuthListener>
+            </AppInitializer>
           </FirebaseClientInitializer>
         </FontsLoader>
       </MUIThemeProvider>

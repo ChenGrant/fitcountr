@@ -4,6 +4,12 @@ export const GMAIL_PROVIDER = "GMAIL_PROVIDER";
 export const EMAIL_PASSWORD_PROVIDER = "EMAIL_PASSWORD_PROVIDER";
 
 // ----------------------------------- GET REQUESTS -----------------------------------
+export const fetchFirebaseClientConfig = async () => {
+  const response = await fetch(`/firebaseClientConfig`);
+  const data = await response.json();
+  return data;
+};
+
 export const fetchEmailProvider = async (email) => {
   const response = await fetch(`/emailVerification/provider/${email}`);
   const data = await response.json();

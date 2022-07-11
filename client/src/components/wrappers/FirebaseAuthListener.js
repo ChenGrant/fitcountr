@@ -8,9 +8,7 @@ const FirebaseAuthListener = ({ children }) => {
   useEffect(() => {
     if (auth === null) return;
 
-    const unsubscribeAuth = onAuthStateChanged(auth, (newUser) => {
-      console.log("new user:", newUser);
-    });
+    const unsubscribeAuth = onAuthStateChanged(auth, (newUser) => {});
 
     return unsubscribeAuth;
   }, [auth]);

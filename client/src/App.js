@@ -13,7 +13,6 @@ import FontsLoader from "./components/wrappers/FontsLoader";
 import FirebaseAuthListener from "./components/wrappers/FirebaseAuthListener";
 
 const App = () => {
-  console.log('start')
   return (
     <ReduxProvider store={store}>
       <MUIThemeProvider theme={theme}>

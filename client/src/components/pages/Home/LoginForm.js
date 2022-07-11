@@ -1,6 +1,7 @@
 import {
   Box,
   Card,
+  CircularProgress,
   IconButton,
   InputAdornment,
   Typography,
@@ -14,9 +15,20 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useTheme } from "@emotion/react";
 import CustomButton from "../../../mui/CustomButton";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchVerificationStatus } from "../../../utils";
+import { setUser, setVerificationStatus } from "../../../redux";
+import { useNavigate } from "react-router-dom";
 
 // -------------------------------------- CONSTANTS --------------------------------------
 const INPUT_FIELD_ERROR_MESSAGE_HEIGHT = "15px";
+
+// given a the name attribute of an input field, fieldName, and the
+// formik object, errorIsRendered returns true if there is an error
+// being rendered for the input field with a name attribute of fieldName
+const errorIsRendered = (fieldName, formik) =>
+  formik.errors[fieldName] && formik.touched[fieldName];
 
 // ---------------------------------------- FORMIK ----------------------------------------
 const initialValues = {
@@ -31,34 +43,62 @@ const validationSchema = Yup.object({
   password: Yup.string().required("Required"),
 });
 
-const onSubmit = (values, formik) => {
-  console.log(values);
-};
-
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const LoginForm = ({ toggleForm }) => {
-  const [passwordIsVisible, setPasswordIsVisible] = useState(false);
+  const { auth } = useSelector((state) => state.firebaseClient);
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [passwordLoginButtonIsDisabled, setPasswordLoginButtonIsDisabled] =
+    useState(false);
+  const [passwordIsVisible, setPasswordIsVisible] = useState(false);
 
   // ----------------------------------- FUNCTIONS -----------------------------------
-  // given a the name attribute of an input field, fieldName, and the
-  // formik object, errorIsRendered returns true if there is an error
-  // being rendered for the input field with a name attribute of fieldName
-  const errorIsRendered = (fieldName, formik) =>
-    formik.errors[fieldName] && formik.touched[fieldName];
 
-  // const handleLoginWithGmail = () => {};
+  const handleLoginWithGmail = async () => {
+    // sign user in,
+    // if user doesn't have a record, create one for them
+    // setUser(user), setVerificationStatus('Verified')
+    // navigate to dashboard
+  };
 
-  // const handleLoginWithEmailAndPassword = ({ email, password }) => {
-  //   // send 'values' to server
-  //   // on server end:
-  //   // reapply validation schema. (if it fails to pass validation schema, render error messages)
-  //   // check if there exists a user with that email/password
-  //   // if no user with the entered email exists, errorMessage = 'email does not exist'
-  //   // elseif no password, errorMessage = 'password is incorrect'
-  // };
+  const handleLoginWithEmailAndPassword = async (email, password, formik) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const { user } = userCredential;
+      dispatch(setUser(user));
+      const fetchedVerificationStatus = await fetchVerificationStatus(email);
+      if (fetchedVerificationStatus.error)
+        return console.log(fetchedVerificationStatus.error);
+      switch (fetchedVerificationStatus.verificationStatus) {
+        case "Verified":
+          dispatch(setVerificationStatus("Verified"));
+          navigate("/dashboard");
+          return;
+        case "Not verified":
+          dispatch(setVerificationStatus("Not verified"));
+          navigate(`/emailVerification/${user.email}`);
+          return;
+        default:
+          break;
+      }
+    } catch (err) {
+      switch (err.code) {
+        case "auth/user-not-found":
+          return formik.setFieldError("email", "Email not in use");
+        case "auth/wrong-password":
+          return formik.setFieldError("password", "Incorrect password");
+        default:
+          break;
+      }
+    }
+  };
 
   // ------------------------------------- RENDER -------------------------------------
   return (
@@ -73,7 +113,11 @@ const LoginForm = ({ toggleForm }) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={onSubmit}
+          onSubmit={async ({ email, password }, formik) => {
+            setPasswordLoginButtonIsDisabled(true);
+            await handleLoginWithEmailAndPassword(email, password, formik);
+            setPasswordLoginButtonIsDisabled(false);
+          }}
         >
           {(formik) => {
             return (
@@ -86,6 +130,7 @@ const LoginForm = ({ toggleForm }) => {
                   <CustomButton
                     fullWidth
                     variant="contained"
+                    onClick={handleLoginWithGmail}
                     startIcon={
                       <GoogleIcon
                         sx={{ transform: "scale(1.5)", marginRight: "20px" }}
@@ -172,10 +217,18 @@ const LoginForm = ({ toggleForm }) => {
                     </Typography>
                   </Box>
                   {/* Login button */}
-                  <Box>
-                    <CustomButton type="submit" variant="contained" fullWidth>
-                      Login
-                    </CustomButton>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    sx={{ height: "56px" }}
+                  >
+                    {passwordLoginButtonIsDisabled ? (
+                      <CircularProgress />
+                    ) : (
+                      <CustomButton type="submit" variant="contained" fullWidth>
+                        Login
+                      </CustomButton>
+                    )}
                   </Box>
                   {/* Get started */}
                   <Box>

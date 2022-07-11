@@ -9,6 +9,13 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import PinInput from "react-pin-input";
 import EmailVerificationPopup from "./EmailVerificationPopup";
 import CustomButton from "../../../mui/CustomButton";
+import {
+  fetchEmailIsInUse,
+  fetchVerificationStatus,
+  fetchPinLength,
+  sendVerificationEmail,
+  fetchValidatePin,
+} from "../../../utils";
 
 // -------------------------------- CONSTANTS --------------------------------
 const EMAIL_VERIFICATION_POPUP_STATES = {
@@ -77,50 +84,9 @@ const EmailVerification = () => {
   const pageIsLoading = initializingPageData || loadingAssets;
 
   // ----------------------------------- FUNCTIONS -----------------------------------
-  const fetchEmailIsInUse = async (email) => {
-    const response = await fetch(`/emailVerification/emailInUse/${email}`);
-    const data = await response.json();
-    return data;
-  };
-
-  const fetchVerificationStatus = async (email) => {
-    const response = await fetch(
-      `/emailVerification/verificationStatus/${email}`
-    );
-    const data = await response.json();
-    return data;
-  };
-
-  const fetchPinLength = async (email) => {
-    const response = await fetch(`/emailVerification/pinLength/${email}`);
-    const data = await response.json();
-    return data;
-  };
-
-  const fetchSendVerificationEmail = async (email) => {
-    const response = await fetch(
-      `/emailVerification/sendVerificationEmail/${email}`,
-      { method: "POST" }
-    );
-    const data = await response.json();
-    return data;
-  };
-
-  const fetchValidatePin = async (email, pin) => {
-    const response = await fetch("/emailVerification/validatePin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, pin }),
-    });
-    const data = await response.json();
-    return data;
-  };
-
   const sendVerificationEmailHandler = async () => {
     setEmailVerificationPopup(EMAIL_VERIFICATION_POPUP_STATES.SENDING);
-    const responseData = await fetchSendVerificationEmail(email);
+    const responseData = await sendVerificationEmail(email);
     if (responseData.error) {
       console.log(responseData.error.message);
       setEmailVerificationPopup(EMAIL_VERIFICATION_POPUP_STATES.SENT_FAILED);

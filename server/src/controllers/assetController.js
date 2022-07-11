@@ -11,7 +11,7 @@ const getAsset = (req, res) => {
     res.json({ assetURL });
   } catch (err) {
     console.log(err);
-    res.json({ error: { message: "Could not retrieve asset" } });
+    res.json({ error: { message: "Could not retrieve asset" } }).status(404);
   }
 };
 

@@ -1,4 +1,9 @@
-import { RESET_USER, SET_USER, SET_VERIFICATION_STATUS } from "./userTypes";
+import {
+  INITIALIZE_USER,
+  RESET_USER,
+  SET_USER,
+  SET_VERIFICATION_STATUS,
+} from "./userTypes";
 
 const initialState = {
   isInitialized: false,
@@ -10,10 +15,16 @@ const initialState = {
 const userReducer = (state = initialState, action) => {
   let newUser;
   switch (action.type) {
+    case INITIALIZE_USER:
+      newUser = { ...state, isInitialized: true };
+      break;
+
     case RESET_USER:
-      return { ...initialState };
+      newUser = { ...initialState };
+      break;
+
     case SET_USER:
-      newUser = { ...state, isInitialized: true, user: action.payload };
+      newUser = { ...state, user: action.payload };
       break;
 
     case SET_VERIFICATION_STATUS:
@@ -24,8 +35,13 @@ const userReducer = (state = initialState, action) => {
       newUser = state;
       break;
   }
+
   newUser.isLoggedIn =
-    newUser.isInitialized && newUser.isVerified && newUser.user !== null;
+    newUser.isInitialized &&
+    newUser.isVerified !== null &&
+    newUser.isVerified &&
+    newUser.user !== null;
+
   return newUser;
 };
 

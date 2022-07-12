@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../../mui/CustomButton";
 import CustomDialog from "../../../mui/CustomDialog";
-import { setUser, setVerificationStatus } from "../../../redux";
+import { setVerificationStatus } from "../../../redux";
 
 const GmailOverridePopup = ({
   gmailOverridePopupIsOpen,
@@ -37,8 +37,6 @@ const GmailOverridePopup = ({
       <CustomButton
         variant="contained"
         onClick={() => {
-          dispatch(setUser(overriddenGmailUser));
-          dispatch(setVerificationStatus("Verified"));
           navigate("/dashboard");
         }}
       >

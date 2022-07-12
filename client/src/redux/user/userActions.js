@@ -1,5 +1,13 @@
-import { RESET_USER, SET_USER, SET_VERIFICATION_STATUS } from "./userTypes";
+import {
+  INITIALIZE_USER,
+  RESET_USER,
+  SET_USER,
+  SET_VERIFICATION_STATUS,
+} from "./userTypes";
 
+export const initializeUser = () => {
+  return { type: INITIALIZE_USER };
+};
 export const resetUser = () => {
   return { type: RESET_USER };
 };

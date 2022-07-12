@@ -21,7 +21,6 @@ import { useNavigate } from "react-router-dom";
 import CustomButton from "../../../mui/CustomButton";
 import GmailOverridePopup from "./GmailOverridePopup";
 import { handleAuthWithGmail, postSignupData } from "../../../utils";
-import { resetUser, setUser } from "../../../redux";
 import {
   EMAIL_ALREADY_IN_USE,
   EMAIL_PASSWORD_PROVIDER,
@@ -80,7 +79,6 @@ const SignupForm = ({ toggleForm }) => {
         email,
         password
       );
-      dispatch(resetUser());
       const { user } = userCredential;
       const fetchedSignupData = await postSignupData(
         user,
@@ -89,7 +87,6 @@ const SignupForm = ({ toggleForm }) => {
 
       // if user was successfully created
       if (fetchedSignupData.userIsCreated) {
-        dispatch(setUser(user));
         navigate(`/emailVerification/${email}`);
         return;
       }
@@ -147,13 +144,13 @@ const SignupForm = ({ toggleForm }) => {
                         fullWidth
                         variant="contained"
                         onClick={async () => {
-                          setGmailSignupButtonIsDisabled(true);
                           await handleAuthWithGmail({
                             auth,
                             dispatch,
                             navigate,
                             setOverriddenGmailUser,
                             setGmailOverridePopupIsOpen,
+                            setGmailSignupButtonIsDisabled,
                           });
                           setGmailSignupButtonIsDisabled(false);
                         }}

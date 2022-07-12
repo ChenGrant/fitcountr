@@ -16,13 +16,13 @@ import GoogleIcon from "@mui/icons-material/Google";
 import { useTheme } from "@emotion/react";
 import CustomButton from "../../../mui/CustomButton";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   fetchEmailProvider,
   fetchVerificationStatus,
   handleAuthWithGmail,
 } from "../../../utils";
-import { resetUser, setUser, setVerificationStatus } from "../../../redux";
+import { setVerificationStatus } from "../../../redux";
 import { useNavigate } from "react-router-dom";
 import GmailOverridePopup from "./GmailOverridePopup";
 import {
@@ -51,6 +51,7 @@ const LoginForm = ({ toggleForm }) => {
   const auth = getAuth();
   const theme = useTheme();
   const dispatch = useDispatch();
+  const reduxUser = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [gmailLoginButtonIsDisabled, setGmailLoginButtonIsDisabled] =
     useState(false);
@@ -74,19 +75,23 @@ const LoginForm = ({ toggleForm }) => {
         email,
         password
       );
-      dispatch(resetUser());
+
       const { user } = userCredential;
-      dispatch(setUser(user));
+
+      if (reduxUser.user === user && reduxUser.isVerified !== null) {
+        return reduxUser.isVerified
+          ? navigate("/dashboard")
+          : navigate(`/emailVerification/${user.email}`);
+      }
+
       const fetchedVerificationStatus = await fetchVerificationStatus(email);
       if (fetchedVerificationStatus.error)
         return console.log(fetchedVerificationStatus.error);
       switch (fetchedVerificationStatus.verificationStatus) {
         case "Verified":
-          dispatch(setVerificationStatus("Verified"));
           navigate("/dashboard");
           return;
         case "Not verified":
-          dispatch(setVerificationStatus("Not verified"));
           navigate(`/emailVerification/${user.email}`);
           return;
         default:
@@ -145,13 +150,13 @@ const LoginForm = ({ toggleForm }) => {
                         fullWidth
                         variant="contained"
                         onClick={async () => {
-                          setGmailLoginButtonIsDisabled(true);
                           await handleAuthWithGmail({
                             auth,
                             dispatch,
                             navigate,
                             setOverriddenGmailUser,
                             setGmailOverridePopupIsOpen,
+                            setGmailLoginButtonIsDisabled,
                           });
                           setGmailLoginButtonIsDisabled(false);
                         }}

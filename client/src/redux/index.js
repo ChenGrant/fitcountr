@@ -1,1 +1,6 @@
-export { resetUser, setUser, setVerificationStatus } from "./user/userActions";
+export {
+  initializeUser,
+  resetUser,
+  setUser,
+  setVerificationStatus,
+} from "./user/userActions";

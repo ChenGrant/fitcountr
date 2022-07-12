@@ -1,5 +1,5 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { resetUser, setUser, setVerificationStatus } from "../redux";
+import { setVerificationStatus } from "../redux";
 import { GMAIL_PROVIDER, postSignupData } from "./fetchRequestUtils";
 
 // handleAuthWithGmail signs in the user via their gmail account,
@@ -12,18 +12,17 @@ export const handleAuthWithGmail = async ({
   navigate,
   setOverriddenGmailUser,
   setGmailOverridePopupIsOpen,
+  setGmailSignupButtonIsDisabled,
 }) => {
   try {
     const result = await signInWithPopup(auth, new GoogleAuthProvider());
-    dispatch(resetUser());
+    setGmailSignupButtonIsDisabled(true);
     const { user } = result;
     const fetchedSignupData = await postSignupData(user, GMAIL_PROVIDER);
     if (fetchedSignupData.userIsCreated) {
       switch (fetchedSignupData.message) {
         case undefined:
         case "Email already in use, provider already uses Gmail":
-          dispatch(setUser(user));
-          dispatch(setVerificationStatus("Verified"));
           navigate("/dashboard");
           return;
         case "Email already in use, provider overridden to now use Gmail":

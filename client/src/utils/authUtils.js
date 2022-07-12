@@ -1,22 +1,20 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { setVerificationStatus } from "../redux";
 import { GMAIL_PROVIDER, postSignupData } from "./fetchRequestUtils";
 
 // handleAuthWithGmail signs in the user via their gmail account,
 // creates an account for them if it is their first time signing in.
 // If an account associated with the gmail already exists, the login
 // method will be overridden to use gmail.
-export const handleAuthWithGmail = async ({
+export const handleAuthWithGmail = async (
   auth,
-  dispatch,
   navigate,
   setOverriddenGmailUser,
   setGmailOverridePopupIsOpen,
-  setGmailSignupButtonIsDisabled,
-}) => {
+  setGmailButtonIsDisabled,
+) => {
   try {
     const result = await signInWithPopup(auth, new GoogleAuthProvider());
-    setGmailSignupButtonIsDisabled(true);
+    setGmailButtonIsDisabled(true);
     const { user } = result;
     const fetchedSignupData = await postSignupData(user, GMAIL_PROVIDER);
     if (fetchedSignupData.userIsCreated) {
@@ -34,6 +32,6 @@ export const handleAuthWithGmail = async ({
       }
     }
   } catch (error) {
-    console.log(error.code);
+    console.log(error);
   }
 };

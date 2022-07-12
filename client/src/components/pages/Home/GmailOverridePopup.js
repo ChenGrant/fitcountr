@@ -1,11 +1,9 @@
 import { useTheme } from "@emotion/react";
 import { Typography } from "@mui/material";
 import React from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../../mui/CustomButton";
 import CustomDialog from "../../../mui/CustomDialog";
-import { setVerificationStatus } from "../../../redux";
 
 const GmailOverridePopup = ({
   gmailOverridePopupIsOpen,
@@ -13,7 +11,6 @@ const GmailOverridePopup = ({
 }) => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   if (overriddenGmailUser === undefined) return null;
 

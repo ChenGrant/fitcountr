@@ -15,7 +15,6 @@ const FirebaseAuthListener = ({ children }) => {
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, async (newUser) => {
-      console.log(newUser);
       dispatch(resetUser(newUser));
       dispatch(setUser(newUser));
       if (newUser) {

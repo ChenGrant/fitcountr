@@ -16,13 +16,12 @@ import GoogleIcon from "@mui/icons-material/Google";
 import { useTheme } from "@emotion/react";
 import CustomButton from "../../../mui/CustomButton";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   fetchEmailProvider,
   fetchVerificationStatus,
   handleAuthWithGmail,
 } from "../../../utils";
-import { setVerificationStatus } from "../../../redux";
 import { useNavigate } from "react-router-dom";
 import GmailOverridePopup from "./GmailOverridePopup";
 import {
@@ -50,7 +49,6 @@ const validationSchema = Yup.object({
 const LoginForm = ({ toggleForm }) => {
   const auth = getAuth();
   const theme = useTheme();
-  const dispatch = useDispatch();
   const reduxUser = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [gmailLoginButtonIsDisabled, setGmailLoginButtonIsDisabled] =
@@ -150,14 +148,13 @@ const LoginForm = ({ toggleForm }) => {
                         fullWidth
                         variant="contained"
                         onClick={async () => {
-                          await handleAuthWithGmail({
+                          await handleAuthWithGmail(
                             auth,
-                            dispatch,
                             navigate,
                             setOverriddenGmailUser,
                             setGmailOverridePopupIsOpen,
                             setGmailLoginButtonIsDisabled,
-                          });
+                          );
                           setGmailLoginButtonIsDisabled(false);
                         }}
                         startIcon={

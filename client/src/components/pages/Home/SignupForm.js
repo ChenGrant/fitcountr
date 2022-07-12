@@ -16,7 +16,6 @@ import GoogleIcon from "@mui/icons-material/Google";
 import { useTheme } from "@emotion/react";
 import useScreenSize from "../../../hooks/useScreenSize";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../../mui/CustomButton";
 import GmailOverridePopup from "./GmailOverridePopup";
@@ -54,7 +53,6 @@ const SignupForm = ({ toggleForm }) => {
   const theme = useTheme();
   const auth = getAuth();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { desktop, tablet } = useScreenSize();
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
   const [password2IsVisible, setPassword2IsVisible] = useState(false);
@@ -144,14 +142,13 @@ const SignupForm = ({ toggleForm }) => {
                         fullWidth
                         variant="contained"
                         onClick={async () => {
-                          await handleAuthWithGmail({
+                          await handleAuthWithGmail(
                             auth,
-                            dispatch,
                             navigate,
                             setOverriddenGmailUser,
                             setGmailOverridePopupIsOpen,
                             setGmailSignupButtonIsDisabled,
-                          });
+                          );
                           setGmailSignupButtonIsDisabled(false);
                         }}
                         startIcon={

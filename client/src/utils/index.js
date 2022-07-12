@@ -17,4 +17,4 @@ export {
   errorIsRendered,
 } from "./inputFieldUtils";
 
-export {handleAuthWithGmail} from './authUtils'
+export { handleAuthWithGmail } from "./authUtils";

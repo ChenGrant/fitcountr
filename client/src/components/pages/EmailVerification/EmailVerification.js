@@ -218,7 +218,7 @@ const EmailVerification = () => {
           onLoad={() => {
             assetsDispatchers.setAllLoading(false);
             if (imageSrc === assets.emailVerified.src) {
-              if (user.user && user.email === email)
+              if (user.user && user.user.email === email)
                 dispatch(setVerificationStatus("Verified"));
 
               if (pin.validating) {
@@ -227,7 +227,7 @@ const EmailVerification = () => {
                 setHandlingPinValidation(false);
                 return;
               }
-              
+
               if (!pin.validating) {
                 setEmailIsVerified(true);
                 setHandlingPinValidation(false);
@@ -357,7 +357,7 @@ const EmailVerification = () => {
           </>
         )}
         {/* Home Button, make it display 'proceed to dashboard' if user is logged in and email verified */}
-        {user.isLoggedIn && user.user.email === email? (
+        {user.isLoggedIn && user.user.email === email ? (
           <CustomButton
             variant="contained"
             onClick={() => navigate("/dashboard")}

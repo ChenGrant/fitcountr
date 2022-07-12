@@ -1,6 +1,6 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   initializeUser,
   resetUser,
@@ -12,6 +12,7 @@ import { fetchVerificationStatus } from "../../utils";
 const FirebaseAuthListener = ({ children }) => {
   const auth = getAuth();
   const dispatch = useDispatch();
+  const {user} = useSelector(state => state)
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, async (newUser) => {
@@ -26,6 +27,8 @@ const FirebaseAuthListener = ({ children }) => {
 
     return unsubscribeAuth;
   }, [auth, dispatch]);
+
+  if (!user.isInitialized) return null
 
   return <>{children}</>;
 };

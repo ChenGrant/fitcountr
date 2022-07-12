@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import Loading from "../Loading/Loading";
 import LoginForm from "./LoginForm";
@@ -44,11 +44,7 @@ const Home = () => {
   const toggleForm = () =>
     setForm(form === LOGIN_FORM ? SIGNUP_FORM : LOGIN_FORM);
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
-
-  if (!user.isInitialized) return null;
+  //if (!user.isInitialized) return null;
 
   if (
     user.isLoggedIn &&

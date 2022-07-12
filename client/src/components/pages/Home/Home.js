@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import Loading from "../Loading/Loading";
 import LoginForm from "./LoginForm";
 import useScreenSize from "../../../hooks/useScreenSize";
 import SignupForm from "./SignupForm";
 import useAsset from "../../../hooks/useAsset";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
+import GmailOverridePopup, {
+  GMAIL_OVERRIDE_POPUP_STATES,
+} from "./GmailOverridePopup";
 
 // ------------------------------------ CONSTANTS ------------------------------------
 const SIGNUP_FORM = "SIGNUP_FORM";
@@ -20,6 +25,14 @@ const Home = () => {
     logo: { name: "logo" },
     laptopPhone: { name: "laptop_phone" },
   });
+  const { user } = useSelector((state) => state);
+  const [gmailOverridePopupState, setGmailOverridePopupState] = useState(
+    GMAIL_OVERRIDE_POPUP_STATES.CLOSED
+  );
+  //const [overriddenGmailAddress, setOverriddenGmailAddress] = useState("");
+  const [overriddenGmailUser, setOverriddenGmailUser] = useState();
+  const [creatingUser, setCreatingUser] = useState(false)
+
   // pageIsLoading is false when all images have been fetched, the client
   // firebase SDK has been initialized, and font have loaded. Otherwise
   // it is true
@@ -30,6 +43,18 @@ const Home = () => {
   // SIGNUP_FORM and LOGIN_FORM
   const toggleForm = () =>
     setForm(form === LOGIN_FORM ? SIGNUP_FORM : LOGIN_FORM);
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
+  if (!user.isInitialized) return null;
+
+  if (
+    user.isLoggedIn &&
+    gmailOverridePopupState === GMAIL_OVERRIDE_POPUP_STATES.CLOSED && !creatingUser
+  )
+    return <Navigate to="/dashboard" />;
 
   // ------------------------------------- RENDER -------------------------------------
   return (
@@ -85,10 +110,25 @@ const Home = () => {
         </Box>
         {/* toggle between LoginForm and SignupForm components */}
         {form === LOGIN_FORM ? (
-          <LoginForm toggleForm={toggleForm} />
+          <LoginForm
+            toggleForm={toggleForm}
+            setGmailOverridePopupState={setGmailOverridePopupState}
+            setOverriddenGmailUser={setOverriddenGmailUser}
+          />
         ) : (
-          <SignupForm toggleForm={toggleForm} />
+          <SignupForm
+            toggleForm={toggleForm}
+            setGmailOverridePopupState={setGmailOverridePopupState}
+            setOverriddenGmailUser={setOverriddenGmailUser}
+            setCreatingUser = {setCreatingUser}
+          />
         )}
+        {/* Gmail override popup */}
+        <GmailOverridePopup
+          gmailOverridePopupState={gmailOverridePopupState}
+          setGmailOverridePopupState={setGmailOverridePopupState}
+          overriddenGmailUser={overriddenGmailUser}
+        />
       </Box>
     </Box>
   );

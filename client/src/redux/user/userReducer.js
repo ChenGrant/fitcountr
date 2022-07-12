@@ -20,7 +20,7 @@ const userReducer = (state = initialState, action) => {
       break;
 
     case RESET_USER:
-      newUser = { ...initialState };
+      newUser = { ...initialState, isInitialized: state.isInitialized };
       break;
 
     case SET_USER:

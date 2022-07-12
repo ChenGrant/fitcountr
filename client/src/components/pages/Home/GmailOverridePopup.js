@@ -5,8 +5,14 @@ import { useNavigate } from "react-router-dom";
 import CustomButton from "../../../mui/CustomButton";
 import CustomDialog from "../../../mui/CustomDialog";
 
+export const GMAIL_OVERRIDE_POPUP_STATES = {
+  OPEN: "OPEN",
+  CLOSED: "CLOSED",
+  PENDING: "PENDING",
+};
 const GmailOverridePopup = ({
-  gmailOverridePopupIsOpen,
+  gmailOverridePopupState,
+  setGmailOverridePopupState,
   overriddenGmailUser,
 }) => {
   const theme = useTheme();
@@ -15,7 +21,9 @@ const GmailOverridePopup = ({
   if (overriddenGmailUser === undefined) return null;
 
   return (
-    <CustomDialog open={gmailOverridePopupIsOpen}>
+    <CustomDialog
+      open={gmailOverridePopupState === GMAIL_OVERRIDE_POPUP_STATES.OPEN}
+    >
       <Typography variant="h4" gutterBottom>
         Login Method Overridden To Gmail
       </Typography>
@@ -34,6 +42,7 @@ const GmailOverridePopup = ({
       <CustomButton
         variant="contained"
         onClick={() => {
+          setGmailOverridePopupState(GMAIL_OVERRIDE_POPUP_STATES.CLOSED);
           navigate("/dashboard");
         }}
       >

@@ -18,7 +18,6 @@ import useScreenSize from "../../../hooks/useScreenSize";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../../mui/CustomButton";
-import GmailOverridePopup from "./GmailOverridePopup";
 import { handleAuthWithGmail, postSignupData } from "../../../utils";
 import {
   EMAIL_ALREADY_IN_USE,
@@ -49,7 +48,12 @@ const validationSchema = Yup.object({
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
-const SignupForm = ({ toggleForm }) => {
+const SignupForm = ({
+  toggleForm,
+  setGmailOverridePopupState,
+  setOverriddenGmailUser,
+  setCreatingUser
+}) => {
   const theme = useTheme();
   const auth = getAuth();
   const navigate = useNavigate();
@@ -60,11 +64,6 @@ const SignupForm = ({ toggleForm }) => {
     useState(false);
   const [gmailSignupButtonIsDisabled, setGmailSignupButtonIsDisabled] =
     useState(false);
-  const [gmailOverridePopupIsOpen, setGmailOverridePopupIsOpen] =
-    useState(false);
-  // overriddenGmailAddress is the gmail address of the account whose email
-  // verification provider got overridden to use gmail
-  const [overriddenGmailUser, setOverriddenGmailUser] = useState();
 
   // ----------------------------------- FUNCTIONS -----------------------------------
   // handleEmailPasswordSignup uses the given email string, password string,
@@ -117,9 +116,11 @@ const SignupForm = ({ toggleForm }) => {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={async ({ email, password }, formik) => {
+            setCreatingUser(true)
             setPasswordSignupButtonIsDisabled(true);
             await handleEmailPasswordSignup(email, password, formik);
             setPasswordSignupButtonIsDisabled(false);
+            setCreatingUser(false)
           }}
         >
           {(formik) => {
@@ -142,14 +143,16 @@ const SignupForm = ({ toggleForm }) => {
                         fullWidth
                         variant="contained"
                         onClick={async () => {
+                          setCreatingUser(true)
                           await handleAuthWithGmail(
                             auth,
                             navigate,
                             setOverriddenGmailUser,
-                            setGmailOverridePopupIsOpen,
-                            setGmailSignupButtonIsDisabled,
+                            setGmailOverridePopupState,
+                            setGmailSignupButtonIsDisabled
                           );
                           setGmailSignupButtonIsDisabled(false);
+                          setCreatingUser(false)
                         }}
                         startIcon={
                           <GoogleIcon
@@ -289,11 +292,6 @@ const SignupForm = ({ toggleForm }) => {
                       Login
                     </Typography>
                   </Box>
-                  {/* Gmail override popup */}
-                  <GmailOverridePopup
-                    gmailOverridePopupIsOpen={gmailOverridePopupIsOpen}
-                    overriddenGmailUser={overriddenGmailUser}
-                  />
                 </Box>
               </Form>
             );

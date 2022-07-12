@@ -23,7 +23,6 @@ import {
   handleAuthWithGmail,
 } from "../../../utils";
 import { useNavigate } from "react-router-dom";
-import GmailOverridePopup from "./GmailOverridePopup";
 import {
   GMAIL_PROVIDER,
   FORM_ERROR_HEIGHT,
@@ -46,7 +45,11 @@ const validationSchema = Yup.object({
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
-const LoginForm = ({ toggleForm }) => {
+const LoginForm = ({
+  toggleForm,
+  setGmailOverridePopupState,
+  setOverriddenGmailUser,
+}) => {
   const auth = getAuth();
   const theme = useTheme();
   const reduxUser = useSelector((state) => state.user);
@@ -56,10 +59,6 @@ const LoginForm = ({ toggleForm }) => {
   const [passwordLoginButtonIsDisabled, setPasswordLoginButtonIsDisabled] =
     useState(false);
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
-  const [gmailOverridePopupIsOpen, setGmailOverridePopupIsOpen] =
-    useState(false);
-  //const [overriddenGmailAddress, setOverriddenGmailAddress] = useState("");
-  const [overriddenGmailUser, setOverriddenGmailUser] = useState();
 
   // ----------------------------------- FUNCTIONS -----------------------------------
   const handleLoginWithEmailAndPassword = async (email, password, formik) => {
@@ -152,8 +151,8 @@ const LoginForm = ({ toggleForm }) => {
                             auth,
                             navigate,
                             setOverriddenGmailUser,
-                            setGmailOverridePopupIsOpen,
-                            setGmailLoginButtonIsDisabled,
+                            setGmailOverridePopupState,
+                            setGmailLoginButtonIsDisabled
                           );
                           setGmailLoginButtonIsDisabled(false);
                         }}
@@ -278,11 +277,6 @@ const LoginForm = ({ toggleForm }) => {
                       Signup
                     </Typography>
                   </Box>
-                  {/* Gmail override popup */}
-                  <GmailOverridePopup
-                    gmailOverridePopupIsOpen={gmailOverridePopupIsOpen}
-                    overriddenGmailUser={overriddenGmailUser}
-                  />
                 </Box>
               </Form>
             );

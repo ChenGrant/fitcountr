@@ -25,6 +25,8 @@ import {
   FORM_ERROR_HEIGHT,
   errorIsRendered,
 } from "../../../utils";
+import { useDispatch } from "react-redux";
+import { setAuthenticatingUser } from "../../../redux";
 
 // ------------------------------------- FORMIK -------------------------------------
 const initialValues = {
@@ -52,11 +54,11 @@ const SignupForm = ({
   toggleForm,
   setGmailOverridePopupState,
   setOverriddenGmailUser,
-  setCreatingUser
 }) => {
   const theme = useTheme();
   const auth = getAuth();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { desktop, tablet } = useScreenSize();
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
   const [password2IsVisible, setPassword2IsVisible] = useState(false);
@@ -116,11 +118,11 @@ const SignupForm = ({
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={async ({ email, password }, formik) => {
-            setCreatingUser(true)
+            dispatch(setAuthenticatingUser(true));
             setPasswordSignupButtonIsDisabled(true);
             await handleEmailPasswordSignup(email, password, formik);
             setPasswordSignupButtonIsDisabled(false);
-            setCreatingUser(false)
+            dispatch(setAuthenticatingUser(false));
           }}
         >
           {(formik) => {
@@ -143,7 +145,7 @@ const SignupForm = ({
                         fullWidth
                         variant="contained"
                         onClick={async () => {
-                          setCreatingUser(true)
+                          dispatch(setAuthenticatingUser(true));
                           await handleAuthWithGmail(
                             auth,
                             navigate,
@@ -152,7 +154,7 @@ const SignupForm = ({
                             setGmailSignupButtonIsDisabled
                           );
                           setGmailSignupButtonIsDisabled(false);
-                          setCreatingUser(false)
+                          dispatch(setAuthenticatingUser(false));
                         }}
                         startIcon={
                           <GoogleIcon

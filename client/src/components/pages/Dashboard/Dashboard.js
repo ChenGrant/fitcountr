@@ -1,3 +1,4 @@
+import { Box, Typography } from "@mui/material";
 import { getAuth, signOut } from "firebase/auth";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -14,8 +15,8 @@ const Dashboard = () => {
   if (!user.isLoggedIn) return <Navigate to="/" />;
 
   return (
-    <>
-      <div>Dashboard</div>
+    <Box>
+      <Typography>Hi {user.email}</Typography>
       <CustomButton
         variant="contained"
         onClick={async () => {
@@ -25,7 +26,7 @@ const Dashboard = () => {
       >
         Logout
       </CustomButton>
-    </>
+    </Box>
   );
 };
 

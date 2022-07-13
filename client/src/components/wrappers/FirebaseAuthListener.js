@@ -12,10 +12,11 @@ import { fetchVerificationStatus } from "../../utils";
 const FirebaseAuthListener = ({ children }) => {
   const auth = getAuth();
   const dispatch = useDispatch();
-  const {user} = useSelector(state => state)
+  const { user } = useSelector((state) => state);
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, async (newUser) => {
+      if (user.isAuthenticating) return;
       dispatch(resetUser(newUser));
       dispatch(setUser(newUser));
       if (newUser) {
@@ -26,9 +27,9 @@ const FirebaseAuthListener = ({ children }) => {
     });
 
     return unsubscribeAuth;
-  }, [auth, dispatch]);
+  }, [auth, user.isAuthenticating, dispatch]);
 
-  if (!user.isInitialized) return null
+  if (!user.isInitialized) return null;
 
   return <>{children}</>;
 };

@@ -16,8 +16,9 @@ import GoogleIcon from "@mui/icons-material/Google";
 import { useTheme } from "@emotion/react";
 import CustomButton from "../../../mui/CustomButton";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
+  fetchEmailIsInUse,
   fetchEmailProvider,
   fetchVerificationStatus,
   handleAuthWithGmail,
@@ -28,6 +29,7 @@ import {
   FORM_ERROR_HEIGHT,
   errorIsRendered,
 } from "../../../utils";
+import { setAuthenticatingUser } from "../../../redux";
 
 // ---------------------------------------- FORMIK ----------------------------------------
 const initialValues = {
@@ -52,7 +54,8 @@ const LoginForm = ({
 }) => {
   const auth = getAuth();
   const theme = useTheme();
-  const reduxUser = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [gmailLoginButtonIsDisabled, setGmailLoginButtonIsDisabled] =
     useState(false);
@@ -63,6 +66,10 @@ const LoginForm = ({
   // ----------------------------------- FUNCTIONS -----------------------------------
   const handleLoginWithEmailAndPassword = async (email, password, formik) => {
     try {
+      const fetchedEmailIsInUse = await fetchEmailIsInUse(email);
+      if (!fetchedEmailIsInUse.emailIsInUse)
+        throw new Error("Email not in use");
+
       const fetchedEmailProvider = await fetchEmailProvider(email);
       if (fetchedEmailProvider.emailProvider === GMAIL_PROVIDER)
         throw new Error("Login attempt via password when provider is Gmail");
@@ -72,13 +79,12 @@ const LoginForm = ({
         email,
         password
       );
+      const newUser = userCredential.user;
 
-      const { user } = userCredential;
-
-      if (reduxUser.user === user && reduxUser.isVerified !== null) {
-        return reduxUser.isVerified
+      if (user.user === newUser && user.isVerified !== null) {
+        return user.isVerified
           ? navigate("/dashboard")
-          : navigate(`/emailVerification/${user.email}`);
+          : navigate(`/emailVerification/${newUser.email}`);
       }
 
       const fetchedVerificationStatus = await fetchVerificationStatus(email);
@@ -89,7 +95,7 @@ const LoginForm = ({
           navigate("/dashboard");
           return;
         case "Not verified":
-          navigate(`/emailVerification/${user.email}`);
+          navigate(`/emailVerification/${newUser.email}`);
           return;
         default:
           break;
@@ -98,6 +104,7 @@ const LoginForm = ({
       switch (error.message) {
         case "Login attempt via password when provider is Gmail":
           return formik.setFieldError("email", "Account uses Gmail login");
+        case "Email not in use":
         case "Firebase: Error (auth/user-not-found).":
           return formik.setFieldError("email", "Email not in use");
         case "Firebase: Error (auth/wrong-password).":
@@ -147,6 +154,7 @@ const LoginForm = ({
                         fullWidth
                         variant="contained"
                         onClick={async () => {
+                          dispatch(setAuthenticatingUser(true));
                           await handleAuthWithGmail(
                             auth,
                             navigate,
@@ -154,6 +162,7 @@ const LoginForm = ({
                             setGmailOverridePopupState,
                             setGmailLoginButtonIsDisabled
                           );
+                          dispatch(setAuthenticatingUser(false));
                           setGmailLoginButtonIsDisabled(false);
                         }}
                         startIcon={

@@ -29,9 +29,7 @@ const Home = () => {
   const [gmailOverridePopupState, setGmailOverridePopupState] = useState(
     GMAIL_OVERRIDE_POPUP_STATES.CLOSED
   );
-  //const [overriddenGmailAddress, setOverriddenGmailAddress] = useState("");
   const [overriddenGmailUser, setOverriddenGmailUser] = useState();
-  const [creatingUser, setCreatingUser] = useState(false)
 
   // pageIsLoading is false when all images have been fetched, the client
   // firebase SDK has been initialized, and font have loaded. Otherwise
@@ -48,7 +46,8 @@ const Home = () => {
 
   if (
     user.isLoggedIn &&
-    gmailOverridePopupState === GMAIL_OVERRIDE_POPUP_STATES.CLOSED && !creatingUser
+    !user.isCreating &&
+    gmailOverridePopupState === GMAIL_OVERRIDE_POPUP_STATES.CLOSED
   )
     return <Navigate to="/dashboard" />;
 
@@ -116,7 +115,6 @@ const Home = () => {
             toggleForm={toggleForm}
             setGmailOverridePopupState={setGmailOverridePopupState}
             setOverriddenGmailUser={setOverriddenGmailUser}
-            setCreatingUser = {setCreatingUser}
           />
         )}
         {/* Gmail override popup */}

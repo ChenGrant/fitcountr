@@ -1,11 +1,13 @@
 import {
   INITIALIZE_USER,
   RESET_USER,
+  SET_AUTHENTICATING_USER,
   SET_USER,
   SET_VERIFICATION_STATUS,
 } from "./userTypes";
 
 const initialState = {
+  isAuthenticating: false,
   isInitialized: false,
   user: null,
   isVerified: null,
@@ -25,6 +27,10 @@ const userReducer = (state = initialState, action) => {
 
     case SET_USER:
       newUser = { ...state, user: action.payload };
+      break;
+
+    case SET_AUTHENTICATING_USER:
+      newUser = { ...state, isAuthenticating: action.payload };
       break;
 
     case SET_VERIFICATION_STATUS:

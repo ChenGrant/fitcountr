@@ -157,13 +157,11 @@ const LoginForm = ({
                           dispatch(setAuthenticatingUser(true));
                           await handleAuthWithGmail(
                             auth,
-                            navigate,
                             setOverriddenGmailUser,
                             setGmailOverridePopupState,
                             setGmailLoginButtonIsDisabled
                           );
                           dispatch(setAuthenticatingUser(false));
-                          setGmailLoginButtonIsDisabled(false);
                         }}
                         startIcon={
                           <GoogleIcon

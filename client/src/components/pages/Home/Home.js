@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import Loading from "../Loading/Loading";
 import LoginForm from "./LoginForm";
@@ -44,6 +44,7 @@ const Home = () => {
 
   //if (!user.isInitialized) return null;
 
+  // ------------------------------------- RENDER -------------------------------------
   if (
     user.isLoggedIn &&
     !user.isCreating &&
@@ -51,7 +52,6 @@ const Home = () => {
   )
     return <Navigate to="/dashboard" />;
 
-  // ------------------------------------- RENDER -------------------------------------
   return (
     <Box height={desktop && "100vh"} px="5vw">
       {/* render Loading component when loading */}

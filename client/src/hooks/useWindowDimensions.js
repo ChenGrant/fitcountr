@@ -5,7 +5,7 @@ const getWindowDimensions = () => {
   return { width, height };
 };
 
-const RESIZE_EVENT_NAME = "RESIZE";
+const RESIZE_EVENT_NAME = "resize";
 
 // returns an object with 'width' and 'height' properties that
 // represent the width and height of the window in pixels respectively

@@ -8,7 +8,6 @@ import { GMAIL_PROVIDER, postSignupData } from "./fetchRequestUtils";
 // method will be overridden to use gmail.
 export const handleAuthWithGmail = async (
   auth,
-  navigate,
   setOverriddenGmailUser,
   setGmailOverridePopupState,
   setGmailButtonIsDisabled
@@ -18,17 +17,18 @@ export const handleAuthWithGmail = async (
     setGmailButtonIsDisabled(true);
     setGmailOverridePopupState(GMAIL_OVERRIDE_POPUP_STATES.PENDING);
     const { user } = result;
+    
     const fetchedSignupData = await postSignupData(user, GMAIL_PROVIDER);
     if (fetchedSignupData.userIsCreated) {
       switch (fetchedSignupData.message) {
         case undefined:
         case "Email already in use, provider already uses Gmail":
           setGmailOverridePopupState(GMAIL_OVERRIDE_POPUP_STATES.CLOSED);
-          navigate("/dashboard");
           return;
         case "Email already in use, provider overridden to now use Gmail":
           setOverriddenGmailUser(user);
           setGmailOverridePopupState(GMAIL_OVERRIDE_POPUP_STATES.OPEN);
+          setGmailButtonIsDisabled(false)
           return;
         default:
           break;
@@ -36,5 +36,6 @@ export const handleAuthWithGmail = async (
     }
   } catch (error) {
     console.log(error);
+    setGmailButtonIsDisabled(false)
   }
 };

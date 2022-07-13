@@ -148,12 +148,10 @@ const SignupForm = ({
                           dispatch(setAuthenticatingUser(true));
                           await handleAuthWithGmail(
                             auth,
-                            navigate,
                             setOverriddenGmailUser,
                             setGmailOverridePopupState,
                             setGmailSignupButtonIsDisabled
                           );
-                          setGmailSignupButtonIsDisabled(false);
                           dispatch(setAuthenticatingUser(false));
                         }}
                         startIcon={

@@ -1,4 +1,4 @@
-import { Box, Card, Typography } from "@mui/material";
+import { Box,  Typography } from "@mui/material";
 import React from "react";
 import {
   capitalizeFirstCharacter,
@@ -8,20 +8,17 @@ import {
 import TrendingFlatIcon from "@mui/icons-material/TrendingFlat";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import CustomCard from "../../../mui/CustomCard";
 
 const DailyStatCard = ({ stat, goal, current }) => {
   return (
-    <Card
+    <CustomCard
       sx={{
-        py: 3,
-        px: 5,
-        boxShadow: 4,
-        borderRadius: "10px",
         width: "100%",
         minWidth: "max-content",
       }}
     >
-      <Box bgcolor="white" display="flex" flexDirection="column" gap={1.8}>
+      <Box display="flex" flexDirection="column" gap={1.8}>
         <Typography sx={{ fontWeight: 600 }}>
           {capitalizeFirstCharacter(stat)}
         </Typography>
@@ -81,7 +78,7 @@ const DailyStatCard = ({ stat, goal, current }) => {
         </Box>
         <Typography variant="h4">{numberWithCommas(current)}</Typography>
       </Box>
-    </Card>
+    </CustomCard>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Avatar, Box, IconButton, Typography } from "@mui/material";
+import { Avatar, Box, IconButton } from "@mui/material";
 import { getAuth, signOut } from "firebase/auth";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -9,6 +9,8 @@ import useScreenSize from "../../../hooks/useScreenSize";
 import { v4 as uuidv4 } from "uuid";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useTheme } from "@emotion/react";
+import MacroPieChart from "./MacroPieChart.js";
+import LineChart from "./LineChart";
 
 const statsForTheDay = [
   {
@@ -38,10 +40,11 @@ const Dashboard = () => {
   const { user } = useSelector((state) => state);
   const navigate = useNavigate();
   const theme = useTheme();
-  const { desktop, tablet, phone } = useScreenSize();
+  const { desktop } = useScreenSize();
   if (!user.isLoggedIn) return <Navigate to="/" />;
   return (
     <Box p={4} fullWidth display="flex" flexDirection="column" gap={4}>
+      {/* Top Row */}
       <Box
         fullWidth
         display="flex"
@@ -88,6 +91,7 @@ const Dashboard = () => {
           />
         </Box>
       </Box>
+      {/* Stat Cards */}
       <Box
         display="flex"
         flexDirection={desktop ? "row" : "column"}
@@ -100,9 +104,11 @@ const Dashboard = () => {
           <DailyStatCard key={uuidv4()} {...stat} />
         ))}
       </Box>
-      <br />
-      <br />
-      <br />
+      <Box display="flex" gap={3}>
+        {/* Macros */}
+        {/* <MacroPieChart />
+        <LineChart /> */}
+      </Box>
       <CustomButton
         variant="contained"
         onClick={async () => {
@@ -112,7 +118,6 @@ const Dashboard = () => {
       >
         Logout
       </CustomButton>
-      <Typography>Hi {user.user.email}</Typography>
     </Box>
   );
 };

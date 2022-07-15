@@ -42,8 +42,6 @@ const Home = () => {
   const toggleForm = () =>
     setForm(form === LOGIN_FORM ? SIGNUP_FORM : LOGIN_FORM);
 
-  //if (!user.isInitialized) return null;
-
   // ------------------------------------- RENDER -------------------------------------
   if (
     user.isLoggedIn &&

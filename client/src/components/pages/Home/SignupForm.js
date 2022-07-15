@@ -17,7 +17,7 @@ import { useTheme } from "@emotion/react";
 import useScreenSize from "../../../hooks/useScreenSize";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import CustomButton from "../../../mui/CustomButton";
+import CustomButton from "../../ui/CustomButton";
 import { handleAuthWithGmail, postSignupData } from "../../../utils";
 import {
   EMAIL_ALREADY_IN_USE,

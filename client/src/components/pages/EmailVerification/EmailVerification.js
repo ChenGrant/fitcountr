@@ -8,7 +8,7 @@ import Loading from "../Loading/Loading";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import PinInput from "react-pin-input";
 import EmailVerificationPopup from "./EmailVerificationPopup";
-import CustomButton from "../../../mui/CustomButton";
+import CustomButton from "../../ui/CustomButton";
 import {
   fetchEmailIsInUse,
   fetchVerificationStatus,

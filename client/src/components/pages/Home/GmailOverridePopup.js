@@ -2,8 +2,8 @@ import { useTheme } from "@emotion/react";
 import { Typography } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import CustomButton from "../../../mui/CustomButton";
-import CustomDialog from "../../../mui/CustomDialog";
+import CustomButton from "../../ui/CustomButton";
+import CustomDialog from "../../ui/CustomDialog";
 
 export const GMAIL_OVERRIDE_POPUP_STATES = {
   OPEN: "OPEN",

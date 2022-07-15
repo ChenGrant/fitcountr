@@ -2,7 +2,7 @@ import { useTheme } from "@emotion/react";
 import { Box, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
-import CustomCard from "../../../mui/CustomCard";
+import CustomCard from "../../ui/CustomCard";
 
 const LineChart = () => {
   const theme = useTheme();

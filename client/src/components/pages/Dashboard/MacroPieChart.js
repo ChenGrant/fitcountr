@@ -2,7 +2,7 @@ import { useTheme } from "@emotion/react";
 import { Box, Typography } from "@mui/material";
 import React from "react";
 import Chart from "react-apexcharts";
-import CustomCard from "../../../mui/CustomCard";
+import CustomCard from "../../ui/CustomCard";
 
 const MacroPieChart = () => {
   const theme = useTheme();

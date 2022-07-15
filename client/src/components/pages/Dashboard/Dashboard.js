@@ -3,7 +3,7 @@ import { getAuth, signOut } from "firebase/auth";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
-import CustomButton from "../../../mui/CustomButton";
+import CustomButton from "../../ui/CustomButton";
 import DailyStatCard from "./DailyStatCard";
 import useScreenSize from "../../../hooks/useScreenSize";
 import { v4 as uuidv4 } from "uuid";

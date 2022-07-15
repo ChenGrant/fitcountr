@@ -11,7 +11,7 @@ import {
   Filler,
   Legend,
 } from "chart.js";
-import CustomCard from "../../../mui/CustomCard";
+import CustomCard from "../../ui/CustomCard";
 import { useTheme } from "@emotion/react";
 import { Box } from "@mui/system";
 import { Typography } from "@mui/material";

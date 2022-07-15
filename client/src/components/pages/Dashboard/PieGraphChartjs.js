@@ -2,7 +2,7 @@ import React from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import { Box } from "@mui/system";
-import CustomCard from "../../../mui/CustomCard";
+import CustomCard from "../../ui/CustomCard";
 import { useTheme } from "@emotion/react";
 import { Typography } from "@mui/material";
 ChartJS.register(ArcElement, Tooltip, Legend);

@@ -8,7 +8,7 @@ import {
 import TrendingFlatIcon from "@mui/icons-material/TrendingFlat";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import CustomCard from "../../../mui/CustomCard";
+import CustomCard from "../../ui/CustomCard";
 
 const DailyStatCard = ({ stat, goal, current }) => {
   return (

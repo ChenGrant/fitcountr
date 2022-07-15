@@ -1,19 +1,27 @@
-import React, { useContext } from "react";
-import Loading from "../pages/Loading/Loading";
-import { FirebaseClientInitializerContext } from "./FirebaseClientInitializer";
-import { FontsLoaderContext } from "./FontsLoader";
+import React from "react";
+import theme from "../../mui/Theme";
+import { ThemeProvider } from "@mui/material";
+import { Provider as ReduxProvider } from "react-redux";
+import store from "../../redux/store";
+import FirebaseClientInitializer from "./FirebaseClientInitializer";
+import FirebaseUserListener from "./FirebaseUserListener";
+import FontsLoader from "./FontsLoader";
+import LoadingInitializer from "./LoadingInitializer";
 
-// AppInitializer waits for the fonts to load and the firebase client to be 
-// initialized before rendering anything
 const AppInitializer = ({ children }) => {
-  const initializingFirebaseClient = useContext(
-    FirebaseClientInitializerContext
+  return (
+    <ReduxProvider store={store}>
+      <ThemeProvider theme={theme}>
+        <FontsLoader>
+          <FirebaseClientInitializer>
+            <FirebaseUserListener>
+              <LoadingInitializer>{children}</LoadingInitializer>
+            </FirebaseUserListener>
+          </FirebaseClientInitializer>
+        </FontsLoader>
+      </ThemeProvider>
+    </ReduxProvider>
   );
-  const loadingFonts = useContext(FontsLoaderContext);
-
-  if (initializingFirebaseClient || loadingFonts) return <Loading/>;
-
-  return <>{children}</>;
 };
 
 export default AppInitializer;

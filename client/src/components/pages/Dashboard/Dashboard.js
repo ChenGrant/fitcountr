@@ -11,6 +11,8 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useTheme } from "@emotion/react";
 import MacroPieChart from "./MacroPieChart.js";
 import LineChart from "./LineChart";
+import LineGraphChartjs from "./LineGraphChartjs";
+import PieGraphChartjs from "./PieGraphChartjs";
 
 const statsForTheDay = [
   {
@@ -47,7 +49,8 @@ const Dashboard = () => {
       {/* Top Row */}
       <Box
         fullWidth
-        display="flex"
+        //display="flex"
+        display="none"
         justifyContent="flex-end"
         alignItems="center"
       >
@@ -108,6 +111,12 @@ const Dashboard = () => {
         {/* Macros */}
         {/* <MacroPieChart />
         <LineChart /> */}
+        <Box>
+          <PieGraphChartjs />
+        </Box>
+        <Box flex={1} >
+          <LineGraphChartjs />
+        </Box>
       </Box>
       <CustomButton
         variant="contained"

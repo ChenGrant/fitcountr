@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import Loading from "../pages/Loading/Loading";
 import { FirebaseClientInitializerContext } from "./FirebaseClientInitializer";
 import { FontsLoaderContext } from "./FontsLoader";
 
@@ -10,7 +11,7 @@ const AppInitializer = ({ children }) => {
   );
   const loadingFonts = useContext(FontsLoaderContext);
 
-  if (initializingFirebaseClient || loadingFonts) return null;
+  if (initializingFirebaseClient || loadingFonts) return <Loading/>;
 
   return <>{children}</>;
 };

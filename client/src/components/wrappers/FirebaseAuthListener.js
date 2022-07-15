@@ -7,6 +7,7 @@ import {
   setUser,
   setVerificationStatus,
 } from "../../redux";
+import Loading from "../pages/Loading/Loading";
 import { fetchVerificationStatus } from "../../utils";
 
 const FirebaseAuthListener = ({ children }) => {
@@ -29,7 +30,7 @@ const FirebaseAuthListener = ({ children }) => {
     return unsubscribeAuth;
   }, [auth, user.isAuthenticating, dispatch]);
 
-  if (!user.isInitialized) return null;
+  if (!user.isInitialized) return <Loading />;
 
   return <>{children}</>;
 };

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Box, Typography } from "@mui/material";
-import Loading from "../Loading/Loading";
 import LoginForm from "./LoginForm";
 import useScreenSize from "../../../hooks/useScreenSize";
 import SignupForm from "./SignupForm";
@@ -10,6 +9,7 @@ import { Navigate } from "react-router-dom";
 import GmailOverridePopup, {
   GMAIL_OVERRIDE_POPUP_STATES,
 } from "./GmailOverridePopup";
+import LoadingCircle from "../../ui/LoadingCircle";
 
 // ------------------------------------ CONSTANTS ------------------------------------
 const SIGNUP_FORM = "SIGNUP_FORM";
@@ -54,8 +54,8 @@ const Home = () => {
 
   return (
     <Box height={desktop && "100vh"} px="5vw">
-      {/* render Loading component when loading */}
-      {pageIsLoading && <Loading />}
+      {/* render LoadingCircle component when loading */}
+      {pageIsLoading && <LoadingCircle />}
       {/* display home page when no longer loading */}
       <Box
         py={!desktop && "8vh"}

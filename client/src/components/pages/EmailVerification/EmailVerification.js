@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import useAsset from "../../../hooks/useAsset";
 import useScreenSize from "../../../hooks/useScreenSize";
 import { Box, CircularProgress, Typography } from "@mui/material";
-import Loading from "../Loading/Loading";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import PinInput from "react-pin-input";
 import EmailVerificationPopup from "./EmailVerificationPopup";
@@ -18,6 +17,7 @@ import {
 } from "../../../utils";
 import { useDispatch, useSelector } from "react-redux";
 import { setVerificationStatus } from "../../../redux";
+import LoadingCircle from "../../ui/LoadingCircle";
 
 // -------------------------------- CONSTANTS --------------------------------
 const EMAIL_VERIFICATION_POPUP_STATES = {
@@ -202,7 +202,7 @@ const EmailVerification = () => {
   // ------------------------------------- RENDER -------------------------------------
   return (
     <Box display="grid" sx={{ placeItems: "center" }} height="100vh">
-      {pageIsLoading && <Loading />}
+      {pageIsLoading && <LoadingCircle />}
       <Box
         p={3}
         display={pageIsLoading ? "none" : "flex"}

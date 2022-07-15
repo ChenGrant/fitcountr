@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useSelector } from "react-redux";
-import Loading from "../pages/Loading/Loading";
+import LoadingCircle from "../ui/LoadingCircle";
 import { FontsLoaderContext } from "./FontsLoader";
 
 const LoadingInitializer = ({ children }) => {
@@ -8,7 +8,7 @@ const LoadingInitializer = ({ children }) => {
   const loadingFonts = useContext(FontsLoaderContext);
 
   // user.isInitialized being true implies initializingFirebaseClient is false
-  if (loadingFonts || !user.isInitialized) return <Loading />;
+  if (loadingFonts || !user.isInitialized) return <LoadingCircle />;
 
   return <>{children}</>;
 };

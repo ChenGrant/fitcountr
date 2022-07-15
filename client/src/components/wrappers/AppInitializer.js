@@ -1,5 +1,5 @@
 import React from "react";
-import theme from "../../mui/Theme";
+import theme from "../../theme/Theme";
 import { ThemeProvider } from "@mui/material";
 import { Provider as ReduxProvider } from "react-redux";
 import store from "../../redux/store";

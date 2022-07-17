@@ -44,5 +44,6 @@ module.exports = {
     EMAIL_DENIED: process.env.ASSET_EMAIL_DENIED,
     EMAIL_PENDING: process.env.ASSET_EMAIL_PENDING,
     EMAIL_VERIFIED: process.env.ASSET_EMAIL_VERIFIED,
+    SHORT_LOGO: process.env.ASSET_SHORT_LOGO,
   },
 };

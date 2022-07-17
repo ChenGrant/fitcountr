@@ -31,9 +31,6 @@ const Home = () => {
   );
   const [overriddenGmailUser, setOverriddenGmailUser] = useState();
 
-  // pageIsLoading is false when all images have been fetched, the client
-  // firebase SDK has been initialized, and font have loaded. Otherwise
-  // it is true
   const pageIsLoading = loadingAssets;
 
   // ----------------------------------- FUNCTIONS -----------------------------------

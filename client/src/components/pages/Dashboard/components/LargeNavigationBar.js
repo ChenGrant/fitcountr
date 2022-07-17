@@ -1,11 +1,15 @@
-import { Box, IconButton } from "@mui/material";
+import { Avatar, Box, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { keyframes } from "@emotion/react";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import useAsset from "../../../../hooks/useAsset";
 import LoadingCircle from "../../../ui/LoadingCircle";
+import LogoutIcon from "@mui/icons-material/Logout";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import { getAuth, signOut } from "firebase/auth";
+import { useSelector } from "react-redux";
 
 // ------------------------------------ CONSTANTS ------------------------------------
 const OPEN_SIDE_NAV_WIDTH = "233px";
@@ -26,7 +30,9 @@ const RIGHT = "RIGHT";
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
-const NavigationBar = () => {
+const LargeNavigationBar = () => {
+  const auth = getAuth();
+  const { user } = useSelector((state) => state);
   const [isOpen, setIsOpen] = useState(false);
   const [iconDirection, setIconDirection] = useState(RIGHT);
   const [hoveredAtLeastOnce, setHoveredAtLeastOnce] = useState(false);
@@ -36,9 +42,13 @@ const NavigationBar = () => {
 
   const pageIsLoading = loadingAssets;
 
+  // ----------------------------------- FUNCTIONS -----------------------------------
   const toggleIconDirection = () => {
     iconDirection === LEFT ? setIconDirection(RIGHT) : setIconDirection(LEFT);
   };
+
+  // ------------------------------------- RENDER -------------------------------------
+  if (!user.isLoggedIn) return <Navigate to="/" />;
 
   return (
     <>
@@ -51,6 +61,9 @@ const NavigationBar = () => {
           overflow="hidden"
           width={isOpen ? OPEN_SIDE_NAV_WIDTH : CLOSED_SIDE_NAV_WIDTH}
           boxShadow={4}
+          display="flex"
+          flexDirection="column"
+          alignItems={!isOpen && "center"}
           onMouseEnter={() => {
             setIsOpen(true);
             setHoveredAtLeastOnce(true);
@@ -58,15 +71,16 @@ const NavigationBar = () => {
           onMouseLeave={() => iconDirection === RIGHT && setIsOpen(false)}
           sx={{
             animation: isOpen
-              ? `${grow} 0.2s ease-in-out`
-              : hoveredAtLeastOnce && `${shrink} 0.2s ease-in-out`,
+              ? `${grow} 0.25s ease-in-out`
+              : hoveredAtLeastOnce && `${shrink} 0.25s ease-in-out`,
           }}
         >
           {/* Logo and Navigation Bar expansion */}
-          <Box height="60px" bgcolor="white" display="flex" alignItems="center">
+          <Box height="75px" bgcolor="white" display="flex" alignItems="center">
             <Box
               component="img"
               src={assets.shortLogo.src}
+              pl={isOpen && 2}
               alt="favicon"
               height="31px"
               bgcolor="white"
@@ -87,6 +101,64 @@ const NavigationBar = () => {
               </Box>
             )}
           </Box>
+          {/* Profile */}
+          <Box
+            height="75px"
+            display="flex"
+            alignItems="center"
+            px={isOpen && 2}
+            borderRadius="10px"
+            gap={2}
+            sx={{
+              cursor: "pointer",
+              "&:hover": {
+                bgcolor: "rgba(145, 158, 171, 0.12)",
+              },
+            }}
+          >
+            <Avatar
+              alt="profilePic"
+              src="https://mui.com/static/images/avatar/1.jpg"
+            />
+            {isOpen && <Typography>Profile</Typography>}
+          </Box>
+          {/* Dashboard */}
+          <Box
+            height="75px"
+            display="flex"
+            alignItems="center"
+            px={isOpen && 2}
+            borderRadius="10px"
+            gap={2}
+            sx={{
+              cursor: "pointer",
+              "&:hover": {
+                bgcolor: "rgba(145, 158, 171, 0.12)",
+              },
+            }}
+          >
+            <DashboardIcon color="primary" />
+            {isOpen && <Typography>Dashboard</Typography>}
+          </Box>
+          {/* Logout */}
+          <Box
+            height="75px"
+            display="flex"
+            alignItems="center"
+            px={isOpen && 2}
+            borderRadius="10px"
+            gap={2}
+            sx={{
+              cursor: "pointer",
+              "&:hover": {
+                bgcolor: "rgba(145, 158, 171, 0.12)",
+              },
+            }}
+            onClick={() => signOut(auth)}
+          >
+            <LogoutIcon color="primary" />
+            {isOpen && <Typography>Logout</Typography>}
+          </Box>
         </Box>
         {/* Outlet */}
         <Box flex={1}>
@@ -97,4 +169,4 @@ const NavigationBar = () => {
   );
 };
 
-export default NavigationBar;
+export default LargeNavigationBar;

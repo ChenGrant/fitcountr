@@ -3,7 +3,7 @@ import React from "react";
 
 const Home = () => {
   return (
-    <Box fullWidth bgcolor="green">
+    <Box fullWidth bgcolor="green" height = '200vh'>
       Home
     </Box>
   );

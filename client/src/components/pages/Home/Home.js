@@ -47,6 +47,7 @@ const Home = () => {
   )
     return <Navigate to="/dashboard" />;
 
+  // ------------------------------------- RENDER -------------------------------------
   return (
     <Box height={desktop && "100vh"} px="5vw">
       {/* render LoadingCircle component when loading */}

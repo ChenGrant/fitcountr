@@ -30,6 +30,7 @@ import {
   errorIsRendered,
 } from "../../../utils";
 import { setAuthenticatingUser } from "../../../redux";
+import useScreenSize from "../../../hooks/useScreenSize";
 
 // ---------------------------------------- FORMIK ----------------------------------------
 const initialValues = {
@@ -57,6 +58,7 @@ const LoginForm = ({
   const { user } = useSelector((state) => state);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { desktop, tablet } = useScreenSize();
   const [gmailLoginButtonIsDisabled, setGmailLoginButtonIsDisabled] =
     useState(false);
   const [passwordLoginButtonIsDisabled, setPasswordLoginButtonIsDisabled] =
@@ -121,6 +123,7 @@ const LoginForm = ({
       sx={{
         p: 3,
         borderRadius: "13px",
+        width: desktop ? "545px" : tablet ? "90%" : "85%",
       }}
       raised
     >
@@ -176,7 +179,6 @@ const LoginForm = ({
                       </CustomButton>
                     )}
                   </Box>
-
                   {/* login form divider */}
                   <Box
                     my={1}

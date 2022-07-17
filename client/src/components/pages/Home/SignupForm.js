@@ -109,7 +109,7 @@ const SignupForm = ({
       sx={{
         p: 3,
         borderRadius: "13px",
-        width: desktop ? "545px" : tablet ? "90%" : "auto",
+        width: desktop ? "545px" : tablet ? "90%" : "85%",
       }}
       raised
     >

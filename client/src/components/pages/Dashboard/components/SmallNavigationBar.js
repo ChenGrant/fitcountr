@@ -10,45 +10,32 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { getAuth, signOut } from "firebase/auth";
 import { useSelector } from "react-redux";
 
-const NAV_BAR_HEIGHT = "60px";
 const SmallNavigationBar = () => {
   const auth = getAuth();
   const { user } = useSelector((state) => state);
   const { tablet } = useScreenSize();
   const [menuIsOpen, setMenuIsOpen] = useState(false);
-  const [assets, assetsDispatchers, loadingAssets] = useAsset({
-    logo: { name: "logo" },
-  });
-  const pageIsLoading = loadingAssets;
-
+  
   // ------------------------------------- RENDER -------------------------------------
   if (!user.isLoggedIn) return <Navigate to="/" />;
 
   return (
-    <Box width="100%">
+    <>
       {/* Fixed Navigation Bar */}
       <Box
-        height={NAV_BAR_HEIGHT}
-        width = 'inherit'
-        display={pageIsLoading ? "none" : "flex"}
+        height='60px'
+        display="flex"
         alignItems="center"
         position="fixed"
-        zIndex={90000}
-        sx={{ backdropFilter: "blur(10px)" }}
+        zIndex={999999}
       >
-        <Box
-          height="50%"
-          pl={2}
-          component="img"
-          src={assets.logo.src}
-          alt="logo"
-          onLoad={() => assetsDispatchers.logo.setLoading(false)}
-        />
-        <Box flex={1} display="flex" justifyContent="right">
-          <IconButton onClick={() => setMenuIsOpen(true)} size="large">
-            <MenuIcon fontSize="inherit" color="primary" />
-          </IconButton>
-        </Box>
+        <IconButton
+          sx={{ position: "fixed", margin: "0px 20px", right: "0px" }}
+          onClick={() => setMenuIsOpen(true)}
+          size="large"
+        >
+          <MenuIcon fontSize="inherit" color="primary" />
+        </IconButton>
       </Box>
       {/* Navigation Menu that slides in */}
       <Slide direction="left" in={menuIsOpen} timeout={tablet ? 400 : 0}>
@@ -62,7 +49,7 @@ const SmallNavigationBar = () => {
           padding="30px"
           bgcolor="white"
           sx={{
-            zIndex: 99999,
+            zIndex: 999999,
             boxShadow: 4,
           }}
         >
@@ -133,9 +120,8 @@ const SmallNavigationBar = () => {
         </Box>
       </Slide>
       {/* Body */}
-      <Box height={NAV_BAR_HEIGHT} bgcolor="white" />
       <Outlet />
-    </Box>
+    </>
   );
 };
 

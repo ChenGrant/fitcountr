@@ -25,11 +25,11 @@ const SmallNavigationBar = () => {
   if (!user.isLoggedIn) return <Navigate to="/" />;
 
   return (
-    <>
+    <Box width="100%">
       {/* Fixed Navigation Bar */}
       <Box
         height={NAV_BAR_HEIGHT}
-        width="100%"
+        width = 'inherit'
         display={pageIsLoading ? "none" : "flex"}
         alignItems="center"
         position="fixed"
@@ -135,7 +135,7 @@ const SmallNavigationBar = () => {
       {/* Body */}
       <Box height={NAV_BAR_HEIGHT} bgcolor="white" />
       <Outlet />
-    </>
+    </Box>
   );
 };
 

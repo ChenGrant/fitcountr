@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
-import CustomButton from "../../../ui/CustomButton";
-import CustomDialog from "../../../ui/CustomDialog";
+import CustomButton from "../../../../ui/CustomButton";
+import CustomDialog from "../../../../ui/CustomDialog";
 import { getAuth, signOut } from "firebase/auth";
 
 const ConfirmLogoutPopup = ({

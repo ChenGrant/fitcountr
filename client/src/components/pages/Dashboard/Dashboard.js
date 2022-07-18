@@ -1,10 +1,10 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "./components/Home";
-import LargeNavigationBar from "./components/LargeNavigationBar";
+import LargeNavigationBar from "./components/NavigationBar/LargeNavigationBar";
 import UnavailableResource from "../UnavailableResource/UnavailableResource";
 import useScreenSize from '../../../hooks/useScreenSize'
-import SmallNavigationBar from "./components/SmallNavigationBar";
+import SmallNavigationBar from "./components/NavigationBar/SmallNavigationBar";
 import Profile from "./components/Profile";
 
 const Dashboard = () => {

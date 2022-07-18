@@ -1,6 +1,6 @@
 import { Avatar, Box, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { keyframes } from "@emotion/react";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
@@ -8,8 +8,8 @@ import useAsset from "../../../../hooks/useAsset";
 import LoadingCircle from "../../../ui/LoadingCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import { getAuth, signOut } from "firebase/auth";
 import { useSelector } from "react-redux";
+import ConfirmLogoutPopup from "./ConfirmLogoutPopup";
 
 // ------------------------------------ CONSTANTS ------------------------------------
 const OPEN_SIDE_NAV_WIDTH = "233px";
@@ -31,14 +31,17 @@ const RIGHT = "RIGHT";
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const LargeNavigationBar = () => {
-  const auth = getAuth();
+  const navigate = useNavigate();
   const { user } = useSelector((state) => state);
+  const [animating, setAnimating] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [iconDirection, setIconDirection] = useState(RIGHT);
   const [hoveredAtLeastOnce, setHoveredAtLeastOnce] = useState(false);
   const [assets, assetsDispatchers, loadingAssets] = useAsset({
     shortLogo: { name: "short_logo" },
   });
+  const [confirmLogoutPopupIsOpen, setConfirmLogoutPopupIsOpen] =
+    useState(false);
 
   const pageIsLoading = loadingAssets;
 
@@ -65,11 +68,15 @@ const LargeNavigationBar = () => {
           flexDirection="column"
           alignItems={!isOpen && "center"}
           onMouseEnter={() => {
+            if (animating) return;
+            setAnimating(true);
             setIsOpen(true);
             setHoveredAtLeastOnce(true);
           }}
+          onAnimationEnd={() => setAnimating(false)}
           onMouseLeave={() => iconDirection === RIGHT && setIsOpen(false)}
           sx={{
+            animationFillMode: "forwards",
             animation: isOpen
               ? `${grow} 0.25s ease-in-out`
               : hoveredAtLeastOnce && `${shrink} 0.25s ease-in-out`,
@@ -115,6 +122,7 @@ const LargeNavigationBar = () => {
                 bgcolor: "rgba(145, 158, 171, 0.12)",
               },
             }}
+            onClick={() => navigate("/dashboard/profile")}
           >
             <Avatar
               alt="profilePic"
@@ -136,6 +144,7 @@ const LargeNavigationBar = () => {
                 bgcolor: "rgba(145, 158, 171, 0.12)",
               },
             }}
+            onClick={() => navigate("/dashboard/")}
           >
             <DashboardIcon color="primary" />
             {isOpen && <Typography>Dashboard</Typography>}
@@ -154,7 +163,7 @@ const LargeNavigationBar = () => {
                 bgcolor: "rgba(145, 158, 171, 0.12)",
               },
             }}
-            onClick={() => signOut(auth)}
+            onClick={() => setConfirmLogoutPopupIsOpen(true)}
           >
             <LogoutIcon color="primary" />
             {isOpen && <Typography>Logout</Typography>}
@@ -164,6 +173,10 @@ const LargeNavigationBar = () => {
         <Box flex={1}>
           <Outlet />
         </Box>
+        <ConfirmLogoutPopup
+          setConfirmLogoutPopupIsOpen={setConfirmLogoutPopupIsOpen}
+          confirmLogoutPopupIsOpen={confirmLogoutPopupIsOpen}
+        />
       </Box>
     </>
   );

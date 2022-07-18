@@ -43,7 +43,9 @@ const LargeNavigationBar = () => {
     iconDirection === LEFT ? setIconDirection(RIGHT) : setIconDirection(LEFT);
 
   // ---------------------------------- USE EFFECTS ----------------------------------
-  useEffect(() => !isOpen && setIconDirection(RIGHT), [isOpen]);
+  useEffect(() => {
+    !isOpen && setIconDirection(RIGHT);
+  }, [isOpen]);
 
   // ------------------------------------- RENDER -------------------------------------
   return (

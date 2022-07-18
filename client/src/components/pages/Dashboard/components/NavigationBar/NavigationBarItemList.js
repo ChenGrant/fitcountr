@@ -7,7 +7,11 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import ConfirmLogoutPopup from "./ConfirmLogoutPopup";
 import useScreenSize from "../../../../../hooks/useScreenSize";
 
-const NavigationBarItemList = ({ isOpen, setMenuIsOpen, setIsOpen }) => {
+const NavigationBarItemList = ({
+  isOpen,
+  setMenuIsOpen,
+  setIsOpen,
+}) => {
   const { desktop } = useScreenSize();
   const [confirmLogoutPopupIsOpen, setConfirmLogoutPopupIsOpen] =
     useState(false);

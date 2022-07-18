@@ -1,5 +1,5 @@
 import { Box, IconButton } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { keyframes } from "@emotion/react";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -41,6 +41,9 @@ const LargeNavigationBar = () => {
   // ----------------------------------- FUNCTIONS -----------------------------------
   const toggleIconDirection = () =>
     iconDirection === LEFT ? setIconDirection(RIGHT) : setIconDirection(LEFT);
+
+  // ---------------------------------- USE EFFECTS ----------------------------------
+  useEffect(() => !isOpen && setIconDirection(RIGHT), [isOpen]);
 
   // ------------------------------------- RENDER -------------------------------------
   return (
@@ -99,7 +102,11 @@ const LargeNavigationBar = () => {
             )}
           </Box>
           {/* NavigationBarItemList */}
-          <NavigationBarItemList isOpen={isOpen} setIsOpen={setIsOpen} />
+          <NavigationBarItemList
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            setIconDirection={setIconDirection}
+          />
         </Box>
         {/* Outlet */}
         <Box flex={1}>

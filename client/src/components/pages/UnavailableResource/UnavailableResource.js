@@ -9,7 +9,7 @@ const UnavailableResource = () => {
   const navigate = useNavigate();
   return (
     <Box
-      width="100vw"
+      fullWidth
       height="100vh"
       display="flex"
       flexDirection="column"
@@ -19,7 +19,9 @@ const UnavailableResource = () => {
       bgcolor="white"
       sx={{ zIndex: 99 }}
     >
-      <Typography variant="h1">Unavailable Resource</Typography>
+      <Typography variant="h1" textAlign="center">
+        Unavailable Resource
+      </Typography>
       {user.isLoggedIn ? (
         <CustomButton
           variant="contained"

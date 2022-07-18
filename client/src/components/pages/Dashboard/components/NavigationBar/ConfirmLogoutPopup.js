@@ -14,20 +14,24 @@ const ConfirmLogoutPopup = ({
       open={confirmLogoutPopupIsOpen}
       onClose={() => setConfirmLogoutPopupIsOpen(false)}
     >
-      <Box display="flex" flexDirection="column" gap={3}>
-        <Typography variant="h4" gutterBottom>
-          Logout?
+      <Box display="flex" flexDirection="column" gap={2}>
+        <Typography variant="h6" gutterBottom>
+          Are you sure you want to logout?
         </Typography>
-        <Box display="flex" gap={2}>
-          <CustomButton variant="contained" onClick={() => signOut(auth)}>
-            Yes, logout
-          </CustomButton>
+        <Box display="flex" gap={2} fullWidth justifyContent="center">
           <CustomButton
             variant="outlined"
-            sx={{ textTransform: "none", borderRadius: "10px" }}
+            sx={{ textTransform: "none", borderRadius: "10px", px: 3 }}
             onClick={() => setConfirmLogoutPopupIsOpen(false)}
           >
-            Cancel
+            No
+          </CustomButton>
+          <CustomButton
+            variant="contained"
+            sx={{ px: 3 }}
+            onClick={() => signOut(auth)}
+          >
+            Yes
           </CustomButton>
         </Box>
       </Box>

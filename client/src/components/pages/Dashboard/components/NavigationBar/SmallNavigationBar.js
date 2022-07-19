@@ -38,6 +38,7 @@ const SmallNavigationBar = () => {
           right={0}
           height="calc(100vh - 2 * 25px)"
           maxWidth="500px"
+          minWidth="200px"
           padding="25px"
           bgcolor="white"
           sx={{

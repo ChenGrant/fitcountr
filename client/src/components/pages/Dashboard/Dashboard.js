@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Home from "./components/Home";
+import Home from "./components/Home/Home";
 import LargeNavigationBar from "./components/NavigationBar/LargeNavigationBar";
 import UnavailableResource from "../UnavailableResource/UnavailableResource";
 import useScreenSize from "../../../hooks/useScreenSize";

@@ -70,19 +70,23 @@ const LargeNavigationBar = () => {
           onAnimationEnd={() => setAnimating(false)}
           onMouseLeave={() => iconDirection === RIGHT && setIsOpen(false)}
           sx={{
-            //overflow: "scroll",
-            animationFillMode: "forwards",
-            //overflowX: 'hidden',
-            // "::-webkit-scrollbar": {
-            //   display: "none",
-            // },
+            overflow: 'scroll',
+            overflowX: "hidden",
+            "::-webkit-scrollbar": {
+              display: "none",
+            },
             animation: isOpen
               ? `${grow} 0.25s ease-in-out`
               : hoveredAtLeastOnce && `${shrink} 0.25s ease-in-out`,
           }}
         >
           {/* Logo and Navigation Bar expansion */}
-          <Box height="75px" display="flex" alignItems="center">
+          <Box
+            height="75px"
+            minHeight="75px"
+            display="flex"
+            alignItems="center"
+          >
             <Box
               component="img"
               src={assets.shortLogo.src}
@@ -108,81 +112,6 @@ const LargeNavigationBar = () => {
             )}
           </Box>
           {/* NavigationBarItemList */}
-          <NavigationBarItemList
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            setIconDirection={setIconDirection}
-          />
-          <NavigationBarItemList
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            setIconDirection={setIconDirection}
-          />
-          <NavigationBarItemList
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            setIconDirection={setIconDirection}
-          />
-          <NavigationBarItemList
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            setIconDirection={setIconDirection}
-          />
-          <NavigationBarItemList
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            setIconDirection={setIconDirection}
-          />
-          <NavigationBarItemList
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            setIconDirection={setIconDirection}
-          />
-          <NavigationBarItemList
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            setIconDirection={setIconDirection}
-          />
-          <NavigationBarItemList
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            setIconDirection={setIconDirection}
-          />
-          <NavigationBarItemList
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            setIconDirection={setIconDirection}
-          />
-          <NavigationBarItemList
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            setIconDirection={setIconDirection}
-          />
-          <NavigationBarItemList
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            setIconDirection={setIconDirection}
-          />
-          <NavigationBarItemList
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            setIconDirection={setIconDirection}
-          />
-          <NavigationBarItemList
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            setIconDirection={setIconDirection}
-          />
-          <NavigationBarItemList
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            setIconDirection={setIconDirection}
-          />
-          <NavigationBarItemList
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            setIconDirection={setIconDirection}
-          />
           <NavigationBarItemList
             isOpen={isOpen}
             setIsOpen={setIsOpen}

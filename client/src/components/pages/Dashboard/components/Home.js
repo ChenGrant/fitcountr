@@ -9,7 +9,135 @@ const Home = () => {
   if (!user.isLoggedIn) return <Navigate to="/" />;
 
   return (
-    <Box fullWidth bgcolor="green" height="100vh">
+    <Box fullWidth bgcolor="green">
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
+      Home
+      <br />
       Home
       <br />
     </Box>

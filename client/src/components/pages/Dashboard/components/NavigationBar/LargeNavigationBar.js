@@ -70,8 +70,7 @@ const LargeNavigationBar = () => {
           onAnimationEnd={() => setAnimating(false)}
           onMouseLeave={() => iconDirection === RIGHT && setIsOpen(false)}
           sx={{
-            overflow: 'scroll',
-            overflowX: "hidden",
+            overflow: "scroll",
             "::-webkit-scrollbar": {
               display: "none",
             },

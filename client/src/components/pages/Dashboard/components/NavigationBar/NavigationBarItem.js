@@ -8,8 +8,7 @@ const NavigationBarItem = ({ isOpen, name, displayComponent, ...rest }) => {
 
   return (
     <Box
-      height={desktop ? "75px" : "50px"}
-      minHeight={desktop && "75px"}
+      minHeight={desktop ? "75px" : "60px"}
       display="flex"
       alignItems="center"
       px={(!desktop || isOpen) && 2}

@@ -16,6 +16,7 @@ const SmallNavigationBar = () => {
       {/* Fixed Navigation Bar */}
       <Box
         height="60px"
+        minHeight="60px"
         display="flex"
         alignItems="center"
         position="fixed"
@@ -35,14 +36,17 @@ const SmallNavigationBar = () => {
           position="fixed"
           top={0}
           right={0}
-          height="100vh"
-          width="70vw"
+          height="calc(100vh - 2 * 25px)"
           maxWidth="500px"
-          padding="30px"
+          padding="25px"
           bgcolor="white"
           sx={{
             zIndex: 999999,
             boxShadow: 4,
+            overflow: "scroll",
+            "::-webkit-scrollbar": {
+              display: "none",
+            },
           }}
         >
           <Box onClick={() => setMenuIsOpen(false)}>
@@ -55,7 +59,14 @@ const SmallNavigationBar = () => {
         </Box>
       </Slide>
       {/* Body */}
-      <Box flex={1}>
+      <Box
+        flex={1}
+        overflow="scroll"
+        height="100vh"
+        sx={{
+          overflowX: "hidden",
+        }}
+      >
         <Outlet />
       </Box>
     </>

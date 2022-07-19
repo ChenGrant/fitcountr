@@ -9,8 +9,9 @@ const Home = () => {
   if (!user.isLoggedIn) return <Navigate to="/" />;
 
   return (
-    <Box fullWidth bgcolor="green" height = '200vh'>
+    <Box fullWidth bgcolor="green" height="100vh">
       Home
+      <br />
     </Box>
   );
 };

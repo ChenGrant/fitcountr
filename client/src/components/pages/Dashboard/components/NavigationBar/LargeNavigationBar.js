@@ -56,7 +56,6 @@ const LargeNavigationBar = () => {
         <Box
           height="calc(100vh - 2 * 23px)"
           p="23px"
-          overflow="hidden"
           width={isOpen ? OPEN_SIDE_NAV_WIDTH : CLOSED_SIDE_NAV_WIDTH}
           boxShadow={4}
           display="flex"
@@ -71,7 +70,12 @@ const LargeNavigationBar = () => {
           onAnimationEnd={() => setAnimating(false)}
           onMouseLeave={() => iconDirection === RIGHT && setIsOpen(false)}
           sx={{
+            //overflow: "scroll",
             animationFillMode: "forwards",
+            //overflowX: 'hidden',
+            // "::-webkit-scrollbar": {
+            //   display: "none",
+            // },
             animation: isOpen
               ? `${grow} 0.25s ease-in-out`
               : hoveredAtLeastOnce && `${shrink} 0.25s ease-in-out`,
@@ -109,9 +113,91 @@ const LargeNavigationBar = () => {
             setIsOpen={setIsOpen}
             setIconDirection={setIconDirection}
           />
+          <NavigationBarItemList
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            setIconDirection={setIconDirection}
+          />
+          <NavigationBarItemList
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            setIconDirection={setIconDirection}
+          />
+          <NavigationBarItemList
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            setIconDirection={setIconDirection}
+          />
+          <NavigationBarItemList
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            setIconDirection={setIconDirection}
+          />
+          <NavigationBarItemList
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            setIconDirection={setIconDirection}
+          />
+          <NavigationBarItemList
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            setIconDirection={setIconDirection}
+          />
+          <NavigationBarItemList
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            setIconDirection={setIconDirection}
+          />
+          <NavigationBarItemList
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            setIconDirection={setIconDirection}
+          />
+          <NavigationBarItemList
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            setIconDirection={setIconDirection}
+          />
+          <NavigationBarItemList
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            setIconDirection={setIconDirection}
+          />
+          <NavigationBarItemList
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            setIconDirection={setIconDirection}
+          />
+          <NavigationBarItemList
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            setIconDirection={setIconDirection}
+          />
+          <NavigationBarItemList
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            setIconDirection={setIconDirection}
+          />
+          <NavigationBarItemList
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            setIconDirection={setIconDirection}
+          />
+          <NavigationBarItemList
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            setIconDirection={setIconDirection}
+          />
         </Box>
         {/* Outlet */}
-        <Box flex={1}>
+        <Box
+          flex={1}
+          overflow="scroll"
+          height="100vh"
+          sx={{
+            overflowX: "hidden",
+          }}
+        >
           <Outlet />
         </Box>
       </Box>

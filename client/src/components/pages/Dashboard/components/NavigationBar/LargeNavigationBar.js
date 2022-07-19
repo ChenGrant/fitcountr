@@ -61,7 +61,7 @@ const LargeNavigationBar = () => {
           display="flex"
           flexDirection="column"
           alignItems={!isOpen && "center"}
-          onMouseEnter={() => {
+          onMouseOver={() => {
             if (animating) return;
             setAnimating(true);
             setIsOpen(true);

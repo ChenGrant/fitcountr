@@ -1,21 +1,16 @@
 import { Avatar } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import NavigationBarItem from "./NavigationBarItem";
 import LogoutIcon from "@mui/icons-material/Logout";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import ConfirmLogoutPopup from "./ConfirmLogoutPopup";
 import useScreenSize from "../../../../../hooks/useScreenSize";
+import { getAuth, signOut } from "firebase/auth";
 
-const NavigationBarItemList = ({
-  isOpen,
-  setMenuIsOpen,
-  setIsOpen,
-}) => {
+const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
   const { desktop } = useScreenSize();
-  const [confirmLogoutPopupIsOpen, setConfirmLogoutPopupIsOpen] =
-    useState(false);
   const navigate = useNavigate();
+  const auth = getAuth();
 
   // ------------------------------------- RENDER -------------------------------------
   return (
@@ -48,18 +43,10 @@ const NavigationBarItemList = ({
       />
       {/* Logout */}
       <NavigationBarItem
-        onClick={() => {
-          setIsOpen && setIsOpen(false);
-          setMenuIsOpen && setMenuIsOpen(false);
-          setConfirmLogoutPopupIsOpen(true);
-        }}
+        onClick={() => signOut(auth)}
         isOpen={isOpen}
         displayComponent={<LogoutIcon color="primary" />}
         name="Logout"
-      />
-      <ConfirmLogoutPopup
-        setConfirmLogoutPopupIsOpen={setConfirmLogoutPopupIsOpen}
-        confirmLogoutPopupIsOpen={confirmLogoutPopupIsOpen}
       />
     </>
   );

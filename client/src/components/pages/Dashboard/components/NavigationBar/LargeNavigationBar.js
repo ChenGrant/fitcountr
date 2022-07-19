@@ -118,16 +118,18 @@ const LargeNavigationBar = () => {
           />
         </Box>
         {/* Outlet */}
-        <Box
-          flex={1}
-          overflow="scroll"
-          height="100vh"
-          sx={{
-            overflowX: "hidden",
-          }}
-        >
-          <Outlet />
-        </Box>
+        {!pageIsLoading && (
+          <Box
+            flex={1}
+            overflow="scroll"
+            height="100vh"
+            sx={{
+              overflowX: "hidden",
+            }}
+          >
+            <Outlet />
+          </Box>
+        )}
       </Box>
     </>
   );

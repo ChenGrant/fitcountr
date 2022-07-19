@@ -14,7 +14,6 @@ const DailyProgressCard = ({ stat, goal, current }) => {
   return (
     <CustomCard
       sx={{
-        width: "calc(95% - 5 * 8px)",
         minWidth: "max-content",
       }}
     >

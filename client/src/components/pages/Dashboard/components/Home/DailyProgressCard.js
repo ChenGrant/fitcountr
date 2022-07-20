@@ -9,12 +9,14 @@ import TrendingFlatIcon from "@mui/icons-material/TrendingFlat";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import CustomCard from "../../../../ui/CustomCard";
+import useScreenSize from "../../../../../hooks/useScreenSize";
 
 const DailyProgressCard = ({ stat, goal, current }) => {
+  const { desktop } = useScreenSize();
   return (
     <CustomCard
       sx={{
-        minWidth: "max-content",
+        minWidth: desktop && "max-content",
       }}
     >
       <Box display="flex" flexDirection="column" gap={1.8}>

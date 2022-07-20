@@ -17,7 +17,7 @@ const MacrosPieChart = ({ macros }) => {
     >
       <Box display="flex" flexDirection="column" gap={1.8}>
         <Typography sx={{ fontWeight: 600 }}>Macronutrients</Typography>
-        <Box width={desktop ? "100%" : "max(30vw, 130px)"}>
+        <Box width={desktop ? "100%" : "min(100%, 350px)"}>
           <Pie
             height="100%"
             options={{

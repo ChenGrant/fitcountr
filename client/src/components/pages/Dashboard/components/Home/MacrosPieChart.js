@@ -12,7 +12,9 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const MacrosPieChart = ({ macros }) => {
   const { desktop } = useScreenSize();
   return (
-    <CustomCard sx={{ height: "calc(100% - 2 * 3 * 8px)" }}>
+    <CustomCard
+      sx={{ height: desktop ? "calc(100% - 2 * 3 * 8px)" : "max-content" }}
+    >
       <Box display="flex" flexDirection="column" gap={1.8}>
         <Typography sx={{ fontWeight: 600 }}>Macronutrients</Typography>
         <Box width={desktop ? "100%" : "max(30vw, 130px)"}>

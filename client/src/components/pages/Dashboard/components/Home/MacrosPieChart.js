@@ -12,10 +12,10 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const MacrosPieChart = ({ macros }) => {
   const { desktop } = useScreenSize();
   return (
-    <CustomCard sx={{ width: desktop ? "300px" : "calc(95% - 5 * 8px)" }}>
+    <CustomCard sx={{ height: "calc(100% - 2 * 3 * 8px)" }}>
       <Box display="flex" flexDirection="column" gap={1.8}>
         <Typography sx={{ fontWeight: 600 }}>Macronutrients</Typography>
-        <Box>
+        <Box width={desktop ? "100%" : "max(30vw, 130px)"}>
           <Pie
             height="100%"
             options={{
@@ -39,14 +39,14 @@ const MacrosPieChart = ({ macros }) => {
         </Box>
         {macros.map((macro) => {
           return (
-            <Box display="flex" alignItems="center" gap={1}>
+            <Box key={uuidv4()} display="flex" alignItems="center" gap={1}>
               <Box
                 bgcolor={macro.color}
                 minHeight="10px"
                 minWidth="10px"
                 borderRadius="100%"
               />
-              <Typography key={uuidv4()} sx={{ fontWeight: 600 }}>
+              <Typography sx={{ fontWeight: 600 }}>
                 {macro.label}: {macro.value}
                 {macro.unit}, +2{macro.unit} of goal
               </Typography>

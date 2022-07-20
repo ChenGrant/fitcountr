@@ -9,6 +9,7 @@ import MacroPieChart from "./MacrosPieChart";
 import { capitalizeFirstCharacter } from "../../../../../utils";
 import { useTheme } from "@emotion/react";
 import LoadingCircle from "../../../../ui/LoadingCircle";
+import ProgressLineChart from "./ProgressLineChart";
 
 const dailyProgressData = [
   {
@@ -84,13 +85,28 @@ const Home = () => {
         ))}
       </Box>
       <Box
+        fullWidth
         display="flex"
         flexDirection={desktop ? "row" : "column"}
-        fullWidth
         alignItems={!desktop && "center"}
+        gap={GAP_SIZE}
       >
-        <Box display="grid" sx={{ placeItems: !desktop && "center" }} width="100%">
+        <Box
+          display="grid"
+          sx={{ placeItems: !desktop && "center" }}
+          flex={desktop && 2}
+          width={desktop ? "min(450px, 25vw)" : "100%"}
+        >
           <MacroPieChart macros={macros} />
+        </Box>
+        <Box
+          display="grid"
+          sx={{ placeItems: !desktop && "center" }}
+          flex={desktop && 5}
+          width={!desktop && "100%"}
+          height={desktop ? "auto" : "max(70vw, 400px)"}
+        >
+          <ProgressLineChart />
         </Box>
       </Box>
     </Box>

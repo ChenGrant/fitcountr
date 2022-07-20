@@ -7,7 +7,7 @@ const CustomCard = ({ sx, ...rest }) => {
       sx={{
         py: 3,
         px: 5,
-        width: "calc(95% - 5 * 8px)",
+        width: "calc(100% - 2 * 5 * 8px)",
         boxShadow: 4,
         borderRadius: "10px",
         ...sx,

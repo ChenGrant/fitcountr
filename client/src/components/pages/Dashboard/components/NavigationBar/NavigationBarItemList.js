@@ -25,7 +25,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
         displayComponent={
           <Avatar
             alt="profilePic"
-            src="https://mui.com/static/images/avatar/1.jpg"
+            src="https://i.stack.imgur.com/l60Hf.png"
             sx={!desktop ? { height: "35px", width: "35px" } : {}}
           />
         }

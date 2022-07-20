@@ -51,16 +51,20 @@ const ProgressLineChart = () => {
   const theme = useTheme();
   return (
     <CustomCard sx={{ height: "calc(100% - 2 * 3 * 8px)" }}>
-      <Box display="flex" flexDirection="column" gap={1.8} height="100%">
+      <Box
+        display="flex"
+        flexDirection="column"
+        gap={1.8}
+        height="100%"
+        fullWidth
+      >
         <Box display="flex">
-          <Box>
+          <Box flex={1}>
             <Typography sx={{ fontWeight: 600 }}>Weight Progress</Typography>
           </Box>
-          <Box flex={1} display="flex" justifyContent="right">
-            <IconButton>
-              <SettingsIcon />
-            </IconButton>
-          </Box>
+          <IconButton>
+            <SettingsIcon />
+          </IconButton>
         </Box>
         <Box flex={1}>
           <Line

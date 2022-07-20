@@ -49,7 +49,6 @@ const Home = () => {
 
   useEffect(() => {
     const getMacros = async () => {
-      await new Promise((r) => setTimeout(r, 2000));
       const responseData = macrosData;
 
       responseData.forEach((macro) => {

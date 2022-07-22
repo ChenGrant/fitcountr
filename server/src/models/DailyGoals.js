@@ -8,15 +8,12 @@ const dailyGoalsSchema = new mongoose.Schema({
   weight: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "Measurement",
-    required: true,
   },
   steps: {
     type: Number,
-    required: true,
   },
   nutrition: {
     type: {},
-    required: true,
   },
 });
 

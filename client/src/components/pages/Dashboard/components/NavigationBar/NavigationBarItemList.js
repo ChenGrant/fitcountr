@@ -1,14 +1,11 @@
-import { Avatar } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import NavigationBarItem from "./NavigationBarItem";
 import LogoutIcon from "@mui/icons-material/Logout";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import useScreenSize from "../../../../../hooks/useScreenSize";
 import { getAuth, signOut } from "firebase/auth";
 
 const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
-  const { desktop } = useScreenSize();
   const navigate = useNavigate();
   const auth = getAuth();
 
@@ -16,7 +13,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
   return (
     <>
       {/* Profile */}
-      <NavigationBarItem
+      {/* <NavigationBarItem
         onClick={() => {
           setMenuIsOpen && setMenuIsOpen(false);
           navigate("/dashboard/profile");
@@ -30,7 +27,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
           />
         }
         name="Profile"
-      />
+      /> */}
       {/* Dashboard */}
       <NavigationBarItem
         onClick={() => {

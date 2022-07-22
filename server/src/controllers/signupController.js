@@ -34,6 +34,7 @@ const createUser = async (req, res) => {
 
       // create user in mongodb atlas
       const createdUser = await User.create({
+        _id: uid,
         uid,
         email,
         emailVerification: {
@@ -74,6 +75,7 @@ const createUser = async (req, res) => {
 
       // create user in mongodb atlas if no users with the same email exist
       await User.create({
+        _id: uid,
         uid,
         email,
         emailVerification: { isVerified: true, provider: GMAIL_PROVIDER },

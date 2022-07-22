@@ -5,6 +5,10 @@ const EMAIL_VERIFICATION_PIN_LENGTH = 5;
 
 // -------------------------------------- SCHEMA --------------------------------------
 const userSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    required: true,
+  },
   uid: {
     type: String,
     required: true,

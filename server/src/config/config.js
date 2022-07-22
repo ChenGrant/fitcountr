@@ -46,4 +46,5 @@ module.exports = {
     EMAIL_VERIFIED: process.env.ASSET_EMAIL_VERIFIED,
     SHORT_LOGO: process.env.ASSET_SHORT_LOGO,
   },
+  BARCODE_API_KEY: process.env.BARCODE_API_KEY,
 };

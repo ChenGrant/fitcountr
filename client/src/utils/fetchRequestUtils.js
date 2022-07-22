@@ -74,3 +74,14 @@ export const postSignupData = async (user, provider) => {
   const data = await response.json();
   return data;
 };
+
+export const fetchBarcode = async (barcodeImageFile) => {
+  const formData = new FormData();
+  formData.append("barcodeImageFile", barcodeImageFile);
+  const response = await fetch(`/searchFood/barcode`, {
+    method: "POST",
+    body: formData,
+  });
+  const data = await response.json();
+  return data;
+};

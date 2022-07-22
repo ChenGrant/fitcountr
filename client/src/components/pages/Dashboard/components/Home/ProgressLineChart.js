@@ -45,7 +45,6 @@ const filteredData = [
   65.2, 64.9, 64.9, 64.9, 64.9, 65.15, 64.8, 65.05, 64.6, 65.05, 65.25, 65,
   64.65, 64.65, 65.2, 65.2, 65, 64.65, 64.85, 65.5, 65.5, 64.55, 64.3,
 ];
-console.log(filteredData);
 
 const ProgressLineChart = () => {
   const theme = useTheme();

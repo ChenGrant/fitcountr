@@ -23,7 +23,15 @@ const NavigationBarItem = ({ isOpen, name, displayComponent, ...rest }) => {
       {...rest}
     >
       {displayComponent}
-      {(!desktop || isOpen) && <Typography>{name}</Typography>}
+      {(!desktop || isOpen) && (
+        <Typography
+          sx={{
+            whiteSpace: "nowrap",
+          }}
+        >
+          {name}
+        </Typography>
+      )}
     </Box>
   );
 };

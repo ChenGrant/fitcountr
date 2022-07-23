@@ -2,7 +2,7 @@ import { Box, FormControl, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import {
   fetchBarcode,
-  fetchNutritionFromBarcode,
+  fetchNutritionFromBarcodeNumber,
   fetchNutritionFromName,
 } from "../../../../../utils/fetchRequestUtils";
 import CustomButton from "../../../../ui/CustomButton";
@@ -20,16 +20,16 @@ const SearchFood = () => {
   const handleSubmit = async () => {
     if (files === undefined || files.length === 0) return;
     setScanning(true);
-    //const fetchedBarcode = await fetchBarcode(files[0]);
-    const fetchedBarcode = {
-      BarcodeType: "UPC_A",
-      RawText: "605388716637",
-      Successful: true,
-    };
+    const fetchedBarcode = await fetchBarcode(files[0]);
+    // const fetchedBarcode = {
+    //   BarcodeType: "UPC_A",
+    //   RawText: "605388716637",
+    //   Successful: true,
+    // };
     setBarcode(fetchedBarcode.RawText);
     console.log(fetchedBarcode);
     const fetchedNutrition = fetchedBarcode.RawText
-      ? await fetchNutritionFromBarcode(fetchedBarcode.RawText)
+      ? await fetchNutritionFromBarcodeNumber(fetchedBarcode.RawText)
       : "none";
     console.log(fetchedNutrition);
     setScanning(false);
@@ -38,10 +38,10 @@ const SearchFood = () => {
   const keyIsEnter = (e) => e.key === "Enter";
 
   const handleSearch = async () => {
-    console.log(foodName)
-    const fetchedNutrition = await fetchNutritionFromName(foodName)
-    console.log(fetchedNutrition)
-  }
+    console.log(foodName);
+    const fetchedNutrition = await fetchNutritionFromName(foodName);
+    console.log(fetchedNutrition);
+  };
 
   return (
     <Box p={4} display="flex" flexDirection="column" gap={GAP_SIZE}>

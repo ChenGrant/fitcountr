@@ -1,72 +1,73 @@
-import { Box, FormControl, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
-import {
-  fetchBarcode,
-  fetchNutritionFromBarcodeNumber,
-  fetchNutritionFromName,
-} from "../../../../../utils/fetchRequestUtils";
-import CustomButton from "../../../../ui/CustomButton";
-import LoadingCircle from "../../../../ui/LoadingCircle";
+import { Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Stack } from "../../../../../utils";
+import SelectSearchMethod from "./SelectSearchMethod";
+import BarcodeImage from "./BarcodeImage";
 
-const GAP_SIZE = 4;
+// ------------------------------------ CONSTANTS ------------------------------------
 
+const PAGES = {
+  SELECT_SEARCH_METHOD: "SELECT_SEARCH_METHOD",
+  BARCODE_IMAGE: "BARCODE_IMAGE",
+};
+
+// ************************************************************************************
+// ------------------------------------ COMPONENT -------------------------------------
+// ************************************************************************************
 const SearchFood = () => {
-  const [files, setFiles] = useState();
-  const [barcode, setBarcode] = useState("");
-  const [scanning, setScanning] = useState(false);
+  const [pageStack, setPageStack] = useState(() => {
+    const stack = new Stack();
+    stack.push(PAGES.SELECT_SEARCH_METHOD);
+    return stack;
+  });
 
-  const [foodName, setFoodName] = useState("");
-
-  const handleSubmit = async () => {
-    if (files === undefined || files.length === 0) return;
-    setScanning(true);
-    // const fetchedBarcode = await fetchBarcode(files[0]);
-    const fetchedBarcode = {
-      BarcodeType: "UPC_A",
-      RawText: "605388716637",
-      Successful: true,
-    };
-    setBarcode(fetchedBarcode.RawText);
-    console.log(fetchedBarcode);
-    const fetchedNutrition = fetchedBarcode.RawText
-      ? await fetchNutritionFromBarcodeNumber(fetchedBarcode.RawText)
-      : "none";
-    console.log(fetchedNutrition);
-    setScanning(false);
+  // ----------------------------------- FUNCTIONS -----------------------------------
+  const pushPageToPageStack = (page) => {
+    const pageStackCopy = Object.assign(
+      Object.create(Object.getPrototypeOf(pageStack)),
+      pageStack
+    );
+    pageStackCopy.push(page);
+    setPageStack(pageStackCopy);
   };
 
-  const keyIsEnter = (e) => e.key === "Enter";
-
-  const handleSearch = async () => {
-    console.log(foodName);
-    const fetchedNutrition = await fetchNutritionFromName(foodName);
-    console.log(fetchedNutrition);
+  const popPageFromPageStack = () => {
+    const pageStackCopy = Object.assign(
+      Object.create(Object.getPrototypeOf(pageStack)),
+      pageStack
+    );
+    const poppedValue = pageStackCopy.pop();
+    setPageStack(pageStackCopy);
+    return poppedValue;
   };
 
-  return (
-    <Box p={4} display="flex" flexDirection="column" gap={GAP_SIZE}>
-      {scanning ? (
-        <LoadingCircle />
-      ) : (
-        <>
-          <Typography>Upload Image of a Food's Barcode</Typography>
-          <TextField type="file" onChange={(e) => setFiles(e.target.files)} />
-          <CustomButton variant="contained" onClick={handleSubmit}>
-            Submit Barcode
-          </CustomButton>
-        </>
-      )}
-      {barcode && <Typography>Barcode: {barcode}</Typography>}
-      <Box mt="30vh">
-        <Typography>Search for food</Typography>
-        <TextField
-          value={foodName}
-          onChange={(e) => setFoodName(e.target.value)}
-          onKeyDown={(e) => keyIsEnter(e) && handleSearch()}
+  // ----------------------------------- USE EFFECT -----------------------------------
+  useEffect(() => {
+    console.log(pageStack);
+  }, [pageStack]);
+
+  // ------------------------------------- RENDER -------------------------------------
+  if (pageStack.isEmpty()) return null;
+
+  switch (pageStack.peek()) {
+    case "SELECT_SEARCH_METHOD":
+      return (
+        <SelectSearchMethod
+          pushPageToPageStack={pushPageToPageStack}
+          PAGES={PAGES}
         />
-      </Box>
-    </Box>
-  );
+      );
+    case "BARCODE_IMAGE":
+      return (
+        <BarcodeImage
+          popPageFromPageStack={popPageFromPageStack}
+          pushPageToPageStack={pushPageToPageStack}
+          PAGES={PAGES}
+        />
+      );
+    default:
+      return <Typography>Bet</Typography>;
+  }
 };
 
 export default SearchFood;

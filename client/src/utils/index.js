@@ -22,3 +22,5 @@ export { handleAuthWithGmail } from "./authUtils";
 export { numberWithCommas, capitalizeFirstCharacter } from "./stringUtils";
 
 export { sub } from "./numberUtils";
+
+export { Stack } from "./dataStructureUtils";

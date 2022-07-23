@@ -2,6 +2,7 @@ const {
   scanBarcodeImageAsync,
 } = require("../services/cloudmersive/cloudmersive");
 const axios = require("axios");
+const config = require("../config/config");
 
 const getNutritionFromBarcode = async (req, res) => {
   const { barcode } = req.params;
@@ -21,7 +22,7 @@ const getNutritionFromBarcode = async (req, res) => {
       .concat([["servingSize", { value: 100, unit: "g" }]])
   );
 
-  console.log(nutriments)
+  console.log(nutriments);
 
   const clean = {
     name: nutrition.data.product.product_name,
@@ -37,4 +38,30 @@ const scanBarcode = async (req, res) => {
   return res.json(response);
 };
 
-module.exports = { getNutritionFromBarcode, scanBarcode };
+const getNutritionFromName = async (req, res) => {
+  const { name } = req.params;
+
+  const api_params = {
+    api_key: config.FOOD_DATA_CENTRAL_API_KEY,
+    query: name,
+    pageNumber: 2,
+    dataType: ["Branded"],
+    brandName: "Liberte",
+    pageSize: 200,
+  };
+
+  let api_url = `https://api.nal.usda.gov/fdc/v1/foods/search?`;
+
+  Object.entries(api_params).forEach(([key, value]) => {
+    api_url += `${key}=${value}&`;
+  });
+  console.log(api_url);
+
+  // api_key=${config.FOOD_DATA_CENTRAL_API_KEY}&query=${name}`;
+
+  const nutrition = await axios.get(api_url);
+  console.log(nutrition);
+  return res.json(nutrition.data);
+};
+
+module.exports = { getNutritionFromBarcode, getNutritionFromName, scanBarcode };

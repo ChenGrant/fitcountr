@@ -1,8 +1,9 @@
-import { Box, TextField, Typography } from "@mui/material";
+import { Box, FormControl, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import {
   fetchBarcode,
   fetchNutritionFromBarcode,
+  fetchNutritionFromName,
 } from "../../../../../utils/fetchRequestUtils";
 import CustomButton from "../../../../ui/CustomButton";
 import LoadingCircle from "../../../../ui/LoadingCircle";
@@ -13,6 +14,8 @@ const SearchFood = () => {
   const [files, setFiles] = useState();
   const [barcode, setBarcode] = useState("");
   const [scanning, setScanning] = useState(false);
+
+  const [foodName, setFoodName] = useState("");
 
   const handleSubmit = async () => {
     if (files === undefined || files.length === 0) return;
@@ -32,6 +35,14 @@ const SearchFood = () => {
     setScanning(false);
   };
 
+  const keyIsEnter = (e) => e.key === "Enter";
+
+  const handleSearch = async () => {
+    console.log(foodName)
+    const fetchedNutrition = await fetchNutritionFromName(foodName)
+    console.log(fetchedNutrition)
+  }
+
   return (
     <Box p={4} display="flex" flexDirection="column" gap={GAP_SIZE}>
       {scanning ? (
@@ -46,6 +57,14 @@ const SearchFood = () => {
         </>
       )}
       {barcode && <Typography>Barcode: {barcode}</Typography>}
+      <Box mt="30vh">
+        <Typography>Search for food</Typography>
+        <TextField
+          value={foodName}
+          onChange={(e) => setFoodName(e.target.value)}
+          onKeyDown={(e) => keyIsEnter(e) && handleSearch()}
+        />
+      </Box>
     </Box>
   );
 };

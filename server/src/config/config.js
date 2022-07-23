@@ -47,4 +47,5 @@ module.exports = {
     SHORT_LOGO: process.env.ASSET_SHORT_LOGO,
   },
   BARCODE_API_KEY: process.env.BARCODE_API_KEY,
+  FOOD_DATA_CENTRAL_API_KEY: process.env.FOOD_DATA_CENTRAL_API_KEY,
 };

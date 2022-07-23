@@ -37,7 +37,13 @@ export const fetchPinLength = async (email) => {
 };
 
 export const fetchNutritionFromBarcode = async (barcode) => {
-  const response = await fetch(`/searchFood/nutrition/${barcode}`);
+  const response = await fetch(`/searchFood/barcode/${barcode}`);
+  const data = await response.json();
+  return data;
+};
+
+export const fetchNutritionFromName = async (name) => {
+  const response = await fetch(`/searchFood/name/${name}`);
   const data = await response.json();
   return data;
 };

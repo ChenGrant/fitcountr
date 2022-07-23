@@ -36,6 +36,12 @@ export const fetchPinLength = async (email) => {
   return data;
 };
 
+export const fetchNutritionFromBarcode = async (barcode) => {
+  const response = await fetch(`/searchFood/nutrition/${barcode}`);
+  const data = await response.json();
+  return data;
+};
+
 // ---------------------------------- POST REQUESTS ----------------------------------
 export const sendVerificationEmail = async (email) => {
   const response = await fetch(
@@ -78,7 +84,7 @@ export const postSignupData = async (user, provider) => {
 export const fetchBarcode = async (barcodeImageFile) => {
   const formData = new FormData();
   formData.append("barcodeImageFile", barcodeImageFile);
-  const response = await fetch(`/searchFood/barcode`, {
+  const response = await fetch(`/searchFood/scanBarcode`, {
     method: "POST",
     body: formData,
   });

@@ -1,6 +1,9 @@
 import { Box, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { fetchBarcode } from "../../../../../utils/fetchRequestUtils";
+import {
+  fetchBarcode,
+  fetchNutritionFromBarcode,
+} from "../../../../../utils/fetchRequestUtils";
 import CustomButton from "../../../../ui/CustomButton";
 import LoadingCircle from "../../../../ui/LoadingCircle";
 
@@ -14,10 +17,18 @@ const SearchFood = () => {
   const handleSubmit = async () => {
     if (files === undefined || files.length === 0) return;
     setScanning(true);
-    console.log(files[0]);
-    const fetchedBarcode = await fetchBarcode(files[0]);
+    //const fetchedBarcode = await fetchBarcode(files[0]);
+    const fetchedBarcode = {
+      BarcodeType: "UPC_A",
+      RawText: "605388716637",
+      Successful: true,
+    };
     setBarcode(fetchedBarcode.RawText);
     console.log(fetchedBarcode);
+    const fetchedNutrition = fetchedBarcode.RawText
+      ? await fetchNutritionFromBarcode(fetchedBarcode.RawText)
+      : "none";
+    console.log(fetchedNutrition);
     setScanning(false);
   };
 

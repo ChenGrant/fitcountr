@@ -20,12 +20,12 @@ const SearchFood = () => {
   const handleSubmit = async () => {
     if (files === undefined || files.length === 0) return;
     setScanning(true);
-    const fetchedBarcode = await fetchBarcode(files[0]);
-    // const fetchedBarcode = {
-    //   BarcodeType: "UPC_A",
-    //   RawText: "605388716637",
-    //   Successful: true,
-    // };
+    // const fetchedBarcode = await fetchBarcode(files[0]);
+    const fetchedBarcode = {
+      BarcodeType: "UPC_A",
+      RawText: "605388716637",
+      Successful: true,
+    };
     setBarcode(fetchedBarcode.RawText);
     console.log(fetchedBarcode);
     const fetchedNutrition = fetchedBarcode.RawText

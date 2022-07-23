@@ -44,6 +44,7 @@ const getNutritionFromName = async (req, res) => {
     pageNumber: 1,
     dataType: ["Survey (FNDDS)"],
     pageSize: 200,
+    requireAllWords: true,
   };
 
   let api_url = `https://api.nal.usda.gov/fdc/v1/foods/search?`;
@@ -53,7 +54,7 @@ const getNutritionFromName = async (req, res) => {
   });
 
   const nutrition = await axios.get(api_url);
-  
+
   return res.json(nutrition.data);
 };
 

@@ -9,7 +9,7 @@ import ErrorIcon from "@mui/icons-material/Error";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-const BarcodeImage = ({ popPageFromPageStack, pushPageToPageStack, PAGES }) => {
+const BarcodeImage = ({ popPage, pushPage, PAGES }) => {
   const theme = useTheme();
   const [enteredDragZone, setEnteredDragZone] = useState(false);
   const [file, setFile] = useState();
@@ -30,7 +30,7 @@ const BarcodeImage = ({ popPageFromPageStack, pushPageToPageStack, PAGES }) => {
   return (
     <>
       <Box m={5}>
-        <IconButton color="primary" onClick={() => popPageFromPageStack()}>
+        <IconButton color="primary" onClick={() => popPage()}>
           <ArrowBackIcon />
         </IconButton>
       </Box>

@@ -4,7 +4,7 @@ import React from "react";
 import CustomCard from "../../../../ui/CustomCard";
 import { v4 as uuidv4 } from "uuid";
 
-const SelectSearchMethod = ({ pushPageToPageStack, PAGES }) => {
+const SelectSearchMethod = ({ pushPage, PAGES }) => {
   const SEARCH_METHODS = [
     {
       label: "Barcode Image",
@@ -45,7 +45,7 @@ const SelectSearchMethod = ({ pushPageToPageStack, PAGES }) => {
               <CustomCard
                 key={uuidv4()}
                 sx={{ cursor: "pointer" }}
-                onClick={() => page && pushPageToPageStack(page)}
+                onClick={() => page && pushPage(page)}
               >
                 <Box
                   flex={1}

@@ -1,4 +1,3 @@
-import { Typography } from "@mui/material";
 import React, { useState } from "react";
 import { Stack } from "../../../../../utils";
 import SelectSearchMethod from "./SelectSearchMethod";
@@ -22,7 +21,7 @@ const SearchFood = () => {
   });
 
   // ----------------------------------- FUNCTIONS -----------------------------------
-  const pushPageToPageStack = (page) => {
+  const pushPage = (page) => {
     const pageStackCopy = Object.assign(
       Object.create(Object.getPrototypeOf(pageStack)),
       pageStack
@@ -31,7 +30,7 @@ const SearchFood = () => {
     setPageStack(pageStackCopy);
   };
 
-  const popPageFromPageStack = () => {
+  const popPage = () => {
     const pageStackCopy = Object.assign(
       Object.create(Object.getPrototypeOf(pageStack)),
       pageStack
@@ -46,22 +45,13 @@ const SearchFood = () => {
 
   switch (pageStack.peek()) {
     case "SELECT_SEARCH_METHOD":
-      return (
-        <SelectSearchMethod
-          pushPageToPageStack={pushPageToPageStack}
-          PAGES={PAGES}
-        />
-      );
+      return <SelectSearchMethod pushPage={pushPage} PAGES={PAGES} />;
     case "BARCODE_IMAGE":
       return (
-        <BarcodeImage
-          popPageFromPageStack={popPageFromPageStack}
-          pushPageToPageStack={pushPageToPageStack}
-          PAGES={PAGES}
-        />
+        <BarcodeImage popPage={popPage} pushPage={pushPage} PAGES={PAGES} />
       );
     default:
-      return <Typography>Bet</Typography>;
+      return null;
   }
 };
 

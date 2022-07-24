@@ -2,13 +2,11 @@ import React, { useState } from "react";
 import { Stack } from "../../../../../utils";
 import SelectSearchMethod from "./SelectSearchMethod";
 import BarcodeImage from "./BarcodeImage";
+import { PAGES } from "../../../../../utils";
 
-// ------------------------------------ CONSTANTS ------------------------------------
-
-const PAGES = {
-  SELECT_SEARCH_METHOD: "SELECT_SEARCH_METHOD",
-  BARCODE_IMAGE: "BARCODE_IMAGE",
-};
+// ------------------------------------- CONTEXTS -------------------------------------
+export const PushPageContext = React.createContext();
+export const PopPageContext = React.createContext();
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
@@ -40,19 +38,27 @@ const SearchFood = () => {
     return poppedValue;
   };
 
+  const renderPage = () => {
+    switch (pageStack.peek()) {
+      case "SELECT_SEARCH_METHOD":
+        return <SelectSearchMethod />;
+      case "BARCODE_IMAGE":
+        return <BarcodeImage />;
+      default:
+        return null;
+    }
+  };
+
   // ------------------------------------- RENDER -------------------------------------
   if (pageStack.isEmpty()) return null;
 
-  switch (pageStack.peek()) {
-    case "SELECT_SEARCH_METHOD":
-      return <SelectSearchMethod pushPage={pushPage} PAGES={PAGES} />;
-    case "BARCODE_IMAGE":
-      return (
-        <BarcodeImage popPage={popPage} pushPage={pushPage} PAGES={PAGES} />
-      );
-    default:
-      return null;
-  }
+  return (
+    <PushPageContext.Provider value={pushPage}>
+      <PopPageContext.Provider value={popPage}>
+        {renderPage()}
+      </PopPageContext.Provider>
+    </PushPageContext.Provider>
+  );
 };
 
 export default SearchFood;

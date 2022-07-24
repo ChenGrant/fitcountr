@@ -1,27 +1,35 @@
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useContext } from "react";
 import CustomCard from "../../../../ui/CustomCard";
 import { v4 as uuidv4 } from "uuid";
+import { PushPageContext } from "./SearchFood";
+import { PAGES } from "../../../../../utils";
 
-const SelectSearchMethod = ({ pushPage, PAGES }) => {
-  const SEARCH_METHODS = [
-    {
-      label: "Barcode Image",
-      imageSrc: "https://pngimg.com/uploads/barcode/barcode_PNG10.png",
-      page: PAGES.BARCODE_IMAGE,
-    },
-    {
-      label: "Barcode Number",
-      imageSrc:
-        "https://firebasestorage.googleapis.com/v0/b/fitcountr-staging.appspot.com/o/assets%2Fsearch_food%2Fbarcode_number.png?alt=media&token=bb3bf4e3-3f20-415e-9657-6516132d0d3d",
-    },
-    {
-      label: "Food Name",
-      imageSrc:
-        "https://firebasestorage.googleapis.com/v0/b/fitcountr-staging.appspot.com/o/assets%2Fsearch_food%2Fsearch_bar.png?alt=media&token=eb9999bd-df00-4454-afc9-9ab0e8b9c9b6",
-    },
-  ];
+// ------------------------------------ CONSTANTS ------------------------------------
+const SEARCH_METHODS = [
+  {
+    label: "Barcode Image",
+    imageSrc: "https://pngimg.com/uploads/barcode/barcode_PNG10.png",
+    page: PAGES.BARCODE_IMAGE,
+  },
+  {
+    label: "Barcode Number",
+    imageSrc:
+      "https://firebasestorage.googleapis.com/v0/b/fitcountr-staging.appspot.com/o/assets%2Fsearch_food%2Fbarcode_number.png?alt=media&token=bb3bf4e3-3f20-415e-9657-6516132d0d3d",
+  },
+  {
+    label: "Food Name",
+    imageSrc:
+      "https://firebasestorage.googleapis.com/v0/b/fitcountr-staging.appspot.com/o/assets%2Fsearch_food%2Fsearch_bar.png?alt=media&token=eb9999bd-df00-4454-afc9-9ab0e8b9c9b6",
+  },
+];
+
+// ************************************************************************************
+// ------------------------------------ COMPONENT -------------------------------------
+// ************************************************************************************
+const SelectSearchMethod = () => {
+  const pushPage = useContext(PushPageContext);
 
   return (
     <Box

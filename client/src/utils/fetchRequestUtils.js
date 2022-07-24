@@ -87,7 +87,7 @@ export const postSignupData = async (user, provider) => {
   return data;
 };
 
-export const fetchBarcode = async (barcodeImageFile) => {
+export const scanBarcodeImage = async (barcodeImageFile) => {
   const formData = new FormData();
   formData.append("barcodeImageFile", barcodeImageFile);
   const response = await fetch(`/searchFood/scanBarcodeImage`, {

@@ -1,19 +1,27 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import CustomButton from "../../../../ui/CustomButton";
 import Dropzone from "react-dropzone";
 import { Box } from "@mui/system";
-import { Card, IconButton, Typography } from "@mui/material";
+import { Card, CircularProgress, IconButton, Typography } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import ImageIcon from "@mui/icons-material/Image";
 import ErrorIcon from "@mui/icons-material/Error";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { scanBarcodeImage } from "../../../../../utils/fetchRequestUtils";
+import BarcodeConfirmPopup from "./BarcodeConfirmPopup";
+import { PopPageContext } from "./SearchFood";
 
-const BarcodeImage = ({ popPage, pushPage, PAGES }) => {
+const BarcodeImage = () => {
   const theme = useTheme();
+  const popPage = useContext(PopPageContext);
   const [enteredDragZone, setEnteredDragZone] = useState(false);
   const [file, setFile] = useState();
   const [fileError, setFileError] = useState(false);
+  const [barcodeNumber, setBarcodeNumber] = useState(false);
+  const [scanningBarcode, setScanningBarcode] = useState(false);
+  const [barcodeConfirmPopupIsOpen, setBarcodeConfirmPopupIsOpen] =
+    useState(false);
 
   const handleFileDrop = (acceptedFiles) => {
     setEnteredDragZone(false);
@@ -25,6 +33,20 @@ const BarcodeImage = ({ popPage, pushPage, PAGES }) => {
     }
     setEnteredDragZone(false);
     setFile(acceptedFiles);
+  };
+
+  const handleScan = async (file) => {
+    //const barcodeData = await scanBarcodeImage(file)
+    const barcodeData = {
+      BarcodeType: "UPC_A",
+      RawText: "605388716637",
+      Successful: true,
+    };
+
+    if (!barcodeData.Successful) return setBarcodeNumber();
+
+    setBarcodeConfirmPopupIsOpen(true);
+    setBarcodeNumber(barcodeData.RawText);
   };
 
   return (
@@ -106,14 +128,27 @@ const BarcodeImage = ({ popPage, pushPage, PAGES }) => {
             )}
           </Dropzone>
         </Box>
-        <CustomButton
-          sx={{ px: 20, visibility: (!file || fileError) && "hidden" }}
-          variant="contained"
-          onClick={() => console.log("scan")}
-        >
-          Scan
-        </CustomButton>
+        {scanningBarcode ? (
+          <CircularProgress color="primary" thickness={4} size={50} />
+        ) : (
+          <CustomButton
+            sx={{ px: 20, visibility: (!file || fileError) && "hidden" }}
+            variant="contained"
+            onClick={async () => {
+              setScanningBarcode(true);
+              await handleScan(file[0]);
+              setScanningBarcode(false);
+            }}
+          >
+            Scan
+          </CustomButton>
+        )}
       </Box>
+      <BarcodeConfirmPopup
+        barcodeNumber={barcodeNumber}
+        barcodeConfirmPopupIsOpen={barcodeConfirmPopupIsOpen}
+        setBarcodeConfirmPopupIsOpen={setBarcodeConfirmPopupIsOpen}
+      />
     </>
   );
 };

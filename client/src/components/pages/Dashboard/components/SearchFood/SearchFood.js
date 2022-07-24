@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Stack } from "../../../../../utils";
 import SelectSearchMethod from "./SelectSearchMethod";
 import BarcodeImage from "./BarcodeImage";
@@ -40,11 +40,6 @@ const SearchFood = () => {
     setPageStack(pageStackCopy);
     return poppedValue;
   };
-
-  // ----------------------------------- USE EFFECT -----------------------------------
-  useEffect(() => {
-    console.log(pageStack);
-  }, [pageStack]);
 
   // ------------------------------------- RENDER -------------------------------------
   if (pageStack.isEmpty()) return null;

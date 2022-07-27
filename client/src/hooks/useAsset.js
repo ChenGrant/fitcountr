@@ -1,4 +1,5 @@
 import { useEffect, useReducer } from "react";
+import { fetchAssetURLFromAssetName } from "../utils";
 
 const ACTIONS = {
   ADD_ASSET: "ADD_ASSET",
@@ -32,13 +33,6 @@ const reducer = (state, action) => {
     default:
       return state;
   }
-};
-
-// given an assetName, this function fetches the URL for that asset
-const fetchAssetURLFromAssetName = async (assetName) => {
-  const response = await fetch(`/asset/${assetName}`);
-  const data = await response.json();
-  return data.assetURL;
 };
 
 const initializeAssets = (initialAssets) => {
@@ -83,13 +77,13 @@ const initializeDispatchers = (assets, dispatch) => {
 
 // if the 'src' property for any asset has a value of "",
 // populate the 'src' property with the assetURL fetched from the server
-const populateSrcField = (assets, dispatch) => {
-  Object.entries(assets).forEach(async (asset) => {
-    const [key, value] = asset;
+const populateSrcField = async (assets, dispatch) => {
+  const assetURLS = [];
+  for (const [key, value] of Object.entries(assets)) {
     if (!assets[key].src) {
       const assetName = value.name;
       const assetURL = await fetchAssetURLFromAssetName(assetName);
-      dispatch({
+      assetURLS.push({
         type: ACTIONS.SET_SRC,
         payload: {
           key,
@@ -97,7 +91,8 @@ const populateSrcField = (assets, dispatch) => {
         },
       });
     }
-  });
+  }
+  assetURLS.forEach((assetURL) => dispatch(assetURL));
 };
 
 // ----------------------------------- CUSTOM HOOK -----------------------------------
@@ -146,7 +141,9 @@ const useAsset = (input) => {
   );
 
   // populate the src field from a value of "" to their corresponding src URL
-  useEffect(() => populateSrcField(assets, dispatch), [assets]);
+  useEffect(() => {
+    populateSrcField(assets, dispatch);
+  }, [assets]);
 
   return [assets, assetsDispatchers, loadingAssets, fetchingAssetSources];
 };

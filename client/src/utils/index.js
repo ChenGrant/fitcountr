@@ -2,6 +2,7 @@ export {
   GMAIL_PROVIDER,
   EMAIL_PASSWORD_PROVIDER,
   fetchFirebaseClientConfig,
+  fetchAssetURLFromAssetName,
   fetchEmailProvider,
   fetchEmailIsInUse,
   fetchVerificationStatus,

@@ -48,6 +48,12 @@ export const fetchNutritionFromName = async (name) => {
   return data;
 };
 
+export const fetchAssetURLFromAssetName = async (assetName) => {
+  const response = await fetch(`/asset/${assetName}`);
+  const data = await response.json();
+  return data.assetURL;
+};
+
 // ---------------------------------- POST REQUESTS ----------------------------------
 export const sendVerificationEmail = async (email) => {
   const response = await fetch(

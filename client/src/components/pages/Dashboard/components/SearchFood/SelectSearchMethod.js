@@ -1,6 +1,6 @@
 import { LinearProgress, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import CustomCard from "../../../../ui/CustomCard";
 import { v4 as uuidv4 } from "uuid";
 import { PushPageContext } from "./SearchFood";

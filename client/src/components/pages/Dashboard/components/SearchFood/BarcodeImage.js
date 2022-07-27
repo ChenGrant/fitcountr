@@ -11,6 +11,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { scanBarcodeImage } from "../../../../../utils/fetchRequestUtils";
 import BarcodeConfirmPopup from "./BarcodeConfirmPopup";
 import { PopPageContext } from "./SearchFood";
+import BarcodeImageErrorPopup from "./BarcodeImageErrorPopup";
 
 const BarcodeImage = () => {
   const theme = useTheme();
@@ -22,6 +23,7 @@ const BarcodeImage = () => {
   const [scanningBarcode, setScanningBarcode] = useState(false);
   const [barcodeConfirmPopupIsOpen, setBarcodeConfirmPopupIsOpen] =
     useState(false);
+  const [barcodeErrorPopupIsOpen, setBarcodeErrorPopupIsOpen] = useState(false);
 
   const handleFileDrop = (acceptedFiles) => {
     setEnteredDragZone(false);
@@ -36,14 +38,14 @@ const BarcodeImage = () => {
   };
 
   const handleScan = async (file) => {
-    const barcodeData = await scanBarcodeImage(file)
+    const barcodeData = await scanBarcodeImage(file);
     // const barcodeData = {
     //   BarcodeType: "UPC_A",
     //   RawText: "605388716637",
     //   Successful: true,
     // };
 
-    if (!barcodeData.Successful) return setBarcodeNumber();
+    if (!barcodeData.Successful) return setBarcodeErrorPopupIsOpen(true);
 
     setBarcodeConfirmPopupIsOpen(true);
     setBarcodeNumber(barcodeData.RawText);
@@ -148,6 +150,10 @@ const BarcodeImage = () => {
         barcodeNumber={barcodeNumber}
         barcodeConfirmPopupIsOpen={barcodeConfirmPopupIsOpen}
         setBarcodeConfirmPopupIsOpen={setBarcodeConfirmPopupIsOpen}
+      />
+      <BarcodeImageErrorPopup
+        barcodeErrorPopupIsOpen={barcodeErrorPopupIsOpen}
+        setBarcodeErrorPopupIsOpen={setBarcodeErrorPopupIsOpen}
       />
     </>
   );

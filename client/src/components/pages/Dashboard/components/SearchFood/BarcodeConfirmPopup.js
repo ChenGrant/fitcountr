@@ -15,7 +15,7 @@ const BarcodeConfirmPopup = ({
       onClose={() => setBarcodeConfirmPopupIsOpen(false)}
     >
       <Typography variant="h4" gutterBottom>
-        Is the barcode number{" "}
+        Scanned barcode number{" "}
         <Box component="span" color="primary.main">
           {barcodeNumber}
         </Box>

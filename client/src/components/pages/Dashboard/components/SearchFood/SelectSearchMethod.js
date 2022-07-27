@@ -17,6 +17,7 @@ const SEARCH_METHODS = [
   {
     label: "Barcode Number",
     imageName: "barcodeNumber",
+    page: PAGES.BARCODE_NUMBER,
   },
   {
     label: "Food Name",
@@ -37,7 +38,7 @@ const SelectSearchMethod = () => {
   });
 
   const pageIsLoading = loadingAssets;
-  
+
   return (
     <>
       {pageIsLoading && (
@@ -73,7 +74,7 @@ const SelectSearchMethod = () => {
                 <CustomCard
                   key={uuidv4()}
                   sx={{ cursor: "pointer" }}
-                  onClick={() => page && pushPage(page)}
+                  onClick={() => page && pushPage({ name: page })}
                 >
                   <Box
                     flex={1}

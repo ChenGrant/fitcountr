@@ -3,6 +3,7 @@ import { Stack } from "../../../../../utils";
 import SelectSearchMethod from "./SelectSearchMethod";
 import BarcodeImage from "./BarcodeImage";
 import { PAGES } from "../../../../../utils";
+import BarcodeNumber from "./BarcodeNumber";
 
 // ------------------------------------- CONTEXTS -------------------------------------
 export const PushPageContext = React.createContext();
@@ -14,7 +15,7 @@ export const PopPageContext = React.createContext();
 const SearchFood = () => {
   const [pageStack, setPageStack] = useState(() => {
     const stack = new Stack();
-    stack.push(PAGES.SELECT_SEARCH_METHOD);
+    stack.push({ name: PAGES.SELECT_SEARCH_METHOD });
     return stack;
   });
 
@@ -39,11 +40,14 @@ const SearchFood = () => {
   };
 
   const renderPage = () => {
-    switch (pageStack.peek()) {
-      case "SELECT_SEARCH_METHOD":
+    const topPage = pageStack.peek();
+    switch (topPage.name) {
+      case PAGES.SELECT_SEARCH_METHOD:
         return <SelectSearchMethod />;
-      case "BARCODE_IMAGE":
+      case PAGES.BARCODE_IMAGE:
         return <BarcodeImage />;
+      case PAGES.BARCODE_NUMBER:
+        return <BarcodeNumber initialBarcodeNumber={topPage.barcodeNumber} />;
       default:
         return null;
     }

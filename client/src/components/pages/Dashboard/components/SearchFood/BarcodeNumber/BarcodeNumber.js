@@ -57,7 +57,7 @@ const BarcodeNumber = ({ initialBarcodeNumber = "" }) => {
           Search up a product's nutritional data via its barcode number
         </Typography>
         <Box
-          width="90%"
+          width="100%"
           maxWidth="500px"
           display="flex"
           flexDirection="column"

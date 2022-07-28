@@ -4,6 +4,7 @@ import SelectSearchMethod from "./SelectSearchMethod";
 import BarcodeImage from "./BarcodeImage";
 import { PAGES } from "../../../../../utils";
 import BarcodeNumber from "./BarcodeNumber";
+import NutritionalData from "./NutritionalData";
 
 // ------------------------------------- CONTEXTS -------------------------------------
 export const PushPageContext = React.createContext();
@@ -48,6 +49,8 @@ const SearchFood = () => {
         return <BarcodeImage />;
       case PAGES.BARCODE_NUMBER:
         return <BarcodeNumber initialBarcodeNumber={topPage.barcodeNumber} />;
+      case PAGES.NUTRITIONAL_DATA:
+        return <NutritionalData barcodeNumber={topPage.barcodeNumber} />;
       default:
         return null;
     }

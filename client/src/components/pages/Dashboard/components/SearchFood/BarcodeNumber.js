@@ -7,19 +7,22 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useContext, useState } from "react";
-import { PopPageContext } from "./SearchFood";
+import { PopPageContext, PushPageContext } from "./SearchFood";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SearchIcon from "@mui/icons-material/Search";
+import CustomButton from "../../../../ui/CustomButton";
+import { PAGES } from "../../../../../utils";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const BarcodeNumber = ({ initialBarcodeNumber = "" }) => {
+  const pushPage = useContext(PushPageContext);
   const popPage = useContext(PopPageContext);
   const [barcodeNumber, setBarcodeNumber] = useState(initialBarcodeNumber);
 
-  const handleSearchBarcodeNumber = (barcodeNumber) => {
-    console.log(barcodeNumber);
+  const handleSearchBarcodeNumber = async (barcodeNumber) => {
+    pushPage({ name: PAGES.NUTRITIONAL_DATA, barcodeNumber });
   };
 
   // ------------------------------------- RENDER -------------------------------------
@@ -41,31 +44,36 @@ const BarcodeNumber = ({ initialBarcodeNumber = "" }) => {
         <Typography>
           Search up a product's nutritional data via its barcode number
         </Typography>
-        <FormControl
-          variant="outlined"
-          sx={{ width: "90%", maxWidth: "500px", mt: -7 }}
+        <Box
+          width="90%"
+          maxWidth="500px"
+          display="flex"
+          flexDirection="column"
+          gap={5}
         >
-          <InputLabel>Barcode Number</InputLabel>
-          <OutlinedInput
-            label={"Barcode Number"}
-            type="input"
-            value={barcodeNumber}
-            onChange={(e) => setBarcodeNumber(e.target.value)}
-            onKeyDown={(event) => {
-              if (event.key !== "Enter") return;
-              handleSearchBarcodeNumber(barcodeNumber);
-            }}
-            variant="outlined"
-            placeholder="Ex: 064900407482"
-            endAdornment={
-              <IconButton
-                onClick={() => handleSearchBarcodeNumber(barcodeNumber)}
-              >
-                <SearchIcon sx={{ color: "black" }} />
-              </IconButton>
-            }
-          />
-        </FormControl>
+          <FormControl variant="outlined">
+            <InputLabel>Barcode Number</InputLabel>
+            <OutlinedInput
+              label={"Barcode Number"}
+              type="input"
+              value={barcodeNumber}
+              onChange={(e) => setBarcodeNumber(e.target.value)}
+              onKeyDown={(event) => {
+                if (event.key !== "Enter") return;
+                handleSearchBarcodeNumber(barcodeNumber);
+              }}
+              variant="outlined"
+              placeholder="Ex: 064900407482"
+              startAdornment={<SearchIcon sx={{ color: "black", pr: 1 }} />}
+            />
+          </FormControl>
+          <CustomButton
+            variant="contained"
+            onClick={() => handleSearchBarcodeNumber(barcodeNumber)}
+          >
+            Search
+          </CustomButton>
+        </Box>
       </Box>
     </>
   );

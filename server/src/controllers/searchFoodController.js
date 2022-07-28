@@ -5,28 +5,38 @@ const axios = require("axios");
 const config = require("../config/config");
 
 const getNutritionFromBarcodeNumber = async (req, res) => {
-  const { barcodeNumber } = req.params;
-  const nutrition = await axios.get(
-    `https://world.openfoodfacts.org/api/v0/product/${barcodeNumber}.json`
-  );
+  try {
+    const { barcodeNumber } = req.params;
+    const nutrition = await axios.get(
+      `https://world.openfoodfacts.org/api/v0/product/${barcodeNumber}.json`
+    );
 
-  const nutriments = Object.fromEntries(
-    Object.entries(nutrition.data.product.nutriments)
-      .filter(([key]) => key.endsWith("_100g") && key !== "energy_100g")
-      .map(([key, value]) =>
-        key === "energy-kcal_100g"
-          ? ["calories", value]
-          : [key.replace("_100g", ""), { value, unit: "g" }]
-      )
-      .concat([["servingSize", { value: 100, unit: "g" }]])
-  );
+    if (nutrition.data.status === 0) {
+      throw new Error("No code or invalid code");
+    }
 
-  const clean = {
-    name: nutrition.data.product.product_name,
-    nutrition: nutriments,
-    barcodeNumber,
-  };
-  return res.json(clean);
+    const nutriments = Object.fromEntries(
+      Object.entries(nutrition.data.product.nutriments)
+        .filter(([key]) => key.endsWith("_100g") && key !== "energy_100g")
+        .map(([key, value]) =>
+          key === "energy-kcal_100g"
+            ? ["calories", value]
+            : [key.replace("_100g", ""), { value, unit: "g" }]
+        )
+        .concat([["servingSize", { value: 100, unit: "g" }]])
+    );
+
+    return res.json({
+      name: nutrition.data.product.product_name,
+      nutrition: nutriments,
+      barcodeNumber,
+    });
+  } catch (err) {
+    console.log(err);
+    return res
+      .json({ error: { message: "Could not fetch nutritional data" } })
+      .status(404);
+  }
 };
 
 const scanBarcodeImage = async (req, res) => {

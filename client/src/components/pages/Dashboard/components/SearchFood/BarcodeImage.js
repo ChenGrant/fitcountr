@@ -38,12 +38,12 @@ const BarcodeImage = () => {
   };
 
   const handleScan = async (file) => {
-    const barcodeData = await scanBarcodeImage(file);
-    // const barcodeData = {
-    //   BarcodeType: "UPC_A",
-    //   RawText: "605388716637",
-    //   Successful: true,
-    // };
+    //const barcodeData = await scanBarcodeImage(file);
+    const barcodeData = {
+      BarcodeType: "UPC_A",
+      RawText: "605388716637",
+      Successful: true,
+    };
 
     if (!barcodeData.Successful) return setBarcodeErrorPopupIsOpen(true);
 

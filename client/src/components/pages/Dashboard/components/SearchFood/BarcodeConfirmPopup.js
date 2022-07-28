@@ -25,7 +25,13 @@ const BarcodeConfirmPopup = ({
         </Box>
         ?
       </Typography>
-      <CustomButton variant="contained" sx={{ width: "100%" }}>
+      <CustomButton
+        variant="contained"
+        sx={{ width: "100%" }}
+        onClick={() =>
+          pushPage({ name: PAGES.NUTRITIONAL_DATA, barcodeNumber })
+        }
+      >
         Confirm
       </CustomButton>
       <CustomButton

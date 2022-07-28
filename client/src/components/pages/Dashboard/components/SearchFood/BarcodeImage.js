@@ -54,7 +54,7 @@ const BarcodeImage = () => {
   return (
     <>
       <Box m={5}>
-        <IconButton color="primary" onClick={() => popPage()}>
+        <IconButton color="primary" onClick={popPage}>
           <ArrowBackIcon />
         </IconButton>
       </Box>

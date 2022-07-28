@@ -7,7 +7,11 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useContext, useState } from "react";
-import { PopPageContext, PushPageContext } from "./SearchFood";
+import {
+  PopPageContext,
+  PushPageContext,
+  SetTopPageContext,
+} from "./SearchFood";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SearchIcon from "@mui/icons-material/Search";
 import CustomButton from "../../../../ui/CustomButton";
@@ -19,9 +23,11 @@ import { PAGES } from "../../../../../utils";
 const BarcodeNumber = ({ initialBarcodeNumber = "" }) => {
   const pushPage = useContext(PushPageContext);
   const popPage = useContext(PopPageContext);
+  const setTopPage = useContext(SetTopPageContext);
   const [barcodeNumber, setBarcodeNumber] = useState(initialBarcodeNumber);
 
   const handleSearchBarcodeNumber = async (barcodeNumber) => {
+    setTopPage({ name: PAGES.BARCODE_NUMBER, barcodeNumber });
     pushPage({ name: PAGES.NUTRITIONAL_DATA, barcodeNumber });
   };
 
@@ -29,7 +35,7 @@ const BarcodeNumber = ({ initialBarcodeNumber = "" }) => {
   return (
     <>
       <Box m={5}>
-        <IconButton color="primary" onClick={() => popPage()}>
+        <IconButton color="primary" onClick={popPage}>
           <ArrowBackIcon />
         </IconButton>
       </Box>

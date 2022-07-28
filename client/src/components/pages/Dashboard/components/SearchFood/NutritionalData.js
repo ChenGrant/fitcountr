@@ -28,47 +28,50 @@ const NutritionalData = ({ barcodeNumber }) => {
 
   if (fetchingNutritionalData) return <LoadingCircle />;
 
-  if (!nutritionalData)
-    return (
-      <>
-        <Box m={5}>
-          <IconButton color="primary" onClick={() => popPage()}>
-            <ArrowBackIcon />
-          </IconButton>
-        </Box>
-        {!nutritionalData ? (
-          <Box display="grid" sx={{ placeItems: "center" }} px={2}>
-            <Box
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              justifyContent="center"
-              textAlign="center"
-              width="100%"
-              maxWidth="500px"
+  return (
+    <>
+      <Box m={5}>
+        <IconButton color="primary" onClick={popPage}>
+          <ArrowBackIcon />
+        </IconButton>
+      </Box>
+      {!nutritionalData ? (
+        <Box display="grid" sx={{ placeItems: "center" }} px={2}>
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            textAlign="center"
+            width="100%"
+            maxWidth="500px"
+          >
+            <Typography variant="h4" gutterBottom>
+              No Nutritional Data Found
+            </Typography>
+            <ErrorIcon color="primary" sx={{ fontSize: "100px", my: 7 }} />
+            <Typography>
+              Could not find nutritional data associated with the barcode number{" "}
+              <b style={{ color: theme.palette.primary.main }}>
+                {barcodeNumber}
+              </b>
+              .
+            </Typography>
+            <CustomButton
+              variant="contained"
+              fullWidth
+              sx={{ mt: 5 }}
+              onClick={popPage}
             >
-              <Typography variant="h4" gutterBottom>
-                No Nutritional Data Found
-              </Typography>
-              <ErrorIcon color="primary" sx={{ fontSize: "100px", my: 7 }} />
-              <Typography>
-                Could not find nutritional data associated with the barcode
-                number{" "}
-                <b style={{ color: theme.palette.primary.main }}>
-                  {barcodeNumber}
-                </b>
-                .
-              </Typography>
-              <CustomButton variant="contained" fullWidth sx={{ mt: 5 }}>
-                Back
-              </CustomButton>
-            </Box>
+              Back
+            </CustomButton>
           </Box>
-        ) : (
-          <Typography>Data</Typography>
-        )}
-      </>
-    );
+        </Box>
+      ) : (
+        <Typography>Data</Typography>
+      )}
+    </>
+  );
 };
 
 export default NutritionalData;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Stack } from "../../../../../utils";
 import SelectSearchMethod from "./SelectSearchMethod";
 import BarcodeImage from "./BarcodeImage";
@@ -7,6 +7,7 @@ import BarcodeNumber from "./BarcodeNumber";
 import NutritionalData from "./NutritionalData";
 
 // ------------------------------------- CONTEXTS -------------------------------------
+export const SetTopPageContext = React.createContext();
 export const PushPageContext = React.createContext();
 export const PopPageContext = React.createContext();
 
@@ -21,6 +22,11 @@ const SearchFood = () => {
   });
 
   // ----------------------------------- FUNCTIONS -----------------------------------
+  const setTopPage = (page) => {
+    popPage();
+    pushPage(page);
+  };
+
   const pushPage = (page) => {
     const pageStackCopy = Object.assign(
       Object.create(Object.getPrototypeOf(pageStack)),
@@ -56,15 +62,19 @@ const SearchFood = () => {
     }
   };
 
+  // ----------------------------------- USE EFFECT -----------------------------------
+  useEffect(() => console.log(pageStack), [pageStack]);
   // ------------------------------------- RENDER -------------------------------------
   if (pageStack.isEmpty()) return null;
 
   return (
-    <PushPageContext.Provider value={pushPage}>
-      <PopPageContext.Provider value={popPage}>
-        {renderPage()}
-      </PopPageContext.Provider>
-    </PushPageContext.Provider>
+    <SetTopPageContext.Provider value={setTopPage}>
+      <PushPageContext.Provider value={pushPage}>
+        <PopPageContext.Provider value={popPage}>
+          {renderPage()}
+        </PopPageContext.Provider>
+      </PushPageContext.Provider>
+    </SetTopPageContext.Provider>
   );
 };
 

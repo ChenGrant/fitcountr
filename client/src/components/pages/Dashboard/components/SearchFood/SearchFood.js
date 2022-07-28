@@ -46,13 +46,14 @@ const SearchFood = () => {
     return poppedValue;
   };
 
+  useEffect(() => console.log(pageStack), [pageStack]);
   const renderPage = () => {
     const topPage = pageStack.peek();
     switch (topPage.name) {
       case PAGES.SELECT_SEARCH_METHOD:
         return <SelectSearchMethod />;
       case PAGES.BARCODE_IMAGE:
-        return <BarcodeImage />;
+        return <BarcodeImage initialFile={topPage.file} />;
       case PAGES.BARCODE_NUMBER:
         return <BarcodeNumber initialBarcodeNumber={topPage.barcodeNumber} />;
       case PAGES.NUTRITIONAL_DATA:

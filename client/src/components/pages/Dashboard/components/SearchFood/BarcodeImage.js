@@ -10,20 +10,24 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { scanBarcodeImage } from "../../../../../utils/fetchRequestUtils";
 import BarcodeConfirmPopup from "./BarcodeConfirmPopup";
-import { PopPageContext } from "./SearchFood";
+import { PopPageContext, SetTopPageContext } from "./SearchFood";
 import BarcodeImageErrorPopup from "./BarcodeImageErrorPopup";
+import { PAGES } from "../../../../../utils";
 
-const BarcodeImage = () => {
+const BarcodeImage = ({ initialFile }) => {
   const theme = useTheme();
+  const setTopPage = useContext(SetTopPageContext);
   const popPage = useContext(PopPageContext);
   const [enteredDragZone, setEnteredDragZone] = useState(false);
-  const [file, setFile] = useState();
+  const [file, setFile] = useState(initialFile);
   const [fileError, setFileError] = useState(false);
   const [barcodeNumber, setBarcodeNumber] = useState(false);
   const [scanningBarcode, setScanningBarcode] = useState(false);
   const [barcodeConfirmPopupIsOpen, setBarcodeConfirmPopupIsOpen] =
     useState(false);
   const [barcodeErrorPopupIsOpen, setBarcodeErrorPopupIsOpen] = useState(false);
+
+  console.log(file)
 
   const handleFileDrop = (acceptedFiles) => {
     setEnteredDragZone(false);
@@ -34,7 +38,7 @@ const BarcodeImage = () => {
       return;
     }
     setEnteredDragZone(false);
-    setFile(acceptedFiles);
+    setFile(acceptedFiles[0]);
   };
 
   const handleScan = async (file) => {
@@ -46,7 +50,8 @@ const BarcodeImage = () => {
     };
 
     if (!barcodeData.Successful) return setBarcodeErrorPopupIsOpen(true);
-
+    
+    setTopPage({ name: PAGES.BARCODE_IMAGE, file });
     setBarcodeConfirmPopupIsOpen(true);
     setBarcodeNumber(barcodeData.RawText);
   };
@@ -115,7 +120,7 @@ const BarcodeImage = () => {
                     {file && (
                       <>
                         <CheckCircleIcon sx={{ color: "green" }} />
-                        <Typography>Uploaded File: {file[0].name}</Typography>
+                        <Typography>Uploaded File: {file.name}</Typography>
                       </>
                     )}
                     {fileError && (
@@ -138,7 +143,7 @@ const BarcodeImage = () => {
             variant="contained"
             onClick={async () => {
               setScanningBarcode(true);
-              await handleScan(file[0]);
+              await handleScan(file);
               setScanningBarcode(false);
             }}
           >

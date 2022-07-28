@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import CustomButton from "../../../../ui/CustomButton";
+import CustomButton from "../../../../../ui/CustomButton";
 import Dropzone from "react-dropzone";
 import { Box } from "@mui/system";
 import { Card, CircularProgress, IconButton, Typography } from "@mui/material";
@@ -8,11 +8,11 @@ import ImageIcon from "@mui/icons-material/Image";
 import ErrorIcon from "@mui/icons-material/Error";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { scanBarcodeImage } from "../../../../../utils/fetchRequestUtils";
+import { scanBarcodeImage } from "../../../../../../utils/fetchRequestUtils";
 import BarcodeConfirmPopup from "./BarcodeConfirmPopup";
-import { PopPageContext, SetTopPageContext } from "./SearchFood";
+import { PopPageContext, SetTopPageContext } from "../SearchFood";
 import BarcodeImageErrorPopup from "./BarcodeImageErrorPopup";
-import { PAGES } from "../../../../../utils";
+import { PAGES } from "../../../../../../utils";
 
 const BarcodeImage = ({ initialFile }) => {
   const theme = useTheme();

@@ -1,10 +1,10 @@
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useContext } from "react";
-import { PAGES } from "../../../../../utils";
-import CustomButton from "../../../../ui/CustomButton";
-import CustomDialog from "../../../../ui/CustomDialog";
-import { PushPageContext } from "./SearchFood";
+import { PAGES } from "../../../../../../utils";
+import CustomButton from "../../../../../ui/CustomButton";
+import CustomDialog from "../../../../../ui/CustomDialog";
+import { PushPageContext } from "../SearchFood";
 
 const BarcodeConfirmPopup = ({
   barcodeNumber,

@@ -11,11 +11,11 @@ import {
   PopPageContext,
   PushPageContext,
   SetTopPageContext,
-} from "./SearchFood";
+} from "../SearchFood";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SearchIcon from "@mui/icons-material/Search";
-import CustomButton from "../../../../ui/CustomButton";
-import { PAGES } from "../../../../../utils";
+import CustomButton from "../../../../../ui/CustomButton";
+import { PAGES } from "../../../../../../utils";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------

@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Stack } from "../../../../../utils";
+import { PAGES, Stack } from "../../../../../utils";
 import SelectSearchMethod from "./SelectSearchMethod";
-import BarcodeImage from "./BarcodeImage";
-import { PAGES } from "../../../../../utils";
-import BarcodeNumber from "./BarcodeNumber";
+import BarcodeImage from "./BarcodeImage/BarcodeImage";
+import BarcodeNumber from "./BarcodeNumber/BarcodeNumber";
 import NutritionalData from "./NutritionalData";
 
 // ------------------------------------- CONTEXTS -------------------------------------

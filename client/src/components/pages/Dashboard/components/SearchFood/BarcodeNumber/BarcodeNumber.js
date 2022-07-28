@@ -16,11 +16,13 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SearchIcon from "@mui/icons-material/Search";
 import CustomButton from "../../../../../ui/CustomButton";
 import { PAGES } from "../../../../../../utils";
+import useScreenSize from "../../../../../../hooks/useScreenSize";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const BarcodeNumber = ({ initialBarcodeNumber = "" }) => {
+  const { desktop } = useScreenSize();
   const pushPage = useContext(PushPageContext);
   const popPage = useContext(PopPageContext);
   const setTopPage = useContext(SetTopPageContext);
@@ -44,10 +46,14 @@ const BarcodeNumber = ({ initialBarcodeNumber = "" }) => {
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
-        gap={10}
+        gap={desktop ? 10 : 5}
+        px={desktop ? 5 : 2}
+        pb={5}
       >
-        <Typography variant="h4">Enter a Barcode Number</Typography>
-        <Typography>
+        <Typography variant="h4" textAlign="center">
+          Enter a Barcode Number
+        </Typography>
+        <Typography textAlign="center">
           Search up a product's nutritional data via its barcode number
         </Typography>
         <Box

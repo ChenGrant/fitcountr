@@ -1,3 +1,9 @@
+import React, { useContext, useState } from "react";
+import {
+  PopPageContext,
+  PushPageContext,
+  SetTopPageContext,
+} from "../SearchFood";
 import {
   Box,
   FormControl,
@@ -6,32 +12,23 @@ import {
   OutlinedInput,
   Typography,
 } from "@mui/material";
-import React, { useContext, useState } from "react";
-import {
-  PopPageContext,
-  PushPageContext,
-  SetTopPageContext,
-} from "../SearchFood";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SearchIcon from "@mui/icons-material/Search";
 import CustomButton from "../../../../../ui/CustomButton";
 import { PAGES } from "../../../../../../utils";
 
-// ************************************************************************************
-// ------------------------------------ COMPONENT -------------------------------------
-// ************************************************************************************
-const BarcodeNumber = ({ initialBarcodeNumber = "" }) => {
+const FoodName = () => {
   const pushPage = useContext(PushPageContext);
   const popPage = useContext(PopPageContext);
   const setTopPage = useContext(SetTopPageContext);
-  const [barcodeNumber, setBarcodeNumber] = useState(initialBarcodeNumber);
 
-  const handleSearchBarcodeNumber = (barcodeNumber) => {
-    setTopPage({ name: PAGES.BARCODE_NUMBER, barcodeNumber });
-    pushPage({ name: PAGES.NUTRITIONAL_DATA, barcodeNumber });
+  const [foodName, setFoodName] = useState("");
+
+  const handleSearchFoodName = (foodName) => {
+    // setTopPage({ name: PAGES.FOOD_NAME, foodName });
+    // pushPage({ name: PAGES.NUTRITIONAL_DATA, foodName });
   };
 
-  // ------------------------------------- RENDER -------------------------------------
   return (
     <>
       <Box m={5}>
@@ -44,11 +41,11 @@ const BarcodeNumber = ({ initialBarcodeNumber = "" }) => {
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
-        gap={10}
+        gap={5}
       >
-        <Typography variant="h4">Enter a Barcode Number</Typography>
+        <Typography variant="h4">Enter a Food Name</Typography>
         <Typography>
-          Search up a product's nutritional data via its barcode number
+          Search up a product's nutritional data via its name
         </Typography>
         <Box
           width="90%"
@@ -58,24 +55,24 @@ const BarcodeNumber = ({ initialBarcodeNumber = "" }) => {
           gap={5}
         >
           <FormControl variant="outlined">
-            <InputLabel>Barcode Number</InputLabel>
+            <InputLabel>Food Name</InputLabel>
             <OutlinedInput
-              label={"Barcode Number"}
+              label={"Food Name"}
               type="input"
-              value={barcodeNumber}
-              onChange={(e) => setBarcodeNumber(e.target.value)}
+              value={foodName}
+              onChange={(e) => setFoodName(e.target.value)}
               onKeyDown={(event) => {
                 if (event.key !== "Enter") return;
-                handleSearchBarcodeNumber(barcodeNumber);
+                handleSearchFoodName(foodName);
               }}
               variant="outlined"
-              placeholder="Ex: 064900407482"
+              placeholder="Ex: chicken breast, raw"
               startAdornment={<SearchIcon sx={{ color: "black", pr: 1 }} />}
             />
           </FormControl>
           <CustomButton
             variant="contained"
-            onClick={() => handleSearchBarcodeNumber(barcodeNumber)}
+            onClick={() => handleSearchFoodName(foodName)}
           >
             Search
           </CustomButton>
@@ -85,4 +82,4 @@ const BarcodeNumber = ({ initialBarcodeNumber = "" }) => {
   );
 };
 
-export default BarcodeNumber;
+export default FoodName;

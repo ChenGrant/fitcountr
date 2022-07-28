@@ -22,6 +22,7 @@ const SEARCH_METHODS = [
   {
     label: "Food Name",
     imageName: "foodName",
+    page: PAGES.FOOD_NAME,
   },
 ];
 

@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { PushPageContext } from "./SearchFood";
 import { PAGES } from "../../../../../utils";
 import useAsset from "../../../../../hooks/useAsset";
+import useScreenSize from "../../../../../hooks/useScreenSize";
 
 // ------------------------------------ CONSTANTS ------------------------------------
 const SEARCH_METHODS = [
@@ -31,7 +32,7 @@ const SEARCH_METHODS = [
 // ************************************************************************************
 const SelectSearchMethod = () => {
   const pushPage = useContext(PushPageContext);
-
+  const { desktop } = useScreenSize();
   const [assets, assetsDispatchers, loadingAssets] = useAsset({
     barcodeImage: { name: "search_barcode_image" },
     barcodeNumber: { name: "search_barcode_number" },
@@ -56,20 +57,25 @@ const SelectSearchMethod = () => {
       )}
       <Box
         px={4}
-        height="100vh"
+        py={!desktop && 10}
+        height={desktop ? "100vh" : "auto"}
         display={pageIsLoading ? "none" : "flex"}
         flexDirection="column"
         gap={10}
         alignItems="center"
         justifyContent="center"
       >
-        <Box flex={1} display="flex" alignItems="flex-end">
+        <Box flex={desktop && 1} display="flex" alignItems="flex-end">
           <Typography variant="h1" textAlign="center">
             Choose a search method
           </Typography>
         </Box>
-        <Box flex={2}>
-          <Box display="flex" gap={4}>
+        <Box flex={desktop && 2}>
+          <Box
+            display="flex"
+            flexDirection={desktop ? "row" : "column"}
+            gap={5}
+          >
             {SEARCH_METHODS.map(({ label, imageName, page }) => {
               return (
                 <CustomCard

@@ -19,24 +19,27 @@ import FoodDataTable from "./FoodDataTable";
 import FoodNameErrorPopup from "./FoodNameErrorPopup";
 
 const FoodName = ({ initialFoodName = "" }) => {
-  const { desktop } = useScreenSize();
+  const { desktop, tablet } = useScreenSize();
   const popPage = useContext(PopPageContext);
   const setTopPage = useContext(SetTopPageContext);
 
+  const [foodNameInputField, setFoodNameInputField] = useState(initialFoodName);
   const [foodName, setFoodName] = useState(initialFoodName);
   const [fetchingFoodData, setFetchingFoodData] = useState(false);
   const [foodNameErrorPopupIsOpen, setFoodNameErrorPopupIsOpen] =
     useState(false);
   const [foodData, setFoodData] = useState({});
 
-  const handleSearchFoodName = async (foodName) => {
-    setFetchingFoodData(true);
+  const handleSearchFoodName = async (foodNameInputField) => {
+    if (foodNameInputField === foodName) return;
 
+    setFoodName(foodNameInputField);
+    setFetchingFoodData(true);
     await (async () => {
-      if (!foodName) return setFoodNameErrorPopupIsOpen(true);
-      const fetchedFoodList = await fetchFoodListFromName(foodName);
+      if (!foodNameInputField) return setFoodNameErrorPopupIsOpen(true);
+      const fetchedFoodList = await fetchFoodListFromName(foodNameInputField);
       if (fetchedFoodList.error) return setFoodNameErrorPopupIsOpen(true);
-      setTopPage({ name: PAGES.FOOD_NAME, foodName });
+      setTopPage({ name: PAGES.FOOD_NAME, foodName: foodNameInputField });
       setFoodData(fetchedFoodList);
     })();
 
@@ -56,8 +59,8 @@ const FoodName = ({ initialFoodName = "" }) => {
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
-        gap={desktop ? 10 : 5}
-        px={desktop ? 5 : 2}
+        gap={5}
+        px={desktop ? 5 : tablet ? 3 : 2}
         pb={5}
       >
         {objectIsEmpty(foodData) && (
@@ -72,9 +75,9 @@ const FoodName = ({ initialFoodName = "" }) => {
         )}
         <Box
           width="100%"
-          maxWidth="500px"
+          maxWidth="600px"
           display="flex"
-          flexDirection={objectIsEmpty(foodData) ? "column" : "row"}
+          flexDirection={objectIsEmpty(foodData) || !desktop ? "column" : "row"}
           alignItems="center"
           gap={objectIsEmpty(foodData) ? 5 : 1}
         >
@@ -83,11 +86,11 @@ const FoodName = ({ initialFoodName = "" }) => {
             <OutlinedInput
               label={"Food Name"}
               type="input"
-              value={foodName}
-              onChange={(e) => setFoodName(e.target.value)}
+              value={foodNameInputField}
+              onChange={(e) => setFoodNameInputField(e.target.value)}
               onKeyDown={(event) => {
                 if (event.key !== "Enter") return;
-                handleSearchFoodName(foodName);
+                handleSearchFoodName(foodNameInputField);
               }}
               variant="outlined"
               placeholder="Ex: chicken breast, raw"
@@ -95,7 +98,7 @@ const FoodName = ({ initialFoodName = "" }) => {
             />
           </FormControl>
           <Box
-            width={objectIsEmpty(foodData) ? "100%" : "200px"}
+            width={objectIsEmpty(foodData) || !desktop ? "100%" : "200px"}
             display="grid"
             sx={{ placeItems: "center" }}
           >
@@ -104,12 +107,12 @@ const FoodName = ({ initialFoodName = "" }) => {
             ) : (
               <CustomButton
                 sx={
-                  objectIsEmpty(foodData)
+                  objectIsEmpty(foodData) || !desktop
                     ? { width: "100%" }
                     : { px: 3, borderRadius: "5px" }
                 }
                 variant="contained"
-                onClick={() => handleSearchFoodName(foodName)}
+                onClick={() => handleSearchFoodName(foodNameInputField)}
               >
                 Search
               </CustomButton>

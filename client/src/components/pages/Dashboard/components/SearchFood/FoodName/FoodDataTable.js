@@ -1,17 +1,14 @@
 import { useTheme } from "@emotion/react";
-import {
-  CircularProgress,
-  LinearProgress,
-  Pagination,
-  Typography,
-} from "@mui/material";
+import { LinearProgress, Pagination, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import CustomCard from "../../../../../ui/CustomCard";
 import { v4 as uuidv4 } from "uuid";
 import { fetchFoodListFromName } from "../../../../../../utils/fetchRequestUtils";
+import useScreenSize from "../../../../../../hooks/useScreenSize";
 
 const FoodDataTable = ({ foodData, foodName, setFoodData }) => {
+  const { phone } = useScreenSize();
   const theme = useTheme();
   const [pageNumber, setPageNumber] = useState(1);
   const [fetching, setFetching] = useState(false);
@@ -25,12 +22,20 @@ const FoodDataTable = ({ foodData, foodName, setFoodData }) => {
     })();
   }, [pageNumber]);
 
+  useEffect(() => setPageNumber(1), [foodName]);
+
   return (
-    <CustomCard sx={{ maxWidth: "800px" }}>
+    <CustomCard
+      sx={
+        phone
+          ? { p: 2, width: "calc(100% - 2 * 2 * 8px)" }
+          : { maxWidth: "800px" }
+      }
+    >
       <Typography variant="h4" gutterBottom>
         <b>Food Name</b>
       </Typography>
-      <Box my={2}>
+      <Box my={1.5}>
         {foodData.foods.length === 0 ? (
           <Typography>No matches found</Typography>
         ) : (
@@ -72,7 +77,8 @@ const FoodDataTable = ({ foodData, foodName, setFoodData }) => {
             "& .MuiPaginationItem-root": {
               color: "black",
               "&:hover": {
-                background: theme.palette.primary.light,
+                cursor: fetching && "not-allowed",
+                background: !fetching && theme.palette.primary.light,
               },
               "&.Mui-selected": {
                 background: theme.palette.primary.main,

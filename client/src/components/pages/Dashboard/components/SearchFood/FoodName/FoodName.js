@@ -116,7 +116,13 @@ const FoodName = ({ initialFoodName = "" }) => {
             )}
           </Box>
         </Box>
-        {!objectIsEmpty(foodData) && <FoodDataTable foodData={foodData} />}
+        {!objectIsEmpty(foodData) && (
+          <FoodDataTable
+            foodData={foodData}
+            foodName={foodName}
+            setFoodData={setFoodData}
+          />
+        )}
       </Box>
       <FoodNameErrorPopup
         foodName={foodName}

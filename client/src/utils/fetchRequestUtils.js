@@ -42,8 +42,14 @@ export const fetchNutritionFromBarcodeNumber = async (barcodeNumber) => {
   return data;
 };
 
-export const fetchFoodListFromName = async (name) => {
-  const response = await fetch(`/searchFood/name/${name}`);
+export const fetchFoodListFromName = async (
+  name,
+  pageNumber = 1,
+  pageSize = 10
+) => {
+  const response = await fetch(
+    `/searchFood/name/${name}/${pageNumber}/${pageSize}`
+  );
   const data = await response.json();
   return data;
 };

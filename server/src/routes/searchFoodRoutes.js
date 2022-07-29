@@ -7,7 +7,7 @@ const {
 } = require("../controllers/searchFoodController");
 
 router.get("/barcodeNumber/:barcodeNumber", getNutritionFromBarcodeNumber);
-router.get("/name/:name", getNutritionFromName);
+router.get("/name/:name/:pageNumber/:pageSize", getNutritionFromName);
 router.post("/scanBarcodeImage", scanBarcodeImage);
 
 module.exports = router;

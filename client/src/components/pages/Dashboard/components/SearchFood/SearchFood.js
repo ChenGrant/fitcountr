@@ -68,7 +68,7 @@ const SearchFood = () => {
   };
 
   // ----------------------------------- USE EFFECT -----------------------------------
-  useEffect(() => console.log(pageStack), [pageStack]);
+  //useEffect(() => console.log(pageStack), [pageStack]);
 
   // ------------------------------------- RENDER -------------------------------------
   if (!user.isLoggedIn) return <Navigate to="/" />;

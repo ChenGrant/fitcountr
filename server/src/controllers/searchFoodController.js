@@ -47,14 +47,14 @@ const scanBarcodeImage = async (req, res) => {
 
 const getNutritionFromName = async (req, res) => {
   try {
-    const { name } = req.params;
+    const { name, pageNumber, pageSize } = req.params;
 
     const api_params = {
       api_key: config.FOOD_DATA_CENTRAL_API_KEY,
       query: name,
-      pageNumber: 1,
+      pageNumber,
       dataType: ["Survey (FNDDS)"],
-      pageSize: 200,
+      pageSize,
       requireAllWords: true,
     };
 

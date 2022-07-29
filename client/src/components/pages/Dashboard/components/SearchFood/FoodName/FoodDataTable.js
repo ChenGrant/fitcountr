@@ -68,17 +68,17 @@ const FoodDataTable = ({ foodData, foodName, setFoodData }) => {
       </Box>
       <Box display="grid" sx={{ placeItems: "center" }}>
         <Pagination
+          disabled={fetching}
           count={foodData.totalPages}
           page={pageNumber}
-          onChange={(e, pageNumber) => !fetching && setPageNumber(pageNumber)}
+          onChange={(e, pageNumber) => setPageNumber(pageNumber)}
           shape="rounded"
           color="primary"
           sx={{
             "& .MuiPaginationItem-root": {
               color: "black",
               "&:hover": {
-                cursor: fetching && "not-allowed",
-                background: !fetching && theme.palette.primary.light,
+                background: theme.palette.primary.light,
               },
               "&.Mui-selected": {
                 background: theme.palette.primary.main,

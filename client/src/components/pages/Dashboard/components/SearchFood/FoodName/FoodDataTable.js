@@ -45,7 +45,7 @@ const FoodDataTable = ({ foodData, foodName, setFoodData }) => {
             sx={fetching ? { placeItems: "center" } : {}}
           >
             {fetching ? (
-              <LinearProgress sx={{ width: "100%", maxWidth: "400px" }} />
+              <LinearProgress sx={{ width: "75%", maxWidth: "400px" }} />
             ) : (
               foodData.foods.map((food) => (
                 <React.Fragment key={uuidv4()}>

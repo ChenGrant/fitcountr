@@ -79,7 +79,7 @@ const FoodName = ({ initialFoodName = "" }) => {
           display="flex"
           flexDirection={objectIsEmpty(foodData) || !desktop ? "column" : "row"}
           alignItems="center"
-          gap={objectIsEmpty(foodData) ? 5 : 1}
+          gap={objectIsEmpty(foodData) ? 5 : 2}
         >
           <FormControl variant="outlined" fullWidth>
             <InputLabel>Food Name</InputLabel>

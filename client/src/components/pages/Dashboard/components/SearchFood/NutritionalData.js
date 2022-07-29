@@ -20,7 +20,6 @@ const NutritionalData = ({ barcodeNumber }) => {
       const fetchedNutrition = await fetchNutritionFromBarcodeNumber(
         barcodeNumber
       );
-      console.log(fetchedNutrition);
       !fetchedNutrition.error && setNutritionalData(fetchedNutrition);
       setFetchingNutritionalData(false);
     })();

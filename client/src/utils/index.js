@@ -27,3 +27,5 @@ export { sub } from "./numberUtils";
 export { Stack } from "./dataStructureUtils";
 
 export { PAGES } from "./foodSearchUtils";
+
+export { objectIsEmpty } from "./objectUtils";

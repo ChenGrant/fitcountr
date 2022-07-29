@@ -49,7 +49,6 @@ const SearchFood = () => {
     return poppedValue;
   };
 
-  useEffect(() => console.log(pageStack), [pageStack]);
   const renderPage = () => {
     const topPage = pageStack.peek();
     switch (topPage.name) {
@@ -60,7 +59,7 @@ const SearchFood = () => {
       case PAGES.BARCODE_NUMBER:
         return <BarcodeNumber initialBarcodeNumber={topPage.barcodeNumber} />;
       case PAGES.FOOD_NAME:
-        return <FoodName />;
+        return <FoodName initialFoodName={topPage.foodName} />;
       case PAGES.NUTRITIONAL_DATA:
         return <NutritionalData barcodeNumber={topPage.barcodeNumber} />;
       default:

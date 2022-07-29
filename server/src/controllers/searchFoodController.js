@@ -46,26 +46,33 @@ const scanBarcodeImage = async (req, res) => {
 };
 
 const getNutritionFromName = async (req, res) => {
-  const { name } = req.params;
+  try {
+    const { name } = req.params;
 
-  const api_params = {
-    api_key: config.FOOD_DATA_CENTRAL_API_KEY,
-    query: name,
-    pageNumber: 1,
-    dataType: ["Survey (FNDDS)"],
-    pageSize: 200,
-    requireAllWords: true,
-  };
+    const api_params = {
+      api_key: config.FOOD_DATA_CENTRAL_API_KEY,
+      query: name,
+      pageNumber: 1,
+      dataType: ["Survey (FNDDS)"],
+      pageSize: 200,
+      requireAllWords: true,
+    };
 
-  let api_url = `https://api.nal.usda.gov/fdc/v1/foods/search?`;
+    let api_url = `https://api.nal.usda.gov/fdc/v1/foods/search?`;
 
-  Object.entries(api_params).forEach(([key, value], index) => {
-    api_url += `${index === 0 ? "" : "&"}${key}=${value}`;
-  });
+    Object.entries(api_params).forEach(([key, value], index) => {
+      api_url += `${index === 0 ? "" : "&"}${key}=${value}`;
+    });
 
-  const nutrition = await axios.get(api_url);
+    const nutrition = await axios.get(api_url);
 
-  return res.json(nutrition.data);
+    return res.json(nutrition.data);
+  } catch (err) {
+    console.log(err);
+    return res
+      .json({ error: { message: "Could not fetch nutritional data" } })
+      .status(404);
+  }
 };
 
 module.exports = {

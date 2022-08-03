@@ -1,26 +1,31 @@
 import { useTheme } from "@emotion/react";
 import { LinearProgress, Pagination, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CustomCard from "../../../../../ui/CustomCard";
 import { v4 as uuidv4 } from "uuid";
 import { fetchFoodListFromName } from "../../../../../../utils/fetchRequestUtils";
 import useScreenSize from "../../../../../../hooks/useScreenSize";
+import { PushPageContext, SetTopPageContext } from "../SearchFood";
+import { PAGES } from "../../../../../../utils";
 
 const FoodDataTable = ({ foodData, foodName, setFoodData }) => {
   const { phone } = useScreenSize();
   const theme = useTheme();
   const [pageNumber, setPageNumber] = useState(1);
   const [fetching, setFetching] = useState(false);
+  const setTopPage = useContext(SetTopPageContext);
+  const pushPage = useContext(PushPageContext);
 
   useEffect(() => {
     (async () => {
       setFetching(true);
       const fetchedFoodData = await fetchFoodListFromName(foodName, pageNumber);
+      console.log(fetchedFoodData)
       setFoodData(fetchedFoodData);
       setFetching(false);
     })();
-  }, [pageNumber]);
+  }, [pageNumber, foodName, setFoodData]);
 
   useEffect(() => setPageNumber(1), [foodName]);
 
@@ -56,7 +61,13 @@ const FoodDataTable = ({ foodData, foodName, setFoodData }) => {
                       cursor: "pointer",
                       "&:hover": { bgcolor: "#ededed" },
                     }}
-                    onClick={() => console.log(food.description)}
+                    onClick={() => {
+                      setTopPage({ name: PAGES.FOOD_NAME, foodName });
+                      pushPage({
+                        name: PAGES.NUTRITIONAL_DATA,
+                        food,
+                      });
+                    }}
                   >
                     {food.description}
                   </Typography>

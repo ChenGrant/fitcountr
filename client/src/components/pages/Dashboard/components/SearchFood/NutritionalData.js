@@ -8,8 +8,14 @@ import CustomButton from "../../../../ui/CustomButton";
 import { Box } from "@mui/system";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { PopPageContext } from "./SearchFood";
+import CustomCard from "../../../../ui/CustomCard";
+import useScreenSize from "../../../../../hooks/useScreenSize";
+import { v4 as uuidv4 } from "uuid";
 
-const NutritionalData = ({ barcodeNumber }) => {
+const NutritionalData = (props) => {
+  const { barcodeNumber, food } = props;
+  const { phone } = useScreenSize();
+  console.log(props);
   const theme = useTheme();
   const popPage = useContext(PopPageContext);
   const [fetchingNutritionalData, setFetchingNutritionalData] = useState(true);
@@ -17,9 +23,11 @@ const NutritionalData = ({ barcodeNumber }) => {
 
   useEffect(() => {
     (async () => {
+      if (!barcodeNumber) return setFetchingNutritionalData(false);
       const fetchedNutrition = await fetchNutritionFromBarcodeNumber(
         barcodeNumber
       );
+      console.log(fetchedNutrition);
       !fetchedNutrition.error && setNutritionalData(fetchedNutrition);
       setFetchingNutritionalData(false);
     })();
@@ -34,41 +42,76 @@ const NutritionalData = ({ barcodeNumber }) => {
           <ArrowBackIcon />
         </IconButton>
       </Box>
-      {!nutritionalData ? (
-        <Box display="grid" sx={{ placeItems: "center" }} px={2}>
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            textAlign="center"
-            width="100%"
-            maxWidth="500px"
+      <Box sx={{ width: "100%", display: "grid", placeItems: "center" }}>
+        {food ? (
+          <CustomCard
+            sx={
+              phone
+                ? { p: 2, width: "calc(100% - 2 * 2 * 8px)" }
+                : { maxWidth: "600px" }
+            }
           >
             <Typography variant="h4" gutterBottom>
-              No Nutritional Data Found
+              <b>{food.description}</b>
             </Typography>
-            <ErrorIcon color="primary" sx={{ fontSize: "100px", my: 7 }} />
-            <Typography>
-              Could not find nutritional data associated with the barcode number{" "}
-              <b style={{ color: theme.palette.primary.main }}>
-                {barcodeNumber}
-              </b>
-              .
+            <Typography gutterBottom>
+              <b>Serving Size: 100g</b>
             </Typography>
-            <CustomButton
-              variant="contained"
-              fullWidth
-              sx={{ mt: 5 }}
-              onClick={popPage}
+            {food.foodNutrients.map(({ nutrientName, value, unitName }) => (
+              <Box
+                key={uuidv4()}
+                display="flex"
+                borderTop="1px solid #D3D3D3"
+                py={1}
+              >
+                <Box flex={1}>
+                  <Typography textAlign="left">{nutrientName}</Typography>
+                </Box>
+                <Box>
+                  <Typography textAlign="right">
+                    {value} {unitName}
+                  </Typography>
+                </Box>
+              </Box>
+            ))}
+          </CustomCard>
+        ) : !nutritionalData ? (
+          <Box display="grid" sx={{ placeItems: "center" }} px={2}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              justifyContent="center"
+              textAlign="center"
+              width="100%"
+              maxWidth="500px"
             >
-              Back
-            </CustomButton>
+              <Typography variant="h4" gutterBottom>
+                No Nutritional Data Found
+              </Typography>
+              <ErrorIcon color="primary" sx={{ fontSize: "100px", my: 7 }} />
+              <Typography>
+                Could not find nutritional data associated with the barcode
+                number{" "}
+                <b style={{ color: theme.palette.primary.main }}>
+                  {barcodeNumber}
+                </b>
+                .
+              </Typography>
+              <CustomButton
+                variant="contained"
+                fullWidth
+                sx={{ mt: 5 }}
+                onClick={popPage}
+              >
+                Back
+              </CustomButton>
+            </Box>
           </Box>
-        </Box>
-      ) : (
-        <Typography>Data</Typography>
-      )}
+        ) : (
+          <Typography>Data</Typography>
+        )}
+      </Box>
     </>
   );
 };

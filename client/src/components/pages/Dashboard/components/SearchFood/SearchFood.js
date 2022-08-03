@@ -61,7 +61,12 @@ const SearchFood = () => {
       case PAGES.FOOD_NAME:
         return <FoodName initialFoodName={topPage.foodName} />;
       case PAGES.NUTRITIONAL_DATA:
-        return <NutritionalData barcodeNumber={topPage.barcodeNumber} />;
+        return (
+          <NutritionalData
+            barcodeNumber={topPage.barcodeNumber}
+            food={topPage.food}
+          />
+        );
       default:
         return null;
     }

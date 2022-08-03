@@ -1,18 +1,19 @@
 import { Typography, IconButton } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
-import { fetchNutritionFromBarcodeNumber } from "../../../../../utils/fetchRequestUtils";
-import LoadingCircle from "../../../../ui/LoadingCircle";
+import { fetchNutritionFromBarcodeNumber } from "../../../../../../utils/fetchRequestUtils";
+import LoadingCircle from "../../../../../ui/LoadingCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import { useTheme } from "@emotion/react";
-import CustomButton from "../../../../ui/CustomButton";
+import CustomButton from "../../../../../ui/CustomButton";
 import { Box } from "@mui/system";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { PopPageContext } from "./SearchFood";
-import CustomCard from "../../../../ui/CustomCard";
-import useScreenSize from "../../../../../hooks/useScreenSize";
+import { PopPageContext } from "./../SearchFood";
+import CustomCard from "../../../../../ui/CustomCard";
+import useScreenSize from "../../../../../../hooks/useScreenSize";
 import { v4 as uuidv4 } from "uuid";
-import { capitalizeFirstCharacter } from "../../../../../utils";
+import { capitalizeFirstCharacter, round } from "../../../../../../utils";
 
+const DECIMAL_PLACES = 2;
 const USDA_NUTRIENT_SET = new Set([
   "Protein",
   "Carbohydrate, by difference",
@@ -64,7 +65,9 @@ const NutritionalData = ({ barcodeNumber, food }) => {
       const fetchedNutrition = await fetchNutritionFromBarcodeNumber(
         barcodeNumber
       );
-      !fetchedNutrition.error && setNutritionalData(fetchedNutrition);
+      !fetchedNutrition.error
+        ? setNutritionalData(fetchedNutrition)
+        : setFetchingNutritionalData(false);
     })();
   }, [barcodeNumber]);
 
@@ -160,8 +163,8 @@ const NutritionalData = ({ barcodeNumber, food }) => {
                     <Box>
                       <Typography textAlign="right">
                         {nutrientName === "calories"
-                          ? measurement
-                          : `${value} ${unit}`}
+                          ? round(measurement, DECIMAL_PLACES)
+                          : `${round(value, DECIMAL_PLACES)} ${unit}`}
                       </Typography>
                     </Box>
                   </Box>

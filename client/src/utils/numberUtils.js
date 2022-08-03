@@ -7,3 +7,7 @@ export const sub = (a, b) => {
 
   return Number((a - b).toFixed(a1_max > b1_max ? a1_max : b1_max));
 };
+
+export const round = (number, decimalPlaces) =>
+  Math.round((number + Number.EPSILON) * Math.pow(10, decimalPlaces)) /
+  Math.pow(10, decimalPlaces);

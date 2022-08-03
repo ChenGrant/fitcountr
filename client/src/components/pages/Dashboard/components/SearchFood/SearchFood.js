@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { PAGES, Stack } from "../../../../../utils";
-import SelectSearchMethod from "./SelectSearchMethod";
+import SelectSearchMethod from "./SelectSearchMethod/SelectSearchMethod";
 import BarcodeImage from "./BarcodeImage/BarcodeImage";
 import BarcodeNumber from "./BarcodeNumber/BarcodeNumber";
-import NutritionalData from "./NutritionalData";
+import NutritionalData from "./NutritionalData/NutritionalData";
 import FoodName from "./FoodName/FoodName";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";

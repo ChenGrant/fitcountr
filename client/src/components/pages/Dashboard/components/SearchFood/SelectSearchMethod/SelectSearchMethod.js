@@ -1,12 +1,12 @@
 import { LinearProgress, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useContext } from "react";
-import CustomCard from "../../../../ui/CustomCard";
+import CustomCard from "../../../../../ui/CustomCard";
 import { v4 as uuidv4 } from "uuid";
-import { PushPageContext } from "./SearchFood";
-import { PAGES } from "../../../../../utils";
-import useAsset from "../../../../../hooks/useAsset";
-import useScreenSize from "../../../../../hooks/useScreenSize";
+import { PushPageContext } from "./../SearchFood";
+import { PAGES } from "../../../../../../utils";
+import useAsset from "../../../../../../hooks/useAsset";
+import useScreenSize from "../../../../../../hooks/useScreenSize";
 
 // ------------------------------------ CONSTANTS ------------------------------------
 const SEARCH_METHODS = [

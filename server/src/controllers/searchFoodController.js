@@ -17,17 +17,25 @@ const getNutritionFromBarcodeNumber = async (req, res) => {
 
     const nutriments = Object.fromEntries(
       Object.entries(nutrition.data.product.nutriments)
-        .filter(([key]) => key.endsWith("_100g") && key !== "energy_100g")
-        .map(([key, value]) =>
-          key === "energy-kcal_100g"
-            ? ["calories", value]
-            : [key.replace("_100g", ""), { value, unit: "g" }]
+        .filter(
+          ([key, value]) =>
+            key.endsWith("_100g") && key !== "energy_100g" && value !== 0
         )
-        .concat([["servingSize", { value: 100, unit: "g" }]])
+        .map(([key, value]) => {
+          switch (key) {
+            case "energy-kcal_100g":
+              return ["calories", value];
+            case "saturated-fat_100g":
+              return ["saturated fat", { value, unit: "g" }];
+            default:
+              return [key.replace("_100g", ""), { value, unit: "g" }];
+          }
+        })
     );
 
     return res.json({
       name: nutrition.data.product.product_name,
+      ["serving size"]: { value: 100, unit: "g" },
       nutrition: nutriments,
       barcodeNumber,
     });

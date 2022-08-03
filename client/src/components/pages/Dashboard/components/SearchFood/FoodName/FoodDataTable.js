@@ -21,7 +21,6 @@ const FoodDataTable = ({ foodData, foodName, setFoodData }) => {
     (async () => {
       setFetching(true);
       const fetchedFoodData = await fetchFoodListFromName(foodName, pageNumber);
-      console.log(fetchedFoodData)
       setFoodData(fetchedFoodData);
       setFetching(false);
     })();

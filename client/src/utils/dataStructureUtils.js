@@ -10,9 +10,7 @@ export class Stack {
 
   // remove element from the stack
   pop() {
-    if (this.items.length > 0) {
-      return this.items.pop();
-    }
+    if (this.items.length > 0) return this.items.pop();
   }
 
   // view the last element

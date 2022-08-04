@@ -5,7 +5,7 @@ import React, { useContext, useEffect, useState } from "react";
 import CustomCard from "../../../../../ui/CustomCard";
 import { v4 as uuidv4 } from "uuid";
 import useScreenSize from "../../../../../../hooks/useScreenSize";
-import { PushPageContext, SetTopPageContext } from "../SearchFood";
+import { AddPageContext, SetCurrentPageContext } from "../SearchFood";
 import { PAGES, fetchFoodsFromQuery } from "../../../../../../utils";
 
 const FoodDataTable = ({ foodData, foodName, setFoodData }) => {
@@ -13,8 +13,8 @@ const FoodDataTable = ({ foodData, foodName, setFoodData }) => {
   const theme = useTheme();
   const [pageNumber, setPageNumber] = useState(1);
   const [fetching, setFetching] = useState(false);
-  const setTopPage = useContext(SetTopPageContext);
-  const pushPage = useContext(PushPageContext);
+  const setCurrentPage = useContext(SetCurrentPageContext);
+  const addPage = useContext(AddPageContext);
 
   useEffect(() => {
     (async () => {
@@ -60,8 +60,8 @@ const FoodDataTable = ({ foodData, foodName, setFoodData }) => {
                       "&:hover": { bgcolor: "#ededed" },
                     }}
                     onClick={() => {
-                      setTopPage({ name: PAGES.FOOD_NAME, foodName });
-                      pushPage({
+                      setCurrentPage({ name: PAGES.FOOD_NAME, foodName });
+                      addPage({
                         name: PAGES.NUTRITIONAL_DATA,
                         food,
                       });

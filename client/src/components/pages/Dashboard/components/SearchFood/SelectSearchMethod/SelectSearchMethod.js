@@ -3,7 +3,7 @@ import { Box } from "@mui/system";
 import React, { useContext } from "react";
 import CustomCard from "../../../../../ui/CustomCard";
 import { v4 as uuidv4 } from "uuid";
-import { PushPageContext } from "./../SearchFood";
+import { AddPageContext } from "./../SearchFood";
 import { PAGES } from "../../../../../../utils";
 import useAsset from "../../../../../../hooks/useAsset";
 import useScreenSize from "../../../../../../hooks/useScreenSize";
@@ -11,19 +11,19 @@ import useScreenSize from "../../../../../../hooks/useScreenSize";
 // ------------------------------------ CONSTANTS ------------------------------------
 const SEARCH_METHODS = [
   {
-    label: "Barcode Image",
+    searchMethodName: "Barcode Image",
     imageName: "barcodeImage",
-    page: PAGES.BARCODE_IMAGE,
+    pageName: PAGES.BARCODE_IMAGE,
   },
   {
-    label: "Barcode Number",
+    searchMethodName: "Barcode Number",
     imageName: "barcodeNumber",
-    page: PAGES.BARCODE_NUMBER,
+    pageName: PAGES.BARCODE_NUMBER,
   },
   {
-    label: "Food Name",
+    searchMethodName: "Food Name",
     imageName: "foodName",
-    page: PAGES.FOOD_NAME,
+    pageName: PAGES.FOOD_NAME,
   },
 ];
 
@@ -31,7 +31,7 @@ const SEARCH_METHODS = [
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const SelectSearchMethod = () => {
-  const pushPage = useContext(PushPageContext);
+  const addPage = useContext(AddPageContext);
   const { desktop } = useScreenSize();
   const [assets, assetsDispatchers, loadingAssets] = useAsset({
     barcodeImage: { name: "search_barcode_image" },
@@ -76,12 +76,12 @@ const SelectSearchMethod = () => {
             flexDirection={desktop ? "row" : "column"}
             gap={5}
           >
-            {SEARCH_METHODS.map(({ label, imageName, page }) => {
+            {SEARCH_METHODS.map(({ searchMethodName, imageName, pageName }) => {
               return (
                 <CustomCard
                   key={uuidv4()}
                   sx={{ cursor: "pointer" }}
-                  onClick={() => page && pushPage({ name: page })}
+                  onClick={() => pageName && addPage({ name: pageName })}
                 >
                   <Box
                     flex={1}
@@ -94,7 +94,7 @@ const SelectSearchMethod = () => {
                   >
                     <Box>
                       <Typography variant="h6" textAlign="center">
-                        <b>{label}</b>
+                        <b>{searchMethodName}</b>
                       </Typography>
                     </Box>
                     <Box
@@ -106,7 +106,7 @@ const SelectSearchMethod = () => {
                       <Box
                         component="img"
                         width="100%"
-                        alt={label}
+                        alt={searchMethodName}
                         src={assets[imageName].src}
                         onLoad={() =>
                           assets[imageName].isLoading &&

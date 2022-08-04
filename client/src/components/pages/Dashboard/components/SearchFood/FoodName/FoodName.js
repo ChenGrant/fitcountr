@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { PopPageContext, SetTopPageContext } from "../SearchFood";
+import { RemovePageContext, SetCurrentPageContext } from "../SearchFood";
 import {
   Box,
   CircularProgress,
@@ -23,8 +23,8 @@ import FoodNameErrorPopup from "./FoodNameErrorPopup";
 
 const FoodName = ({ initialFoodName = "" }) => {
   const { desktop, tablet } = useScreenSize();
-  const popPage = useContext(PopPageContext);
-  const setTopPage = useContext(SetTopPageContext);
+  const removePage = useContext(RemovePageContext);
+  const setCurrentPage = useContext(SetCurrentPageContext);
 
   const [foodNameInputField, setFoodNameInputField] = useState(initialFoodName);
   const [foodName, setFoodName] = useState(initialFoodName);
@@ -34,7 +34,7 @@ const FoodName = ({ initialFoodName = "" }) => {
   const [foodData, setFoodData] = useState({});
 
   const handleSearchFoodName = async (foodNameInputField) => {
-    if (foodNameInputField === foodName) return;
+    if (!objectIsEmpty(foodData) && foodNameInputField === foodName) return;
 
     setFoodName(foodNameInputField);
     setFetchingFoodData(true);
@@ -42,7 +42,7 @@ const FoodName = ({ initialFoodName = "" }) => {
       if (!foodNameInputField) return setFoodNameErrorPopupIsOpen(true);
       const fetchedFoodList = await fetchFoodsFromQuery(foodNameInputField);
       if (fetchedFoodList.error) return setFoodNameErrorPopupIsOpen(true);
-      setTopPage({ name: PAGES.FOOD_NAME, foodName: foodNameInputField });
+      setCurrentPage({ name: PAGES.FOOD_NAME, foodName: foodNameInputField });
       setFoodData(fetchedFoodList);
     })();
 
@@ -52,7 +52,7 @@ const FoodName = ({ initialFoodName = "" }) => {
   return (
     <>
       <Box m={5}>
-        <IconButton color="primary" onClick={popPage}>
+        <IconButton color="primary" onClick={removePage}>
           <ArrowBackIcon />
         </IconButton>
       </Box>

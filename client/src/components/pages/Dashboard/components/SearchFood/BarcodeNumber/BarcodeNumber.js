@@ -8,9 +8,9 @@ import {
 } from "@mui/material";
 import React, { useContext, useState } from "react";
 import {
-  PopPageContext,
-  PushPageContext,
-  SetTopPageContext,
+  AddPageContext,
+  RemovePageContext,
+  SetCurrentPageContext,
 } from "../SearchFood";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SearchIcon from "@mui/icons-material/Search";
@@ -23,21 +23,21 @@ import useScreenSize from "../../../../../../hooks/useScreenSize";
 // ************************************************************************************
 const BarcodeNumber = ({ initialBarcodeNumber = "" }) => {
   const { desktop } = useScreenSize();
-  const pushPage = useContext(PushPageContext);
-  const popPage = useContext(PopPageContext);
-  const setTopPage = useContext(SetTopPageContext);
+  const removePage = useContext(RemovePageContext);
+  const addPage = useContext(AddPageContext);
+  const setCurrentPage = useContext(SetCurrentPageContext);
   const [barcodeNumber, setBarcodeNumber] = useState(initialBarcodeNumber);
 
   const handleSearchBarcodeNumber = (barcodeNumber) => {
-    setTopPage({ name: PAGES.BARCODE_NUMBER, barcodeNumber });
-    pushPage({ name: PAGES.NUTRITIONAL_DATA, barcodeNumber });
+    setCurrentPage({ name: PAGES.BARCODE_NUMBER, barcodeNumber });
+    addPage({ name: PAGES.NUTRITIONAL_DATA, barcodeNumber });
   };
 
   // ------------------------------------- RENDER -------------------------------------
   return (
     <>
       <Box m={5}>
-        <IconButton color="primary" onClick={popPage}>
+        <IconButton color="primary" onClick={removePage}>
           <ArrowBackIcon />
         </IconButton>
       </Box>

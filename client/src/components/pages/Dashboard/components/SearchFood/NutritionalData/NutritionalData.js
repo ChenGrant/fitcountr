@@ -7,13 +7,14 @@ import { useTheme } from "@emotion/react";
 import CustomButton from "../../../../../ui/CustomButton";
 import { Box } from "@mui/system";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { PopPageContext } from "./../SearchFood";
+import { RemovePageContext } from "./../SearchFood";
 import CustomCard from "../../../../../ui/CustomCard";
 import useScreenSize from "../../../../../../hooks/useScreenSize";
 import { v4 as uuidv4 } from "uuid";
 import { capitalizeFirstCharacter, round } from "../../../../../../utils";
 
 const DECIMAL_PLACES = 2;
+
 const USDA_NUTRIENT_SET = new Set([
   "Protein",
   "Carbohydrate, by difference",
@@ -50,7 +51,7 @@ const sortByNutrition = (nutritionalData) =>
 const NutritionalData = ({ barcodeNumber, food }) => {
   const { phone } = useScreenSize();
   const theme = useTheme();
-  const popPage = useContext(PopPageContext);
+  const removePage = useContext(RemovePageContext);
   const [fetchingNutritionalData, setFetchingNutritionalData] = useState(true);
   const [nutritionalData, setNutritionalData] = useState();
 
@@ -123,7 +124,7 @@ const NutritionalData = ({ barcodeNumber, food }) => {
   return (
     <>
       <Box m={5}>
-        <IconButton color="primary" onClick={popPage}>
+        <IconButton color="primary" onClick={removePage}>
           <ArrowBackIcon />
         </IconButton>
       </Box>
@@ -199,7 +200,7 @@ const NutritionalData = ({ barcodeNumber, food }) => {
                 variant="contained"
                 fullWidth
                 sx={{ mt: 5 }}
-                onClick={popPage}
+                onClick={removePage}
               >
                 Back
               </CustomButton>

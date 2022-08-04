@@ -8,18 +8,17 @@ import ImageIcon from "@mui/icons-material/Image";
 import ErrorIcon from "@mui/icons-material/Error";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { scanBarcodeImage } from "../../../../../../utils/fetchRequestUtils";
 import BarcodeConfirmPopup from "./BarcodeConfirmPopup";
-import { PopPageContext, SetTopPageContext } from "../SearchFood";
+import { RemovePageContext, SetCurrentPageContext } from "../SearchFood";
 import BarcodeImageErrorPopup from "./BarcodeImageErrorPopup";
-import { PAGES } from "../../../../../../utils";
+import { PAGES, scanBarcodeImage } from "../../../../../../utils";
 import useScreenSize from "../../../../../../hooks/useScreenSize";
 
 const BarcodeImage = ({ initialFile }) => {
   const theme = useTheme();
   const { desktop } = useScreenSize();
-  const setTopPage = useContext(SetTopPageContext);
-  const popPage = useContext(PopPageContext);
+  const setCurrentPage = useContext(SetCurrentPageContext);
+  const removePage = useContext(RemovePageContext);
   const [enteredDragZone, setEnteredDragZone] = useState(false);
   const [file, setFile] = useState(initialFile);
   const [fileError, setFileError] = useState(false);
@@ -51,7 +50,7 @@ const BarcodeImage = ({ initialFile }) => {
 
     if (!barcodeData.Successful) return setBarcodeErrorPopupIsOpen(true);
 
-    setTopPage({ name: PAGES.BARCODE_IMAGE, file });
+    setCurrentPage({ name: PAGES.BARCODE_IMAGE, file });
     setBarcodeConfirmPopupIsOpen(true);
     setBarcodeNumber(barcodeData.RawText);
   };
@@ -59,7 +58,7 @@ const BarcodeImage = ({ initialFile }) => {
   return (
     <>
       <Box m={5}>
-        <IconButton color="primary" onClick={popPage}>
+        <IconButton color="primary" onClick={removePage}>
           <ArrowBackIcon />
         </IconButton>
       </Box>

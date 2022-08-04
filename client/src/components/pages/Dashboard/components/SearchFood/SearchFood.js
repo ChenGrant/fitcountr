@@ -9,9 +9,9 @@ import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 // ------------------------------------- CONTEXTS -------------------------------------
-export const SetTopPageContext = React.createContext();
-export const PushPageContext = React.createContext();
-export const PopPageContext = React.createContext();
+export const SetCurrentPageContext = React.createContext();
+export const AddPageContext = React.createContext();
+export const RemovePageContext = React.createContext();
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
@@ -25,12 +25,12 @@ const SearchFood = () => {
   });
 
   // ----------------------------------- FUNCTIONS -----------------------------------
-  const setTopPage = (page) => {
-    popPage();
-    pushPage(page);
+  const setCurrentPage = (newCurrentPage) => {
+    removePage();
+    addPage(newCurrentPage);
   };
 
-  const pushPage = (page) => {
+  const addPage = (page) => {
     const pageStackCopy = Object.assign(
       Object.create(Object.getPrototypeOf(pageStack)),
       pageStack
@@ -39,37 +39,14 @@ const SearchFood = () => {
     setPageStack(pageStackCopy);
   };
 
-  const popPage = () => {
+  const removePage = () => {
     const pageStackCopy = Object.assign(
       Object.create(Object.getPrototypeOf(pageStack)),
       pageStack
     );
-    const poppedValue = pageStackCopy.pop();
+    const poppedPage = pageStackCopy.pop();
     setPageStack(pageStackCopy);
-    return poppedValue;
-  };
-
-  const renderPage = () => {
-    const topPage = pageStack.peek();
-    switch (topPage.name) {
-      case PAGES.SELECT_SEARCH_METHOD:
-        return <SelectSearchMethod />;
-      case PAGES.BARCODE_IMAGE:
-        return <BarcodeImage initialFile={topPage.file} />;
-      case PAGES.BARCODE_NUMBER:
-        return <BarcodeNumber initialBarcodeNumber={topPage.barcodeNumber} />;
-      case PAGES.FOOD_NAME:
-        return <FoodName initialFoodName={topPage.foodName} />;
-      case PAGES.NUTRITIONAL_DATA:
-        return (
-          <NutritionalData
-            barcodeNumber={topPage.barcodeNumber}
-            food={topPage.food}
-          />
-        );
-      default:
-        return null;
-    }
+    return poppedPage;
   };
 
   // ----------------------------------- USE EFFECT -----------------------------------
@@ -79,13 +56,36 @@ const SearchFood = () => {
   if (!user.isLoggedIn) return <Navigate to="/" />;
 
   return (
-    <SetTopPageContext.Provider value={setTopPage}>
-      <PushPageContext.Provider value={pushPage}>
-        <PopPageContext.Provider value={popPage}>
-          {renderPage()}
-        </PopPageContext.Provider>
-      </PushPageContext.Provider>
-    </SetTopPageContext.Provider>
+    <SetCurrentPageContext.Provider value={setCurrentPage}>
+      <AddPageContext.Provider value={addPage}>
+        <RemovePageContext.Provider value={removePage}>
+          {(() => {
+            const topPage = pageStack.peek();
+            switch (topPage.name) {
+              case PAGES.SELECT_SEARCH_METHOD:
+                return <SelectSearchMethod />;
+              case PAGES.BARCODE_IMAGE:
+                return <BarcodeImage initialFile={topPage.file} />;
+              case PAGES.BARCODE_NUMBER:
+                return (
+                  <BarcodeNumber initialBarcodeNumber={topPage.barcodeNumber} />
+                );
+              case PAGES.FOOD_NAME:
+                return <FoodName initialFoodName={topPage.foodName} />;
+              case PAGES.NUTRITIONAL_DATA:
+                return (
+                  <NutritionalData
+                    barcodeNumber={topPage.barcodeNumber}
+                    food={topPage.food}
+                  />
+                );
+              default:
+                return null;
+            }
+          })()}
+        </RemovePageContext.Provider>
+      </AddPageContext.Provider>
+    </SetCurrentPageContext.Provider>
   );
 };
 

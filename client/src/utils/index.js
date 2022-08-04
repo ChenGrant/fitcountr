@@ -7,9 +7,10 @@ export {
   fetchEmailIsInUse,
   fetchVerificationStatus,
   fetchPinLength,
-  fetchFoodsFromQuery,
-  sendVerificationEmail,
   fetchValidatePin,
+  fetchFoodsFromQuery,
+  scanBarcodeImage,
+  sendVerificationEmail,
   postSignupData,
 } from "./fetchRequestUtils";
 

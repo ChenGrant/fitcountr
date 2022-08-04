@@ -4,14 +4,35 @@ import React, { useContext } from "react";
 import { PAGES } from "../../../../../../utils";
 import CustomButton from "../../../../../ui/CustomButton";
 import CustomDialog from "../../../../../ui/CustomDialog";
-import { PushPageContext } from "../SearchFood";
+import { AddPageContext } from "../SearchFood";
+import { v4 as uuidv4 } from "uuid";
 
 const BarcodeConfirmPopup = ({
   barcodeNumber,
   barcodeConfirmPopupIsOpen,
   setBarcodeConfirmPopupIsOpen,
 }) => {
-  const pushPage = useContext(PushPageContext);
+  const addPage = useContext(AddPageContext);
+
+  const POPUP_OPTIONS = [
+    {
+      label: "Confirm",
+      onClickHandler: () =>
+        addPage({ name: PAGES.NUTRITIONAL_DATA, barcodeNumber }),
+    },
+    {
+      label: "Edit Barcode Number",
+      onClickHandler: () =>
+        addPage({
+          name: PAGES.BARCODE_NUMBER,
+          barcodeNumber,
+        }),
+    },
+    {
+      label: "Choose Another Image",
+      onClickHandler: () => setBarcodeConfirmPopupIsOpen(false),
+    },
+  ];
 
   return (
     <CustomDialog
@@ -25,34 +46,16 @@ const BarcodeConfirmPopup = ({
         </Box>
         ?
       </Typography>
-      <CustomButton
-        variant="contained"
-        sx={{ width: "100%" }}
-        onClick={() =>
-          pushPage({ name: PAGES.NUTRITIONAL_DATA, barcodeNumber })
-        }
-      >
-        Confirm
-      </CustomButton>
-      <CustomButton
-        variant="contained"
-        sx={{ width: "100%" }}
-        onClick={() =>
-          pushPage({
-            name: PAGES.BARCODE_NUMBER,
-            barcodeNumber,
-          })
-        }
-      >
-        Edit Barcode Number
-      </CustomButton>
-      <CustomButton
-        variant="contained"
-        sx={{ width: "100%" }}
-        onClick={() => setBarcodeConfirmPopupIsOpen(false)}
-      >
-        Choose Another Image
-      </CustomButton>
+      {POPUP_OPTIONS.map(({ label, onClickHandler }) => (
+        <CustomButton
+          key={uuidv4()}
+          variant="contained"
+          sx={{ width: "100%" }}
+          onClick={onClickHandler}
+        >
+          {label}
+        </CustomButton>
+      ))}
     </CustomDialog>
   );
 };

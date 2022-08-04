@@ -1,29 +1,23 @@
 import {
   Box,
   FormControl,
-  IconButton,
   InputLabel,
   OutlinedInput,
   Typography,
 } from "@mui/material";
 import React, { useContext, useState } from "react";
-import {
-  AddPageContext,
-  RemovePageContext,
-  SetCurrentPageContext,
-} from "../SearchFood";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { AddPageContext, SetCurrentPageContext } from "../SearchFood";
 import SearchIcon from "@mui/icons-material/Search";
 import CustomButton from "../../../../../ui/CustomButton";
 import { PAGES } from "../../../../../../utils";
 import useScreenSize from "../../../../../../hooks/useScreenSize";
+import BackArrow from "../BackArrow";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const BarcodeNumber = ({ initialBarcodeNumber = "" }) => {
   const { desktop } = useScreenSize();
-  const removePage = useContext(RemovePageContext);
   const addPage = useContext(AddPageContext);
   const setCurrentPage = useContext(SetCurrentPageContext);
   const [barcodeNumber, setBarcodeNumber] = useState(initialBarcodeNumber);
@@ -36,11 +30,7 @@ const BarcodeNumber = ({ initialBarcodeNumber = "" }) => {
   // ------------------------------------- RENDER -------------------------------------
   return (
     <>
-      <Box m={5}>
-        <IconButton color="primary" onClick={removePage}>
-          <ArrowBackIcon />
-        </IconButton>
-      </Box>
+      <BackArrow />
       <Box
         display="flex"
         flexDirection="column"

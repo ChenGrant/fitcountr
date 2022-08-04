@@ -2,14 +2,13 @@ import React, { useContext, useState } from "react";
 import CustomButton from "../../../../../ui/CustomButton";
 import Dropzone from "react-dropzone";
 import { Box } from "@mui/system";
-import { Card, CircularProgress, IconButton, Typography } from "@mui/material";
+import { Card, CircularProgress, Typography } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import ImageIcon from "@mui/icons-material/Image";
 import ErrorIcon from "@mui/icons-material/Error";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import BarcodeConfirmPopup from "./BarcodeConfirmPopup";
-import { RemovePageContext, SetCurrentPageContext } from "../SearchFood";
+import { SetCurrentPageContext } from "../SearchFood";
 import BarcodeImageErrorPopup from "./BarcodeImageErrorPopup";
 import { PAGES, scanBarcodeImage } from "../../../../../../utils";
 import useScreenSize from "../../../../../../hooks/useScreenSize";
@@ -18,11 +17,10 @@ const BarcodeImage = ({ initialFile }) => {
   const theme = useTheme();
   const { desktop } = useScreenSize();
   const setCurrentPage = useContext(SetCurrentPageContext);
-  const removePage = useContext(RemovePageContext);
   const [enteredDragZone, setEnteredDragZone] = useState(false);
   const [file, setFile] = useState(initialFile);
   const [fileError, setFileError] = useState(false);
-  const [barcodeNumber, setBarcodeNumber] = useState(false);
+  const [barcodeNumber, setBarcodeNumber] = useState();
   const [scanningBarcode, setScanningBarcode] = useState(false);
   const [barcodeConfirmPopupIsOpen, setBarcodeConfirmPopupIsOpen] =
     useState(false);
@@ -57,11 +55,7 @@ const BarcodeImage = ({ initialFile }) => {
 
   return (
     <>
-      <Box m={5}>
-        <IconButton color="primary" onClick={removePage}>
-          <ArrowBackIcon />
-        </IconButton>
-      </Box>
+      <BarcodeImage />
       <Box
         display="flex"
         flexDirection="column"

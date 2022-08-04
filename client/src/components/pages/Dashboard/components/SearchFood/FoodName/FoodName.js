@@ -1,15 +1,13 @@
 import React, { useContext, useState } from "react";
-import { RemovePageContext, SetCurrentPageContext } from "../SearchFood";
+import { SetCurrentPageContext } from "../SearchFood";
 import {
   Box,
   CircularProgress,
   FormControl,
-  IconButton,
   InputLabel,
   OutlinedInput,
   Typography,
 } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SearchIcon from "@mui/icons-material/Search";
 import CustomButton from "../../../../../ui/CustomButton";
 import {
@@ -20,10 +18,10 @@ import {
 import useScreenSize from "../../../../../../hooks/useScreenSize";
 import FoodDataTable from "./FoodDataTable";
 import FoodNameErrorPopup from "./FoodNameErrorPopup";
+import BackArrow from "../BackArrow";
 
 const FoodName = ({ initialFoodName = "" }) => {
   const { desktop, tablet } = useScreenSize();
-  const removePage = useContext(RemovePageContext);
   const setCurrentPage = useContext(SetCurrentPageContext);
 
   const [foodNameInputField, setFoodNameInputField] = useState(initialFoodName);
@@ -51,12 +49,7 @@ const FoodName = ({ initialFoodName = "" }) => {
 
   return (
     <>
-      <Box m={5}>
-        <IconButton color="primary" onClick={removePage}>
-          <ArrowBackIcon />
-        </IconButton>
-      </Box>
-
+      <BackArrow />
       <Box
         display="flex"
         flexDirection="column"

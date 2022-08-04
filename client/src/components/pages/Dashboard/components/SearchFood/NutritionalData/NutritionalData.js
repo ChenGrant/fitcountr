@@ -1,4 +1,4 @@
-import { Typography, IconButton } from "@mui/material";
+import { Typography } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { fetchNutritionFromBarcodeNumber } from "../../../../../../utils/fetchRequestUtils";
 import LoadingCircle from "../../../../../ui/LoadingCircle";
@@ -6,12 +6,12 @@ import ErrorIcon from "@mui/icons-material/Error";
 import { useTheme } from "@emotion/react";
 import CustomButton from "../../../../../ui/CustomButton";
 import { Box } from "@mui/system";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { RemovePageContext } from "./../SearchFood";
 import CustomCard from "../../../../../ui/CustomCard";
 import useScreenSize from "../../../../../../hooks/useScreenSize";
 import { v4 as uuidv4 } from "uuid";
 import { capitalizeFirstCharacter, round } from "../../../../../../utils";
+import BackArrow from "../BackArrow";
 
 const DECIMAL_PLACES = 2;
 
@@ -123,11 +123,7 @@ const NutritionalData = ({ barcodeNumber, food }) => {
 
   return (
     <>
-      <Box m={5}>
-        <IconButton color="primary" onClick={removePage}>
-          <ArrowBackIcon />
-        </IconButton>
-      </Box>
+      <BackArrow />
       <Box sx={{ width: "100%", display: "grid", placeItems: "center" }}>
         {nutritionalData ? (
           <CustomCard

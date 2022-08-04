@@ -7,16 +7,15 @@ const config = require("../config/config");
 const getNutritionFromBarcodeNumber = async (req, res) => {
   try {
     const { barcodeNumber } = req.params;
-    const nutrition = await axios.get(
+    const fetchedNutrition = await axios.get(
       `https://world.openfoodfacts.org/api/v0/product/${barcodeNumber}.json`
     );
 
-    if (nutrition.data.status === 0) {
+    if (fetchedNutrition.data.status === 0)
       throw new Error("No code or invalid code");
-    }
 
     const nutriments = Object.fromEntries(
-      Object.entries(nutrition.data.product.nutriments)
+      Object.entries(fetchedNutrition.data.product.nutriments)
         .filter(
           ([key, value]) =>
             key.endsWith("_100g") && key !== "energy_100g" && value !== 0
@@ -34,7 +33,7 @@ const getNutritionFromBarcodeNumber = async (req, res) => {
     );
 
     return res.json({
-      name: nutrition.data.product.product_name,
+      name: fetchedNutrition.data.product.product_name,
       ["serving size"]: { value: 100, unit: "g" },
       nutrition: nutriments,
       barcodeNumber,
@@ -48,33 +47,37 @@ const getNutritionFromBarcodeNumber = async (req, res) => {
 };
 
 const scanBarcodeImage = async (req, res) => {
-  const { barcodeImageFile } = req.files;
-  const response = await scanBarcodeImageAsync(barcodeImageFile.data);
-  return res.json(response);
+  try {
+    const { barcodeImageFile } = req.files;
+    return res.json(await scanBarcodeImageAsync(barcodeImageFile.data));
+  } catch (err) {
+    console.log(err);
+    return res
+      .json({ error: { message: "Could not scan barcode" } })
+      .status(404);
+  }
 };
 
-const getNutritionFromName = async (req, res) => {
+const getFoodsFromQuery = async (req, res) => {
   try {
-    const { name, pageNumber, pageSize } = req.params;
+    const { query, pageNumber, pageSize } = req.params;
 
-    const api_params = {
+    let usda_api_url = `https://api.nal.usda.gov/fdc/v1/foods/search?`;
+
+    Object.entries({
       api_key: config.FOOD_DATA_CENTRAL_API_KEY,
-      query: name,
+      query,
       pageNumber,
       dataType: ["Survey (FNDDS)"],
       pageSize,
       requireAllWords: true,
-    };
-
-    let api_url = `https://api.nal.usda.gov/fdc/v1/foods/search?`;
-
-    Object.entries(api_params).forEach(([key, value], index) => {
-      api_url += `${index === 0 ? "" : "&"}${key}=${value}`;
+    }).forEach(([key, value], index) => {
+      usda_api_url += `${index === 0 ? "" : "&"}${key}=${value}`;
     });
 
-    const nutrition = await axios.get(api_url);
+    const fetchedFoods = await axios.get(usda_api_url);
 
-    return res.json(nutrition.data);
+    return res.json(fetchedFoods.data);
   } catch (err) {
     console.log(err);
     return res
@@ -86,5 +89,5 @@ const getNutritionFromName = async (req, res) => {
 module.exports = {
   getNutritionFromBarcodeNumber,
   scanBarcodeImage,
-  getNutritionFromName,
+  getFoodsFromQuery,
 };

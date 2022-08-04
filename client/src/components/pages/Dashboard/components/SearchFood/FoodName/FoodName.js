@@ -12,9 +12,12 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SearchIcon from "@mui/icons-material/Search";
 import CustomButton from "../../../../../ui/CustomButton";
-import { objectIsEmpty, PAGES } from "../../../../../../utils";
+import {
+  objectIsEmpty,
+  PAGES,
+  fetchFoodsFromQuery,
+} from "../../../../../../utils";
 import useScreenSize from "../../../../../../hooks/useScreenSize";
-import { fetchFoodListFromName } from "../../../../../../utils/fetchRequestUtils";
 import FoodDataTable from "./FoodDataTable";
 import FoodNameErrorPopup from "./FoodNameErrorPopup";
 
@@ -37,7 +40,7 @@ const FoodName = ({ initialFoodName = "" }) => {
     setFetchingFoodData(true);
     await (async () => {
       if (!foodNameInputField) return setFoodNameErrorPopupIsOpen(true);
-      const fetchedFoodList = await fetchFoodListFromName(foodNameInputField);
+      const fetchedFoodList = await fetchFoodsFromQuery(foodNameInputField);
       if (fetchedFoodList.error) return setFoodNameErrorPopupIsOpen(true);
       setTopPage({ name: PAGES.FOOD_NAME, foodName: foodNameInputField });
       setFoodData(fetchedFoodList);

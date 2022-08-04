@@ -4,10 +4,9 @@ import { Box } from "@mui/system";
 import React, { useContext, useEffect, useState } from "react";
 import CustomCard from "../../../../../ui/CustomCard";
 import { v4 as uuidv4 } from "uuid";
-import { fetchFoodListFromName } from "../../../../../../utils/fetchRequestUtils";
 import useScreenSize from "../../../../../../hooks/useScreenSize";
 import { PushPageContext, SetTopPageContext } from "../SearchFood";
-import { PAGES } from "../../../../../../utils";
+import { PAGES, fetchFoodsFromQuery } from "../../../../../../utils";
 
 const FoodDataTable = ({ foodData, foodName, setFoodData }) => {
   const { phone } = useScreenSize();
@@ -20,7 +19,7 @@ const FoodDataTable = ({ foodData, foodName, setFoodData }) => {
   useEffect(() => {
     (async () => {
       setFetching(true);
-      const fetchedFoodData = await fetchFoodListFromName(foodName, pageNumber);
+      const fetchedFoodData = await fetchFoodsFromQuery(foodName, pageNumber);
       setFoodData(fetchedFoodData);
       setFetching(false);
     })();

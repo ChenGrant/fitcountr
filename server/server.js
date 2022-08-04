@@ -2,6 +2,7 @@ const path = require("path");
 const config = require("./src/config/config");
 const cors = require("cors");
 const morgan = require("morgan");
+const fileupload = require("express-fileupload");
 require("./src/services/firebase/firebase");
 const express = require("express");
 const mongoose = require("mongoose");
@@ -11,7 +12,6 @@ const signupRoutes = require("./src/routes/signupRoutes");
 const assetRoutes = require("./src/routes/assetRoutes");
 const emailVerificationRoutes = require("./src/routes/emailVerificationRoutes");
 const searchFoodRoutes = require("./src/routes/searchFoodRoutes");
-const fileupload = require("express-fileupload");
 
 // ------------------------------------ MIDDLEWARE ------------------------------------
 app.use(express.urlencoded({ extended: true }));

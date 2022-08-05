@@ -15,6 +15,7 @@ export class Stack {
 
   // view the last element
   peek() {
+    if (this.items.length === 0) return null;
     return this.items[this.items.length - 1];
   }
 

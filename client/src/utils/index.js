@@ -6,13 +6,14 @@ export {
   fetchEmailProvider,
   fetchEmailIsInUse,
   fetchVerificationStatus,
+  fetchNutritionFromBarcodeNumber,
   fetchPinLength,
   fetchValidatePin,
   fetchFoodsFromQuery,
   scanBarcodeImage,
   sendVerificationEmail,
   postSignupData,
-} from "./fetchRequestUtils";
+} from "./requestUtils";
 
 export {
   FORM_ERROR_HEIGHT,

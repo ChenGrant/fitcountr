@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
-import { fetchNutritionFromBarcodeNumber } from "../../../../../../utils/fetchRequestUtils";
+import { fetchNutritionFromBarcodeNumber } from "../../../../../../utils/";
 import LoadingCircle from "../../../../../ui/LoadingCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import { useTheme } from "@emotion/react";

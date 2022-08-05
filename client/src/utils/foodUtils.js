@@ -1,3 +1,11 @@
+export const SEARCH_FOOD_PAGES = {
+  SELECT_SEARCH_METHOD: "SELECT_SEARCH_METHOD",
+  BARCODE_IMAGE: "BARCODE_IMAGE",
+  BARCODE_NUMBER: "BARCODE_NUMBER",
+  FOOD_NAME: "FOOD_NAME",
+  NUTRITIONAL_DATA: "NUTRITIONAL_DATA",
+};
+
 export const USDA_NUTRIENT_SET = new Set([
   "Protein",
   "Carbohydrate, by difference",
@@ -7,7 +15,7 @@ export const USDA_NUTRIENT_SET = new Set([
   "Sodium, Na",
 ]);
 
-export const NUTRIENT_PRIORITY = [
+const NUTRIENT_PRIORITY = [
   "calories",
   "proteins",
   "carbohydrates",

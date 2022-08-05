@@ -12,7 +12,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import CustomButton from "../../../components/ui/CustomButton";
 import {
   objectIsEmpty,
-  PAGES,
+  SEARCH_FOOD_PAGES,
   fetchFoodsFromQuery,
 } from "../../../utils/";
 import useScreenSize from "../../../hooks/useScreenSize";
@@ -40,7 +40,10 @@ const FoodName = ({ initialFoodName = "" }) => {
       if (!foodNameInputField) return setFoodNameErrorPopupIsOpen(true);
       const fetchedFoodList = await fetchFoodsFromQuery(foodNameInputField);
       if (fetchedFoodList.error) return setFoodNameErrorPopupIsOpen(true);
-      setCurrentPage({ name: PAGES.FOOD_NAME, foodName: foodNameInputField });
+      setCurrentPage({
+        name: SEARCH_FOOD_PAGES.FOOD_NAME,
+        foodName: foodNameInputField,
+      });
       setFoodData(fetchedFoodList);
     })();
 

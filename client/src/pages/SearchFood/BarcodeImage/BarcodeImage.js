@@ -10,7 +10,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import BarcodeConfirmPopup from "./BarcodeConfirmPopup";
 import { SetCurrentPageContext } from "../SearchFood";
 import BarcodeImageErrorPopup from "./BarcodeImageErrorPopup";
-import { PAGES, scanBarcodeImage } from "../../../utils/";
+import { SEARCH_FOOD_PAGES, scanBarcodeImage } from "../../../utils/";
 import useScreenSize from "../../../hooks/useScreenSize";
 import BackArrow from "../../../components/ui/BackArrow";
 
@@ -49,7 +49,7 @@ const BarcodeImage = ({ initialFile }) => {
 
     if (!barcodeData.Successful) return setBarcodeErrorPopupIsOpen(true);
 
-    setCurrentPage({ name: PAGES.BARCODE_IMAGE, file });
+    setCurrentPage({ name: SEARCH_FOOD_PAGES.BARCODE_IMAGE, file });
     setBarcodeConfirmPopupIsOpen(true);
     setBarcodeNumber(barcodeData.RawText);
   };

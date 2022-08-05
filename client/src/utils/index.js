@@ -29,14 +29,12 @@ export { sub, round } from "./numberUtils";
 
 export { Stack } from "./dataStructureUtils";
 
-export { PAGES } from "./foodSearchUtils";
-
 export { objectIsEmpty } from "./objectUtils";
 
 export {
   sortByNutrient,
+  SEARCH_FOOD_PAGES,
   USDA_NUTRIENT_SET,
-  NUTRIENT_PRIORITY,
-} from "./nutrientUtils";
+} from "./foodUtils";
 
 export { theme } from "./themeUtils";

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PAGES, Stack } from "../../utils";
+import { SEARCH_FOOD_PAGES, Stack } from "../../utils";
 import SelectSearchMethod from "./SelectSearchMethod/SelectSearchMethod";
 import BarcodeImage from "./BarcodeImage/BarcodeImage";
 import BarcodeNumber from "./BarcodeNumber/BarcodeNumber";
@@ -15,7 +15,7 @@ const {
   BARCODE_NUMBER,
   FOOD_NAME,
   NUTRITIONAL_DATA,
-} = PAGES;
+} = SEARCH_FOOD_PAGES;
 
 // ------------------------------------- CONTEXTS -------------------------------------
 export const SetCurrentPageContext = React.createContext();
@@ -29,7 +29,7 @@ const SearchFood = () => {
   const { user } = useSelector((state) => state);
   const [pageStack, setPageStack] = useState(() => {
     const stack = new Stack();
-    stack.push({ name: PAGES.SELECT_SEARCH_METHOD });
+    stack.push({ name: SEARCH_FOOD_PAGES.SELECT_SEARCH_METHOD });
     return stack;
   });
 

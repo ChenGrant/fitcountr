@@ -6,7 +6,7 @@ import CustomCard from "../../../components/ui/CustomCard";
 import { v4 as uuidv4 } from "uuid";
 import useScreenSize from "../../../hooks/useScreenSize";
 import { AddPageContext, SetCurrentPageContext } from "../SearchFood";
-import { PAGES, fetchFoodsFromQuery } from "../../../utils/";
+import { SEARCH_FOOD_PAGES, fetchFoodsFromQuery } from "../../../utils/";
 
 const FoodDataTable = ({ foodData, foodName, setFoodData }) => {
   const { phone } = useScreenSize();
@@ -60,9 +60,12 @@ const FoodDataTable = ({ foodData, foodName, setFoodData }) => {
                       "&:hover": { bgcolor: "#ededed" },
                     }}
                     onClick={() => {
-                      setCurrentPage({ name: PAGES.FOOD_NAME, foodName });
+                      setCurrentPage({
+                        name: SEARCH_FOOD_PAGES.FOOD_NAME,
+                        foodName,
+                      });
                       addPage({
-                        name: PAGES.NUTRITIONAL_DATA,
+                        name: SEARCH_FOOD_PAGES.NUTRITIONAL_DATA,
                         food,
                       });
                     }}

@@ -4,7 +4,7 @@ import React, { useContext } from "react";
 import CustomCard from "../../../components/ui/CustomCard";
 import { v4 as uuidv4 } from "uuid";
 import { AddPageContext } from "../SearchFood";
-import { PAGES } from "../../../utils";
+import { SEARCH_FOOD_PAGES } from "../../../utils";
 import useAsset from "../../../hooks/useAsset";
 import useScreenSize from "../../../hooks/useScreenSize";
 
@@ -14,19 +14,19 @@ const SEARCH_METHODS = [
     searchMethodName: "Barcode Image",
     imageName: "barcodeImage",
     apiImageName: "search_barcode_image",
-    pageName: PAGES.BARCODE_IMAGE,
+    pageName: SEARCH_FOOD_PAGES.BARCODE_IMAGE,
   },
   {
     searchMethodName: "Barcode Number",
     imageName: "barcodeNumber",
     apiImageName: "search_barcode_number",
-    pageName: PAGES.BARCODE_NUMBER,
+    pageName: SEARCH_FOOD_PAGES.BARCODE_NUMBER,
   },
   {
     searchMethodName: "Food Name",
     imageName: "foodName",
     apiImageName: "search_food_name",
-    pageName: PAGES.FOOD_NAME,
+    pageName: SEARCH_FOOD_PAGES.FOOD_NAME,
   },
 ];
 

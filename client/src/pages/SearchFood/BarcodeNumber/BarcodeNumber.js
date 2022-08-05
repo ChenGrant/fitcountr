@@ -9,7 +9,7 @@ import React, { useContext, useState } from "react";
 import { AddPageContext, SetCurrentPageContext } from "../SearchFood";
 import SearchIcon from "@mui/icons-material/Search";
 import CustomButton from "../../../components/ui/CustomButton";
-import { PAGES } from "../../../utils/";
+import { SEARCH_FOOD_PAGES } from "../../../utils/";
 import useScreenSize from "../../../hooks/useScreenSize";
 import BackArrow from "../../../components/ui/BackArrow";
 
@@ -23,8 +23,8 @@ const BarcodeNumber = ({ initialBarcodeNumber = "" }) => {
   const [barcodeNumber, setBarcodeNumber] = useState(initialBarcodeNumber);
 
   const handleSearchBarcodeNumber = (barcodeNumber) => {
-    setCurrentPage({ name: PAGES.BARCODE_NUMBER, barcodeNumber });
-    addPage({ name: PAGES.NUTRITIONAL_DATA, barcodeNumber });
+    setCurrentPage({ name: SEARCH_FOOD_PAGES.BARCODE_NUMBER, barcodeNumber });
+    addPage({ name: SEARCH_FOOD_PAGES.NUTRITIONAL_DATA, barcodeNumber });
   };
 
   // ------------------------------------- RENDER -------------------------------------

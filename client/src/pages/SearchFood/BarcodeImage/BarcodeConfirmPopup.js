@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useContext } from "react";
-import { PAGES } from "../../../utils";
+import { SEARCH_FOOD_PAGES } from "../../../utils";
 import CustomButton from "../../../components/ui/CustomButton";
 import CustomDialog from "../../../components/ui/CustomDialog";
 import { AddPageContext } from "../SearchFood";
@@ -18,13 +18,13 @@ const BarcodeConfirmPopup = ({
     {
       label: "Confirm",
       onClickHandler: () =>
-        addPage({ name: PAGES.NUTRITIONAL_DATA, barcodeNumber }),
+        addPage({ name: SEARCH_FOOD_PAGES.NUTRITIONAL_DATA, barcodeNumber }),
     },
     {
       label: "Edit Barcode Number",
       onClickHandler: () =>
         addPage({
-          name: PAGES.BARCODE_NUMBER,
+          name: SEARCH_FOOD_PAGES.BARCODE_NUMBER,
           barcodeNumber,
         }),
     },

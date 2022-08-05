@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material";
 
-const theme = createTheme({
+export const theme = createTheme({
   typography: {
     fontFamily: "Montserrat,sans-serif",
     fontWeightLight: 300,
@@ -86,5 +86,3 @@ theme.typography.h6[theme.breakpoints.only("xs")] = {
 theme.typography.body1[theme.breakpoints.only("xs")] = { fontSize: "16px" };
 
 theme.typography.button[theme.breakpoints.only("xs")] = { fontSize: "18px" };
-
-export default theme;

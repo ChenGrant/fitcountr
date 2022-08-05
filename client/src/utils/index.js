@@ -38,3 +38,5 @@ export {
   USDA_NUTRIENT_SET,
   NUTRIENT_PRIORITY,
 } from "./nutrientUtils";
+
+export { theme } from "./themeUtils";

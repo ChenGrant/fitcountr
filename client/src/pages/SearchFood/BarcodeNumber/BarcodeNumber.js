@@ -8,10 +8,10 @@ import {
 import React, { useContext, useState } from "react";
 import { AddPageContext, SetCurrentPageContext } from "../SearchFood";
 import SearchIcon from "@mui/icons-material/Search";
-import CustomButton from "../../../../../ui/CustomButton";
-import { PAGES } from "../../../../../../utils";
-import useScreenSize from "../../../../../../hooks/useScreenSize";
-import BackArrow from "../BackArrow";
+import CustomButton from "../../../components/ui/CustomButton";
+import { PAGES } from "../../../utils/";
+import useScreenSize from "../../../hooks/useScreenSize";
+import BackArrow from "../../../components/ui/BackArrow";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------

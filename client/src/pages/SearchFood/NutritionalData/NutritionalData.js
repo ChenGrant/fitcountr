@@ -1,22 +1,22 @@
 import { Typography } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
-import { fetchNutritionFromBarcodeNumber } from "../../../../../../utils/";
-import LoadingCircle from "../../../../../ui/LoadingCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import { useTheme } from "@emotion/react";
-import CustomButton from "../../../../../ui/CustomButton";
+import { fetchNutritionFromBarcodeNumber } from "../../../utils/";
+import CustomButton from "../../../components/ui/CustomButton";
+import LoadingCircle from "../../../components/ui/LoadingCircle";
 import { Box } from "@mui/system";
 import { RemovePageContext } from "../SearchFood";
-import CustomCard from "../../../../../ui/CustomCard";
-import useScreenSize from "../../../../../../hooks/useScreenSize";
+import CustomCard from "../../../components/ui/CustomCard";
+import useScreenSize from "../../../hooks/useScreenSize";
 import { v4 as uuidv4 } from "uuid";
 import {
   capitalizeFirstCharacter,
   round,
   sortByNutrient,
   USDA_NUTRIENT_SET,
-} from "../../../../../../utils";
-import BackArrow from "../BackArrow";
+} from "../../../utils";
+import BackArrow from "../../../components/ui/BackArrow";
 
 // ------------------------------------ CONSTANTS ------------------------------------
 const NUTRIENT_DECIMAL_PLACES = 2;

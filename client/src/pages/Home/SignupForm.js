@@ -7,26 +7,27 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import FormikControl from "../../formik/FormikControl";
+import FormikControl from "../../components/formik/FormikControl";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useTheme } from "@emotion/react";
-import useScreenSize from "../../../hooks/useScreenSize";
+import useScreenSize from "../../hooks/useScreenSize";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import CustomButton from "../../ui/CustomButton";
-import { handleAuthWithGmail, postSignupData } from "../../../utils";
+import CustomButton from "../../components/ui/CustomButton";
 import {
   EMAIL_ALREADY_IN_USE,
   EMAIL_PASSWORD_PROVIDER,
   FORM_ERROR_HEIGHT,
   errorIsRendered,
-} from "../../../utils";
+  handleAuthWithGmail,
+  postSignupData,
+} from "../../utils";
 import { useDispatch } from "react-redux";
-import { setAuthenticatingUser } from "../../../redux";
+import { setAuthenticatingUser } from "../../redux";
 
 // ------------------------------------- FORMIK -------------------------------------
 const initialValues = {

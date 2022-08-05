@@ -1,9 +1,9 @@
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useContext } from "react";
-import { PAGES } from "../../../../../../utils";
-import CustomButton from "../../../../../ui/CustomButton";
-import CustomDialog from "../../../../../ui/CustomDialog";
+import { PAGES } from "../../../utils";
+import CustomButton from "../../../components/ui/CustomButton";
+import CustomDialog from "../../../components/ui/CustomDialog";
 import { AddPageContext } from "../SearchFood";
 import { v4 as uuidv4 } from "uuid";
 

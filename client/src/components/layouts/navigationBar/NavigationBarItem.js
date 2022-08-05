@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
-import useScreenSize from "../../../../../hooks/useScreenSize";
+import useScreenSize from "../../../hooks/useScreenSize";
 
 const NavigationBarItem = ({ isOpen, name, displayComponent, ...rest }) => {
   const { desktop } = useScreenSize();

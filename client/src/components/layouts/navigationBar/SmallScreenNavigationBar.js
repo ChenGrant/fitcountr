@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import ClearIcon from "@mui/icons-material/Clear";
 import { Outlet } from "react-router-dom";
-import useScreenSize from "../../../../../hooks/useScreenSize";
+import useScreenSize from "../../../hooks/useScreenSize";
 import NavigationBarItemList from "./NavigationBarItemList";
 
 const SmallScreenNavigationBar = () => {

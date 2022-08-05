@@ -4,8 +4,8 @@ import { Outlet } from "react-router-dom";
 import { keyframes } from "@emotion/react";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import useAsset from "../../../../../hooks/useAsset";
-import LoadingCircle from "../../../../ui/LoadingCircle";
+import useAsset from "../../../hooks/useAsset";
+import LoadingCircle from "../../../components/ui/LoadingCircle";
 import NavigationBarItemList from "./NavigationBarItemList";
 
 // ------------------------------------ CONSTANTS ------------------------------------

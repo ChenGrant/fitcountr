@@ -1,11 +1,11 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
-import Dashboard from "../components/pages/Dashboard/components/Home/Home";
-import LargeScreenNavigationBar from "../components/pages/Dashboard/components/NavigationBar/LargeScreenNavigationBar";
-import UnavailableResource from "../components/pages/UnavailableResource/UnavailableResource";
 import useScreenSize from "../hooks/useScreenSize";
-import SmallScreenNavigationBar from "../components/pages/Dashboard/components/NavigationBar/SmallScreenNavigationBar";
-import SearchFood from "../components/pages/Dashboard/components/SearchFood/SearchFood";
+import { Routes, Route } from "react-router-dom";
+import LargeScreenNavigationBar from "../components/layouts/navigationBar/LargeScreenNavigationBar";
+import SmallScreenNavigationBar from "../components/layouts/navigationBar/SmallScreenNavigationBar";
+import Dashboard from "../pages/Dashboard/Dashboard";
+import SearchFood from "../pages/SearchFood/SearchFood";
+import UnavailableResource from "../pages/UnavailableResource/UnavailableResource";
 
 const DashboardRoutes = () => {
   const { desktop } = useScreenSize();

@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import React from "react";
-import CustomButton from "../../../../../ui/CustomButton";
-import CustomDialog from "../../../../../ui/CustomDialog";
+import CustomButton from "../../../components/ui/CustomButton";
+import CustomDialog from "../../../components/ui/CustomDialog";
 import ErrorIcon from "@mui/icons-material/Error";
 
 const BarcodeImageErrorPopup = ({

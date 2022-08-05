@@ -9,16 +9,16 @@ import {
   Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import CustomButton from "../../../../../ui/CustomButton";
+import CustomButton from "../../../components/ui/CustomButton";
 import {
   objectIsEmpty,
   PAGES,
   fetchFoodsFromQuery,
-} from "../../../../../../utils";
-import useScreenSize from "../../../../../../hooks/useScreenSize";
+} from "../../../utils/";
+import useScreenSize from "../../../hooks/useScreenSize";
 import FoodDataTable from "./FoodDataTable";
 import FoodNameErrorPopup from "./FoodNameErrorPopup";
-import BackArrow from "../BackArrow";
+import BackArrow from "../../../components/ui/BackArrow";
 
 const FoodName = ({ initialFoodName = "" }) => {
   const { desktop, tablet } = useScreenSize();

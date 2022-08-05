@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PAGES, Stack } from "../../../../../utils";
+import { PAGES, Stack } from "../../utils";
 import SelectSearchMethod from "./SelectSearchMethod/SelectSearchMethod";
 import BarcodeImage from "./BarcodeImage/BarcodeImage";
 import BarcodeNumber from "./BarcodeNumber/BarcodeNumber";

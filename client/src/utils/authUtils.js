@@ -1,5 +1,5 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { GMAIL_OVERRIDE_POPUP_STATES } from "../components/pages/Home/GmailOverridePopup";
+import { GMAIL_OVERRIDE_POPUP_STATES } from "../pages/Home/GmailOverridePopup";
 import { GMAIL_PROVIDER, postSignupData } from "./index";
 
 // handleAuthWithGmail signs in the user via their gmail account,
@@ -17,7 +17,7 @@ export const handleAuthWithGmail = async (
     setGmailButtonIsDisabled(true);
     setGmailOverridePopupState(GMAIL_OVERRIDE_POPUP_STATES.PENDING);
     const { user } = result;
-    
+
     const fetchedSignupData = await postSignupData(user, GMAIL_PROVIDER);
     if (fetchedSignupData.userIsCreated) {
       switch (fetchedSignupData.message) {
@@ -28,7 +28,7 @@ export const handleAuthWithGmail = async (
         case "Email already in use, provider overridden to now use Gmail":
           setOverriddenGmailUser(user);
           setGmailOverridePopupState(GMAIL_OVERRIDE_POPUP_STATES.OPEN);
-          setGmailButtonIsDisabled(false)
+          setGmailButtonIsDisabled(false);
           return;
         default:
           break;
@@ -36,6 +36,6 @@ export const handleAuthWithGmail = async (
     }
   } catch (err) {
     console.log(err);
-    setGmailButtonIsDisabled(false)
+    setGmailButtonIsDisabled(false);
   }
 };

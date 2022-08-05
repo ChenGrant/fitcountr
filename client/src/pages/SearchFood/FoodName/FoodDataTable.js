@@ -2,11 +2,11 @@ import { useTheme } from "@emotion/react";
 import { LinearProgress, Pagination, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useContext, useEffect, useState } from "react";
-import CustomCard from "../../../../../ui/CustomCard";
+import CustomCard from "../../../components/ui/CustomCard";
 import { v4 as uuidv4 } from "uuid";
-import useScreenSize from "../../../../../../hooks/useScreenSize";
+import useScreenSize from "../../../hooks/useScreenSize";
 import { AddPageContext, SetCurrentPageContext } from "../SearchFood";
-import { PAGES, fetchFoodsFromQuery } from "../../../../../../utils";
+import { PAGES, fetchFoodsFromQuery } from "../../../utils/";
 
 const FoodDataTable = ({ foodData, foodName, setFoodData }) => {
   const { phone } = useScreenSize();

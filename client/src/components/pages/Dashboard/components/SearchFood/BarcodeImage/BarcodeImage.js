@@ -12,6 +12,7 @@ import { SetCurrentPageContext } from "../SearchFood";
 import BarcodeImageErrorPopup from "./BarcodeImageErrorPopup";
 import { PAGES, scanBarcodeImage } from "../../../../../../utils";
 import useScreenSize from "../../../../../../hooks/useScreenSize";
+import BackArrow from "../BackArrow";
 
 const BarcodeImage = ({ initialFile }) => {
   const theme = useTheme();
@@ -55,7 +56,7 @@ const BarcodeImage = ({ initialFile }) => {
 
   return (
     <>
-      <BarcodeImage />
+      <BackArrow />
       <Box
         display="flex"
         flexDirection="column"

@@ -16,8 +16,8 @@ const FirebaseClientInitializer = ({ children }) => {
   // fetch Firebase client configuration object from server and initialize app
   useEffect(() => {
     (async () => {
-      const firebaseClientConfig = await fetchFirebaseClientConfig();
-      const app = initializeApp(firebaseClientConfig);
+      const fetchedFirebaseClientConfig = await fetchFirebaseClientConfig();
+      const app = initializeApp(fetchedFirebaseClientConfig);
       getAuth(app);
       setInitializingFirebaseClient(false);
     })();

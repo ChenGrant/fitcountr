@@ -82,12 +82,12 @@ const populateSrcField = async (assets, dispatch) => {
   for (const [key, value] of Object.entries(assets)) {
     if (!assets[key].src) {
       const assetName = value.name;
-      const assetURL = await fetchAssetURLFromAssetName(assetName);
+      const fetchedAssetURL = await fetchAssetURLFromAssetName(assetName);
       assetURLS.push({
         type: ACTIONS.SET_SRC,
         payload: {
           key,
-          src: assetURL,
+          src: fetchedAssetURL.assetURL,
         },
       });
     }

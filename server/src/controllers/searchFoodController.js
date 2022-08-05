@@ -3,6 +3,10 @@ const {
 } = require("../services/cloudmersive/cloudmersive");
 const axios = require("axios");
 const config = require("../config/config");
+const { UNITS } = require("../utils/foodUtils");
+
+// ------------------------------------ CONSTANTS ------------------------------------
+const { GRAM } = UNITS;
 
 // ************************************************************************************
 // ----------------------------------- CONTROLLERS ------------------------------------
@@ -30,16 +34,16 @@ const getFoodFromBarcodeNumber = async (req, res) => {
             case "energy-kcal_100g":
               return ["calories", value];
             case "saturated-fat_100g":
-              return ["saturated fat", { value, unit: "g" }];
+              return ["saturated fat", { value, unit: GRAM }];
             default:
-              return [key.replace("_100g", ""), { value, unit: "g" }];
+              return [key.replace("_100g", ""), { value, unit: GRAM }];
           }
         })
     );
 
     return res.json({
       name: fetchedFood.data.product.product_name,
-      servingSize: { value: 100, unit: "g" },
+      servingSize: { value: 100, unit: GRAM },
       nutrients,
       barcodeNumber,
     });

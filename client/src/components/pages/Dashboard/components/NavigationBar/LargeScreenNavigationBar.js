@@ -27,7 +27,7 @@ const RIGHT = "RIGHT";
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
-const LargeNavigationBar = () => {
+const LargeScreenNavigationBar = () => {
   const [animating, setAnimating] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [iconDirection, setIconDirection] = useState(RIGHT);
@@ -135,4 +135,4 @@ const LargeNavigationBar = () => {
   );
 };
 
-export default LargeNavigationBar;
+export default LargeScreenNavigationBar;

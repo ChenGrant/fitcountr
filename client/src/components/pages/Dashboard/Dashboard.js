@@ -1,10 +1,10 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "./components/Home/Home";
-import LargeNavigationBar from "./components/NavigationBar/LargeNavigationBar";
+import LargeScreenNavigationBar from "./components/NavigationBar/LargeScreenNavigationBar";
 import UnavailableResource from "../UnavailableResource/UnavailableResource";
 import useScreenSize from "../../../hooks/useScreenSize";
-import SmallNavigationBar from "./components/NavigationBar/SmallNavigationBar";
+import SmallScreenNavigationBar from "./components/NavigationBar/SmallScreenNavigationBar";
 import SearchFood from "./components/SearchFood/SearchFood";
 
 const Dashboard = () => {
@@ -13,7 +13,9 @@ const Dashboard = () => {
   return (
     <Routes>
       <Route
-        element={desktop ? <LargeNavigationBar /> : <SmallNavigationBar />}
+        element={
+          desktop ? <LargeScreenNavigationBar /> : <SmallScreenNavigationBar />
+        }
       >
         <Route path="/" element={<Home />} />
         <Route path="/searchFood" element={<SearchFood />} />

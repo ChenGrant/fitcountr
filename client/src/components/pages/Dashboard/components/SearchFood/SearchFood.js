@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { PAGES, Stack } from "../../../../../utils";
 import SelectSearchMethod from "./SelectSearchMethod/SelectSearchMethod";
 import BarcodeImage from "./BarcodeImage/BarcodeImage";
@@ -7,6 +7,15 @@ import NutritionalData from "./NutritionalData/NutritionalData";
 import FoodName from "./FoodName/FoodName";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+
+// ------------------------------------ CONSTANTS ------------------------------------
+const {
+  SELECT_SEARCH_METHOD,
+  BARCODE_IMAGE,
+  BARCODE_NUMBER,
+  FOOD_NAME,
+  NUTRITIONAL_DATA,
+} = PAGES;
 
 // ------------------------------------- CONTEXTS -------------------------------------
 export const SetCurrentPageContext = React.createContext();
@@ -25,32 +34,28 @@ const SearchFood = () => {
   });
 
   // ----------------------------------- FUNCTIONS -----------------------------------
+  const copyPageStack = (pageStack) =>
+    Object.assign(Object.create(Object.getPrototypeOf(pageStack)), pageStack);
+
+  const getCurrentPage = (pageStack) => pageStack.peek();
+
   const setCurrentPage = (newCurrentPage) => {
     removePage();
     addPage(newCurrentPage);
   };
 
   const addPage = (page) => {
-    const pageStackCopy = Object.assign(
-      Object.create(Object.getPrototypeOf(pageStack)),
-      pageStack
-    );
+    const pageStackCopy = copyPageStack(pageStack);
     pageStackCopy.push(page);
     setPageStack(pageStackCopy);
   };
 
   const removePage = () => {
-    const pageStackCopy = Object.assign(
-      Object.create(Object.getPrototypeOf(pageStack)),
-      pageStack
-    );
+    const pageStackCopy = copyPageStack(pageStack);
     const poppedPage = pageStackCopy.pop();
     setPageStack(pageStackCopy);
     return poppedPage;
   };
-
-  // ----------------------------------- USE EFFECT -----------------------------------
-  //useEffect(() => console.log(pageStack), [pageStack]);
 
   // ------------------------------------- RENDER -------------------------------------
   if (!user.isLoggedIn) return <Navigate to="/" />;
@@ -60,25 +65,27 @@ const SearchFood = () => {
       <AddPageContext.Provider value={addPage}>
         <RemovePageContext.Provider value={removePage}>
           {(() => {
-            const topPage = pageStack.peek();
-            switch (topPage.name) {
-              case PAGES.SELECT_SEARCH_METHOD:
+            const currentPage = getCurrentPage(pageStack);
+            const { name, file, food, foodName, barcodeNumber } = currentPage;
+
+            switch (name) {
+              case SELECT_SEARCH_METHOD:
                 return <SelectSearchMethod />;
-              case PAGES.BARCODE_IMAGE:
-                return <BarcodeImage initialFile={topPage.file} />;
-              case PAGES.BARCODE_NUMBER:
+
+              case BARCODE_IMAGE:
+                return <BarcodeImage initialFile={file} />;
+
+              case BARCODE_NUMBER:
+                return <BarcodeNumber initialBarcodeNumber={barcodeNumber} />;
+
+              case FOOD_NAME:
+                return <FoodName initialFoodName={foodName} />;
+
+              case NUTRITIONAL_DATA:
                 return (
-                  <BarcodeNumber initialBarcodeNumber={topPage.barcodeNumber} />
+                  <NutritionalData barcodeNumber={barcodeNumber} food={food} />
                 );
-              case PAGES.FOOD_NAME:
-                return <FoodName initialFoodName={topPage.foodName} />;
-              case PAGES.NUTRITIONAL_DATA:
-                return (
-                  <NutritionalData
-                    barcodeNumber={topPage.barcodeNumber}
-                    food={topPage.food}
-                  />
-                );
+
               default:
                 return null;
             }

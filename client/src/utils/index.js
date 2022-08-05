@@ -31,3 +31,9 @@ export { Stack } from "./dataStructureUtils";
 export { PAGES } from "./foodSearchUtils";
 
 export { objectIsEmpty } from "./objectUtils";
+
+export {
+  sortByNutrient,
+  USDA_NUTRIENT_SET,
+  NUTRIENT_PRIORITY,
+} from "./nutrientUtils";

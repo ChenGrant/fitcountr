@@ -6,7 +6,7 @@ import { Outlet } from "react-router-dom";
 import useScreenSize from "../../../../../hooks/useScreenSize";
 import NavigationBarItemList from "./NavigationBarItemList";
 
-const SmallNavigationBar = () => {
+const SmallScreenNavigationBar = () => {
   const { tablet } = useScreenSize();
   const [menuIsOpen, setMenuIsOpen] = useState(false);
 
@@ -74,4 +74,4 @@ const SmallNavigationBar = () => {
   );
 };
 
-export default SmallNavigationBar;
+export default SmallScreenNavigationBar;

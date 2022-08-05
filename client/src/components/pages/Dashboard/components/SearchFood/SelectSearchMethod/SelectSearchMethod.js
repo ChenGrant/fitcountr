@@ -13,16 +13,19 @@ const SEARCH_METHODS = [
   {
     searchMethodName: "Barcode Image",
     imageName: "barcodeImage",
+    apiImageName: "search_barcode_image",
     pageName: PAGES.BARCODE_IMAGE,
   },
   {
     searchMethodName: "Barcode Number",
     imageName: "barcodeNumber",
+    apiImageName: "search_barcode_number",
     pageName: PAGES.BARCODE_NUMBER,
   },
   {
     searchMethodName: "Food Name",
     imageName: "foodName",
+    apiImageName: "search_food_name",
     pageName: PAGES.FOOD_NAME,
   },
 ];
@@ -33,16 +36,21 @@ const SEARCH_METHODS = [
 const SelectSearchMethod = () => {
   const addPage = useContext(AddPageContext);
   const { desktop } = useScreenSize();
-  const [assets, assetsDispatchers, loadingAssets] = useAsset({
-    barcodeImage: { name: "search_barcode_image" },
-    barcodeNumber: { name: "search_barcode_number" },
-    foodName: { name: "search_food_name" },
-  });
+  const [assets, assetsDispatchers, loadingAssets] = useAsset(
+    Object.fromEntries(
+      SEARCH_METHODS.map(({ imageName, apiImageName }) => [
+        imageName,
+        { name: apiImageName },
+      ])
+    )
+  );
 
   const pageIsLoading = loadingAssets;
 
+  // ------------------------------------ RENDER -------------------------------------
   return (
     <>
+      {/* render LinearProgress component if page is loading */}
       {pageIsLoading && (
         <Box
           width="100%"
@@ -65,11 +73,13 @@ const SelectSearchMethod = () => {
         alignItems="center"
         justifyContent="center"
       >
+        {/* Header */}
         <Box flex={desktop && 1} display="flex" alignItems="flex-end">
           <Typography variant="h1" textAlign="center">
             Choose a search method
           </Typography>
         </Box>
+        {/* Search Methods */}
         <Box flex={desktop && 2}>
           <Box
             display="flex"

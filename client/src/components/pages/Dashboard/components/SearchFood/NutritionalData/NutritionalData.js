@@ -10,44 +10,20 @@ import { RemovePageContext } from "./../SearchFood";
 import CustomCard from "../../../../../ui/CustomCard";
 import useScreenSize from "../../../../../../hooks/useScreenSize";
 import { v4 as uuidv4 } from "uuid";
-import { capitalizeFirstCharacter, round } from "../../../../../../utils";
+import {
+  capitalizeFirstCharacter,
+  round,
+  sortByNutrient,
+  USDA_NUTRIENT_SET,
+} from "../../../../../../utils";
 import BackArrow from "../BackArrow";
 
-const DECIMAL_PLACES = 2;
+// ------------------------------------ CONSTANTS ------------------------------------
+const NUTRIENT_DECIMAL_PLACES = 2;
 
-const USDA_NUTRIENT_SET = new Set([
-  "Protein",
-  "Carbohydrate, by difference",
-  "Energy",
-  "Total lipid (fat)",
-  "Sugars",
-  "Sodium, Na",
-]);
-
-const NUTRIENT_PRIORITY = [
-  "calories",
-  "proteins",
-  "carbohydrates",
-  "fat",
-  "sugars",
-  "sodium",
-];
-
-const sortByNutrition = (nutritionalData) =>
-  nutritionalData.sort(([nutrientName1], [nutrientName2]) => {
-    if (
-      NUTRIENT_PRIORITY.includes(nutrientName1) &&
-      NUTRIENT_PRIORITY.includes(nutrientName2)
-    )
-      return (
-        NUTRIENT_PRIORITY.indexOf(nutrientName1) -
-        NUTRIENT_PRIORITY.indexOf(nutrientName2)
-      );
-    else if (NUTRIENT_PRIORITY.includes(nutrientName1)) return -1;
-    else if (NUTRIENT_PRIORITY.includes(nutrientName2)) return 1;
-    return nutrientName1 - nutrientName2;
-  });
-
+// ************************************************************************************
+// ------------------------------------ COMPONENT -------------------------------------
+// ************************************************************************************
 const NutritionalData = ({ barcodeNumber, food }) => {
   const { phone } = useScreenSize();
   const theme = useTheme();
@@ -55,8 +31,9 @@ const NutritionalData = ({ barcodeNumber, food }) => {
   const [fetchingNutritionalData, setFetchingNutritionalData] = useState(true);
   const [nutritionalData, setNutritionalData] = useState();
 
+  // ------------------------------------ USE EFFECT ----------------------------------
   useEffect(() => {
-    if (nutritionalData !== undefined) setFetchingNutritionalData(false);
+    nutritionalData !== undefined && setFetchingNutritionalData(false);
   }, [nutritionalData]);
 
   useEffect(() => {
@@ -119,6 +96,7 @@ const NutritionalData = ({ barcodeNumber, food }) => {
     setNutritionalData(cleanData);
   }, [food]);
 
+  // -------------------------------------- RENDER ------------------------------------
   if (fetchingNutritionalData) return <LoadingCircle />;
 
   return (
@@ -142,7 +120,7 @@ const NutritionalData = ({ barcodeNumber, food }) => {
                 {nutritionalData["serving size"].unit}
               </b>
             </Typography>
-            {sortByNutrition(Object.entries(nutritionalData.nutrition)).map(
+            {sortByNutrient(Object.entries(nutritionalData.nutrition)).map(
               ([nutrientName, measurement]) => {
                 const { value, unit } = measurement;
                 return (
@@ -160,8 +138,8 @@ const NutritionalData = ({ barcodeNumber, food }) => {
                     <Box>
                       <Typography textAlign="right">
                         {nutrientName === "calories"
-                          ? round(measurement, DECIMAL_PLACES)
-                          : `${round(value, DECIMAL_PLACES)} ${unit}`}
+                          ? round(measurement, NUTRIENT_DECIMAL_PLACES)
+                          : `${round(value, NUTRIENT_DECIMAL_PLACES)} ${unit}`}
                       </Typography>
                     </Box>
                   </Box>

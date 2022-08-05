@@ -6,6 +6,7 @@ import { RemovePageContext } from "./SearchFood";
 
 const BackArrow = () => {
   const removePage = useContext(RemovePageContext);
+
   return (
     <Box m={5}>
       <IconButton color="primary" onClick={removePage}>

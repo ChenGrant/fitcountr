@@ -15,8 +15,8 @@ const transport = nodemailer.createTransport({
 
 // ------------------------------------- FUNCTIONS -------------------------------------
 // sendMailAsync promisifies the transport.sendMail method
-const sendMailAsync = ({ from = GMAIL_USERNAME, ...rest }) => {
-  return new Promise((res, rej) => {
+const sendMailAsync = ({ from = GMAIL_USERNAME, ...rest }) =>
+  new Promise((res, rej) => {
     transport.sendMail({ from, ...rest }, (err, data) => {
       if (err) {
         rej(err);
@@ -25,7 +25,6 @@ const sendMailAsync = ({ from = GMAIL_USERNAME, ...rest }) => {
       res(data);
     });
   });
-};
 
 // given a receiver email and an email verification pin, sendEmailVerificationAsync
 // sends an email to the receiver email that includes the email verification pin and

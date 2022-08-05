@@ -25,7 +25,7 @@ const mealSchema = new mongoose.Schema({
       },
     ],
     validate: {
-      validator: (value) => !ArrayUtils.arrayIsEmpty(value),
+      validator: (value) => !ArrayUtils.getArrayIsEmpty(value),
       message: (props) => `${props.value} is an empty array`,
     },
     required: true,

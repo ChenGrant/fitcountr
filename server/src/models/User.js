@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { EmailUtils, NumberUtils } = require("../utils/index");
+const { StringUtils, NumberUtils } = require("../utils/index");
 
 const EMAIL_VERIFICATION_PIN_LENGTH = 5;
 
@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     lowerCase: true,
     validate: {
-      validator: EmailUtils.emailIsValid,
+      validator: StringUtils.getStringIsValidEmail,
       message: (props) => `${props.value} is an invalid email`,
     },
   },
@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
         type: Number,
         immutable: true,
         default: () =>
-          NumberUtils.generateRandomInteger(
+          NumberUtils.getRandomIntFromInterval(
             Math.pow(10, EMAIL_VERIFICATION_PIN_LENGTH - 1),
             Math.pow(10, EMAIL_VERIFICATION_PIN_LENGTH)
           ),

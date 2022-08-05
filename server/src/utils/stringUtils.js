@@ -1,4 +1,16 @@
-// returns true if a string is empty and false otherwise
-const stringIsEmpty = (string) => string === "";
+const assert = require("assert");
 
-module.exports = { stringIsEmpty };
+const assertIsString = (string) =>
+  assert(typeof string === "string" || string instanceof String);
+
+const getStringIsEmpty = (string) => {
+  assertIsString(string);
+  return string === "";
+};
+
+const getStringIsValidEmail = (string) => {
+  assertIsString(string);
+  return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(string);
+};
+
+module.exports = { getStringIsValidEmail, getStringIsEmpty };

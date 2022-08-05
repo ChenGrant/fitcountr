@@ -1,4 +1,11 @@
-// returns true if an array is empty and false otherwise
-const arrayIsEmpty = (array) => array.length === 0;
+const assert = require("assert");
 
-module.exports = { arrayIsEmpty };
+const assertIsArray = (array) => assert(Array.isArray(array));
+
+// returns true if an array is empty and false otherwise
+const getArrayIsEmpty = (array) => {
+  assertIsArray(array);
+  return array.length === 0;
+};
+
+module.exports = { getArrayIsEmpty };

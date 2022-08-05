@@ -37,7 +37,7 @@ const macrosData = [
 
 const GAP_SIZE = 3;
 
-const Home = () => {
+const Dashboard = () => {
   const { user } = useSelector((state) => state);
   const { desktop } = useScreenSize();
   const theme = useTheme();
@@ -112,4 +112,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Dashboard;

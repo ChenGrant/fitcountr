@@ -3,7 +3,7 @@ import { Box } from "@mui/system";
 import React, { useContext } from "react";
 import CustomCard from "../../../../../ui/CustomCard";
 import { v4 as uuidv4 } from "uuid";
-import { AddPageContext } from "./../SearchFood";
+import { AddPageContext } from "../SearchFood";
 import { PAGES } from "../../../../../../utils";
 import useAsset from "../../../../../../hooks/useAsset";
 import useScreenSize from "../../../../../../hooks/useScreenSize";

@@ -6,7 +6,7 @@ import ErrorIcon from "@mui/icons-material/Error";
 import { useTheme } from "@emotion/react";
 import CustomButton from "../../../../../ui/CustomButton";
 import { Box } from "@mui/system";
-import { RemovePageContext } from "./../SearchFood";
+import { RemovePageContext } from "../SearchFood";
 import CustomCard from "../../../../../ui/CustomCard";
 import useScreenSize from "../../../../../../hooks/useScreenSize";
 import { v4 as uuidv4 } from "uuid";

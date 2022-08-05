@@ -1,10 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./components/pages/Home/Home";
-import DashboardRoutes from "./routes/DashboardRoutes";
-import UnavailableResource from "./components/pages/UnavailableResource/UnavailableResource";
-import EmailVerification from "./components/pages/EmailVerification/EmailVerification";
 import AppInitializer from "./components/wrappers/AppInitializer";
+import DashboardRoutes from "./routes/DashboardRoutes";
+import Home from "./pages/Home/Home";
+import EmailVerification from "./pages/EmailVerification/EmailVerification";
+import UnavailableResource from "./pages/UnavailableResource/UnavailableResource";
 
 const App = () => {
   return (

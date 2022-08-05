@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Home from "../components/pages/Dashboard/components/Home/Home";
+import Dashboard from "../components/pages/Dashboard/components/Home/Home";
 import LargeScreenNavigationBar from "../components/pages/Dashboard/components/NavigationBar/LargeScreenNavigationBar";
 import UnavailableResource from "../components/pages/UnavailableResource/UnavailableResource";
 import useScreenSize from "../hooks/useScreenSize";
@@ -17,7 +17,7 @@ const DashboardRoutes = () => {
           desktop ? <LargeScreenNavigationBar /> : <SmallScreenNavigationBar />
         }
       >
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Dashboard />} />
         <Route path="/searchFood" element={<SearchFood />} />
       </Route>
       <Route path="*" element={<UnavailableResource />} />

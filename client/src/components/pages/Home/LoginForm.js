@@ -102,8 +102,8 @@ const LoginForm = ({
         default:
           break;
       }
-    } catch (error) {
-      switch (error.message) {
+    } catch (err) {
+      switch (err.message) {
         case "Login attempt via password when provider is Gmail":
           return formik.setFieldError("email", "Account uses Gmail login");
         case "Email not in use":

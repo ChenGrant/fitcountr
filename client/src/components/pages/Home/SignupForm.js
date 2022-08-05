@@ -97,8 +97,8 @@ const SignupForm = ({
         default:
           break;
       }
-    } catch (error) {
-      if (error.message === "Firebase: Error (auth/email-already-in-use).")
+    } catch (err) {
+      if (err.message === "Firebase: Error (auth/email-already-in-use).")
         return formik.setFieldError("email", EMAIL_ALREADY_IN_USE);
     }
   };

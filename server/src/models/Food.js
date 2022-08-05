@@ -6,11 +6,12 @@ const foodSchema = new mongoose.Schema({
     required: true,
   },
   description: String,
+  servingSize: String,
   image: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "MediaFile",
   },
-  nutrition: {
+  nutrients: {
     type: {},
     required: true,
   },

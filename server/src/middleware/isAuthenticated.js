@@ -7,7 +7,8 @@ const isAuthenticated = async (req, res, next) => {
     const user = await auth.verifyIdToken(idToken);
     req.headerAuthUid = user.uid;
     next();
-  } catch (error) {
+  } catch (err) {
+    console.log(err);
     return res
       .json({ error: { message: "Could not authenticate" } })
       .status(401);

@@ -4,18 +4,23 @@ const {
 const axios = require("axios");
 const config = require("../config/config");
 
-const getNutritionFromBarcodeNumber = async (req, res) => {
+// ************************************************************************************
+// ----------------------------------- CONTROLLERS ------------------------------------
+// ************************************************************************************
+
+// ----------------------------- getFoodFromBarcodeNumber -----------------------------
+const getFoodFromBarcodeNumber = async (req, res) => {
   try {
     const { barcodeNumber } = req.params;
-    const fetchedNutrition = await axios.get(
+    const fetchedFood = await axios.get(
       `https://world.openfoodfacts.org/api/v0/product/${barcodeNumber}.json`
     );
 
-    if (fetchedNutrition.data.status === 0)
+    if (fetchedFood.data.status === 0)
       throw new Error("No code or invalid code");
 
-    const nutriments = Object.fromEntries(
-      Object.entries(fetchedNutrition.data.product.nutriments)
+    const nutrients = Object.fromEntries(
+      Object.entries(fetchedFood.data.product.nutriments)
         .filter(
           ([key, value]) =>
             key.endsWith("_100g") && key !== "energy_100g" && value !== 0
@@ -33,19 +38,20 @@ const getNutritionFromBarcodeNumber = async (req, res) => {
     );
 
     return res.json({
-      name: fetchedNutrition.data.product.product_name,
-      ["serving size"]: { value: 100, unit: "g" },
-      nutrition: nutriments,
+      name: fetchedFood.data.product.product_name,
+      servingSize: { value: 100, unit: "g" },
+      nutrients,
       barcodeNumber,
     });
   } catch (err) {
     console.log(err);
     return res
-      .json({ error: { message: "Could not fetch nutritional data" } })
+      .json({ error: { message: "Could not fetch food data" } })
       .status(404);
   }
 };
 
+// --------------------------------- scanBarcodeImage ---------------------------------
 const scanBarcodeImage = async (req, res) => {
   try {
     const { barcodeImageFile } = req.files;
@@ -53,11 +59,12 @@ const scanBarcodeImage = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res
-      .json({ error: { message: "Could not scan barcode" } })
+      .json({ error: { message: "Could not scan barcode image" } })
       .status(404);
   }
 };
 
+// -------------------------------- getFoodsFromQuery --------------------------------
 const getFoodsFromQuery = async (req, res) => {
   try {
     const { query, pageNumber, pageSize } = req.params;
@@ -81,13 +88,13 @@ const getFoodsFromQuery = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res
-      .json({ error: { message: "Could not fetch nutritional data" } })
+      .json({ error: { message: "Could not fetch food data" } })
       .status(404);
   }
 };
 
 module.exports = {
-  getNutritionFromBarcodeNumber,
+  getFoodFromBarcodeNumber,
   scanBarcodeImage,
   getFoodsFromQuery,
 };

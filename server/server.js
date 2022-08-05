@@ -42,4 +42,4 @@ mongoose
       console.log(`server started on port ${PORT}`);
     });
   })
-  .catch((error) => console.log("failed to connect to mongodb atlas ", error));
+  .catch((err) => console.log("failed to connect to mongodb atlas ", err));

@@ -54,18 +54,18 @@ const NutritionalData = ({ barcodeNumber, food }) => {
 
     const cleanData = {
       name: food.description,
-      "serving size": {
+      servingSize: {
         value: 100,
         unit: "g",
       },
-      nutrition: {},
+      nutrients: {},
     };
 
     food.foodNutrients
       .filter(({ nutrientName }) => USDA_NUTRIENT_SET.has(nutrientName))
       .forEach(({ nutrientName, value, unitName }) => {
         if (nutrientName === "Energy") {
-          cleanData["nutrition"]["calories"] = value;
+          cleanData.nutrients["calories"] = value;
           return;
         }
 
@@ -88,7 +88,7 @@ const NutritionalData = ({ barcodeNumber, food }) => {
           }
         })();
 
-        cleanData["nutrition"][propertyName.toLowerCase()] = {
+        cleanData.nutrients[propertyName.toLowerCase()] = {
           value,
           unit: unitName.toLowerCase(),
         };
@@ -98,6 +98,8 @@ const NutritionalData = ({ barcodeNumber, food }) => {
 
   // -------------------------------------- RENDER ------------------------------------
   if (fetchingNutritionalData) return <LoadingCircle />;
+
+  console.log(nutritionalData);
 
   return (
     <>
@@ -116,11 +118,11 @@ const NutritionalData = ({ barcodeNumber, food }) => {
             </Typography>
             <Typography gutterBottom>
               <b>
-                Serving Size: {nutritionalData["serving size"].value}
-                {nutritionalData["serving size"].unit}
+                Serving Size: {nutritionalData.servingSize.value}
+                {nutritionalData.servingSize.unit}
               </b>
             </Typography>
-            {sortByNutrient(Object.entries(nutritionalData.nutrition)).map(
+            {sortByNutrient(Object.entries(nutritionalData.nutrients)).map(
               ([nutrientName, measurement]) => {
                 const { value, unit } = measurement;
                 return (

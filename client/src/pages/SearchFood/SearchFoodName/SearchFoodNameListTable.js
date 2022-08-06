@@ -60,13 +60,9 @@ const SearchFoodNameListTable = ({ foodData, foodName, setFoodData }) => {
                       "&:hover": { bgcolor: "#ededed" },
                     }}
                     onClick={() => {
-                      setCurrentPage({
-                        name: SEARCH_FOOD_PAGES.SEARCH_FOOD_NAME,
-                        foodName,
-                      });
                       addPage({
                         name: SEARCH_FOOD_PAGES.FOOD_DATA,
-                        foodData,
+                        foodData: food,
                       });
                     }}
                   >

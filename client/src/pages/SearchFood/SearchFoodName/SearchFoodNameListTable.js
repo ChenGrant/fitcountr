@@ -12,7 +12,7 @@ const SearchFoodNameListTable = ({ foodData, foodName, setFoodData }) => {
   const { phone } = useScreenSize();
   const theme = useTheme();
   const [pageNumber, setPageNumber] = useState(1);
-  const [fetching, setFetching] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const addPage = useContext(AddPageContext);
 
   useEffect(() => {

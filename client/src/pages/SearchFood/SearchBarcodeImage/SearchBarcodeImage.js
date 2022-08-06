@@ -15,23 +15,35 @@ import useScreenSize from "../../../hooks/useScreenSize";
 import BackArrow from "../../../components/ui/BackArrow";
 
 // -------------------------------- CONSTANTS --------------------------------
-const FILE_ACTIONS = {
+const BARCODE_ACTIONS = {
   ENTER_DRAG_ZONE: "ENTER_DRAG_ZONE",
   EXIT_DRAG_ZONE: "EXIT_DRAG_ZONE",
-  SET_FILE_DATA: "SET_FILE_DATA",
-  SET_ERROR: "SET_ERROR",
+  SET_FILE: "SET_FILE",
+  SET_FILE_ERROR: "SET_FILE_ERROR",
+  SET_NUMBER: "SET_NUMBER",
+  SET_NUMBER_ERROR: "SET_NUMBER_ERROR",
+  START_SCANNING: "START_SCANNING",
+  END_SCANNING: "END_SCANNING",
 };
 
 const fileReducer = (state, action) => {
   switch (action.type) {
-    case FILE_ACTIONS.ENTER_DRAG_ZONE:
+    case BARCODE_ACTIONS.ENTER_DRAG_ZONE:
       return { ...state, isInDragZone: true };
-    case FILE_ACTIONS.EXIT_DRAG_ZONE:
+    case BARCODE_ACTIONS.EXIT_DRAG_ZONE:
       return { ...state, isInDragZone: false };
-    case FILE_ACTIONS.SET_FILE_DATA:
-      return { ...state, data: action.payload, error: false };
-    case FILE_ACTIONS.SET_ERROR:
-      return { ...state, data: null, error: action.payload };
+    case BARCODE_ACTIONS.SET_FILE:
+      return { ...state, file: action.payload, fileError: false };
+    case BARCODE_ACTIONS.SET_FILE_ERROR:
+      return { ...state, file: null, fileError: action.payload };
+    case BARCODE_ACTIONS.SET_NUMBER:
+      return { ...state, number: action.payload, numberError: false };
+    case BARCODE_ACTIONS.SET_NUMBER_ERROR:
+      return { ...state, number: null, numberError: action.payload };
+    case BARCODE_ACTIONS.START_SCANNING:
+      return { ...state, scanning: true };
+    case BARCODE_ACTIONS.END_SCANNING:
+      return { ...state, scanning: false };
     default:
       return state;
   }
@@ -44,29 +56,30 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
   const theme = useTheme();
   const { desktop } = useScreenSize();
   const setCurrentPage = useContext(SetCurrentPageContext);
-  const [file, dispatch] = useReducer(fileReducer, {
+  const [barcode, dispatch] = useReducer(fileReducer, {
     isInDragZone: false,
-    data: initialBarcodeImageFile ?? null,
-    error: false,
+    file: initialBarcodeImageFile ?? null,
+    fileError: false,
+    number: null,
+    numberError: false,
+    scanning: false,
   });
-  const [barcodeNumber, setBarcodeNumber] = useState();
-  const [scanningBarcode, setScanningBarcode] = useState(false);
   const [barcodeConfirmPopupIsOpen, setBarcodeConfirmPopupIsOpen] =
     useState(false);
   const [barcodeErrorPopupIsOpen, setBarcodeErrorPopupIsOpen] = useState(false);
 
   // ----------------------------------- FUNCTIONS -----------------------------------
   const handleFileDrop = (acceptedFiles) => {
-    dispatch({ type: FILE_ACTIONS.EXIT_DRAG_ZONE });
-    dispatch({ type: FILE_ACTIONS.SET_ERROR, payload: false });
+    dispatch({ type: BARCODE_ACTIONS.EXIT_DRAG_ZONE });
+    dispatch({ type: BARCODE_ACTIONS.SET_FILE_ERROR, payload: false });
 
     if (acceptedFiles.length === 0) {
-      dispatch({ type: FILE_ACTIONS.SET_FILE_DATA, payload: null });
-      dispatch({ type: FILE_ACTIONS.SET_ERROR, payload: true });
+      dispatch({ type: BARCODE_ACTIONS.SET_FILE, payload: null });
+      dispatch({ type: BARCODE_ACTIONS.SET_FILE_ERROR, payload: true });
       return;
     }
 
-    dispatch({ type: FILE_ACTIONS.SET_FILE_DATA, payload: acceptedFiles[0] });
+    dispatch({ type: BARCODE_ACTIONS.SET_FILE, payload: acceptedFiles[0] });
   };
 
   const handleScan = async (file) => {
@@ -79,11 +92,14 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
       barcodeImageFile: file,
     });
     setBarcodeConfirmPopupIsOpen(true);
-    setBarcodeNumber(barcodeData.RawText);
+    dispatch({
+      type: BARCODE_ACTIONS.SET_NUMBER,
+      payload: barcodeData.RawText,
+    });
   };
 
   // ------------------------------------- RENDER -------------------------------------
-  console.log(file)
+  console.log(barcode);
   return (
     <>
       <BackArrow />
@@ -102,8 +118,12 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
         <Box width="100%" maxWidth="1200px" bgcolor>
           <Dropzone
             onDrop={handleFileDrop}
-            onDragEnter={() => dispatch({ type: FILE_ACTIONS.ENTER_DRAG_ZONE })}
-            onDragLeave={() => dispatch({ type: FILE_ACTIONS.EXIT_DRAG_ZONE })}
+            onDragEnter={() =>
+              dispatch({ type: BARCODE_ACTIONS.ENTER_DRAG_ZONE })
+            }
+            onDragLeave={() =>
+              dispatch({ type: BARCODE_ACTIONS.EXIT_DRAG_ZONE })
+            }
             maxFiles={1}
             accept={{ "image/png": [".png", ".jpg", ".jpeg"] }}
           >
@@ -120,7 +140,7 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
                   height="300px"
                   borderRadius="20px"
                   border={`2px dashed ${theme.palette.primary.main}`}
-                  bgcolor={file.isInDragZone && theme.palette.primary.light}
+                  bgcolor={barcode.isInDragZone && theme.palette.primary.light}
                   display="flex"
                   flexDirection="column"
                   alignItems="center"
@@ -144,20 +164,24 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
                     </Box>
                   </Typography>
                   <Box
-                    visibility={file.data || file.error ? "visible" : "hidden"}
+                    visibility={
+                      barcode.file || barcode.fileError ? "visible" : "hidden"
+                    }
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
                     gap={1}
                     height="50px"
                   >
-                    {file.data && (
+                    {barcode.file && (
                       <>
                         <CheckCircleIcon sx={{ color: "green" }} />
-                        <Typography>Uploaded File: {file.data.name}</Typography>
+                        <Typography>
+                          Uploaded File: {barcode.file.name}
+                        </Typography>
                       </>
                     )}
-                    {file.error && (
+                    {barcode.fileError && (
                       <>
                         <ErrorIcon sx={{ color: "red" }} />
                         <Typography>Could not accept that file</Typography>
@@ -169,20 +193,20 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
             )}
           </Dropzone>
         </Box>
-        {scanningBarcode ? (
+        {barcode.scanning ? (
           <CircularProgress color="primary" thickness={4} size={50} />
         ) : (
           <CustomButton
             sx={{
               width: "100%",
               maxWidth: "400px",
-              visibility: (!file.data || file.error) && "hidden",
+              visibility: (!barcode.file || barcode.fileError) && "hidden",
             }}
             variant="contained"
             onClick={async () => {
-              setScanningBarcode(true);
-              await handleScan(file.data);
-              setScanningBarcode(false);
+              dispatch({ type: BARCODE_ACTIONS.START_SCANNING });
+              await handleScan(barcode.file);
+              dispatch({ type: BARCODE_ACTIONS.END_SCANNING });
             }}
           >
             Scan
@@ -190,7 +214,7 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
         )}
       </Box>
       <SearchBarcodeImageConfirmPopup
-        barcodeNumber={barcodeNumber}
+        barcodeNumber={barcode.number}
         barcodeConfirmPopupIsOpen={barcodeConfirmPopupIsOpen}
         setBarcodeConfirmPopupIsOpen={setBarcodeConfirmPopupIsOpen}
       />

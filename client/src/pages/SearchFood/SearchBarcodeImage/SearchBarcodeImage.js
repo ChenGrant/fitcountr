@@ -21,7 +21,6 @@ const BARCODE_ACTIONS = {
   SET_FILE: "SET_FILE",
   SET_FILE_ERROR: "SET_FILE_ERROR",
   SET_NUMBER: "SET_NUMBER",
-  SET_NUMBER_ERROR: "SET_NUMBER_ERROR",
   START_SCANNING: "START_SCANNING",
   END_SCANNING: "END_SCANNING",
 };
@@ -38,8 +37,6 @@ const fileReducer = (state, action) => {
       return { ...state, file: null, fileError: action.payload };
     case BARCODE_ACTIONS.SET_NUMBER:
       return { ...state, number: action.payload, numberError: false };
-    case BARCODE_ACTIONS.SET_NUMBER_ERROR:
-      return { ...state, number: null, numberError: action.payload };
     case BARCODE_ACTIONS.START_SCANNING:
       return { ...state, scanning: true };
     case BARCODE_ACTIONS.END_SCANNING:
@@ -61,7 +58,6 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
     file: initialBarcodeImageFile ?? null,
     fileError: false,
     number: null,
-    numberError: false,
     scanning: false,
   });
   const [barcodeConfirmPopupIsOpen, setBarcodeConfirmPopupIsOpen] =

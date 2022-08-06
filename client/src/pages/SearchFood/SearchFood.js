@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { SEARCH_FOOD_PAGES, Stack } from "../../utils";
 import SelectSearchMethod from "./SelectSearchMethod/SelectSearchMethod";
 import SearchBarcodeImage from "./SearchBarcodeImage/SearchBarcodeImage";
@@ -60,7 +60,6 @@ const SearchFood = () => {
   // useEffect(() => console.log(pageStack.items), [pageStack]);
   // ------------------------------------- RENDER -------------------------------------
   if (!user.isLoggedIn) return <Navigate to="/" />;
-
 
   return (
     <SetCurrentPageContext.Provider value={setCurrentPage}>

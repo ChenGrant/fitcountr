@@ -5,7 +5,7 @@ export class Stack {
 
   // add element to the stack
   push(element) {
-    return this.items.push(element);
+    this.items.push(element);
   }
 
   // remove element from the stack
@@ -15,7 +15,7 @@ export class Stack {
 
   // view the last element
   peek() {
-    if (this.items.length === 0) return null;
+    if (this.items.length === 0) return undefined;
     return this.items[this.items.length - 1];
   }
 

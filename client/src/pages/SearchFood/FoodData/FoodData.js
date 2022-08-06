@@ -14,7 +14,7 @@ import {
   capitalizeFirstCharacter,
   round,
   sortByNutrient,
-  USDA_NUTRIENT_SET,
+  getCleanFoodData,
 } from "../../../utils";
 import BackArrow from "../../../components/ui/BackArrow";
 
@@ -32,78 +32,39 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
   const [foodData, setFoodData] = useState();
 
   // ------------------------------------ USE EFFECT ----------------------------------
+  // set fetching to false when foodData is no longer undefined
   useEffect(() => {
     foodData !== undefined && setFetchingFoodData(false);
   }, [foodData]);
 
+  // if the initialBarcodeNumber prop is not undefined, fetch the foodData for that 
+  // barcode number. 
   useEffect(() => {
     if (!initialBarcodeNumber) return;
 
     (async () => {
-      const fetchedFood = await fetchFoodFromBarcodeNumber(
+      const fetchedFoodData = await fetchFoodFromBarcodeNumber(
         initialBarcodeNumber
       );
-      !fetchedFood.error && setFoodData(fetchedFood);
+      setFoodData(fetchedFoodData);
     })();
   }, [initialBarcodeNumber]);
 
+  // if the initialFoodData prop is not undefined, set the foodData state variable 
+  // with the value of initialFoodData
   useEffect(() => {
     if (!initialFoodData) return;
-
-    const cleanData = {
-      name: initialFoodData.description,
-      servingSize: {
-        value: 100,
-        unit: "g",
-      },
-      nutrients: {},
-    };
-
-    initialFoodData.foodNutrients
-      .filter(({ nutrientName }) => USDA_NUTRIENT_SET.has(nutrientName))
-      .forEach(({ nutrientName, value, unitName }) => {
-        if (nutrientName === "Energy") {
-          cleanData.nutrients["calories"] = value;
-          return;
-        }
-
-        const propertyName = (() => {
-          switch (nutrientName) {
-            case "Carbohydrate, by difference":
-              return "carbohydrates";
-
-            case "Protein":
-              return "proteins";
-
-            case "Total lipid (fat)":
-              return "fat";
-
-            case "Sodium, Na":
-              return "sodium";
-
-            default:
-              return nutrientName;
-          }
-        })();
-
-        cleanData.nutrients[propertyName.toLowerCase()] = {
-          value,
-          unit: unitName.toLowerCase(),
-        };
-      });
-    setFoodData(cleanData);
+    setFoodData(getCleanFoodData(initialFoodData));
   }, [initialFoodData]);
 
   // -------------------------------------- RENDER ------------------------------------
   if (fetchingFoodData) return <LoadingCircle />;
 
-  console.log(foodData);
-
   return (
     <>
       <BackArrow />
       <Box sx={{ width: "100%", display: "grid", placeItems: "center" }}>
-        {foodData ? (
+        {!foodData.error ? (
           <CustomCard
             sx={
               phone

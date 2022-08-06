@@ -32,9 +32,9 @@ export { Stack } from "./dataStructureUtils";
 export { objectIsEmpty } from "./objectUtils";
 
 export {
-  sortByNutrient,
   SEARCH_FOOD_PAGES,
-  USDA_NUTRIENT_SET,
+  sortByNutrient,
+  getCleanFoodData,
 } from "./foodUtils";
 
 export { theme } from "./themeUtils";

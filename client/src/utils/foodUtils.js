@@ -6,7 +6,7 @@ export const SEARCH_FOOD_PAGES = {
   FOOD_DATA: "FOOD_DATA",
 };
 
-export const USDA_NUTRIENT_SET = new Set([
+const USDA_NUTRIENT_SET = new Set([
   "Protein",
   "Carbohydrate, by difference",
   "Energy",
@@ -38,3 +38,49 @@ export const sortByNutrient = (nutritionalData) =>
     else if (NUTRIENT_PRIORITY.includes(nutrient2)) return 1;
     return nutrient1 - nutrient2;
   });
+
+export const getCleanFoodData = (rawFoodData) => {
+  const cleanFoodData = {
+    name: rawFoodData.description,
+    servingSize: {
+      value: 100,
+      unit: "g",
+    },
+    nutrients: {},
+  };
+
+  rawFoodData.foodNutrients
+    .filter(({ nutrientName }) => USDA_NUTRIENT_SET.has(nutrientName))
+    .forEach(({ nutrientName, value, unitName }) => {
+      if (nutrientName === "Energy") {
+        cleanFoodData.nutrients["calories"] = value;
+        return;
+      }
+
+      const propertyName = (() => {
+        switch (nutrientName) {
+          case "Carbohydrate, by difference":
+            return "carbohydrates";
+
+          case "Protein":
+            return "proteins";
+
+          case "Total lipid (fat)":
+            return "fat";
+
+          case "Sodium, Na":
+            return "sodium";
+
+          default:
+            return nutrientName;
+        }
+      })();
+
+      cleanFoodData.nutrients[propertyName.toLowerCase()] = {
+        value,
+        unit: unitName.toLowerCase(),
+      };
+    });
+
+  return cleanFoodData;
+};

@@ -5,7 +5,7 @@ import React, { useContext, useEffect, useState } from "react";
 import CustomCard from "../../../components/ui/CustomCard";
 import { v4 as uuidv4 } from "uuid";
 import useScreenSize from "../../../hooks/useScreenSize";
-import { AddPageContext, SetCurrentPageContext } from "../SearchFood";
+import { AddPageContext } from "../SearchFood";
 import { SEARCH_FOOD_PAGES, fetchFoodsFromQuery } from "../../../utils";
 
 const SearchFoodNameListTable = ({ foodData, foodName, setFoodData }) => {
@@ -13,7 +13,6 @@ const SearchFoodNameListTable = ({ foodData, foodName, setFoodData }) => {
   const theme = useTheme();
   const [pageNumber, setPageNumber] = useState(1);
   const [fetching, setFetching] = useState(false);
-  const setCurrentPage = useContext(SetCurrentPageContext);
   const addPage = useContext(AddPageContext);
 
   useEffect(() => {

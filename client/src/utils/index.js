@@ -6,7 +6,7 @@ export {
   fetchEmailProvider,
   fetchEmailIsInUse,
   fetchVerificationStatus,
-  fetchNutritionFromBarcodeNumber,
+  fetchFoodFromBarcodeNumber,
   fetchPinLength,
   fetchValidatePin,
   fetchFoodsFromQuery,

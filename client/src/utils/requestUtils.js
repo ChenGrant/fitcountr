@@ -29,7 +29,7 @@ export const fetchVerificationStatus = async (email) =>
 export const fetchPinLength = async (email) =>
   await fetchJSON(`/emailVerification/pinLength/${email}`);
 
-export const fetchNutritionFromBarcodeNumber = async (barcodeNumber) =>
+export const fetchFoodFromBarcodeNumber = async (barcodeNumber) =>
   await fetchJSON(`/searchFood/barcodeNumber/${barcodeNumber}`);
 
 export const fetchFoodsFromQuery = async (

@@ -14,19 +14,19 @@ const SEARCH_METHODS = [
     searchMethodName: "Barcode Image",
     imageName: "barcodeImage",
     apiImageName: "search_barcode_image",
-    pageName: SEARCH_FOOD_PAGES.BARCODE_IMAGE,
+    pageName: SEARCH_FOOD_PAGES.SEARCH_BARCODE_IMAGE,
   },
   {
     searchMethodName: "Barcode Number",
     imageName: "barcodeNumber",
     apiImageName: "search_barcode_number",
-    pageName: SEARCH_FOOD_PAGES.BARCODE_NUMBER,
+    pageName: SEARCH_FOOD_PAGES.SEARCH_BARCODE_NUMBER,
   },
   {
     searchMethodName: "Food Name",
     imageName: "foodName",
     apiImageName: "search_food_name",
-    pageName: SEARCH_FOOD_PAGES.FOOD_NAME,
+    pageName: SEARCH_FOOD_PAGES.SEARCH_FOOD_NAME,
   },
 ];
 

@@ -1,20 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SEARCH_FOOD_PAGES, Stack } from "../../utils";
 import SelectSearchMethod from "./SelectSearchMethod/SelectSearchMethod";
-import BarcodeImage from "./BarcodeImage/BarcodeImage";
-import BarcodeNumber from "./BarcodeNumber/BarcodeNumber";
-import NutritionalData from "./NutritionalData/NutritionalData";
-import FoodName from "./FoodName/FoodName";
+import SearchBarcodeImage from "./SearchBarcodeImage/SearchBarcodeImage";
+import SearchBarcodeNumber from "./SearchBarcodeNumber/SearchBarcodeNumber";
+import SearchFoodName from "./SearchFoodName/SearchFoodName";
+import FoodData from "./FoodData/FoodData";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 // ------------------------------------ CONSTANTS ------------------------------------
 const {
   SELECT_SEARCH_METHOD,
-  BARCODE_IMAGE,
-  BARCODE_NUMBER,
-  FOOD_NAME,
-  NUTRITIONAL_DATA,
+  SEARCH_BARCODE_IMAGE,
+  SEARCH_BARCODE_NUMBER,
+  SEARCH_FOOD_NAME,
+  FOOD_DATA,
 } = SEARCH_FOOD_PAGES;
 
 // ------------------------------------- CONTEXTS -------------------------------------
@@ -57,33 +57,49 @@ const SearchFood = () => {
     return poppedPage;
   };
 
+  useEffect(() => console.log(pageStack.items), [pageStack]);
   // ------------------------------------- RENDER -------------------------------------
   if (!user.isLoggedIn) return <Navigate to="/" />;
+
 
   return (
     <SetCurrentPageContext.Provider value={setCurrentPage}>
       <AddPageContext.Provider value={addPage}>
         <RemovePageContext.Provider value={removePage}>
           {(() => {
-            const currentPage = getCurrentPage(pageStack);
-            const { name, file, food, foodName, barcodeNumber } = currentPage;
+            const {
+              name,
+              barcodeImageFile,
+              foodData,
+              foodName,
+              barcodeNumber,
+            } = getCurrentPage(pageStack);
 
             switch (name) {
               case SELECT_SEARCH_METHOD:
                 return <SelectSearchMethod />;
 
-              case BARCODE_IMAGE:
-                return <BarcodeImage initialFile={file} />;
-
-              case BARCODE_NUMBER:
-                return <BarcodeNumber initialBarcodeNumber={barcodeNumber} />;
-
-              case FOOD_NAME:
-                return <FoodName initialFoodName={foodName} />;
-
-              case NUTRITIONAL_DATA:
+              case SEARCH_BARCODE_IMAGE:
                 return (
-                  <NutritionalData barcodeNumber={barcodeNumber} food={food} />
+                  <SearchBarcodeImage
+                    initialBarcodeImageFile={barcodeImageFile}
+                  />
+                );
+
+              case SEARCH_BARCODE_NUMBER:
+                return (
+                  <SearchBarcodeNumber initialBarcodeNumber={barcodeNumber} />
+                );
+
+              case SEARCH_FOOD_NAME:
+                return <SearchFoodName initialFoodName={foodName} />;
+
+              case FOOD_DATA:
+                return (
+                  <FoodData
+                    initialBarcodeNumber={barcodeNumber}
+                    initialFoodData={foodData}
+                  />
                 );
 
               default:

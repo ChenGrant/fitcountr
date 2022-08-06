@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import ErrorIcon from "@mui/icons-material/Error";
 import { useTheme } from "@emotion/react";
 import { fetchFoodFromBarcodeNumber } from "../../../utils";
@@ -17,6 +17,7 @@ import {
   getCleanFoodData,
 } from "../../../utils";
 import BackArrow from "../../../components/ui/BackArrow";
+import useFetch from "../../../hooks/useFetch";
 
 // ------------------------------------ CONSTANTS ------------------------------------
 const NUTRIENT_DECIMAL_PLACES = 2;
@@ -28,43 +29,21 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
   const { phone } = useScreenSize();
   const theme = useTheme();
   const removePage = useContext(RemovePageContext);
-  const [fetchingFoodData, setFetchingFoodData] = useState(true);
-  const [foodData, setFoodData] = useState();
+  const foodData = useFetch(
+    initialBarcodeNumber
+      ? async () => await fetchFoodFromBarcodeNumber(initialBarcodeNumber)
+      : () => getCleanFoodData(initialFoodData)
+  );
+  const pageIsLoading = !foodData.hasFetched
 
-  // ------------------------------------ USE EFFECT ----------------------------------
-  // set fetching to false when foodData is no longer undefined
-  useEffect(() => {
-    foodData !== undefined && setFetchingFoodData(false);
-  }, [foodData]);
-
-  // if the initialBarcodeNumber prop is not undefined, fetch the foodData for that 
-  // barcode number. 
-  useEffect(() => {
-    if (!initialBarcodeNumber) return;
-
-    (async () => {
-      const fetchedFoodData = await fetchFoodFromBarcodeNumber(
-        initialBarcodeNumber
-      );
-      setFoodData(fetchedFoodData);
-    })();
-  }, [initialBarcodeNumber]);
-
-  // if the initialFoodData prop is not undefined, set the foodData state variable 
-  // with the value of initialFoodData
-  useEffect(() => {
-    if (!initialFoodData) return;
-    setFoodData(getCleanFoodData(initialFoodData));
-  }, [initialFoodData]);
-
-  // -------------------------------------- RENDER ------------------------------------
-  if (fetchingFoodData) return <LoadingCircle />;
+  // // -------------------------------------- RENDER ------------------------------------
+  if (pageIsLoading) return <LoadingCircle />;
 
   return (
     <>
       <BackArrow />
       <Box sx={{ width: "100%", display: "grid", placeItems: "center" }}>
-        {!foodData.error ? (
+        {foodData.data ? (
           <CustomCard
             sx={
               phone
@@ -73,15 +52,15 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
             }
           >
             <Typography variant="h4" gutterBottom>
-              <b>{foodData.name}</b>
+              <b>{foodData.data.name}</b>
             </Typography>
             <Typography gutterBottom>
               <b>
-                Serving Size: {foodData.servingSize.value}
-                {foodData.servingSize.unit}
+                Serving Size: {foodData.data.servingSize.value}
+                {foodData.data.servingSize.unit}
               </b>
             </Typography>
-            {sortByNutrient(Object.entries(foodData.nutrients)).map(
+            {sortByNutrient(Object.entries(foodData.data.nutrients)).map(
               ([nutrientName, measurement]) => {
                 const { value, unit } = measurement;
                 return (

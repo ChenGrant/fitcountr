@@ -57,7 +57,7 @@ const SearchFood = () => {
     return poppedPage;
   };
 
-  useEffect(() => console.log(pageStack.items), [pageStack]);
+  // useEffect(() => console.log(pageStack.items), [pageStack]);
   // ------------------------------------- RENDER -------------------------------------
   if (!user.isLoggedIn) return <Navigate to="/" />;
 

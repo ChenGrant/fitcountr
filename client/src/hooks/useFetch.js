@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 
 const ACTIONS = {
   START_FETCH_REQUEST: "START_FETCH_REQUEST",
@@ -41,7 +41,10 @@ const setFetchFailure = (fetchedData) => ({
   payload: fetchedData,
 });
 
-const useFetch = (fetchFunction) => {
+const useFetch = (initialFetchFunction) => {
+  const [fetchFunction, setFetchFunction] = useState(
+    () => initialFetchFunction
+  );
   const [data, dispatch] = useReducer(reducer, {
     isFetching: false,
     hasFetched: false,
@@ -67,7 +70,7 @@ const useFetch = (fetchFunction) => {
     })();
   }, [data.isFetching, data.hasFetched, fetchFunction]);
 
-  return data;
+  return [data, setFetchFunction];
 };
 
 export default useFetch;

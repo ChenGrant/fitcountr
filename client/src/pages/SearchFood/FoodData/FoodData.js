@@ -29,12 +29,12 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
   const { phone } = useScreenSize();
   const theme = useTheme();
   const removePage = useContext(RemovePageContext);
-  const foodData = useFetch(
+  const [foodData] = useFetch(
     initialBarcodeNumber
       ? async () => await fetchFoodFromBarcodeNumber(initialBarcodeNumber)
       : () => getCleanFoodData(initialFoodData)
   );
-  const pageIsLoading = !foodData.hasFetched
+  const pageIsLoading = !foodData.hasFetched;
 
   // // -------------------------------------- RENDER ------------------------------------
   if (pageIsLoading) return <LoadingCircle />;

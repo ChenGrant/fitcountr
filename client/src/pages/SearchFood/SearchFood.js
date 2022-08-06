@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SEARCH_FOOD_PAGES, Stack } from "../../utils";
 import SelectSearchMethod from "./SelectSearchMethod/SelectSearchMethod";
 import SearchBarcodeImage from "./SearchBarcodeImage/SearchBarcodeImage";
@@ -57,7 +57,9 @@ const SearchFood = () => {
     return poppedPage;
   };
 
-  // useEffect(() => console.log(pageStack.items), [pageStack]);
+  useEffect(() => {
+    //console.log(pageStack.items);
+  }, [pageStack]);
   // ------------------------------------- RENDER -------------------------------------
   if (!user.isLoggedIn) return <Navigate to="/" />;
 

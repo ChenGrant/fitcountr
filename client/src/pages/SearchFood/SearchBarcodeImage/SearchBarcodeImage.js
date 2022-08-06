@@ -37,6 +37,28 @@ const fileReducer = (state, action) => {
   }
 };
 
+const BARCODE_NUMBER_ACTIONS = {
+  START_SCANNING: "START_SCANNING",
+  END_SCANNING: "END_SCANNING",
+  SET_NUMBER: "SET_NUMBER",
+  SET_ERROR: "SET_ERROR",
+};
+
+const barcodeNumberReducer = (state, action) => {
+  switch (action.type) {
+    case BARCODE_NUMBER_ACTIONS.START_SCANNING:
+      return { ...state, isScanning: true };
+    case BARCODE_NUMBER_ACTIONS.END_SCANNING:
+      return { ...state, isScanning: false };
+    case BARCODE_NUMBER_ACTIONS.SET_NUMBER:
+      return { ...state, number: action.payload, error: false };
+    case BARCODE_NUMBER_ACTIONS.SET_ERROR:
+      return { ...state, error: true };
+    default:
+      return state;
+  }
+};
+
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
@@ -44,46 +66,65 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
   const theme = useTheme();
   const { desktop } = useScreenSize();
   const setCurrentPage = useContext(SetCurrentPageContext);
-  const [file, dispatch] = useReducer(fileReducer, {
+  const [file, fileDispatch] = useReducer(fileReducer, {
     isInDragZone: false,
     data: initialBarcodeImageFile ?? null,
     error: false,
   });
-  const [barcodeNumber, setBarcodeNumber] = useState();
-  const [scanningBarcode, setScanningBarcode] = useState(false);
+  const [barcodeNumber, barcodeNumberDispatch] = useReducer(
+    barcodeNumberReducer,
+    {
+      isScanning: false,
+      number: null,
+      error: false,
+    }
+  );
   const [barcodeConfirmPopupIsOpen, setBarcodeConfirmPopupIsOpen] =
     useState(false);
   const [barcodeErrorPopupIsOpen, setBarcodeErrorPopupIsOpen] = useState(false);
 
   // ----------------------------------- FUNCTIONS -----------------------------------
   const handleFileDrop = (acceptedFiles) => {
-    dispatch({ type: FILE_ACTIONS.EXIT_DRAG_ZONE });
-    dispatch({ type: FILE_ACTIONS.SET_ERROR, payload: false });
+    fileDispatch({ type: FILE_ACTIONS.EXIT_DRAG_ZONE });
+    fileDispatch({ type: FILE_ACTIONS.SET_ERROR, payload: false });
 
     if (acceptedFiles.length === 0) {
-      dispatch({ type: FILE_ACTIONS.SET_FILE_DATA, payload: null });
-      dispatch({ type: FILE_ACTIONS.SET_ERROR, payload: true });
+      fileDispatch({ type: FILE_ACTIONS.SET_FILE_DATA, payload: null });
+      fileDispatch({ type: FILE_ACTIONS.SET_ERROR, payload: true });
       return;
     }
 
-    dispatch({ type: FILE_ACTIONS.SET_FILE_DATA, payload: acceptedFiles[0] });
+    setCurrentPage({
+      name: SEARCH_FOOD_PAGES.SEARCH_BARCODE_IMAGE,
+      barcodeImageFile: acceptedFiles[0],
+    });
+
+    fileDispatch({
+      type: FILE_ACTIONS.SET_FILE_DATA,
+      payload: acceptedFiles[0],
+    });
   };
 
   const handleScan = async (file) => {
     const barcodeData = await scanBarcodeImage(file);
 
-    if (!barcodeData.Successful) return setBarcodeErrorPopupIsOpen(true);
+    if (!barcodeData.Successful) {
+      barcodeNumberDispatch({
+        type: BARCODE_NUMBER_ACTIONS.SET_ERROR,
+        payload: true,
+      });
+      setBarcodeErrorPopupIsOpen(true);
+      return;
+    }
 
-    setCurrentPage({
-      name: SEARCH_FOOD_PAGES.SEARCH_BARCODE_IMAGE,
-      barcodeImageFile: file,
-    });
     setBarcodeConfirmPopupIsOpen(true);
-    setBarcodeNumber(barcodeData.RawText);
+    barcodeNumberDispatch({
+      type: BARCODE_NUMBER_ACTIONS.SET_NUMBER,
+      payload: barcodeData.RawText,
+    });
   };
 
   // ------------------------------------- RENDER -------------------------------------
-  console.log(file)
   return (
     <>
       <BackArrow />
@@ -102,8 +143,12 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
         <Box width="100%" maxWidth="1200px" bgcolor>
           <Dropzone
             onDrop={handleFileDrop}
-            onDragEnter={() => dispatch({ type: FILE_ACTIONS.ENTER_DRAG_ZONE })}
-            onDragLeave={() => dispatch({ type: FILE_ACTIONS.EXIT_DRAG_ZONE })}
+            onDragEnter={() =>
+              fileDispatch({ type: FILE_ACTIONS.ENTER_DRAG_ZONE })
+            }
+            onDragLeave={() =>
+              fileDispatch({ type: FILE_ACTIONS.EXIT_DRAG_ZONE })
+            }
             maxFiles={1}
             accept={{ "image/png": [".png", ".jpg", ".jpeg"] }}
           >
@@ -169,7 +214,7 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
             )}
           </Dropzone>
         </Box>
-        {scanningBarcode ? (
+        {barcodeNumber.isScanning ? (
           <CircularProgress color="primary" thickness={4} size={50} />
         ) : (
           <CustomButton
@@ -180,9 +225,13 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
             }}
             variant="contained"
             onClick={async () => {
-              setScanningBarcode(true);
+              barcodeNumberDispatch({
+                type: BARCODE_NUMBER_ACTIONS.START_SCANNING,
+              });
               await handleScan(file.data);
-              setScanningBarcode(false);
+              barcodeNumberDispatch({
+                type: BARCODE_NUMBER_ACTIONS.END_SCANNING,
+              });
             }}
           >
             Scan
@@ -190,7 +239,7 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
         )}
       </Box>
       <SearchBarcodeImageConfirmPopup
-        barcodeNumber={barcodeNumber}
+        barcodeNumber={barcodeNumber.number}
         barcodeConfirmPopupIsOpen={barcodeConfirmPopupIsOpen}
         setBarcodeConfirmPopupIsOpen={setBarcodeConfirmPopupIsOpen}
       />

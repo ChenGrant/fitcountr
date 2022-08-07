@@ -33,6 +33,8 @@ export const sortByNutrient = (nutritionalData) =>
   });
 
 export const cleanFoodsFetchedFromBarcodeNumber = (rawFoodData) => {
+  if (rawFoodData.error) return rawFoodData;
+
   const OPEN_FOOD_FACTS_NUTRIENT_MAP = new Map(
     Object.entries({
       "energy-kcal": "calories",

@@ -1,12 +1,13 @@
 const {
   scanBarcodeImageAsync,
 } = require("../services/cloudmersive/cloudmersive");
-const axios = require("axios");
-const config = require("../config/config");
+const {
+  fetchFoodsFromQueryFoodDataCentral,
+} = require("../services/foodDataCentral/foodDataCentral");
+const {
+  fetchFoodFromBarcodeNumberOpenFoodFacts,
+} = require("../services/openFoodFacts/openFoodFact");
 const { UNITS } = require("../utils/foodUtils");
-
-// ------------------------------------ CONSTANTS ------------------------------------
-const { GRAM } = UNITS;
 
 // ************************************************************************************
 // ----------------------------------- CONTROLLERS ------------------------------------
@@ -16,16 +17,14 @@ const { GRAM } = UNITS;
 const getFoodFromBarcodeNumber = async (req, res) => {
   try {
     const { barcodeNumber } = req.params;
-    const fetchedFood = await axios.get(
-      `https://world.openfoodfacts.org/api/v0/product/${barcodeNumber}.json`
-    );
 
-    if (fetchedFood.data.status === 0)
-      throw new Error("No code or invalid code");
+    const fetchedFood = await fetchFoodFromBarcodeNumberOpenFoodFacts(
+      barcodeNumber
+    );
 
     return res.json({
       name: fetchedFood.data.product.product_name,
-      servingSize: { value: 100, unit: GRAM },
+      servingSize: { value: 100, unit: UNITS.GRAM },
       nutrients: fetchedFood.data.product.nutriments,
       barcodeNumber,
     });
@@ -54,21 +53,14 @@ const scanBarcodeImage = async (req, res) => {
 const getFoodsFromQuery = async (req, res) => {
   try {
     const { query, pageNumber, pageSize } = req.params;
-    
-    const USDA_API_URL =
-      "https://api.nal.usda.gov/fdc/v1/foods/search?" +
-      Object.entries({
-        api_key: config.FOOD_DATA_CENTRAL_API_KEY,
-        query,
-        pageNumber,
-        dataType: ["Survey (FNDDS)"],
-        pageSize,
-        requireAllWords: true,
-      })
-        .map(([key, value]) => `${key}=${value}`)
-        .join("&");
 
-    const fetchedFoods = await axios.get(USDA_API_URL);
+    const fetchedFoods = await fetchFoodsFromQueryFoodDataCentral({
+      query,
+      pageNumber,
+      dataType: ["Survey (FNDDS)"],
+      pageSize,
+      requireAllWords: true,
+    });
 
     return res.json(fetchedFoods.data);
   } catch (err) {

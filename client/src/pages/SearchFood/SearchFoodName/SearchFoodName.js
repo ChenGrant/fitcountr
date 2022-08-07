@@ -18,6 +18,7 @@ import BackArrow from "../../../components/ui/BackArrow";
 
 const FOOD_DATA_ACTIONS = {
   SET_IS_FETCHING_NEW_FOOD: "SET_IS_FETCHING_NEW_FOOD",
+  SET_IS_FETCHING_NEW_LIST_PAGE: "SET_IS_FETCHING_NEW_LIST_PAGE",
   SET_NAME: "SET_NAME",
   SET_LIST: "SET_LIST",
   SET_LIST_PAGE_NUMBER: "SET_LIST_PAGE_NUMBER",
@@ -31,6 +32,8 @@ const foodDataReducer = (state, action) => {
       return { ...state, isFetchingNewFood: action.payload };
     case FOOD_DATA_ACTIONS.SET_LIST:
       return { ...state, list: action.payload };
+    case FOOD_DATA_ACTIONS.SET_IS_FETCHING_NEW_LIST_PAGE:
+      return { ...state, isFetchingNewListPage: action.payload };
     case FOOD_DATA_ACTIONS.SET_LIST_PAGE_NUMBER:
       return { ...state, listPageNumber: action.payload };
     default:
@@ -44,6 +47,7 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
   const [foodNameInputField, setFoodNameInputField] = useState(initialFoodName);
   const [foodData, foodDataDispatch] = useReducer(foodDataReducer, {
     isFetchingNewFood: false,
+    isFetchingNewListPage: false,
     name: initialFoodName ?? null,
     list: null,
     listPageNumber: 1,
@@ -126,8 +130,7 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
               value={foodNameInputField}
               onChange={(e) => setFoodNameInputField(e.target.value)}
               onKeyDown={(event) =>
-                event.key === "Enter" &&
-                searchFoodsFromName(foodNameInputField)
+                event.key === "Enter" && searchFoodsFromName(foodNameInputField)
               }
               variant="outlined"
               placeholder="Ex: chicken breast, raw"

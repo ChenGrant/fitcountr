@@ -1,7 +1,7 @@
 import { useTheme } from "@emotion/react";
 import { LinearProgress, Pagination, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import CustomCard from "../../../components/ui/CustomCard";
 import { v4 as uuidv4 } from "uuid";
 import useScreenSize from "../../../hooks/useScreenSize";
@@ -17,22 +17,27 @@ const SearchFoodNameListTable = ({
   const { phone } = useScreenSize();
   const theme = useTheme();
   const addPage = useContext(AddPageContext);
-  const [isFetchingPageData, setIsFetchingPageData] = useState(true);
 
   useEffect(() => {
     if (
       foodData.list.foodSearchCriteria.query === foodData.name &&
       foodData.list.currentPage === foodData.listPageNumber
     )
-      return setIsFetchingPageData(false);
+      return foodDataDispatch({
+        type: FOOD_DATA_ACTIONS.SET_IS_FETCHING_NEW_LIST_PAGE,
+        payload: false,
+      });
 
-    if (isFetchingPageData || foodData.isFetchingNewFood) return;
+    if (foodData.isFetchingNewListPage || foodData.isFetchingNewFood) return;
 
     // handleNewFoodListPage is executed when the page number changes
     const fetchFoodListPageData = async () => {
       if (foodData.name.trim() === "") return setFoodNameErrorPopupIsOpen(true);
 
-      setIsFetchingPageData(true);
+      foodDataDispatch({
+        type: FOOD_DATA_ACTIONS.SET_IS_FETCHING_NEW_LIST_PAGE,
+        payload: true,
+      });
 
       const fetchedFoodData = await fetchFoodsFromQuery(
         foodData.name,
@@ -45,10 +50,14 @@ const SearchFoodNameListTable = ({
         type: FOOD_DATA_ACTIONS.SET_LIST,
         payload: fetchedFoodData,
       });
-      setIsFetchingPageData(false);
+      foodDataDispatch({
+        type: FOOD_DATA_ACTIONS.SET_IS_FETCHING_NEW_LIST_PAGE,
+        payload: false,
+      });
     };
     fetchFoodListPageData();
   }, [
+    FOOD_DATA_ACTIONS.SET_IS_FETCHING_NEW_LIST_PAGE,
     FOOD_DATA_ACTIONS.SET_LIST,
     foodData.isFetchingNewFood,
     foodData.list.currentPage,
@@ -56,7 +65,7 @@ const SearchFoodNameListTable = ({
     foodData.listPageNumber,
     foodData.name,
     foodDataDispatch,
-    isFetchingPageData,
+    foodData.isFetchingNewListPage,
     setFoodNameErrorPopupIsOpen,
   ]);
 
@@ -78,15 +87,17 @@ const SearchFoodNameListTable = ({
           <Box
             minHeight="410px"
             display={
-              isFetchingPageData && !foodData.isFetchingNewFood && "grid"
+              foodData.isFetchingNewListPage &&
+              !foodData.isFetchingNewFood &&
+              "grid"
             }
             sx={
-              isFetchingPageData && !foodData.isFetchingNewFood
+              foodData.isFetchingNewListPage && !foodData.isFetchingNewFood
                 ? { placeItems: "center" }
                 : {}
             }
           >
-            {isFetchingPageData && !foodData.isFetchingNewFood ? (
+            {foodData.isFetchingNewListPage && !foodData.isFetchingNewFood ? (
               <LinearProgress sx={{ width: "75%", maxWidth: "400px" }} />
             ) : (
               foodData.list.foods.map((food) => (
@@ -115,7 +126,7 @@ const SearchFoodNameListTable = ({
       </Box>
       <Box display="grid" sx={{ placeItems: "center" }}>
         <Pagination
-          disabled={isFetchingPageData}
+          disabled={foodData.isFetchingNewListPage}
           count={foodData.list.totalPages}
           page={foodData.listPageNumber}
           onChange={(e, pageNumber) =>

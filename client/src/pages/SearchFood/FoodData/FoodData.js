@@ -39,7 +39,6 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
   // // -------------------------------------- RENDER ------------------------------------
   if (pageIsLoading) return <LoadingCircle />;
 
-  console.log(foodData)
   return (
     <>
       <BackArrow />

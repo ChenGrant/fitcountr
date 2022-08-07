@@ -58,10 +58,7 @@ const useFetch = (initialFetchFunction) => {
     (async () => {
       dispatch(startFetchRequest());
 
-      const fetchedData =
-        fetchFunction.constructor.name === "AsyncFunction"
-          ? await fetchFunction()
-          : fetchFunction();
+      const fetchedData = await fetchFunction();
 
       if (fetchedData.error)
         return dispatch(setFetchFailure(fetchedData.error));

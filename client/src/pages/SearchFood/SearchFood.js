@@ -17,10 +17,6 @@ const {
   FOOD_DATA,
 } = SEARCH_FOOD_PAGES;
 
-// ------------------------------------- CONTEXTS -------------------------------------
-
-const getCurrentSearchFoodPage = (searchFoodPage) => searchFoodPage.peek();
-
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
@@ -31,7 +27,7 @@ const SearchFood = () => {
   if (!user.isLoggedIn) return <Navigate to="/" />;
 
   const { name, barcodeImageFile, foodData, foodName, barcodeNumber } =
-    getCurrentSearchFoodPage(searchFoodPage);
+    searchFoodPage.peek();
 
   switch (name) {
     case SELECT_SEARCH_METHOD:

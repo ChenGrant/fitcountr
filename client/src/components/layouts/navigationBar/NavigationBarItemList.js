@@ -5,9 +5,12 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import SearchIcon from "@mui/icons-material/Search";
 import { getAuth, signOut } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { resetSearchFoodPages } from "../../../redux";
 
 const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const auth = getAuth();
 
   // ------------------------------------- RENDER -------------------------------------
@@ -43,6 +46,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
       <NavigationBarItem
         onClick={() => {
           setMenuIsOpen && setMenuIsOpen(false);
+          dispatch(resetSearchFoodPages());
           navigate("/dashboard/searchFood");
         }}
         isOpen={isOpen}

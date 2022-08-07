@@ -6,8 +6,11 @@ import {
   RESET_SEARCH_FOOD_PAGES,
 } from "./searchFoodPageTypes";
 
-const initialState = new Stack();
-initialState.push({ name: SEARCH_FOOD_PAGES.SELECT_SEARCH_METHOD });
+const getInitialState = () => {
+  const initialState = new Stack();
+  initialState.push({ name: SEARCH_FOOD_PAGES.SELECT_SEARCH_METHOD });
+  return initialState;
+};
 
 // ------------------------------------ FUNCTIONS ------------------------------------
 const copyState = (state) =>
@@ -26,7 +29,7 @@ const removePage = (state) => {
 };
 
 // ------------------------------------- REDUCER -------------------------------------
-const searchFoodPageReducer = (state = initialState, action) => {
+const searchFoodPageReducer = (state = getInitialState(), action) => {
   switch (action.type) {
     case SET_CURRENT_SEARCH_FOOD_PAGE:
       return addPage(removePage(state), action.payload);
@@ -38,7 +41,7 @@ const searchFoodPageReducer = (state = initialState, action) => {
       return removePage(state);
 
     case RESET_SEARCH_FOOD_PAGES:
-      return copyState(initialState);
+      return getInitialState();
 
     default:
       return state;

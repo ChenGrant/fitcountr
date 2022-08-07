@@ -50,10 +50,7 @@ export const cleanFoodsFetchedFromBarcodeNumber = (rawFoodData) => {
     if (!mappedNutrientName) return;
     nutrients[mappedNutrientName] = {
       value: rawFoodData.nutrients[`${nutrientName}_100g`],
-      unit:
-        nutrientName !== "energy"
-          ? rawFoodData.nutrients[`${nutrientName}_unit`].toLowerCase()
-          : null,
+      unit: rawFoodData.nutrients[`${nutrientName}_unit`].toLowerCase(),
     };
   });
 
@@ -77,10 +74,7 @@ export const cleanFoodsFetchedFromQuery = (rawFoodData) => {
       .filter(({ nutrientName }) => USDA_NUTRIENT_MAP.get(nutrientName))
       .map(({ nutrientName, value, unitName }) => [
         USDA_NUTRIENT_MAP.get(nutrientName),
-        {
-          value,
-          unit: nutrientName !== "Energy" ? unitName.toLowerCase() : null,
-        },
+        { value, unit: unitName.toLowerCase() },
       ])
   );
 

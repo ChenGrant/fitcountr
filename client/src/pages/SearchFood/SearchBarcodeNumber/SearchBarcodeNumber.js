@@ -5,33 +5,39 @@ import {
   OutlinedInput,
   Typography,
 } from "@mui/material";
-import React, { useContext, useState } from "react";
-import { AddPageContext, SetCurrentPageContext } from "../SearchFood";
+import React, { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import CustomButton from "../../../components/ui/CustomButton";
 import { SEARCH_FOOD_PAGES } from "../../../utils";
 import useScreenSize from "../../../hooks/useScreenSize";
 import BackArrow from "../../../components/ui/BackArrow";
+import { useDispatch } from "react-redux";
+import { addSearchFoodPage, setCurrentSearchFoodPage } from "../../../redux";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const SearchBarcodeNumber = ({ initialBarcodeNumber = "" }) => {
   const { desktop } = useScreenSize();
-  const addPage = useContext(AddPageContext);
-  const setCurrentPage = useContext(SetCurrentPageContext);
+  const dispatch = useDispatch();
   const [barcodeNumber, setBarcodeNumber] = useState(initialBarcodeNumber);
 
   const handleSearchBarcodeNumber = (barcodeNumber) => {
     if (barcodeNumber === "") return;
-    setCurrentPage({
-      name: SEARCH_FOOD_PAGES.SEARCH_BARCODE_NUMBER,
-      barcodeNumber,
-    });
-    addPage({
-      name: SEARCH_FOOD_PAGES.FOOD_DATA,
-      barcodeNumber,
-    });
+
+    dispatch(
+      setCurrentSearchFoodPage({
+        name: SEARCH_FOOD_PAGES.SEARCH_BARCODE_NUMBER,
+        barcodeNumber,
+      })
+    );
+
+    dispatch(
+      addSearchFoodPage({
+        name: SEARCH_FOOD_PAGES.FOOD_DATA,
+        barcodeNumber,
+      })
+    );
   };
 
   // ------------------------------------- RENDER -------------------------------------

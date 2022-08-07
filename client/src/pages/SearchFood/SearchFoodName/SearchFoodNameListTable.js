@@ -1,12 +1,13 @@
 import { useTheme } from "@emotion/react";
 import { LinearProgress, Pagination, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import CustomCard from "../../../components/ui/CustomCard";
 import { v4 as uuidv4 } from "uuid";
 import useScreenSize from "../../../hooks/useScreenSize";
-import { AddPageContext } from "../SearchFood";
 import { SEARCH_FOOD_PAGES, fetchFoodsFromQuery } from "../../../utils";
+import { useDispatch } from "react-redux";
+import { addSearchFoodPage } from "../../../redux";
 
 const SearchFoodNameListTable = ({
   setFoodNameErrorPopupIsOpen,
@@ -16,7 +17,7 @@ const SearchFoodNameListTable = ({
 }) => {
   const { phone } = useScreenSize();
   const theme = useTheme();
-  const addPage = useContext(AddPageContext);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (
@@ -109,12 +110,14 @@ const SearchFoodNameListTable = ({
                       cursor: "pointer",
                       "&:hover": { bgcolor: "#ededed" },
                     }}
-                    onClick={() => {
-                      addPage({
-                        name: SEARCH_FOOD_PAGES.FOOD_DATA,
-                        foodData: food,
-                      });
-                    }}
+                    onClick={() =>
+                      dispatch(
+                        addSearchFoodPage({
+                          name: SEARCH_FOOD_PAGES.FOOD_DATA,
+                          foodData: food,
+                        })
+                      )
+                    }
                   >
                     {food.description}
                   </Typography>

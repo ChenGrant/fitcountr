@@ -1,12 +1,13 @@
 import { LinearProgress, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useContext } from "react";
+import React from "react";
 import CustomCard from "../../../components/ui/CustomCard";
 import { v4 as uuidv4 } from "uuid";
-import { AddPageContext } from "../SearchFood";
 import { SEARCH_FOOD_PAGES } from "../../../utils";
 import useAsset from "../../../hooks/useAsset";
 import useScreenSize from "../../../hooks/useScreenSize";
+import { useDispatch } from "react-redux";
+import { addSearchFoodPage } from "../../../redux";
 
 // ------------------------------------ CONSTANTS ------------------------------------
 const SEARCH_METHODS = [
@@ -34,7 +35,7 @@ const SEARCH_METHODS = [
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const SelectSearchMethod = () => {
-  const addPage = useContext(AddPageContext);
+  const dispatch = useDispatch();
   const { desktop } = useScreenSize();
   const [assets, assetsDispatchers, loadingAssets] = useAsset(
     Object.fromEntries(
@@ -91,7 +92,9 @@ const SelectSearchMethod = () => {
                 <CustomCard
                   key={uuidv4()}
                   sx={{ cursor: "pointer" }}
-                  onClick={() => pageName && addPage({ name: pageName })}
+                  onClick={() =>
+                    pageName && dispatch(addSearchFoodPage({ name: pageName }))
+                  }
                 >
                   <Box
                     flex={1}

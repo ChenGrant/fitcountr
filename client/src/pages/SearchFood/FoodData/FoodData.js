@@ -1,12 +1,11 @@
 import { Typography } from "@mui/material";
-import React, { useContext } from "react";
+import React from "react";
 import ErrorIcon from "@mui/icons-material/Error";
 import { useTheme } from "@emotion/react";
 import { fetchFoodFromBarcodeNumber } from "../../../utils";
 import CustomButton from "../../../components/ui/CustomButton";
 import LoadingCircle from "../../../components/ui/LoadingCircle";
 import { Box } from "@mui/system";
-import { RemovePageContext } from "../SearchFood";
 import CustomCard from "../../../components/ui/CustomCard";
 import useScreenSize from "../../../hooks/useScreenSize";
 import { v4 as uuidv4 } from "uuid";
@@ -19,14 +18,16 @@ import {
 } from "../../../utils";
 import BackArrow from "../../../components/ui/BackArrow";
 import useFetch from "../../../hooks/useFetch";
+import { useDispatch } from "react-redux";
+import { removeSearchFoodPage } from "../../../redux";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
   const { phone } = useScreenSize();
+  const dispatch = useDispatch();
   const theme = useTheme();
-  const removePage = useContext(RemovePageContext);
   const [foodData] = useFetch(
     initialBarcodeNumber
       ? async () =>
@@ -113,7 +114,7 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
                 variant="contained"
                 fullWidth
                 sx={{ mt: 5 }}
-                onClick={removePage}
+                onClick={() => dispatch(removeSearchFoodPage())}
               >
                 Back
               </CustomButton>

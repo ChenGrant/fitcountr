@@ -1,35 +1,40 @@
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useContext } from "react";
+import React from "react";
 import { SEARCH_FOOD_PAGES } from "../../../utils";
 import CustomButton from "../../../components/ui/CustomButton";
 import CustomDialog from "../../../components/ui/CustomDialog";
-import { AddPageContext } from "../SearchFood";
 import { v4 as uuidv4 } from "uuid";
+import { useDispatch } from "react-redux";
+import { addSearchFoodPage } from "../../../redux";
 
 const SearchBarcodeImageConfirmPopup = ({
   barcodeNumber,
   barcodeConfirmPopupIsOpen,
   setBarcodeConfirmPopupIsOpen,
 }) => {
-  const addPage = useContext(AddPageContext);
+  const dispatch = useDispatch();
 
   const POPUP_OPTIONS = [
     {
       label: "Confirm",
       onClickHandler: () =>
-        addPage({
-          name: SEARCH_FOOD_PAGES.FOOD_DATA,
-          barcodeNumber,
-        }),
+        dispatch(
+          addSearchFoodPage({
+            name: SEARCH_FOOD_PAGES.FOOD_DATA,
+            barcodeNumber,
+          })
+        ),
     },
     {
       label: "Edit Barcode Number",
       onClickHandler: () =>
-        addPage({
-          name: SEARCH_FOOD_PAGES.SEARCH_BARCODE_NUMBER,
-          barcodeNumber,
-        }),
+        dispatch(
+          addSearchFoodPage({
+            name: SEARCH_FOOD_PAGES.SEARCH_BARCODE_NUMBER,
+            barcodeNumber,
+          })
+        ),
     },
     {
       label: "Choose Another Image",

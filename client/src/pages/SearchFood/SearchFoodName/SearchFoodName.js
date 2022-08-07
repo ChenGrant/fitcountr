@@ -1,5 +1,4 @@
-import React, { useContext, useReducer, useState } from "react";
-import { SetCurrentPageContext } from "../SearchFood";
+import React, { useReducer, useState } from "react";
 import {
   Box,
   CircularProgress,
@@ -15,6 +14,8 @@ import useScreenSize from "../../../hooks/useScreenSize";
 import SearchFoodNameListTable from "./SearchFoodNameListTable";
 import FoodNameErrorPopup from "./SearchFoodNameErrorPopup";
 import BackArrow from "../../../components/ui/BackArrow";
+import { useDispatch } from "react-redux";
+import { setCurrentSearchFoodPage } from "../../../redux";
 
 const FOOD_DATA_ACTIONS = {
   SET_IS_FETCHING_NEW_FOOD: "SET_IS_FETCHING_NEW_FOOD",
@@ -43,7 +44,7 @@ const foodDataReducer = (state, action) => {
 
 const SearchFoodName = ({ initialFoodName = "" }) => {
   const { desktop, tablet } = useScreenSize();
-  const setCurrentPage = useContext(SetCurrentPageContext);
+  const dispatch = useDispatch();
   const [foodNameInputField, setFoodNameInputField] = useState(initialFoodName);
   const [foodData, foodDataDispatch] = useReducer(foodDataReducer, {
     isFetchingNewFood: false,
@@ -72,10 +73,12 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
         return setFoodNameErrorPopupIsOpen(true);
       const fetchedFoodList = await fetchFoodsFromQuery(foodNameInputField);
       if (fetchedFoodList.error) return setFoodNameErrorPopupIsOpen(true);
-      setCurrentPage({
-        name: SEARCH_FOOD_PAGES.SEARCH_FOOD_NAME,
-        foodName: foodNameInputField,
-      });
+      dispatch(
+        setCurrentSearchFoodPage({
+          name: SEARCH_FOOD_PAGES.SEARCH_FOOD_NAME,
+          foodName: foodNameInputField,
+        })
+      );
       foodDataDispatch({
         type: FOOD_DATA_ACTIONS.SET_LIST,
         payload: fetchedFoodList,

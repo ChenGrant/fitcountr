@@ -1,15 +1,19 @@
 import { Box } from "@mui/system";
-import React, { useContext } from "react";
+import React from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { IconButton } from "@mui/material";
-import { RemovePageContext } from "../../pages/SearchFood/SearchFood";
+import { useDispatch } from "react-redux";
+import { removeSearchFoodPage } from "../../redux";
 
 const BackArrow = () => {
-  const removePage = useContext(RemovePageContext);
+  const dispatch = useDispatch();
 
   return (
     <Box m={5}>
-      <IconButton color="primary" onClick={removePage}>
+      <IconButton
+        color="primary"
+        onClick={() => dispatch(removeSearchFoodPage())}
+      >
         <ArrowBackIcon />
       </IconButton>
     </Box>

@@ -1,4 +1,4 @@
-import React, { useContext, useReducer, useState } from "react";
+import React, { useReducer, useState } from "react";
 import CustomButton from "../../../components/ui/CustomButton";
 import Dropzone from "react-dropzone";
 import { Box } from "@mui/system";
@@ -8,11 +8,12 @@ import ImageIcon from "@mui/icons-material/Image";
 import ErrorIcon from "@mui/icons-material/Error";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import SearchBarcodeImageConfirmPopup from "./SearchBarcodeImageConfirmPopup";
-import { SetCurrentPageContext } from "../SearchFood";
 import SearchBarcodeImageErrorPopup from "./SearchBarcodeImageErrorPopup";
 import { SEARCH_FOOD_PAGES, scanBarcodeImage } from "../../../utils";
 import useScreenSize from "../../../hooks/useScreenSize";
 import BackArrow from "../../../components/ui/BackArrow";
+import { useDispatch } from "react-redux";
+import { setCurrentSearchFoodPage } from "../../../redux";
 
 // -------------------------------- CONSTANTS --------------------------------
 const FILE_ACTIONS = {
@@ -65,7 +66,7 @@ const barcodeNumberReducer = (state, action) => {
 const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
   const theme = useTheme();
   const { desktop } = useScreenSize();
-  const setCurrentPage = useContext(SetCurrentPageContext);
+  const dispatch = useDispatch();
   const [file, fileDispatch] = useReducer(fileReducer, {
     isInDragZone: false,
     data: initialBarcodeImageFile ?? null,
@@ -94,10 +95,12 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
       return;
     }
 
-    setCurrentPage({
-      name: SEARCH_FOOD_PAGES.SEARCH_BARCODE_IMAGE,
-      barcodeImageFile: acceptedFiles[0],
-    });
+    dispatch(
+      setCurrentSearchFoodPage({
+        name: SEARCH_FOOD_PAGES.SEARCH_BARCODE_IMAGE,
+        barcodeImageFile: acceptedFiles[0],
+      })
+    );
 
     fileDispatch({
       type: FILE_ACTIONS.SET_FILE_DATA,

@@ -7,7 +7,7 @@ CloudmersiveBarcodeapiClient.ApiClient.instance.authentications[
 
 const apiInstance = new CloudmersiveBarcodeapiClient.BarcodeScanApi();
 
-const scanBarcodeImageAsync = (imageFileBuffer) =>
+const scanBarcodeImageCloudmersive = (imageFileBuffer) =>
   new Promise((res, rej) => {
     apiInstance.barcodeScanImage(imageFileBuffer, (error, data) => {
       if (error) {
@@ -19,5 +19,5 @@ const scanBarcodeImageAsync = (imageFileBuffer) =>
   });
 
 module.exports = {
-  scanBarcodeImageAsync,
+  scanBarcodeImageCloudmersive,
 };

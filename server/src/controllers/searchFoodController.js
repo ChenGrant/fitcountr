@@ -1,5 +1,5 @@
 const {
-  scanBarcodeImageAsync,
+  scanBarcodeImageCloudmersive,
 } = require("../services/cloudmersive/cloudmersive");
 const {
   fetchFoodsFromQueryFoodDataCentral,
@@ -40,7 +40,7 @@ const getFoodFromBarcodeNumber = async (req, res) => {
 const scanBarcodeImage = async (req, res) => {
   try {
     const { barcodeImageFile } = req.files;
-    return res.json(await scanBarcodeImageAsync(barcodeImageFile.data));
+    return res.json(await scanBarcodeImageCloudmersive(barcodeImageFile.data));
   } catch (err) {
     console.log(err);
     return res

@@ -4,15 +4,24 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { IconButton } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { removeSearchFoodPage } from "../../redux";
+import useScreenSize from "../../hooks/useScreenSize";
 
 const BackArrow = () => {
   const dispatch = useDispatch();
+  const { desktop } = useScreenSize();
 
   return (
-    <Box m={5}>
+    <Box
+      height={desktop ? "100px" : "60px"}
+      display="flex"
+      alignItems="center"
+      mb={!desktop && 5}
+      px={desktop ? 5 : "5px"}
+    >
       <IconButton
         color="primary"
         onClick={() => dispatch(removeSearchFoodPage())}
+        size="large"
       >
         <ArrowBackIcon />
       </IconButton>

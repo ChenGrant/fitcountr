@@ -26,6 +26,7 @@ const SmallScreenNavigationBar = () => {
           sx={{ position: "fixed", margin: "0px 20px", right: "0px" }}
           onClick={() => setMenuIsOpen(true)}
           size="large"
+          color="primary"
         >
           <MenuIcon fontSize="inherit" color="primary" />
         </IconButton>

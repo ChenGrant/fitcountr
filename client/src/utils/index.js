@@ -27,14 +27,15 @@ export { numberWithCommas, capitalizeFirstCharacter } from "./stringUtils";
 
 export { sub, round } from "./numberUtils";
 
-export { Stack } from "./dataStructureUtils";
+export { Stack, NutrientPrioritySet } from "./dataStructureUtils";
 
 export { objectIsEmpty } from "./objectUtils";
 
 export {
   SEARCH_FOOD_PAGES,
   sortByNutrient,
-  getCleanFoodData,
+  cleanFoodsFetchedFromQuery,
+  cleanFoodsFetchedFromBarcodeNumber,
 } from "./foodUtils";
 
 export { theme } from "./themeUtils";

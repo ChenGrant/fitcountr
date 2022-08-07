@@ -23,28 +23,10 @@ const getFoodFromBarcodeNumber = async (req, res) => {
     if (fetchedFood.data.status === 0)
       throw new Error("No code or invalid code");
 
-    const nutrients = Object.fromEntries(
-      Object.entries(fetchedFood.data.product.nutriments)
-        .filter(
-          ([key, value]) =>
-            key.endsWith("_100g") && key !== "energy_100g" && value !== 0
-        )
-        .map(([key, value]) => {
-          switch (key) {
-            case "energy-kcal_100g":
-              return ["calories", value];
-            case "saturated-fat_100g":
-              return ["saturated fat", { value, unit: GRAM }];
-            default:
-              return [key.replace("_100g", ""), { value, unit: GRAM }];
-          }
-        })
-    );
-
     return res.json({
       name: fetchedFood.data.product.product_name,
       servingSize: { value: 100, unit: GRAM },
-      nutrients,
+      nutrients: fetchedFood.data.product.nutriments,
       barcodeNumber,
     });
   } catch (err) {

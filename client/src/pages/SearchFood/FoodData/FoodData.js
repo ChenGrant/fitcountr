@@ -14,13 +14,11 @@ import {
   capitalizeFirstCharacter,
   round,
   sortByNutrient,
-  getCleanFoodData,
+  cleanFoodsFetchedFromQuery,
+  cleanFoodsFetchedFromBarcodeNumber,
 } from "../../../utils";
 import BackArrow from "../../../components/ui/BackArrow";
 import useFetch from "../../../hooks/useFetch";
-
-// ------------------------------------ CONSTANTS ------------------------------------
-const NUTRIENT_DECIMAL_PLACES = 2;
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
@@ -31,13 +29,18 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
   const removePage = useContext(RemovePageContext);
   const [foodData] = useFetch(
     initialBarcodeNumber
-      ? async () => await fetchFoodFromBarcodeNumber(initialBarcodeNumber)
-      : () => getCleanFoodData(initialFoodData)
+      ? async () =>
+          cleanFoodsFetchedFromBarcodeNumber(
+            await fetchFoodFromBarcodeNumber(initialBarcodeNumber)
+          )
+      : () => cleanFoodsFetchedFromQuery(initialFoodData)
   );
   const pageIsLoading = !foodData.hasFetched;
 
   // // -------------------------------------- RENDER ------------------------------------
   if (pageIsLoading) return <LoadingCircle />;
+
+  console.log(JSON.stringify(foodData.data.nutrients))
 
   return (
     <>
@@ -77,9 +80,7 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
                     </Box>
                     <Box>
                       <Typography textAlign="right">
-                        {nutrientName === "calories"
-                          ? round(measurement, NUTRIENT_DECIMAL_PLACES)
-                          : `${round(value, NUTRIENT_DECIMAL_PLACES)} ${unit}`}
+                        {`${round(value, 2)} ${unit || ""}`}
                       </Typography>
                     </Box>
                   </Box>

@@ -34,3 +34,23 @@ export class Stack {
     this.items = [];
   }
 }
+
+// add append, removing of elements, keep track of length as well
+export class NutrientPrioritySet {
+  constructor(array) {
+    this.priority = Object.fromEntries(
+      array.map((item, index) => [item, index])
+    );
+    this.items = new Set(array);
+    this.length = array.length;
+  }
+
+  has(element) {
+    return this.items.has(element);
+  }
+
+  indexOf(element) {
+    if (!this.has(element)) return -1;
+    return this.priority[element];
+  }
+}

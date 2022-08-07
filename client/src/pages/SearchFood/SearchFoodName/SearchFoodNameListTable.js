@@ -17,28 +17,36 @@ const SearchFoodNameListTable = ({
   const { phone } = useScreenSize();
   const theme = useTheme();
   const [pageNumber, setPageNumber] = useState(1);
-  const [fetching, setFetching] = useState(true);
+  //const [fetching, setFetching] = useState(true);
   const addPage = useContext(AddPageContext);
 
   useEffect(() => {
     (async () => {
       if (foodData.name.trim() === "") return setFoodNameErrorPopupIsOpen(true);
-      setFetching(true);
+      foodDataDispatch({
+        type: FOOD_DATA_ACTIONS.SET_IS_FETCHING,
+        payload: true,
+      });
       const fetchedFoodData = await fetchFoodsFromQuery(
         foodData.name,
         pageNumber
       );
+      if (fetchedFoodData.error) return setFoodNameErrorPopupIsOpen(true);
       foodDataDispatch({
         type: FOOD_DATA_ACTIONS.SET_LIST,
         payload: fetchedFoodData,
       });
-      setFetching(false);
+
+      foodDataDispatch({
+        type: FOOD_DATA_ACTIONS.SET_IS_FETCHING,
+        payload: false,
+      });
     })();
   }, [
     pageNumber,
     foodData.name,
     foodDataDispatch,
-    FOOD_DATA_ACTIONS.SET_LIST,
+    FOOD_DATA_ACTIONS,
     setFoodNameErrorPopupIsOpen,
   ]);
 
@@ -61,10 +69,10 @@ const SearchFoodNameListTable = ({
         ) : (
           <Box
             minHeight="410px"
-            display={fetching && "grid"}
-            sx={fetching ? { placeItems: "center" } : {}}
+            display={foodData.isFetching && "grid"}
+            sx={foodData.isFetching ? { placeItems: "center" } : {}}
           >
-            {fetching ? (
+            {foodData.isFetching ? (
               <LinearProgress sx={{ width: "75%", maxWidth: "400px" }} />
             ) : (
               foodData.list.foods.map((food) => (
@@ -93,7 +101,7 @@ const SearchFoodNameListTable = ({
       </Box>
       <Box display="grid" sx={{ placeItems: "center" }}>
         <Pagination
-          disabled={fetching}
+          disabled={foodData.isFetching}
           count={foodData.list.totalPages}
           page={pageNumber}
           onChange={(e, pageNumber) => setPageNumber(pageNumber)}

@@ -8,7 +8,11 @@ import useScreenSize from "../../../hooks/useScreenSize";
 import { AddPageContext } from "../SearchFood";
 import { SEARCH_FOOD_PAGES, fetchFoodsFromQuery } from "../../../utils";
 
-const SearchFoodNameListTable = ({ foodData, foodName, setFoodData }) => {
+const SearchFoodNameListTable = ({
+  foodListData,
+  foodName,
+  setFoodListData,
+}) => {
   const { phone } = useScreenSize();
   const theme = useTheme();
   const [pageNumber, setPageNumber] = useState(1);
@@ -19,10 +23,10 @@ const SearchFoodNameListTable = ({ foodData, foodName, setFoodData }) => {
     (async () => {
       setFetching(true);
       const fetchedFoodData = await fetchFoodsFromQuery(foodName, pageNumber);
-      setFoodData(fetchedFoodData);
+      setFoodListData(fetchedFoodData);
       setFetching(false);
     })();
-  }, [pageNumber, foodName, setFoodData]);
+  }, [pageNumber, foodName, setFoodListData]);
 
   useEffect(() => setPageNumber(1), [foodName]);
 
@@ -38,7 +42,7 @@ const SearchFoodNameListTable = ({ foodData, foodName, setFoodData }) => {
         <b>Food Name</b>
       </Typography>
       <Box my={1.5}>
-        {foodData.foods.length === 0 ? (
+        {foodListData.foods.length === 0 ? (
           <Typography>No matches found</Typography>
         ) : (
           <Box
@@ -49,7 +53,7 @@ const SearchFoodNameListTable = ({ foodData, foodName, setFoodData }) => {
             {fetching ? (
               <LinearProgress sx={{ width: "75%", maxWidth: "400px" }} />
             ) : (
-              foodData.foods.map((food) => (
+              foodListData.foods.map((food) => (
                 <React.Fragment key={uuidv4()}>
                   <Box fullWidth height="1px" bgcolor="#D3D3D3" />
                   <Typography
@@ -76,7 +80,7 @@ const SearchFoodNameListTable = ({ foodData, foodName, setFoodData }) => {
       <Box display="grid" sx={{ placeItems: "center" }}>
         <Pagination
           disabled={fetching}
-          count={foodData.totalPages}
+          count={foodListData.totalPages}
           page={pageNumber}
           onChange={(e, pageNumber) => setPageNumber(pageNumber)}
           shape="rounded"

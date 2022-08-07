@@ -26,16 +26,16 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
 
   const [foodNameInputField, setFoodNameInputField] = useState(initialFoodName);
   const [foodName, setFoodName] = useState(initialFoodName);
-  const [fetchingFoodData, setFetchingFoodData] = useState(false);
+  const [fetchingFoodListData, setFetchingFoodListData] = useState(false);
   const [foodNameErrorPopupIsOpen, setFoodNameErrorPopupIsOpen] =
     useState(false);
-  const [foodData, setFoodData] = useState({});
+  const [foodListData, setFoodListData] = useState({});
 
   const handleSearchFoodName = async (foodNameInputField) => {
-    if (!objectIsEmpty(foodData) && foodNameInputField === foodName) return;
+    if (!objectIsEmpty(foodListData) && foodNameInputField === foodName) return;
 
     setFoodName(foodNameInputField);
-    setFetchingFoodData(true);
+    setFetchingFoodListData(true);
     await (async () => {
       if (!foodNameInputField) return setFoodNameErrorPopupIsOpen(true);
       const fetchedFoodList = await fetchFoodsFromQuery(foodNameInputField);
@@ -44,10 +44,10 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
         name: SEARCH_FOOD_PAGES.SEARCH_FOOD_NAME,
         foodName: foodNameInputField,
       });
-      setFoodData(fetchedFoodList);
+      setFoodListData(fetchedFoodList);
     })();
 
-    setFetchingFoodData(false);
+    setFetchingFoodListData(false);
   };
 
   return (
@@ -62,7 +62,7 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
         px={desktop ? 5 : tablet ? 3 : 2}
         pb={5}
       >
-        {objectIsEmpty(foodData) && (
+        {objectIsEmpty(foodListData) && (
           <>
             <Typography variant="h4" textAlign="center">
               Enter a Food Name
@@ -76,9 +76,11 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
           width="100%"
           maxWidth="600px"
           display="flex"
-          flexDirection={objectIsEmpty(foodData) || !desktop ? "column" : "row"}
+          flexDirection={
+            objectIsEmpty(foodListData) || !desktop ? "column" : "row"
+          }
           alignItems="center"
-          gap={objectIsEmpty(foodData) ? 5 : 2}
+          gap={objectIsEmpty(foodListData) ? 5 : 2}
         >
           <FormControl variant="outlined" fullWidth>
             <InputLabel>Food Name</InputLabel>
@@ -87,26 +89,26 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
               type="input"
               value={foodNameInputField}
               onChange={(e) => setFoodNameInputField(e.target.value)}
-              onKeyDown={(event) => {
-                if (event.key !== "Enter") return;
-                handleSearchFoodName(foodNameInputField);
-              }}
+              onKeyDown={(event) =>
+                event.key === "Enter" &&
+                handleSearchFoodName(foodNameInputField)
+              }
               variant="outlined"
               placeholder="Ex: chicken breast, raw"
               startAdornment={<SearchIcon sx={{ color: "black", pr: 1 }} />}
             />
           </FormControl>
           <Box
-            width={objectIsEmpty(foodData) || !desktop ? "100%" : "200px"}
+            width={objectIsEmpty(foodListData) || !desktop ? "100%" : "200px"}
             display="grid"
             sx={{ placeItems: "center" }}
           >
-            {fetchingFoodData ? (
+            {fetchingFoodListData ? (
               <CircularProgress color="primary" thickness={4} size={50} />
             ) : (
               <CustomButton
                 sx={
-                  objectIsEmpty(foodData) || !desktop
+                  objectIsEmpty(foodListData) || !desktop
                     ? { width: "100%" }
                     : { px: 3, borderRadius: "5px" }
                 }
@@ -118,11 +120,11 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
             )}
           </Box>
         </Box>
-        {!objectIsEmpty(foodData) && (
+        {!objectIsEmpty(foodListData) && (
           <SearchFoodNameListTable
-            foodData={foodData}
+            foodListData={foodListData}
             foodName={foodName}
-            setFoodData={setFoodData}
+            setFoodListData={setFoodListData}
           />
         )}
       </Box>

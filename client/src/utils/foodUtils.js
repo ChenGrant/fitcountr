@@ -33,48 +33,31 @@ export const sortByNutrient = (nutritionalData) =>
   });
 
 export const cleanFoodsFetchedFromBarcodeNumber = (rawFoodData) => {
-  console.log(JSON.stringify(rawFoodData));
-  const cleanFoodData = { ...rawFoodData };
+  const OPEN_FOOD_FACTS_NUTRIENT_MAP = new Map(
+    Object.entries({
+      "energy-kcal": "calories",
+      proteins: "protein",
+      carbohydrates: "carbohydrate",
+      fat: "fat",
+      sugars: "sugars",
+      sodium: "sodium",
+    })
+  );
 
-  console.log(cleanFoodData);
+  let nutrients = {};
+  Object.keys(rawFoodData.nutrients).forEach((nutrientName) => {
+    const mappedNutrientName = OPEN_FOOD_FACTS_NUTRIENT_MAP.get(nutrientName);
+    if (!mappedNutrientName) return;
+    nutrients[mappedNutrientName] = {
+      value: rawFoodData.nutrients[`${nutrientName}_100g`],
+      unit:
+        nutrientName !== "energy"
+          ? rawFoodData.nutrients[`${nutrientName}_unit`].toLowerCase()
+          : null,
+    };
+  });
 
-  //const nutrients = Object.fromEntries(
-  //   Object.entries(fetchedFood.data.product.nutriments)
-  //     .filter(
-  //       ([key, value]) =>
-  //         key.endsWith("_100g") && key !== "energy_100g" && value !== 0
-  //     )
-  //     .map(([key, value]) => {
-  //       switch (key) {
-  //         case "energy-kcal_100g":
-  //           return ["calories", value];
-  //         case "saturated-fat_100g":
-  //           return ["saturated fat", { value, unit: GRAM }];
-  //         default:
-  //           return [key.replace("_100g", ""), { value, unit: GRAM }];
-  //       }
-  //     })
-  // );
-
-  // const nutrients = Object.fromEntries(
-  //   Object.entries(fetchedFood.data.product.nutriments)
-  //     .filter(
-  //       ([key, value]) =>
-  //         key.endsWith("_100g") && key !== "energy_100g" && value !== 0
-  //     )
-  //     .map(([key, value]) => {
-  //       switch (key) {
-  //         case "energy-kcal_100g":
-  //           return ["calories", value];
-  //         case "saturated-fat_100g":
-  //           return ["saturated fat", { value, unit: GRAM }];
-  //         default:
-  //           return [key.replace("_100g", ""), { value, unit: GRAM }];
-  //       }
-  //     })
-  // );
-  // console.log({ nutrients });
-  return rawFoodData;
+  return { ...rawFoodData, nutrients };
 };
 
 export const cleanFoodsFetchedFromQuery = (rawFoodData) => {
@@ -89,22 +72,24 @@ export const cleanFoodsFetchedFromQuery = (rawFoodData) => {
     })
   );
 
+  const nutrients = Object.fromEntries(
+    rawFoodData.foodNutrients
+      .filter(({ nutrientName }) => USDA_NUTRIENT_MAP.get(nutrientName))
+      .map(({ nutrientName, value, unitName }) => [
+        USDA_NUTRIENT_MAP.get(nutrientName),
+        {
+          value,
+          unit: nutrientName !== "Energy" ? unitName.toLowerCase() : null,
+        },
+      ])
+  );
+
   return {
     name: rawFoodData.description,
     servingSize: {
       value: 100,
       unit: "g",
     },
-    nutrients: Object.fromEntries(
-      rawFoodData.foodNutrients
-        .filter(({ nutrientName }) => USDA_NUTRIENT_MAP.get(nutrientName))
-        .map(({ nutrientName, value, unitName }) => [
-          USDA_NUTRIENT_MAP.get(nutrientName).toLowerCase(),
-          {
-            value,
-            unit: nutrientName !== "Energy" ? unitName.toLowerCase() : null,
-          },
-        ])
-    ),
+    nutrients,
   };
 };

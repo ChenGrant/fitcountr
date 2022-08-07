@@ -40,8 +40,6 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
   // // -------------------------------------- RENDER ------------------------------------
   if (pageIsLoading) return <LoadingCircle />;
 
-  console.log(JSON.stringify(foodData.data.nutrients))
-
   return (
     <>
       <BackArrow />
@@ -80,7 +78,7 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
                     </Box>
                     <Box>
                       <Typography textAlign="right">
-                        {`${round(value, 2)} ${unit || ""}`}
+                        {`${round(value, 2)} ${unit ?? ""}`}
                       </Typography>
                     </Box>
                   </Box>

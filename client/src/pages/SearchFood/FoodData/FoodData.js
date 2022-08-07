@@ -43,7 +43,7 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
 
   return (
     <>
-      <BackArrow />
+      <BackArrow onClick={() => dispatch(removeSearchFoodPage())} />
       <Box sx={{ width: "100%", display: "grid", placeItems: "center" }}>
         {foodData.data ? (
           <CustomCard

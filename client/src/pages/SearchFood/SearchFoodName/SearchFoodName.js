@@ -15,7 +15,7 @@ import SearchFoodNameListTable from "./SearchFoodNameListTable";
 import FoodNameErrorPopup from "./SearchFoodNameErrorPopup";
 import BackArrow from "../../../components/ui/BackArrow";
 import { useDispatch } from "react-redux";
-import { setCurrentSearchFoodPage } from "../../../redux";
+import { removeSearchFoodPage, setCurrentSearchFoodPage } from "../../../redux";
 
 const FOOD_DATA_ACTIONS = {
   SET_IS_FETCHING_NEW_FOOD: "SET_IS_FETCHING_NEW_FOOD",
@@ -97,7 +97,7 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
 
   return (
     <>
-      <BackArrow />
+      <BackArrow onClick={() => dispatch(removeSearchFoodPage())} />
       <Box
         display="flex"
         flexDirection="column"

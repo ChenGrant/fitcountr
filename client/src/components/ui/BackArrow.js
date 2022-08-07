@@ -2,12 +2,9 @@ import { Box } from "@mui/system";
 import React from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { IconButton } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { removeSearchFoodPage } from "../../redux";
 import useScreenSize from "../../hooks/useScreenSize";
 
-const BackArrow = () => {
-  const dispatch = useDispatch();
+const BackArrow = ({ onClick }) => {
   const { desktop } = useScreenSize();
 
   return (
@@ -18,11 +15,7 @@ const BackArrow = () => {
       mb={!desktop && 5}
       px={desktop ? 5 : "5px"}
     >
-      <IconButton
-        color="primary"
-        onClick={() => dispatch(removeSearchFoodPage())}
-        size="large"
-      >
+      <IconButton color="primary" onClick={onClick} size="large">
         <ArrowBackIcon />
       </IconButton>
     </Box>

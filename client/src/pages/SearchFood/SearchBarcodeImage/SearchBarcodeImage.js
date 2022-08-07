@@ -13,7 +13,7 @@ import { SEARCH_FOOD_PAGES, scanBarcodeImage } from "../../../utils";
 import useScreenSize from "../../../hooks/useScreenSize";
 import BackArrow from "../../../components/ui/BackArrow";
 import { useDispatch } from "react-redux";
-import { setCurrentSearchFoodPage } from "../../../redux";
+import { removeSearchFoodPage, setCurrentSearchFoodPage } from "../../../redux";
 
 // -------------------------------- CONSTANTS --------------------------------
 const FILE_ACTIONS = {
@@ -130,7 +130,7 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
   // ------------------------------------- RENDER -------------------------------------
   return (
     <>
-      <BackArrow />
+      <BackArrow onClick={() => dispatch(removeSearchFoodPage())} />
       <Box
         display="flex"
         flexDirection="column"

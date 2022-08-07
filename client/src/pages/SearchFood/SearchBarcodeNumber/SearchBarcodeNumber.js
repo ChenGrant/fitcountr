@@ -12,7 +12,7 @@ import { SEARCH_FOOD_PAGES } from "../../../utils";
 import useScreenSize from "../../../hooks/useScreenSize";
 import BackArrow from "../../../components/ui/BackArrow";
 import { useDispatch } from "react-redux";
-import { addSearchFoodPage, setCurrentSearchFoodPage } from "../../../redux";
+import { addSearchFoodPage, removeSearchFoodPage, setCurrentSearchFoodPage } from "../../../redux";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
@@ -43,7 +43,7 @@ const SearchBarcodeNumber = ({ initialBarcodeNumber = "" }) => {
   // ------------------------------------- RENDER -------------------------------------
   return (
     <>
-      <BackArrow />
+      <BackArrow onClick={() => dispatch(removeSearchFoodPage())}/>
       <Box
         display="flex"
         flexDirection="column"

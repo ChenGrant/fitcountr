@@ -16,37 +16,45 @@ const SearchFoodNameListTable = ({
 }) => {
   const { phone } = useScreenSize();
   const theme = useTheme();
-  const [pageNumber, setPageNumber] = useState(1);
-  //const [fetching, setFetching] = useState(true);
   const addPage = useContext(AddPageContext);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [isFetchingPageData, setIsFetchingPageData] = useState(true);
 
   useEffect(() => {
+    if (
+      foodData.list.foodSearchCriteria.query === foodData.name &&
+      foodData.list.currentPage === pageNumber
+    )
+      return setIsFetchingPageData(false);
+
     (async () => {
       if (foodData.name.trim() === "") return setFoodNameErrorPopupIsOpen(true);
-      foodDataDispatch({
-        type: FOOD_DATA_ACTIONS.SET_IS_FETCHING,
-        payload: true,
-      });
+
+      setIsFetchingPageData(true);
+
       const fetchedFoodData = await fetchFoodsFromQuery(
         foodData.name,
-        pageNumber
+        foodData.isFetchingNewFood ? 1 : pageNumber
       );
+
       if (fetchedFoodData.error) return setFoodNameErrorPopupIsOpen(true);
+
       foodDataDispatch({
         type: FOOD_DATA_ACTIONS.SET_LIST,
         payload: fetchedFoodData,
       });
 
-      foodDataDispatch({
-        type: FOOD_DATA_ACTIONS.SET_IS_FETCHING,
-        payload: false,
-      });
+      setIsFetchingPageData(false);
     })();
   }, [
     pageNumber,
     foodData.name,
+    foodData.list.foodSearchCriteria.query,
+    foodData.list.currentPage,
+    foodData.isFetchingNewFood,
     foodDataDispatch,
     FOOD_DATA_ACTIONS,
+    setIsFetchingPageData,
     setFoodNameErrorPopupIsOpen,
   ]);
 
@@ -69,10 +77,16 @@ const SearchFoodNameListTable = ({
         ) : (
           <Box
             minHeight="410px"
-            display={foodData.isFetching && "grid"}
-            sx={foodData.isFetching ? { placeItems: "center" } : {}}
+            display={
+              isFetchingPageData && !foodData.isFetchingNewFood && "grid"
+            }
+            sx={
+              isFetchingPageData && !foodData.isFetchingNewFood
+                ? { placeItems: "center" }
+                : {}
+            }
           >
-            {foodData.isFetching ? (
+            {isFetchingPageData && !foodData.isFetchingNewFood ? (
               <LinearProgress sx={{ width: "75%", maxWidth: "400px" }} />
             ) : (
               foodData.list.foods.map((food) => (
@@ -101,7 +115,7 @@ const SearchFoodNameListTable = ({
       </Box>
       <Box display="grid" sx={{ placeItems: "center" }}>
         <Pagination
-          disabled={foodData.isFetching}
+          disabled={isFetchingPageData}
           count={foodData.list.totalPages}
           page={pageNumber}
           onChange={(e, pageNumber) => setPageNumber(pageNumber)}

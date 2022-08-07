@@ -17,7 +17,7 @@ import FoodNameErrorPopup from "./SearchFoodNameErrorPopup";
 import BackArrow from "../../../components/ui/BackArrow";
 
 const FOOD_DATA_ACTIONS = {
-  SET_IS_FETCHING: "SET_IS_FETCHING",
+  SET_IS_FETCHING_NEW_FOOD: "SET_IS_FETCHING_NEW_FOOD",
   SET_NAME: "SET_NAME",
   SET_LIST: "SET_LIST",
 };
@@ -26,8 +26,8 @@ const foodDataReducer = (state, action) => {
   switch (action.type) {
     case FOOD_DATA_ACTIONS.SET_NAME:
       return { ...state, name: action.payload };
-    case FOOD_DATA_ACTIONS.SET_IS_FETCHING:
-      return { ...state, isFetching: action.payload };
+    case FOOD_DATA_ACTIONS.SET_IS_FETCHING_NEW_FOOD:
+      return { ...state, isFetchingNewFood: action.payload };
     case FOOD_DATA_ACTIONS.SET_LIST:
       return { ...state, list: action.payload };
     default:
@@ -40,7 +40,7 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
   const setCurrentPage = useContext(SetCurrentPageContext);
   const [foodNameInputField, setFoodNameInputField] = useState(initialFoodName);
   const [foodData, foodDataDispatch] = useReducer(foodDataReducer, {
-    isFetching: false,
+    isFetchingNewFood: false,
     name: initialFoodName ?? null,
     list: null,
   });
@@ -48,7 +48,7 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
     useState(false);
 
   const handleSearchFoodName = async (foodNameInputField) => {
-    if (foodData.list && foodNameInputField === foodData.name) return;
+    if (foodData.list && foodNameInputField.trim() === foodData.name) return;
 
     foodDataDispatch({
       type: FOOD_DATA_ACTIONS.SET_NAME,
@@ -56,7 +56,7 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
     });
 
     foodDataDispatch({
-      type: FOOD_DATA_ACTIONS.SET_IS_FETCHING,
+      type: FOOD_DATA_ACTIONS.SET_IS_FETCHING_NEW_FOOD,
       payload: true,
     });
     await (async () => {
@@ -75,7 +75,7 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
     })();
 
     foodDataDispatch({
-      type: FOOD_DATA_ACTIONS.SET_IS_FETCHING,
+      type: FOOD_DATA_ACTIONS.SET_IS_FETCHING_NEW_FOOD,
       payload: false,
     });
   };
@@ -131,7 +131,7 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
             display="grid"
             sx={{ placeItems: "center" }}
           >
-            {foodData.isFetching ? (
+            {foodData.isFetchingNewFood ? (
               <CircularProgress color="primary" thickness={4} size={50} />
             ) : (
               <CustomButton

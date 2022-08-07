@@ -72,21 +72,21 @@ const scanBarcodeImage = async (req, res) => {
 const getFoodsFromQuery = async (req, res) => {
   try {
     const { query, pageNumber, pageSize } = req.params;
+    
+    const USDA_API_URL =
+      "https://api.nal.usda.gov/fdc/v1/foods/search?" +
+      Object.entries({
+        api_key: config.FOOD_DATA_CENTRAL_API_KEY,
+        query,
+        pageNumber,
+        dataType: ["Survey (FNDDS)"],
+        pageSize,
+        requireAllWords: true,
+      })
+        .map(([key, value]) => `${key}=${value}`)
+        .join("&");
 
-    let usda_api_url = `https://api.nal.usda.gov/fdc/v1/foods/search?`;
-
-    Object.entries({
-      api_key: config.FOOD_DATA_CENTRAL_API_KEY,
-      query,
-      pageNumber,
-      dataType: ["Survey (FNDDS)"],
-      pageSize,
-      requireAllWords: true,
-    }).forEach(([key, value], index) => {
-      usda_api_url += `${index === 0 ? "" : "&"}${key}=${value}`;
-    });
-
-    const fetchedFoods = await axios.get(usda_api_url);
+    const fetchedFoods = await axios.get(USDA_API_URL);
 
     return res.json(fetchedFoods.data);
   } catch (err) {

@@ -20,6 +20,7 @@ const FOOD_DATA_ACTIONS = {
   SET_IS_FETCHING_NEW_FOOD: "SET_IS_FETCHING_NEW_FOOD",
   SET_NAME: "SET_NAME",
   SET_LIST: "SET_LIST",
+  SET_LIST_PAGE_NUMBER: "SET_LIST_PAGE_NUMBER",
 };
 
 const foodDataReducer = (state, action) => {
@@ -30,6 +31,8 @@ const foodDataReducer = (state, action) => {
       return { ...state, isFetchingNewFood: action.payload };
     case FOOD_DATA_ACTIONS.SET_LIST:
       return { ...state, list: action.payload };
+    case FOOD_DATA_ACTIONS.SET_LIST_PAGE_NUMBER:
+      return { ...state, listPageNumber: action.payload };
     default:
       return state;
   }
@@ -43,11 +46,12 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
     isFetchingNewFood: false,
     name: initialFoodName ?? null,
     list: null,
+    listPageNumber: 1,
   });
   const [foodNameErrorPopupIsOpen, setFoodNameErrorPopupIsOpen] =
     useState(false);
 
-  const handleSearchFoodName = async (foodNameInputField) => {
+  const searchFoodsFromName = async (foodNameInputField) => {
     if (foodData.list && foodNameInputField.trim() === foodData.name) return;
 
     foodDataDispatch({
@@ -74,6 +78,10 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
       });
     })();
 
+    foodDataDispatch({
+      type: FOOD_DATA_ACTIONS.SET_LIST_PAGE_NUMBER,
+      payload: 1,
+    });
     foodDataDispatch({
       type: FOOD_DATA_ACTIONS.SET_IS_FETCHING_NEW_FOOD,
       payload: false,
@@ -119,7 +127,7 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
               onChange={(e) => setFoodNameInputField(e.target.value)}
               onKeyDown={(event) =>
                 event.key === "Enter" &&
-                handleSearchFoodName(foodNameInputField)
+                searchFoodsFromName(foodNameInputField)
               }
               variant="outlined"
               placeholder="Ex: chicken breast, raw"
@@ -141,7 +149,7 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
                     : { px: 3, borderRadius: "5px" }
                 }
                 variant="contained"
-                onClick={() => handleSearchFoodName(foodNameInputField)}
+                onClick={() => searchFoodsFromName(foodNameInputField)}
               >
                 Search
               </CustomButton>

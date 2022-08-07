@@ -17,24 +17,26 @@ const SearchFoodNameListTable = ({
   const { phone } = useScreenSize();
   const theme = useTheme();
   const addPage = useContext(AddPageContext);
-  const [pageNumber, setPageNumber] = useState(1);
   const [isFetchingPageData, setIsFetchingPageData] = useState(true);
 
   useEffect(() => {
     if (
       foodData.list.foodSearchCriteria.query === foodData.name &&
-      foodData.list.currentPage === pageNumber
+      foodData.list.currentPage === foodData.listPageNumber
     )
       return setIsFetchingPageData(false);
 
-    (async () => {
+    if (isFetchingPageData || foodData.isFetchingNewFood) return;
+
+    // handleNewFoodListPage is executed when the page number changes
+    const fetchFoodListPageData = async () => {
       if (foodData.name.trim() === "") return setFoodNameErrorPopupIsOpen(true);
 
       setIsFetchingPageData(true);
 
       const fetchedFoodData = await fetchFoodsFromQuery(
         foodData.name,
-        foodData.isFetchingNewFood ? 1 : pageNumber
+        foodData.listPageNumber
       );
 
       if (fetchedFoodData.error) return setFoodNameErrorPopupIsOpen(true);
@@ -43,22 +45,20 @@ const SearchFoodNameListTable = ({
         type: FOOD_DATA_ACTIONS.SET_LIST,
         payload: fetchedFoodData,
       });
-
       setIsFetchingPageData(false);
-    })();
+    };
+    fetchFoodListPageData();
   }, [
-    pageNumber,
-    foodData.name,
-    foodData.list.foodSearchCriteria.query,
-    foodData.list.currentPage,
+    FOOD_DATA_ACTIONS.SET_LIST,
     foodData.isFetchingNewFood,
+    foodData.list.currentPage,
+    foodData.list.foodSearchCriteria.query,
+    foodData.listPageNumber,
+    foodData.name,
     foodDataDispatch,
-    FOOD_DATA_ACTIONS,
-    setIsFetchingPageData,
+    isFetchingPageData,
     setFoodNameErrorPopupIsOpen,
   ]);
-
-  useEffect(() => setPageNumber(1), [foodData.name]);
 
   return (
     <CustomCard
@@ -117,8 +117,13 @@ const SearchFoodNameListTable = ({
         <Pagination
           disabled={isFetchingPageData}
           count={foodData.list.totalPages}
-          page={pageNumber}
-          onChange={(e, pageNumber) => setPageNumber(pageNumber)}
+          page={foodData.listPageNumber}
+          onChange={(e, pageNumber) =>
+            foodDataDispatch({
+              type: FOOD_DATA_ACTIONS.SET_LIST_PAGE_NUMBER,
+              payload: pageNumber,
+            })
+          }
           shape="rounded"
           color="primary"
           sx={{

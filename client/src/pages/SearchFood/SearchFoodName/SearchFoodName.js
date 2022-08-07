@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useReducer, useState } from "react";
 import { SetCurrentPageContext } from "../SearchFood";
 import {
   Box,
@@ -10,44 +10,74 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CustomButton from "../../../components/ui/CustomButton";
-import {
-  objectIsEmpty,
-  SEARCH_FOOD_PAGES,
-  fetchFoodsFromQuery,
-} from "../../../utils";
+import { SEARCH_FOOD_PAGES, fetchFoodsFromQuery } from "../../../utils";
 import useScreenSize from "../../../hooks/useScreenSize";
 import SearchFoodNameListTable from "./SearchFoodNameListTable";
 import FoodNameErrorPopup from "./SearchFoodNameErrorPopup";
 import BackArrow from "../../../components/ui/BackArrow";
 
+const FOOD_DATA_ACTIONS = {
+  SET_IS_FETCHING: "SET_IS_FETCHING",
+  SET_NAME: "SET_NAME",
+  SET_LIST: "SET_LIST",
+};
+
+const foodDataReducer = (state, action) => {
+  switch (action.type) {
+    case FOOD_DATA_ACTIONS.SET_NAME:
+      return { ...state, name: action.payload };
+    case FOOD_DATA_ACTIONS.SET_IS_FETCHING:
+      return { ...state, isFetching: action.payload };
+    case FOOD_DATA_ACTIONS.SET_LIST:
+      return { ...state, list: action.payload };
+    default:
+      return state;
+  }
+};
+
 const SearchFoodName = ({ initialFoodName = "" }) => {
   const { desktop, tablet } = useScreenSize();
   const setCurrentPage = useContext(SetCurrentPageContext);
-
   const [foodNameInputField, setFoodNameInputField] = useState(initialFoodName);
-  const [foodName, setFoodName] = useState(initialFoodName);
-  const [fetchingFoodListData, setFetchingFoodListData] = useState(false);
+  const [foodData, foodDataDispatch] = useReducer(foodDataReducer, {
+    isFetching: false,
+    name: initialFoodName ?? null,
+    list: null,
+  });
   const [foodNameErrorPopupIsOpen, setFoodNameErrorPopupIsOpen] =
     useState(false);
-  const [foodListData, setFoodListData] = useState({});
 
   const handleSearchFoodName = async (foodNameInputField) => {
-    if (!objectIsEmpty(foodListData) && foodNameInputField === foodName) return;
+    if (foodData.list && foodNameInputField === foodData.name) return;
 
-    setFoodName(foodNameInputField);
-    setFetchingFoodListData(true);
+    foodDataDispatch({
+      type: FOOD_DATA_ACTIONS.SET_NAME,
+      payload: foodNameInputField.trim(),
+    });
+
+    foodDataDispatch({
+      type: FOOD_DATA_ACTIONS.SET_IS_FETCHING,
+      payload: true,
+    });
     await (async () => {
-      if (!foodNameInputField) return setFoodNameErrorPopupIsOpen(true);
+      if (foodNameInputField.trim() === "")
+        return setFoodNameErrorPopupIsOpen(true);
       const fetchedFoodList = await fetchFoodsFromQuery(foodNameInputField);
       if (fetchedFoodList.error) return setFoodNameErrorPopupIsOpen(true);
       setCurrentPage({
         name: SEARCH_FOOD_PAGES.SEARCH_FOOD_NAME,
         foodName: foodNameInputField,
       });
-      setFoodListData(fetchedFoodList);
+      foodDataDispatch({
+        type: FOOD_DATA_ACTIONS.SET_LIST,
+        payload: fetchedFoodList,
+      });
     })();
 
-    setFetchingFoodListData(false);
+    foodDataDispatch({
+      type: FOOD_DATA_ACTIONS.SET_IS_FETCHING,
+      payload: false,
+    });
   };
 
   return (
@@ -62,7 +92,7 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
         px={desktop ? 5 : tablet ? 3 : 2}
         pb={5}
       >
-        {objectIsEmpty(foodListData) && (
+        {!foodData.list && (
           <>
             <Typography variant="h4" textAlign="center">
               Enter a Food Name
@@ -76,11 +106,9 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
           width="100%"
           maxWidth="600px"
           display="flex"
-          flexDirection={
-            objectIsEmpty(foodListData) || !desktop ? "column" : "row"
-          }
+          flexDirection={!foodData.list || !desktop ? "column" : "row"}
           alignItems="center"
-          gap={objectIsEmpty(foodListData) ? 5 : 2}
+          gap={!foodData.list ? 5 : 2}
         >
           <FormControl variant="outlined" fullWidth>
             <InputLabel>Food Name</InputLabel>
@@ -99,16 +127,16 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
             />
           </FormControl>
           <Box
-            width={objectIsEmpty(foodListData) || !desktop ? "100%" : "200px"}
+            width={!foodData.list || !desktop ? "100%" : "200px"}
             display="grid"
             sx={{ placeItems: "center" }}
           >
-            {fetchingFoodListData ? (
+            {foodData.isFetching ? (
               <CircularProgress color="primary" thickness={4} size={50} />
             ) : (
               <CustomButton
                 sx={
-                  objectIsEmpty(foodListData) || !desktop
+                  !foodData.list || !desktop
                     ? { width: "100%" }
                     : { px: 3, borderRadius: "5px" }
                 }
@@ -120,16 +148,17 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
             )}
           </Box>
         </Box>
-        {!objectIsEmpty(foodListData) && (
+        {foodData.list && (
           <SearchFoodNameListTable
-            foodListData={foodListData}
-            foodName={foodName}
-            setFoodListData={setFoodListData}
+            foodData={foodData}
+            FOOD_DATA_ACTIONS={FOOD_DATA_ACTIONS}
+            foodDataDispatch={foodDataDispatch}
+            setFoodNameErrorPopupIsOpen={setFoodNameErrorPopupIsOpen}
           />
         )}
       </Box>
       <FoodNameErrorPopup
-        foodName={foodName}
+        foodName={foodData.name}
         foodNameErrorPopupIsOpen={foodNameErrorPopupIsOpen}
         setFoodNameErrorPopupIsOpen={setFoodNameErrorPopupIsOpen}
       />

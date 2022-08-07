@@ -9,9 +9,10 @@ import { AddPageContext } from "../SearchFood";
 import { SEARCH_FOOD_PAGES, fetchFoodsFromQuery } from "../../../utils";
 
 const SearchFoodNameListTable = ({
-  foodListData,
-  foodName,
-  setFoodListData,
+  setFoodNameErrorPopupIsOpen,
+  foodData,
+  foodDataDispatch,
+  FOOD_DATA_ACTIONS,
 }) => {
   const { phone } = useScreenSize();
   const theme = useTheme();
@@ -21,14 +22,27 @@ const SearchFoodNameListTable = ({
 
   useEffect(() => {
     (async () => {
+      if (foodData.name.trim() === "") return setFoodNameErrorPopupIsOpen(true);
       setFetching(true);
-      const fetchedFoodData = await fetchFoodsFromQuery(foodName, pageNumber);
-      setFoodListData(fetchedFoodData);
+      const fetchedFoodData = await fetchFoodsFromQuery(
+        foodData.name,
+        pageNumber
+      );
+      foodDataDispatch({
+        type: FOOD_DATA_ACTIONS.SET_LIST,
+        payload: fetchedFoodData,
+      });
       setFetching(false);
     })();
-  }, [pageNumber, foodName, setFoodListData]);
+  }, [
+    pageNumber,
+    foodData.name,
+    foodDataDispatch,
+    FOOD_DATA_ACTIONS.SET_LIST,
+    setFoodNameErrorPopupIsOpen,
+  ]);
 
-  useEffect(() => setPageNumber(1), [foodName]);
+  useEffect(() => setPageNumber(1), [foodData.name]);
 
   return (
     <CustomCard
@@ -42,7 +56,7 @@ const SearchFoodNameListTable = ({
         <b>Food Name</b>
       </Typography>
       <Box my={1.5}>
-        {foodListData.foods.length === 0 ? (
+        {foodData.list.foods.length === 0 ? (
           <Typography>No matches found</Typography>
         ) : (
           <Box
@@ -53,7 +67,7 @@ const SearchFoodNameListTable = ({
             {fetching ? (
               <LinearProgress sx={{ width: "75%", maxWidth: "400px" }} />
             ) : (
-              foodListData.foods.map((food) => (
+              foodData.list.foods.map((food) => (
                 <React.Fragment key={uuidv4()}>
                   <Box fullWidth height="1px" bgcolor="#D3D3D3" />
                   <Typography
@@ -80,7 +94,7 @@ const SearchFoodNameListTable = ({
       <Box display="grid" sx={{ placeItems: "center" }}>
         <Pagination
           disabled={fetching}
-          count={foodListData.totalPages}
+          count={foodData.list.totalPages}
           page={pageNumber}
           onChange={(e, pageNumber) => setPageNumber(pageNumber)}
           shape="rounded"

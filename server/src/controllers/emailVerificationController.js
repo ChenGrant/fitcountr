@@ -19,9 +19,8 @@ const verifyEmailIsInUse = async (email) => {
 const getEmailIsInUse = async (req, res) => {
   try {
     const { email } = req.params;
-    return (await User.emailInUse(email))
-      ? res.json({ emailIsInUse: true })
-      : res.json({ emailIsInUse: false });
+    const emailIsInUse = await User.emailInUse(email);
+    return res.json({ emailIsInUse });
   } catch (err) {
     console.log(err);
     res

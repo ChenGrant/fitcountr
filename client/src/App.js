@@ -5,6 +5,7 @@ import DashboardRoutes from "./routes/DashboardRoutes";
 import Home from "./pages/Home/Home";
 import EmailVerification from "./pages/EmailVerification/EmailVerification";
 import UnavailableResource from "./pages/UnavailableResource/UnavailableResource";
+import PasswordReset from "./pages/PasswordReset/PasswordReset";
 
 const App = () => {
   return (
@@ -13,11 +14,12 @@ const App = () => {
         <Routes>
           {/* Routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/dashboard/*" element={<DashboardRoutes />} />
           <Route
             path="/emailVerification/:email"
             element={<EmailVerification />}
           />
+          <Route path="/passwordReset" element={<PasswordReset />} />
+          <Route path="/dashboard/*" element={<DashboardRoutes />} />
           <Route path="*" element={<UnavailableResource />} />
         </Routes>
       </Router>

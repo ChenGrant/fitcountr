@@ -247,8 +247,15 @@ const LoginForm = ({
                   {/* 'forgot password' text */}
                   <Box fullWidth>
                     <Typography
+                      onClick={() => navigate("/passwordReset")}
                       textAlign="right"
-                      sx={{ cursor: "pointer", fontWeight: 600 }}
+                      sx={{
+                        cursor: "pointer",
+                        fontWeight: 600,
+                        "&:hover": {
+                          textDecoration: "underline",
+                        },
+                      }}
                       color="primary"
                     >
                       Forgot password?

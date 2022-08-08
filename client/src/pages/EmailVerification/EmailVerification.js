@@ -60,7 +60,7 @@ const pinReducer = (state, action) => {
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const EmailVerification = () => {
-  const { email } = useParams();
+  const email = useParams().email.toLowerCase();
   const theme = useTheme();
   const navigate = useNavigate();
   const { desktop, tablet, phone } = useScreenSize();

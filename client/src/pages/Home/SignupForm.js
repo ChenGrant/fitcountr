@@ -121,7 +121,11 @@ const SignupForm = ({
           onSubmit={async ({ email, password }, formik) => {
             dispatch(setAuthenticatingUser(true));
             setPasswordSignupButtonIsDisabled(true);
-            await handleEmailPasswordSignup(email, password, formik);
+            await handleEmailPasswordSignup(
+              email.toLowerCase(),
+              password,
+              formik
+            );
             setPasswordSignupButtonIsDisabled(false);
             dispatch(setAuthenticatingUser(false));
           }}

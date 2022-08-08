@@ -131,7 +131,11 @@ const LoginForm = ({
           validationSchema={validationSchema}
           onSubmit={async ({ email, password }, formik) => {
             setPasswordLoginButtonIsDisabled(true);
-            await handleLoginWithEmailAndPassword(email, password, formik);
+            await handleLoginWithEmailAndPassword(
+              email.toLowerCase(),
+              password,
+              formik
+            );
             setPasswordLoginButtonIsDisabled(false);
           }}
         >

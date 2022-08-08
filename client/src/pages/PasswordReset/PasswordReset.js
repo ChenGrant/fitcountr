@@ -85,7 +85,7 @@ const PasswordReset = () => {
 
   const [assets, assetsDispatchers, loadingAssets] = useAsset({
     emailPending: { name: "email_pending" },
-    emailVerified: { name: "email_verified" },
+    emailSuccess: { name: "email_success" },
     emailDenied: { name: "email_denied" },
   });
 
@@ -113,7 +113,7 @@ const PasswordReset = () => {
 
       await sendPasswordResetEmail(auth, lowerCaseEmailAddress);
 
-      setImageSrc(assets.emailVerified.src);
+      setImageSrc(assets.emailSuccess.src);
     } catch (err) {
       textFieldDispatch({
         type: TEXT_FIELD_ACTIONS.SET_ERROR,
@@ -151,7 +151,7 @@ const PasswordReset = () => {
           onLoad={() => {
             assetsDispatchers.setAllLoading(false);
             switch (imageSrc) {
-              case assets.emailVerified.src:
+              case assets.emailSuccess.src:
                 passwordResetEmailDispatch({
                   type: PASSWORD_RESET_EMAIL_ACTIONS.SENT_EMAIL_SUCCESS,
                 });

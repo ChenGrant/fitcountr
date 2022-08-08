@@ -69,7 +69,7 @@ const EmailVerification = () => {
   const [assets, assetsDispatchers, loadingAssets, fetchingAssetSources] =
     useAsset({
       emailPending: { name: "email_pending" },
-      emailVerified: { name: "email_verified" },
+      emailSuccess: { name: "email_success" },
       emailDenied: { name: "email_denied" },
     });
   const [pin, pinDispatch] = useReducer(pinReducer, initialPinState);
@@ -110,7 +110,7 @@ const EmailVerification = () => {
     // check if email is already verified
     const fetchedVerificationStatus = await fetchVerificationStatus(email);
     if (fetchedVerificationStatus.verificationStatus === "Verified") {
-      setImageSrc(assets.emailVerified.src);
+      setImageSrc(assets.emailSuccess.src);
       return;
     }
 
@@ -123,7 +123,7 @@ const EmailVerification = () => {
     }
     switch (responseData.message) {
       case "Pin is valid":
-        setImageSrc(assets.emailVerified.src);
+        setImageSrc(assets.emailSuccess.src);
         return;
       case "Pin is invalid":
         pinDispatch({ type: PIN_ACTIONS.DENIED });
@@ -165,7 +165,7 @@ const EmailVerification = () => {
           switch (fetchedVerificationStatus.verificationStatus) {
             case "Verified":
               setEmailIsVerified(true);
-              setImageSrc(assets.emailVerified.src);
+              setImageSrc(assets.emailSuccess.src);
               return;
             case "Not verified":
               const fetchedPinLength = await fetchPinLength(email);
@@ -194,7 +194,7 @@ const EmailVerification = () => {
   }, [
     email,
     fetchingAssetSources,
-    assets.emailVerified.src,
+    assets.emailSuccess.src,
     assets.emailPending.src,
     assets.emailDenied.src,
   ]);
@@ -217,7 +217,7 @@ const EmailVerification = () => {
           src={imageSrc}
           onLoad={() => {
             assetsDispatchers.setAllLoading(false);
-            if (imageSrc === assets.emailVerified.src) {
+            if (imageSrc === assets.emailSuccess.src) {
               if (user.user && user.user.email === email)
                 dispatch(setVerificationStatus("Verified"));
 

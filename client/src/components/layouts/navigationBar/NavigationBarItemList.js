@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import NavigationBarItem from "./NavigationBarItem";
 import LogoutIcon from "@mui/icons-material/Logout";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import SearchIcon from "@mui/icons-material/Search";
 import { getAuth, signOut } from "firebase/auth";
 import { useDispatch } from "react-redux";
@@ -52,6 +53,16 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
         isOpen={isOpen}
         displayComponent={<SearchIcon color="primary" />}
         name="Search Food"
+      />
+      {/* Progress */}
+      <NavigationBarItem
+        onClick={() => {
+          setMenuIsOpen && setMenuIsOpen(false);
+          navigate("/dashboard/progress");
+        }}
+        isOpen={isOpen}
+        displayComponent={<TrendingUpIcon color="primary" />}
+        name="Progress"
       />
       {/* Logout */}
       <NavigationBarItem

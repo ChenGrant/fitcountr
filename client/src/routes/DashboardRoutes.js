@@ -6,6 +6,7 @@ import SmallScreenNavigationBar from "../components/layouts/navigationBar/SmallS
 import Dashboard from "../pages/Dashboard/Dashboard";
 import SearchFood from "../pages/SearchFood/SearchFood";
 import UnavailableResource from "../pages/UnavailableResource/UnavailableResource";
+import Progress from "../pages/Progress/Progress";
 
 const DashboardRoutes = () => {
   const { desktop } = useScreenSize();
@@ -19,6 +20,7 @@ const DashboardRoutes = () => {
       >
         <Route path="/" element={<Dashboard />} />
         <Route path="/searchFood" element={<SearchFood />} />
+        <Route path="/progress" element={<Progress />} />
       </Route>
       <Route path="*" element={<UnavailableResource />} />
     </Routes>

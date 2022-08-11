@@ -24,7 +24,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
           navigate("/dashboard/profile");
         }}
         isOpen={isOpen}
-        displayComponent={
+        icon={
           <Avatar
             alt="profilePic"
             src="https://i.stack.imgur.com/l60Hf.png"
@@ -40,7 +40,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
           navigate("/dashboard");
         }}
         isOpen={isOpen}
-        displayComponent={<DashboardIcon color="primary" />}
+        icon={<DashboardIcon color="primary" />}
         name="Dashboard"
       />
       {/* Search Food */}
@@ -51,7 +51,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
           navigate("/dashboard/searchFood");
         }}
         isOpen={isOpen}
-        displayComponent={<SearchIcon color="primary" />}
+        icon={<SearchIcon color="primary" />}
         name="Search Food"
       />
       {/* Progress */}
@@ -61,14 +61,15 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
           navigate("/dashboard/progress");
         }}
         isOpen={isOpen}
-        displayComponent={<TrendingUpIcon color="primary" />}
+        icon={<TrendingUpIcon color="primary" />}
         name="Progress"
+        nestedItems={[{ label: "Weight" }, { label: "Meals" }]}
       />
       {/* Logout */}
       <NavigationBarItem
         onClick={() => signOut(auth)}
         isOpen={isOpen}
-        displayComponent={<LogoutIcon color="primary" />}
+        icon={<LogoutIcon color="primary" />}
         name="Logout"
       />
     </>

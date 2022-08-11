@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { StringUtils, NumberUtils } = require("../utils/index");
+const { NumberUtils } = require("../utils/index");
 
 const EMAIL_VERIFICATION_PIN_LENGTH = 5;
 
@@ -17,10 +17,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     lowerCase: true,
-    validate: {
-      validator: StringUtils.getStringIsValidEmail,
-      message: (props) => `${props.value} is an invalid email`,
-    },
   },
   createdAt: {
     type: Date,

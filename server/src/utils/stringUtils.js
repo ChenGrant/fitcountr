@@ -8,9 +8,4 @@ const getStringIsEmpty = (string) => {
   return string === "";
 };
 
-const getStringIsValidEmail = (string) => {
-  assertIsString(string);
-  return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(string);
-};
-
-module.exports = { getStringIsValidEmail, getStringIsEmpty };
+module.exports = { getStringIsEmpty };

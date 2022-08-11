@@ -86,7 +86,7 @@ const createUser = async (req, res) => {
 
     throw new Error("No provider matched");
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
     return res
       .json({ error: { message: "Could not create user" } })
       .status(404);

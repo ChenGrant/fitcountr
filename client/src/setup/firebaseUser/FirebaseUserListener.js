@@ -40,7 +40,7 @@ const FirebaseUserListener = ({ children }) => {
     return unsubscribeAuth;
   }, [auth, user.isAuthenticating, dispatch]);
 
-  return <>{children}</>;
+  return children;
 };
 
 export default FirebaseUserListener;

@@ -9,8 +9,8 @@ import { Navigate } from "react-router-dom";
 import GmailOverridePopup, {
   GMAIL_OVERRIDE_POPUP_STATES,
 } from "./GmailOverridePopup";
-import LoadingCircle from "../../../components/ui/LoadingCircle";
 import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
+import LoadingCircle from "../../../components/miscellaneous/LoadingCircle";
 
 // ------------------------------------ CONSTANTS ------------------------------------
 const SIGNUP_FORM = "SIGNUP_FORM";

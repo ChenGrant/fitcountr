@@ -6,8 +6,8 @@ import DailyProgressCard from "./DailyProgressCard";
 import MacroPieChart from "./MacrosPieChart";
 import { capitalizeFirstCharacter } from "../../../utils";
 import { useTheme } from "@emotion/react";
-import LoadingCircle from "../../../components/ui/LoadingCircle";
 import ProgressLineChart from "./ProgressLineChart";
+import LoadingCircle from "../../../components/miscellaneous/LoadingCircle";
 
 const dailyProgressData = [
   {

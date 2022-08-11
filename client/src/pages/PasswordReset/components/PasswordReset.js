@@ -7,8 +7,8 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import useScreenSize from "../../../hooks/useScreenSize";
 import useAsset from "../../../hooks/useAsset";
-import LoadingCircle from "../../../components/ui/LoadingCircle";
 import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
+import LoadingCircle from "../../../components/miscellaneous/LoadingCircle";
 
 // -------------------------------- CONSTANTS --------------------------------
 const PASSWORD_RESET_EMAIL_ACTIONS = {

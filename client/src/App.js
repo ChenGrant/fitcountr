@@ -11,12 +11,12 @@ import PasswordReset from "./pages/PasswordReset";
 import SearchFood from "./pages/SearchFood";
 import Progress from "./pages/Progress/";
 import Dashboard from "./pages/Dashboard";
-import UnavailableResource from "./components/ui/UnavailableResource";
 import FontsInitializer from "./setup/fonts/FontsInitializer";
 import FirebaseClientInitializer from "./setup/firebaseClient/FirebaseClientInitializer";
 import FirebaseUserListener from "./setup/firebaseUser/FirebaseUserListener";
 import AppSetupLoader from "./setup/app/AppSetupLoader";
 import { ROUTE_PATHS } from "./setup/routes/routeUtils";
+import UnavailableResource from "./components/miscellaneous/UnavailableResource";
 
 const App = () => {
   return (

@@ -4,7 +4,6 @@ import ErrorIcon from "@mui/icons-material/Error";
 import { useTheme } from "@emotion/react";
 import { fetchFoodFromBarcodeNumber } from "../../../utils";
 import CustomButton from "../../../components/ui/CustomButton";
-import LoadingCircle from "../../../components/ui/LoadingCircle";
 import { Box } from "@mui/system";
 import CustomCard from "../../../components/ui/CustomCard";
 import useScreenSize from "../../../hooks/useScreenSize";
@@ -20,6 +19,7 @@ import BackArrow from "../../../components/ui/BackArrow";
 import useFetch from "../../../hooks/useFetch";
 import { useDispatch } from "react-redux";
 import { removeSearchFoodPage } from "../../../redux";
+import LoadingCircle from "../../../components/miscellaneous/LoadingCircle";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------

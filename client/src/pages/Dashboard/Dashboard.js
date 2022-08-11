@@ -1,7 +1,5 @@
 import { Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
 import useScreenSize from "../../hooks/useScreenSize";
 import { v4 as uuidv4 } from "uuid";
 import DailyProgressCard from "./DailyProgressCard";
@@ -38,7 +36,6 @@ const macrosData = [
 const GAP_SIZE = 3;
 
 const Dashboard = () => {
-  const { user } = useSelector((state) => state);
   const { desktop } = useScreenSize();
   const theme = useTheme();
   const { primary } = theme.palette;
@@ -63,8 +60,6 @@ const Dashboard = () => {
     };
     getMacros();
   }, [primary]);
-
-  if (!user.isLoggedIn) return <Navigate to="/" />;
 
   if (loading) return <LoadingCircle />;
 

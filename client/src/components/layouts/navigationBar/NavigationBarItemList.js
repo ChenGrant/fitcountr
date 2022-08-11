@@ -46,7 +46,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
       icon: <SearchIcon />,
       onClick: () => {
         dispatch(resetSearchFoodPages());
-        navigate("/dashboard/searchFood");
+        navigate("/searchFood");
       },
     },
     // Progress

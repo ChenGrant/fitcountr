@@ -1,6 +1,5 @@
 import { Box, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
 import { keyframes } from "@emotion/react";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
@@ -27,7 +26,7 @@ const RIGHT = "RIGHT";
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
-const LargeScreenNavigationBar = () => {
+const LargeScreenNavigationBar = ({ children }) => {
   const [animating, setAnimating] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [iconDirection, setIconDirection] = useState(RIGHT);
@@ -117,7 +116,7 @@ const LargeScreenNavigationBar = () => {
             setIconDirection={setIconDirection}
           />
         </Box>
-        {/* Outlet */}
+        {/* Body */}
         {!pageIsLoading && (
           <Box
             flex={1}
@@ -127,7 +126,7 @@ const LargeScreenNavigationBar = () => {
               overflowX: "hidden",
             }}
           >
-            <Outlet />
+            {children}
           </Box>
         )}
       </Box>

@@ -6,7 +6,6 @@ import SearchBarcodeNumber from "./SearchBarcodeNumber/SearchBarcodeNumber";
 import SearchFoodName from "./SearchFoodName/SearchFoodName";
 import FoodData from "./FoodData/FoodData";
 import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
 
 // ------------------------------------ CONSTANTS ------------------------------------
 const {
@@ -21,11 +20,9 @@ const {
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const SearchFood = () => {
-  const { user, searchFoodPage } = useSelector((state) => state);
+  const { searchFoodPage } = useSelector((state) => state);
 
   // ------------------------------------- RENDER -------------------------------------
-  if (!user.isLoggedIn) return <Navigate to="/" />;
-
   const { name, barcodeImageFile, foodData, foodName, barcodeNumber } =
     searchFoodPage.peek();
 

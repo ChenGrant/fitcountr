@@ -2,11 +2,10 @@ import { Box, IconButton, Slide } from "@mui/material";
 import React, { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import ClearIcon from "@mui/icons-material/Clear";
-import { Outlet } from "react-router-dom";
 import useScreenSize from "../../../hooks/useScreenSize";
 import NavigationBarItemList from "./NavigationBarItemList";
 
-const SmallScreenNavigationBar = () => {
+const SmallScreenNavigationBar = ({ children }) => {
   const { tablet } = useScreenSize();
   const [menuIsOpen, setMenuIsOpen] = useState(false);
 
@@ -69,7 +68,7 @@ const SmallScreenNavigationBar = () => {
           overflowX: "hidden",
         }}
       >
-        <Outlet />
+        {children}
       </Box>
     </>
   );

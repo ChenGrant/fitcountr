@@ -71,7 +71,7 @@ const NavigationBarItem = ({ isOpen, name, icon, nestedItems, ...rest }) => {
       {/* Nested Items */}
       {isExpanded &&
         arrowDirectionIsDown &&
-        nestedItems.map(({ label, onClick }) => (
+        nestedItems.map(({ name, onClick }) => (
           <Box
             key={uuidv4()}
             display="flex"
@@ -95,7 +95,7 @@ const NavigationBarItem = ({ isOpen, name, icon, nestedItems, ...rest }) => {
               borderRadius="100%"
               bgcolor={theme.palette.primary.main}
             />
-            <Typography>{label}</Typography>
+            <Typography>{name}</Typography>
           </Box>
         ))}
     </>

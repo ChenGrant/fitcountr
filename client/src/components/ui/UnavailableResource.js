@@ -3,6 +3,7 @@ import { Box, Typography } from "@mui/material";
 import CustomButton from "./CustomButton";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { ROUTE_PATHS } from "../../setup/routes/routeUtils";
 
 const UnavailableResource = () => {
   const { user } = useSelector((state) => state);
@@ -25,12 +26,15 @@ const UnavailableResource = () => {
       {user.isLoggedIn ? (
         <CustomButton
           variant="contained"
-          onClick={() => navigate("/dashboard/")}
+          onClick={() => navigate(ROUTE_PATHS.DASHBOARD)}
         >
           Dashboard
         </CustomButton>
       ) : (
-        <CustomButton variant="contained" onClick={() => navigate("/")}>
+        <CustomButton
+          variant="contained"
+          onClick={() => navigate(ROUTE_PATHS.HOME)}
+        >
           Home
         </CustomButton>
       )}

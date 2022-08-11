@@ -5,12 +5,13 @@ import LargeScreenNavigationBar from "../../components/layouts/navigationBar/Lar
 import SmallScreenNavigationBar from "../../components/layouts/navigationBar/SmallScreenNavigationBar";
 import Wrapper from "../../components/miscellaneous/Wrapper";
 import useScreenSize from "../../hooks/useScreenSize";
+import { ROUTE_PATHS } from "./routeUtils";
 
 const AuthenticatedRoutes = () => {
   const { user } = useSelector((state) => state);
   const { desktop } = useScreenSize();
 
-  if (!user.isLoggedIn) return <Navigate to="/" />;
+  if (!user.isLoggedIn) return <Navigate to={ROUTE_PATHS.HOME} />;
 
   return (
     <Wrapper

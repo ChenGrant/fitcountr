@@ -18,6 +18,7 @@ import useAsset from "../../../hooks/useAsset";
 import useScreenSize from "../../../hooks/useScreenSize";
 import { useDispatch, useSelector } from "react-redux";
 import { setVerificationStatus } from "../../../redux";
+import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
 
 // -------------------------------- CONSTANTS --------------------------------
 const EMAIL_VERIFICATION_POPUP_STATES = {
@@ -360,12 +361,15 @@ const EmailVerification = () => {
         {user.isLoggedIn && user.user.email === email ? (
           <CustomButton
             variant="contained"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate(ROUTE_PATHS.DASHBOARD)}
           >
             Dashboard
           </CustomButton>
         ) : (
-          <CustomButton variant="contained" onClick={() => navigate("/")}>
+          <CustomButton
+            variant="contained"
+            onClick={() => navigate(ROUTE_PATHS.HOME)}
+          >
             Home
           </CustomButton>
         )}

@@ -9,6 +9,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { resetSearchFoodPages } from "../../../redux";
 import { v4 as uuidv4 } from "uuid";
+import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
 
 const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
   const navigate = useNavigate();
@@ -36,9 +37,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
     {
       name: "Dashboard",
       icon: <DashboardIcon />,
-      onClick: () => {
-        navigate("/dashboard");
-      },
+      onClick: () => navigate(ROUTE_PATHS.DASHBOARD),
     },
     // Search Food
     {
@@ -46,7 +45,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
       icon: <SearchIcon />,
       onClick: () => {
         dispatch(resetSearchFoodPages());
-        navigate("/searchFood");
+        navigate(ROUTE_PATHS.SEARCH_FOOD);
       },
     },
     // Progress

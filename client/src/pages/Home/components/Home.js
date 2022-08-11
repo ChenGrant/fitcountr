@@ -10,6 +10,7 @@ import GmailOverridePopup, {
   GMAIL_OVERRIDE_POPUP_STATES,
 } from "./GmailOverridePopup";
 import LoadingCircle from "../../../components/ui/LoadingCircle";
+import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
 
 // ------------------------------------ CONSTANTS ------------------------------------
 const SIGNUP_FORM = "SIGNUP_FORM";
@@ -45,7 +46,7 @@ const Home = () => {
     !user.isCreating &&
     gmailOverridePopupState === GMAIL_OVERRIDE_POPUP_STATES.CLOSED
   )
-    return <Navigate to="/dashboard" />;
+    return <Navigate to={ROUTE_PATHS.DASHBOARD} />;
 
   return (
     <Box height={desktop && "100vh"} px="5vw">

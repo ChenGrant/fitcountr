@@ -28,6 +28,7 @@ import {
 import { useDispatch } from "react-redux";
 import { setAuthenticatingUser } from "../../../redux";
 import { handleAuthWithGmail } from "../utils";
+import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
 
 // ------------------------------------- FORMIK -------------------------------------
 const initialValues = {
@@ -86,10 +87,8 @@ const SignupForm = ({
       );
 
       // if user was successfully created
-      if (fetchedSignupData.userIsCreated) {
-        navigate(`/emailVerification/${email}`);
-        return;
-      }
+      if (fetchedSignupData.userIsCreated)
+        return navigate(`${ROUTE_PATHS.EMAIL_VERIFICATION}/${email}`);
 
       // if there was error creating user
       switch (fetchedSignupData.message) {

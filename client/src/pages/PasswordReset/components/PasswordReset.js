@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import useScreenSize from "../../../hooks/useScreenSize";
 import useAsset from "../../../hooks/useAsset";
 import LoadingCircle from "../../../components/ui/LoadingCircle";
+import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
 
 // -------------------------------- CONSTANTS --------------------------------
 const PASSWORD_RESET_EMAIL_ACTIONS = {
@@ -259,12 +260,15 @@ const PasswordReset = () => {
           user.isLoggedIn ? (
             <CustomButton
               variant="contained"
-              onClick={() => navigate("/dashboard/")}
+              onClick={() => navigate(ROUTE_PATHS.DASHBOARD)}
             >
               Dashboard
             </CustomButton>
           ) : (
-            <CustomButton variant="contained" onClick={() => navigate("/")}>
+            <CustomButton
+              variant="contained"
+              onClick={() => navigate(ROUTE_PATHS.HOME)}
+            >
               Home
             </CustomButton>
           )

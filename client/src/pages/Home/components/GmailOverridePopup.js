@@ -4,6 +4,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../../components/ui/CustomButton";
 import CustomDialog from "../../../components/ui/CustomDialog";
+import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
 
 // ------------------------------------ CONSTANTS ------------------------------------
 export const GMAIL_OVERRIDE_POPUP_STATES = {
@@ -48,7 +49,7 @@ const GmailOverridePopup = ({
         variant="contained"
         onClick={() => {
           setGmailOverridePopupState(GMAIL_OVERRIDE_POPUP_STATES.CLOSED);
-          navigate("/dashboard");
+          navigate(ROUTE_PATHS.DASHBOARD);
         }}
       >
         I understand

@@ -29,6 +29,7 @@ import {
 import { setAuthenticatingUser } from "../../../redux";
 import useScreenSize from "../../../hooks/useScreenSize";
 import { handleAuthWithGmail } from "../utils";
+import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
 
 // ---------------------------------------- FORMIK ----------------------------------------
 const initialValues = {
@@ -83,8 +84,8 @@ const LoginForm = ({
 
       if (user.user === newUser && user.isVerified !== null) {
         return user.isVerified
-          ? navigate("/dashboard")
-          : navigate(`/emailVerification/${newUser.email}`);
+          ? navigate(ROUTE_PATHS.DASHBOARD)
+          : navigate(`${ROUTE_PATHS.EMAIL_VERIFICATION}/${newUser.email}`);
       }
 
       const fetchedVerificationStatus = await fetchVerificationStatus(email);
@@ -92,13 +93,11 @@ const LoginForm = ({
         return console.log(fetchedVerificationStatus.error);
       switch (fetchedVerificationStatus.verificationStatus) {
         case "Verified":
-          navigate("/dashboard");
-          return;
+          return navigate(ROUTE_PATHS.DASHBOARD);
         case "Not verified":
-          navigate(`/emailVerification/${newUser.email}`);
-          return;
+          return navigate(`${ROUTE_PATHS.EMAIL_VERIFICATION}/${newUser.email}`);
         default:
-          break;
+          return;
       }
     } catch (err) {
       switch (err.message) {
@@ -247,7 +246,7 @@ const LoginForm = ({
                   {/* 'forgot password' text */}
                   <Box fullWidth>
                     <Typography
-                      onClick={() => navigate("/passwordReset")}
+                      onClick={() => navigate(ROUTE_PATHS.PASSWORD_RESET)}
                       textAlign="right"
                       sx={{
                         cursor: "pointer",

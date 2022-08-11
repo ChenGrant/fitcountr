@@ -22,14 +22,13 @@ import {
   fetchEmailIsInUse,
   fetchEmailProvider,
   fetchVerificationStatus,
-  handleAuthWithGmail,
   GMAIL_PROVIDER,
   FORM_ERROR_HEIGHT,
   errorIsRendered,
 } from "../../../utils";
 import { setAuthenticatingUser } from "../../../redux";
 import useScreenSize from "../../../hooks/useScreenSize";
-import { GMAIL_OVERRIDE_POPUP_STATES } from "./GmailOverridePopup";
+import { handleAuthWithGmail } from "../utils";
 
 // ---------------------------------------- FORMIK ----------------------------------------
 const initialValues = {
@@ -165,8 +164,7 @@ const LoginForm = ({
                             auth,
                             setOverriddenGmailUser,
                             setGmailOverridePopupState,
-                            setGmailLoginButtonIsDisabled,
-                            GMAIL_OVERRIDE_POPUP_STATES
+                            setGmailLoginButtonIsDisabled
                           );
                           dispatch(setAuthenticatingUser(false));
                         }}

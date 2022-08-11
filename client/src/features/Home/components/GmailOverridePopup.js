@@ -5,12 +5,16 @@ import { useNavigate } from "react-router-dom";
 import CustomButton from "../../../components/ui/CustomButton";
 import CustomDialog from "../../../components/ui/CustomDialog";
 
+// ------------------------------------ CONSTANTS ------------------------------------
 export const GMAIL_OVERRIDE_POPUP_STATES = {
   OPEN: "OPEN",
   CLOSED: "CLOSED",
   PENDING: "PENDING",
 };
 
+// ************************************************************************************
+// ------------------------------------ COMPONENT -------------------------------------
+// ************************************************************************************
 const GmailOverridePopup = ({
   gmailOverridePopupState,
   setGmailOverridePopupState,

@@ -21,8 +21,6 @@ export {
   errorIsRendered,
 } from "./inputFieldUtils";
 
-export { handleAuthWithGmail } from "./authUtils";
-
 export { numberWithCommas, capitalizeFirstCharacter } from "./stringUtils";
 
 export { sub, round } from "./numberUtils";

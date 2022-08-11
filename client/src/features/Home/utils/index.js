@@ -1,5 +1,6 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { GMAIL_PROVIDER, postSignupData } from "./index";
+import { GMAIL_PROVIDER, postSignupData } from "../../../utils";
+import { GMAIL_OVERRIDE_POPUP_STATES } from "../components/GmailOverridePopup";
 
 // handleAuthWithGmail signs in the user via their gmail account,
 // creates an account for them if it is their first time signing in.
@@ -9,8 +10,7 @@ export const handleAuthWithGmail = async (
   auth,
   setOverriddenGmailUser,
   setGmailOverridePopupState,
-  setGmailButtonIsDisabled,
-  GMAIL_OVERRIDE_POPUP_STATES
+  setGmailButtonIsDisabled
 ) => {
   try {
     const result = await signInWithPopup(auth, new GoogleAuthProvider());

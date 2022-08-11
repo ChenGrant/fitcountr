@@ -89,14 +89,12 @@ const NavigationBarItem = ({ isOpen, name, icon, nestedItems, ...rest }) => {
             ml={3}
             onClick={onClick}
           >
-            <Typography>
-              <Box
-                width="5px"
-                height="5px"
-                borderRadius="100%"
-                bgcolor={theme.palette.primary.main}
-              />
-            </Typography>
+            <Box
+              width="5px"
+              height="5px"
+              borderRadius="100%"
+              bgcolor={theme.palette.primary.main}
+            />
             <Typography>{label}</Typography>
           </Box>
         ))}

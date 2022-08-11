@@ -1,5 +1,5 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { GMAIL_OVERRIDE_POPUP_STATES } from "../pages/Home/GmailOverridePopup";
+import { GMAIL_OVERRIDE_POPUP_STATES } from "../features/Home/GmailOverridePopup";
 import { GMAIL_PROVIDER, postSignupData } from "./index";
 
 // handleAuthWithGmail signs in the user via their gmail account,

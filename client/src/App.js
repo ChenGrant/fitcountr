@@ -1,14 +1,14 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import AppInitializer from "./components/wrappers/AppInitializer";
-import Home from "./pages/Home/Home";
-import EmailVerification from "./pages/EmailVerification/EmailVerification";
-import UnavailableResource from "./pages/UnavailableResource/UnavailableResource";
-import PasswordReset from "./pages/PasswordReset/PasswordReset";
-import SearchFood from "./pages/SearchFood/SearchFood";
-import Progress from "./pages/Progress/Progress";
-import Dashboard from "./pages/Dashboard/Dashboard";
+import Home from "./features/Home/Home";
+import EmailVerification from "./features/EmailVerification/EmailVerification";
+import PasswordReset from "./features/PasswordReset/PasswordReset";
+import SearchFood from "./features/SearchFood/SearchFood";
+import Progress from "./features/Progress/Progress";
+import Dashboard from "./features/Dashboard/Dashboard";
 import AuthenticatedRoutes from "./routes/AuthenticatedRoutes";
+import UnavailableResource from "./components/ui/UnavailableResource";
+import AppInitializer from "./features/AppInitializer/AppInitializer";
 
 const App = () => {
   return (

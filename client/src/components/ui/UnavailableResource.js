@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import CustomButton from "../../components/ui/CustomButton";
+import CustomButton from "./CustomButton";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 

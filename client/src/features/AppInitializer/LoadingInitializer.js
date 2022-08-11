@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useSelector } from "react-redux";
-import LoadingCircle from "../ui/LoadingCircle";
+import LoadingCircle from "../../components/ui/LoadingCircle";
 import { FontsLoaderContext } from "./FontsLoader";
 
 const LoadingInitializer = ({ children }) => {

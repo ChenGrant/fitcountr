@@ -1,13 +1,13 @@
 import { Box, CircularProgress, TextField, Typography } from "@mui/material";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import React, { useEffect, useReducer, useState } from "react";
-import CustomButton from "../../components/ui/CustomButton";
+import CustomButton from "../../../components/ui/CustomButton";
 import { useTheme } from "@mui/styles";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import useScreenSize from "../../hooks/useScreenSize";
-import useAsset from "../../hooks/useAsset";
-import LoadingCircle from "../../components/ui/LoadingCircle";
+import useScreenSize from "../../../hooks/useScreenSize";
+import useAsset from "../../../hooks/useAsset";
+import LoadingCircle from "../../../components/ui/LoadingCircle";
 
 // -------------------------------- CONSTANTS --------------------------------
 const PASSWORD_RESET_EMAIL_ACTIONS = {

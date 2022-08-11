@@ -1,5 +1,5 @@
 import React from "react";
-import CustomCard from "../../components/ui/CustomCard";
+import CustomCard from "../../../components/ui/CustomCard";
 import { Typography, Box, useTheme, IconButton } from "@mui/material";
 import { Line } from "react-chartjs-2";
 import SettingsIcon from "@mui/icons-material/Settings";

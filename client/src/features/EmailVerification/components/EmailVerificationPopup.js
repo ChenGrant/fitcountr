@@ -3,8 +3,8 @@ import { Box, Typography, CircularProgress } from "@mui/material";
 import React from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
-import CustomButton from "../../components/ui/CustomButton";
-import CustomDialog from "../../components/ui/CustomDialog";
+import CustomButton from "../../../components/ui/CustomButton";
+import CustomDialog from "../../../components/ui/CustomDialog";
 
 const EmailVerificationPopup = ({
   email,

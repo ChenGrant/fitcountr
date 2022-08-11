@@ -2,14 +2,15 @@ import { useTheme } from "@emotion/react";
 import { Typography } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import CustomButton from "../../components/ui/CustomButton";
-import CustomDialog from "../../components/ui/CustomDialog";
+import CustomButton from "../../../components/ui/CustomButton";
+import CustomDialog from "../../../components/ui/CustomDialog";
 
 export const GMAIL_OVERRIDE_POPUP_STATES = {
   OPEN: "OPEN",
   CLOSED: "CLOSED",
   PENDING: "PENDING",
 };
+
 const GmailOverridePopup = ({
   gmailOverridePopupState,
   setGmailOverridePopupState,

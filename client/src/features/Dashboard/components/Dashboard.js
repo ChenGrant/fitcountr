@@ -1,12 +1,12 @@
 import { Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import useScreenSize from "../../hooks/useScreenSize";
+import useScreenSize from "../../../hooks/useScreenSize";
 import { v4 as uuidv4 } from "uuid";
 import DailyProgressCard from "./DailyProgressCard";
 import MacroPieChart from "./MacrosPieChart";
-import { capitalizeFirstCharacter } from "../../utils";
+import { capitalizeFirstCharacter } from "../../../utils";
 import { useTheme } from "@emotion/react";
-import LoadingCircle from "../../components/ui/LoadingCircle";
+import LoadingCircle from "../../../components/ui/LoadingCircle";
 import ProgressLineChart from "./ProgressLineChart";
 
 const dailyProgressData = [

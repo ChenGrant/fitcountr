@@ -1,10 +1,10 @@
 import React from "react";
-import { SEARCH_FOOD_PAGES } from "../../utils";
-import SelectSearchMethod from "./SelectSearchMethod/SelectSearchMethod";
-import SearchBarcodeImage from "./SearchBarcodeImage/SearchBarcodeImage";
-import SearchBarcodeNumber from "./SearchBarcodeNumber/SearchBarcodeNumber";
-import SearchFoodName from "./SearchFoodName/SearchFoodName";
-import FoodData from "./FoodData/FoodData";
+import { SEARCH_FOOD_PAGES } from "../../../utils";
+import SelectSearchMethod from "./SelectSearchMethod";
+import SearchBarcodeImage from "./SearchBarcodeImage";
+import SearchBarcodeNumber from "./SearchBarcodeNumber";
+import SearchFoodName from "./SearchFoodName";
+import FoodData from "./FoodData";
 import { useSelector } from "react-redux";
 
 // ------------------------------------ CONSTANTS ------------------------------------

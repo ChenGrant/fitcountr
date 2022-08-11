@@ -2,10 +2,10 @@ import React from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import { Box } from "@mui/system";
-import CustomCard from "../../components/ui/CustomCard";
+import CustomCard from "../../../components/ui/CustomCard";
 import { Typography } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
-import useScreenSize from "../../hooks/useScreenSize";
+import useScreenSize from "../../../hooks/useScreenSize";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 

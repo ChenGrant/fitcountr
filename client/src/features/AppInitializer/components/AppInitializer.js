@@ -1,8 +1,8 @@
 import React from "react";
 import { ThemeProvider } from "@mui/material";
-import { theme } from "../../utils";
+import { theme } from "../../../utils";
 import { Provider as ReduxProvider } from "react-redux";
-import store from "../../redux/store";
+import store from "../../../redux/store";
 import FirebaseClientInitializer from "./FirebaseClientInitializer";
 import FirebaseUserListener from "./FirebaseUserListener";
 import FontsLoader from "./FontsLoader";

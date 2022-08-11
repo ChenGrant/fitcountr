@@ -5,19 +5,19 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import PinInput from "react-pin-input";
 import EmailVerificationPopup from "./EmailVerificationPopup";
-import CustomButton from "../../components/ui/CustomButton";
-import LoadingCircle from "../../components/ui/LoadingCircle";
+import CustomButton from "../../../components/ui/CustomButton";
+import LoadingCircle from "../../../components/ui/LoadingCircle";
 import {
   fetchEmailIsInUse,
   fetchVerificationStatus,
   fetchPinLength,
   sendVerificationEmail,
   fetchValidatePin,
-} from "../../utils";
-import useAsset from "../../hooks/useAsset";
-import useScreenSize from "../../hooks/useScreenSize";
+} from "../../../utils";
+import useAsset from "../../../hooks/useAsset";
+import useScreenSize from "../../../hooks/useScreenSize";
 import { useDispatch, useSelector } from "react-redux";
-import { setVerificationStatus } from "../../redux";
+import { setVerificationStatus } from "../../../redux";
 
 // -------------------------------- CONSTANTS --------------------------------
 const EMAIL_VERIFICATION_POPUP_STATES = {

@@ -7,14 +7,14 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import FormikControl from "../../components/formik/FormikControl";
+import FormikControl from "../../../components/formik/FormikControl";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useTheme } from "@emotion/react";
-import CustomButton from "../../components/ui/CustomButton";
+import CustomButton from "../../../components/ui/CustomButton";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -26,9 +26,10 @@ import {
   GMAIL_PROVIDER,
   FORM_ERROR_HEIGHT,
   errorIsRendered,
-} from "../../utils";
-import { setAuthenticatingUser } from "../../redux";
-import useScreenSize from "../../hooks/useScreenSize";
+} from "../../../utils";
+import { setAuthenticatingUser } from "../../../redux";
+import useScreenSize from "../../../hooks/useScreenSize";
+import { GMAIL_OVERRIDE_POPUP_STATES } from "./GmailOverridePopup";
 
 // ---------------------------------------- FORMIK ----------------------------------------
 const initialValues = {
@@ -164,7 +165,8 @@ const LoginForm = ({
                             auth,
                             setOverriddenGmailUser,
                             setGmailOverridePopupState,
-                            setGmailLoginButtonIsDisabled
+                            setGmailLoginButtonIsDisabled,
+                            GMAIL_OVERRIDE_POPUP_STATES
                           );
                           dispatch(setAuthenticatingUser(false));
                         }}

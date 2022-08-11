@@ -4,12 +4,12 @@ import {
   capitalizeFirstCharacter,
   numberWithCommas,
   sub,
-} from "../../utils";
+} from "../../../utils";
 import TrendingFlatIcon from "@mui/icons-material/TrendingFlat";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import CustomCard from "../../components/ui/CustomCard";
-import useScreenSize from "../../hooks/useScreenSize";
+import CustomCard from "../../../components/ui/CustomCard";
+import useScreenSize from "../../../hooks/useScreenSize";
 
 const DailyProgressCard = ({ stat, goal, current }) => {
   const { desktop } = useScreenSize();

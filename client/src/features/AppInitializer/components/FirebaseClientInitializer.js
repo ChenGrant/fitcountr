@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { fetchFirebaseClientConfig } from "../../utils";
+import { fetchFirebaseClientConfig } from "../../../utils";
 
 // ------------------------------------- CONTEXT --------------------------------------
 export const FirebaseClientInitializerContext = React.createContext();

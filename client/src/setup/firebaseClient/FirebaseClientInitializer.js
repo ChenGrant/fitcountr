@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { fetchFirebaseClientConfig } from "../../../utils";
-
-// ------------------------------------- CONTEXT --------------------------------------
-export const FirebaseClientInitializerContext = React.createContext();
+import { fetchFirebaseClientConfig } from "../../utils";
+import { FirebaseClientInitializerContextProvider } from "./FirebaseClientInitializerContext";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
@@ -24,11 +22,11 @@ const FirebaseClientInitializer = ({ children }) => {
   }, []);
 
   return (
-    <FirebaseClientInitializerContext.Provider
+    <FirebaseClientInitializerContextProvider
       value={initializingFirebaseClient}
     >
       {children}
-    </FirebaseClientInitializerContext.Provider>
+    </FirebaseClientInitializerContextProvider>
   );
 };
 

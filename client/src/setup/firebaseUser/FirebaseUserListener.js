@@ -6,9 +6,9 @@ import {
   resetUser,
   setUser,
   setVerificationStatus,
-} from "../../../redux";
-import { fetchVerificationStatus } from "../../../utils";
-import { FirebaseClientInitializerContext } from "./FirebaseClientInitializer";
+} from "../../redux";
+import { fetchVerificationStatus } from "../../utils";
+import { FirebaseClientInitializerContext } from "../firebaseClient/FirebaseClientInitializerContext";
 
 const FirebaseUserListener = ({ children }) => {
   const initializingFirebaseClient = useContext(

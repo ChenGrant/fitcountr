@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import WebFont from "webfontloader";
-
-// ------------------------------------- CONTEXT --------------------------------------
-export const FontsLoaderContext = React.createContext();
+import { FontsInitializerContextProvider } from "./FontsInitializerContext";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
-const FontsLoader = ({ children }) => {
+const FontsInitializer = ({ children }) => {
   const [loadingFonts, setLoadingFonts] = useState(true);
 
   // fetch fonts
@@ -20,10 +18,10 @@ const FontsLoader = ({ children }) => {
   }, []);
 
   return (
-    <FontsLoaderContext.Provider value={loadingFonts}>
+    <FontsInitializerContextProvider value={loadingFonts}>
       {children}
-    </FontsLoaderContext.Provider>
+    </FontsInitializerContextProvider>
   );
 };
 
-export default FontsLoader;
+export default FontsInitializer;

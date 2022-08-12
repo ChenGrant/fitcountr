@@ -60,13 +60,14 @@ export const cleanFoodsFetchedFromBarcodeNumber = (rawFoodData) => {
 };
 
 export const cleanFoodsFetchedFromQuery = (rawFoodData) => {
+  console.log(rawFoodData);
   const USDA_NUTRIENT_MAP = new Map(
     Object.entries({
       Energy: "calories",
       Protein: "protein",
       "Carbohydrate, by difference": "carbohydrate",
       "Total lipid (fat)": "fat",
-      Sugars: "sugars",
+      "Sugars, total including NLEA": "sugars",
       "Sodium, Na": "sodium",
     })
   );

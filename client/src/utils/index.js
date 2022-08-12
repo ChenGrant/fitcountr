@@ -15,6 +15,8 @@ export {
   postSignupData,
 } from "./requestUtils";
 
+export { sortArray } from "./arrayUtils";
+
 export {
   FORM_ERROR_HEIGHT,
   EMAIL_ALREADY_IN_USE,

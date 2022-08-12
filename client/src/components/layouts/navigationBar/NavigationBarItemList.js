@@ -52,7 +52,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
     {
       name: "Progress",
       icon: <TrendingUpIcon />,
-      nestedItems: [{ name: "Weight" }, { name: "Meals" }],
+      nestedItems: [{ name: "Weight" }, { name: "Meals" }, { name: "Steps" }],
     },
     // Logout
     {

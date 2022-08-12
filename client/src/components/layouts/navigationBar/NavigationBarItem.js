@@ -6,6 +6,7 @@ import useScreenSize from "../../../hooks/useScreenSize";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { v4 as uuidv4 } from "uuid";
+import { sortArray } from "../../../utils";
 
 // -------------------------------- CONSTANTS --------------------------------
 const ARROW_DIRECTIONS = {
@@ -71,7 +72,9 @@ const NavigationBarItem = ({ isOpen, name, icon, nestedItems, ...rest }) => {
       {/* Nested Items */}
       <Collapse in={isExpanded && arrowDirectionIsDown}>
         {nestedItems &&
-          nestedItems.map(({ name, onClick }) => (
+          sortArray(nestedItems, (item1, item2) =>
+            item1.name.localeCompare(item2.name)
+          ).map(({ name, onClick }) => (
             <Box
               key={uuidv4()}
               display="flex"

@@ -1,1 +1,1 @@
-export const SET_STAT = "SET_STAT";
+export const SET_PROGRESS_PAGE_STAT = "SET_PROGRESS_PAGE_STAT";

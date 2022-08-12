@@ -17,13 +17,19 @@ export {
 
 export { sortArray } from "./arrayUtils";
 
+export { PROGRESS_TYPES } from "./progressUtils";
+
 export {
   FORM_ERROR_HEIGHT,
   EMAIL_ALREADY_IN_USE,
   errorIsRendered,
 } from "./inputFieldUtils";
 
-export { numberWithCommas, capitalizeFirstCharacter } from "./stringUtils";
+export {
+  numberWithCommas,
+  capitalizeFirstCharacter,
+  capitalizeFirstCharacterLowercaseRest,
+} from "./stringUtils";
 
 export { sub, round } from "./numberUtils";
 

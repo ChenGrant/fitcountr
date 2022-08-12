@@ -1,4 +1,4 @@
-export { setStat } from "./progressPage/progressPageActions";
+export { setProgressPageStat } from "./progressPage/progressPageActions";
 
 export {
   initializeUser,

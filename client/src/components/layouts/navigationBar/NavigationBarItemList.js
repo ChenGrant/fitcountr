@@ -7,8 +7,12 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import SearchIcon from "@mui/icons-material/Search";
 import { getAuth, signOut } from "firebase/auth";
 import { useDispatch } from "react-redux";
-import { resetSearchFoodPages } from "../../../redux";
+import { resetSearchFoodPages, setProgressPageStat } from "../../../redux";
 import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
+import {
+  capitalizeFirstCharacterLowercaseRest,
+  PROGRESS_TYPES,
+} from "../../../utils";
 
 const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
   const navigate = useNavigate();
@@ -51,7 +55,13 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
     {
       name: "Progress",
       icon: <TrendingUpIcon />,
-      nestedItems: [{ name: "Weight" }, { name: "Meals" }, { name: "Steps" }],
+      nestedItems: Object.values(PROGRESS_TYPES).map((progressType) => ({
+        name: capitalizeFirstCharacterLowercaseRest(progressType),
+        onClick: () => {
+          dispatch(setProgressPageStat(progressType));
+          navigate(ROUTE_PATHS.PROGRESS);
+        },
+      })),
     },
     // Logout
     {

@@ -1,6 +1,6 @@
-import { SET_STAT } from "./progressPageTypes";
+import { SET_PROGRESS_PAGE_STAT } from "./progressPageTypes";
 
-export const setStat = (newStat) => ({
-  type: SET_STAT,
+export const setProgressPageStat = (newStat) => ({
+  type: SET_PROGRESS_PAGE_STAT,
   payload: newStat,
 });

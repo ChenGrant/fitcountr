@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Collapse, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
@@ -69,35 +69,36 @@ const NavigationBarItem = ({ isOpen, name, icon, nestedItems, ...rest }) => {
           ))}
       </Box>
       {/* Nested Items */}
-      {isExpanded &&
-        arrowDirectionIsDown &&
-        nestedItems.map(({ name, onClick }) => (
-          <Box
-            key={uuidv4()}
-            display="flex"
-            alignItems="center"
-            p={1}
-            px={2}
-            borderRadius="10px"
-            gap={2}
-            sx={{
-              cursor: "pointer",
-              "&:hover": {
-                bgcolor: "rgba(145, 158, 171, 0.12)",
-              },
-            }}
-            ml={3}
-            onClick={onClick}
-          >
+      <Collapse in={isExpanded && arrowDirectionIsDown}>
+        {nestedItems &&
+          nestedItems.map(({ name, onClick }) => (
             <Box
-              width="5px"
-              height="5px"
-              borderRadius="100%"
-              bgcolor={theme.palette.primary.main}
-            />
-            <Typography>{name}</Typography>
-          </Box>
-        ))}
+              key={uuidv4()}
+              display="flex"
+              alignItems="center"
+              p={1}
+              px={2}
+              borderRadius="10px"
+              gap={2}
+              sx={{
+                cursor: "pointer",
+                "&:hover": {
+                  bgcolor: "rgba(145, 158, 171, 0.12)",
+                },
+              }}
+              ml={3}
+              onClick={onClick}
+            >
+              <Box
+                width="5px"
+                height="5px"
+                borderRadius="100%"
+                bgcolor={theme.palette.primary.main}
+              />
+              <Typography>{name}</Typography>
+            </Box>
+          ))}
+      </Collapse>
     </>
   );
 };

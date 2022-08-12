@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import useScreenSize from "../../../hooks/useScreenSize";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import { v4 as uuidv4 } from "uuid";
 import { sortArray } from "../../../utils";
 
 // -------------------------------- CONSTANTS --------------------------------
@@ -76,7 +75,7 @@ const NavigationBarItem = ({ isOpen, name, icon, nestedItems, ...rest }) => {
             item1.name.localeCompare(item2.name)
           ).map(({ name, onClick }) => (
             <Box
-              key={uuidv4()}
+              key={name}
               display="flex"
               alignItems="center"
               p={1}

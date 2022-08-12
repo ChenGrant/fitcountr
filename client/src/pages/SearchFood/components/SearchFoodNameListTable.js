@@ -3,7 +3,6 @@ import { LinearProgress, Pagination, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect } from "react";
 import CustomCard from "../../../components/ui/CustomCard";
-import { v4 as uuidv4 } from "uuid";
 import useScreenSize from "../../../hooks/useScreenSize";
 import { SEARCH_FOOD_PAGES, fetchFoodsFromQuery } from "../../../utils";
 import { useDispatch } from "react-redux";
@@ -102,7 +101,7 @@ const SearchFoodNameListTable = ({
               <LinearProgress sx={{ width: "75%", maxWidth: "400px" }} />
             ) : (
               foodData.list.foods.map((food) => (
-                <React.Fragment key={uuidv4()}>
+                <React.Fragment key={food.description}>
                   <Box fullWidth height="1px" bgcolor="#D3D3D3" />
                   <Typography
                     p={1}

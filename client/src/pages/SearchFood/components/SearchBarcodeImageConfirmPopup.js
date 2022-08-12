@@ -4,7 +4,6 @@ import React from "react";
 import { SEARCH_FOOD_PAGES } from "../../../utils";
 import CustomButton from "../../../components/ui/CustomButton";
 import CustomDialog from "../../../components/ui/CustomDialog";
-import { v4 as uuidv4 } from "uuid";
 import { useDispatch } from "react-redux";
 import { addSearchFoodPage } from "../../../redux";
 
@@ -56,7 +55,7 @@ const SearchBarcodeImageConfirmPopup = ({
       </Typography>
       {POPUP_OPTIONS.map(({ label, onClickHandler }) => (
         <CustomButton
-          key={uuidv4()}
+          key={label}
           variant="contained"
           sx={{ width: "100%" }}
           onClick={onClickHandler}

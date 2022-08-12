@@ -7,7 +7,6 @@ import CustomButton from "../../../components/ui/CustomButton";
 import { Box } from "@mui/system";
 import CustomCard from "../../../components/ui/CustomCard";
 import useScreenSize from "../../../hooks/useScreenSize";
-import { v4 as uuidv4 } from "uuid";
 import {
   capitalizeFirstCharacter,
   round,
@@ -70,7 +69,7 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
                 const { value, unit } = measurement;
                 return (
                   <Box
-                    key={uuidv4()}
+                    key={nutrientName}
                     display="flex"
                     borderTop="1px solid #D3D3D3"
                     py={1}

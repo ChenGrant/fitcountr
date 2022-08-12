@@ -1,7 +1,6 @@
 import { Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import useScreenSize from "../../../hooks/useScreenSize";
-import { v4 as uuidv4 } from "uuid";
 import DailyProgressCard from "./DailyProgressCard";
 import MacroPieChart from "./MacrosPieChart";
 import { capitalizeFirstCharacter } from "../../../utils";
@@ -81,7 +80,7 @@ const Dashboard = () => {
         fullWidth
       >
         {dailyProgressData.map((stat) => (
-          <DailyProgressCard key={uuidv4()} {...stat} />
+          <DailyProgressCard key={stat.stat} {...stat} />
         ))}
       </Box>
       <Box

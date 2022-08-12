@@ -2,7 +2,6 @@ import { LinearProgress, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 import CustomCard from "../../../components/ui/CustomCard";
-import { v4 as uuidv4 } from "uuid";
 import { SEARCH_FOOD_PAGES } from "../../../utils";
 import useAsset from "../../../hooks/useAsset";
 import useScreenSize from "../../../hooks/useScreenSize";
@@ -90,7 +89,7 @@ const SelectSearchMethod = () => {
             {SEARCH_METHODS.map(({ searchMethodName, imageName, pageName }) => {
               return (
                 <CustomCard
-                  key={uuidv4()}
+                  key={searchMethodName}
                   sx={{ cursor: "pointer" }}
                   onClick={() =>
                     pageName && dispatch(addSearchFoodPage({ name: pageName }))

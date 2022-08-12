@@ -4,7 +4,6 @@ import { Pie } from "react-chartjs-2";
 import { Box } from "@mui/system";
 import CustomCard from "../../../components/ui/CustomCard";
 import { Typography } from "@mui/material";
-import { v4 as uuidv4 } from "uuid";
 import useScreenSize from "../../../hooks/useScreenSize";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -41,7 +40,7 @@ const MacrosPieChart = ({ macros }) => {
         </Box>
         {macros.map((macro) => {
           return (
-            <Box key={uuidv4()} display="flex" alignItems="center" gap={1}>
+            <Box key={macro.label} display="flex" alignItems="center" gap={1}>
               <Box
                 bgcolor={macro.color}
                 minHeight="10px"

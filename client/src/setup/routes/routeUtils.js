@@ -1,7 +1,7 @@
 export const ROUTE_PATHS = {
   HOME: "/",
-  PASSWORD_RESET: "/passwordReset",
-  EMAIL_VERIFICATION: "/emailVerification/",
+  PASSWORD_RESET: "/password-reset",
+  EMAIL_VERIFICATION: "/email-verification",
   DASHBOARD: "/dashboard",
   SEARCH_FOOD: "/searchFood",
   PROGRESS: "/progress",

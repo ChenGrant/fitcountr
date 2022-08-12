@@ -64,7 +64,13 @@ const Dashboard = () => {
   if (loading) return <LoadingCircle />;
 
   return (
-    <Box p={4} display="flex" flexDirection="column" gap={GAP_SIZE}>
+    <Box
+      p={4}
+      display="flex"
+      flexDirection="column"
+      gap={GAP_SIZE}
+      height="calc(100vh - 2 * 4 * 8px)"
+    >
       {/* Daily Progress Cards */}
       <Box
         display="flex"
@@ -79,6 +85,7 @@ const Dashboard = () => {
         ))}
       </Box>
       <Box
+        flex={1}
         fullWidth
         display="flex"
         flexDirection={desktop ? "row" : "column"}

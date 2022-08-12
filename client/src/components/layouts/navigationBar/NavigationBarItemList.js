@@ -9,10 +9,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { resetSearchFoodPages, setProgressPageStat } from "../../../redux";
 import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
-import {
-  capitalizeFirstCharacterLowercaseRest,
-  PROGRESS_TYPES,
-} from "../../../utils";
+import { PROGRESS_TYPES } from "../../../utils";
 
 const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
   const navigate = useNavigate();
@@ -56,7 +53,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
       name: "Progress",
       icon: <TrendingUpIcon />,
       nestedItems: Object.values(PROGRESS_TYPES).map((progressType) => ({
-        name: capitalizeFirstCharacterLowercaseRest(progressType),
+        name: progressType,
         onClick: () => {
           dispatch(setProgressPageStat(progressType));
           navigate(ROUTE_PATHS.PROGRESS);

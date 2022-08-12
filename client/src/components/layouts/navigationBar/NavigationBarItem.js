@@ -5,7 +5,10 @@ import React, { useState } from "react";
 import useScreenSize from "../../../hooks/useScreenSize";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import { sortArray } from "../../../utils";
+import {
+  capitalizeFirstCharacterLowercaseRest,
+  sortArray,
+} from "../../../utils";
 
 // -------------------------------- CONSTANTS --------------------------------
 const ARROW_DIRECTIONS = {
@@ -97,7 +100,9 @@ const NavigationBarItem = ({ isOpen, name, icon, nestedItems, ...rest }) => {
                 borderRadius="100%"
                 bgcolor={theme.palette.primary.main}
               />
-              <Typography>{name}</Typography>
+              <Typography>
+                {capitalizeFirstCharacterLowercaseRest(name)}
+              </Typography>
             </Box>
           ))}
       </Collapse>

@@ -2,11 +2,9 @@ import { Box, IconButton, Slide } from "@mui/material";
 import React, { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import ClearIcon from "@mui/icons-material/Clear";
-import useScreenSize from "../../../hooks/useScreenSize";
 import NavigationBarItemList from "./NavigationBarItemList";
 
 const SmallScreenNavigationBar = ({ children }) => {
-  const { tablet } = useScreenSize();
   const [menuIsOpen, setMenuIsOpen] = useState(false);
 
   // ------------------------------------- RENDER -------------------------------------
@@ -31,7 +29,7 @@ const SmallScreenNavigationBar = ({ children }) => {
         </IconButton>
       </Box>
       {/* Navigation Menu that slides in */}
-      <Slide direction="left" in={menuIsOpen} timeout={tablet ? 400 : 0}>
+      <Slide direction="left" in={menuIsOpen} timeout={400}>
         <Box
           position="fixed"
           top={0}

@@ -44,10 +44,6 @@ const SmallScreenNavigationBar = ({ children }) => {
           sx={{
             zIndex: 999999,
             boxShadow: 4,
-            overflow: "scroll",
-            "::-webkit-scrollbar": {
-              display: "none",
-            },
           }}
         >
           <Box onClick={() => setMenuIsOpen(false)}>

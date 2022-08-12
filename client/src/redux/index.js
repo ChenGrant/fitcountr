@@ -1,3 +1,5 @@
+export { setStat } from "./progressPage/progressPageActions";
+
 export {
   initializeUser,
   resetUser,

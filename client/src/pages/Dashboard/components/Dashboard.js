@@ -69,7 +69,7 @@ const Dashboard = () => {
       display="flex"
       flexDirection="column"
       gap={GAP_SIZE}
-      height="calc(100vh - 2 * 4 * 8px)"
+      height={desktop ? "calc(100vh - 2 * 4 * 8px)" : "auto"}
     >
       {/* Daily Progress Cards */}
       <Box
@@ -85,7 +85,7 @@ const Dashboard = () => {
         ))}
       </Box>
       <Box
-        flex={1}
+        flex={desktop && 1}
         fullWidth
         display="flex"
         flexDirection={desktop ? "row" : "column"}

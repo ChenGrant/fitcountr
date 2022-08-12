@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import NavigationBarItem from "./NavigationBarItem";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -8,7 +8,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import { getAuth, signOut } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { resetSearchFoodPages } from "../../../redux";
-import { v4 as uuidv4 } from "uuid";
 import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
 
 const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
@@ -65,7 +64,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
   // ------------------------------------- RENDER -------------------------------------
   return NAVIGATION_BAR_ITEMS.map((item) => (
     <NavigationBarItem
-      key={uuidv4()}
+      key={item.name}
       {...item}
       icon={{ ...item.icon, props: { color: "primary" } }}
       isOpen={isOpen}

@@ -15,7 +15,7 @@ export {
   postSignupData,
 } from "./requestUtils";
 
-export { sortArray } from "./arrayUtils";
+export { sortArray, getLexSmallest } from "./arrayUtils";
 
 export { PROGRESS_TYPES } from "./progressUtils";
 

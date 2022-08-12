@@ -3,3 +3,6 @@ export const sortArray = (array, comparator) => {
   arrayCopy.sort(comparator);
   return arrayCopy;
 };
+
+export const getLexSmallest = (array) =>
+  array.reduce((prev, curr) => (prev.localeCompare(curr) < 0 ? prev : curr));

@@ -25,7 +25,7 @@ import LoadingCircle from "../../../components/miscellaneous/LoadingCircle";
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
-  const { phone } = useScreenSize();
+  const { desktop } = useScreenSize();
   const dispatch = useDispatch();
   const theme = useTheme();
   const [foodData] = useFetch(
@@ -47,11 +47,14 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
       <Box sx={{ width: "100%", display: "grid", placeItems: "center" }}>
         {foodData.data ? (
           <CustomCard
-            sx={
-              phone
-                ? { p: 2, width: "calc(100% - 2 * 2 * 8px)" }
-                : { maxWidth: "600px" }
-            }
+            sx={{
+              maxWidth: "600px",
+              ...(!desktop && {
+                p: 2,
+                width: "calc(100% - 2 * 4 * 8px)",
+                maxWidth: "600px",
+              }),
+            }}
           >
             <Typography variant="h4" gutterBottom>
               <b>{foodData.data.name}</b>

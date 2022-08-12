@@ -60,7 +60,6 @@ export const cleanFoodsFetchedFromBarcodeNumber = (rawFoodData) => {
 };
 
 export const cleanFoodsFetchedFromQuery = (rawFoodData) => {
-  console.log(rawFoodData);
   const USDA_NUTRIENT_MAP = new Map(
     Object.entries({
       Energy: "calories",

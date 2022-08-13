@@ -7,7 +7,11 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import SearchIcon from "@mui/icons-material/Search";
 import { getAuth, signOut } from "firebase/auth";
 import { useDispatch } from "react-redux";
-import { resetSearchFoodPages, setProgressPageStat } from "../../../redux";
+import {
+  resetProgressPageStat,
+  resetSearchFoodPages,
+  setProgressPageStat,
+} from "../../../redux";
 import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
 import { PROGRESS_TYPES } from "../../../utils";
 
@@ -76,6 +80,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
       icon={{ ...item.icon, props: { color: "primary" } }}
       isOpen={isOpen}
       onClick={() => {
+        item.name !== "Progress" && dispatch(resetProgressPageStat());
         setMenuIsOpen && setMenuIsOpen(false);
         item.onClick();
       }}

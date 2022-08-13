@@ -14,7 +14,15 @@ import {
 } from "../../../redux";
 import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
 import { PROGRESS_TYPES } from "../../../utils";
+import { Icon } from "@mui/material";
 
+// -------------------------------- CONSTANTS --------------------------------
+const PROFILE_PIC_SRC =
+  "https://180dc.org/wp-content/uploads/2016/08/default-profile.png";
+
+// ************************************************************************************
+// ------------------------------------ COMPONENT -------------------------------------
+// ************************************************************************************
 const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -22,21 +30,19 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
 
   const NAVIGATION_BAR_ITEMS = [
     // Profile
-    // {
-    //   name: "Profile",
-    //   onClick: () => {
-    //     setMenuIsOpen && setMenuIsOpen(false);
-    //     navigate("/dashboard/profile");
-    //   },
-    //   icon: (
-    //     <Avatar
-    //       alt="profilePic"
-    //       src="https://i.stack.imgur.com/l60Hf.png"
-    //       sx={!desktop ? { height: "35px", width: "35px" } : {}}
-    //     />
-    //   ),
-    // },
-
+    {
+      name: "Profile",
+      icon: (
+        <Icon>
+          <img
+            alt="profilePicture"
+            src={PROFILE_PIC_SRC}
+            style={{ borderRadius: "100%", height: "24px", width: "24px" }}
+          />
+        </Icon>
+      ),
+      onClick: () => navigate(ROUTE_PATHS.PROFILE),
+    },
     // Dashboard
     {
       name: "Dashboard",
@@ -77,7 +83,10 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
     <NavigationBarItem
       key={item.name}
       {...item}
-      icon={{ ...item.icon, props: { color: "primary" } }}
+      icon={{
+        ...item.icon,
+        ...(item.name !== "Profile" && { props: { color: "primary" } }),
+      }}
       isOpen={isOpen}
       onClick={() => {
         item.name !== "Progress" && dispatch(resetProgressPageStat());

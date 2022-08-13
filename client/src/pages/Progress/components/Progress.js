@@ -13,6 +13,7 @@ import {
 } from "../../../utils";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
+import ProgressTable from "./ProgressTable";
 const Progress = () => {
   const { progressPage } = useSelector((state) => state);
   const dispatch = useDispatch();
@@ -30,38 +31,44 @@ const Progress = () => {
   if (pageIsLoading) return <LoadingCircle />;
 
   return (
-    <Box p={5} display="flex" flexDirection="column" gap={4}>
+    <Box
+      p={5}
+      display="flex"
+      flexDirection="column"
+      gap={5}
+      alignItems="center"
+    >
       <Typography variant="h1">Progress</Typography>
+      <Tabs
+        value={progressPage.stat}
+        onChange={(e, newProgressType) =>
+          dispatch(setProgressPageStat(newProgressType))
+        }
+      >
+        {sortArray(
+          Object.values(PROGRESS_TYPES),
+          (progressType1, progressType2) =>
+            progressType1.localeCompare(progressType2)
+        ).map((progressType) => {
+          return (
+            <Tab
+              sx={{
+                textTransform: "none",
+                fontSize: "220px",
+                color: "black",
+              }}
+              key={progressType}
+              value={progressType}
+              label={
+                <span style={{ fontSize: "20px" }}>
+                  {capitalizeFirstCharacterLowercaseRest(progressType)}
+                </span>
+              }
+            />
+          );
+        })}
+      </Tabs>
       <Box display="flex" alignItems="center" gap={15}>
-        <Tabs
-          value={progressPage.stat}
-          onChange={(e, newProgressType) =>
-            dispatch(setProgressPageStat(newProgressType))
-          }
-        >
-          {sortArray(
-            Object.values(PROGRESS_TYPES),
-            (progressType1, progressType2) =>
-              progressType1.localeCompare(progressType2)
-          ).map((progressType) => {
-            return (
-              <Tab
-                sx={{
-                  textTransform: "none",
-                  fontSize: "220px",
-                  color: "black",
-                }}
-                key={progressType}
-                value={progressType}
-                label={
-                  <span style={{ fontSize: "20px" }}>
-                    {capitalizeFirstCharacterLowercaseRest(progressType)}
-                  </span>
-                }
-              />
-            );
-          })}
-        </Tabs>
         <Box display="flex" gap={1} alignItems="center">
           <Typography variant="h6">Goal: {45.7} kg</Typography>
           <IconButton>
@@ -82,6 +89,7 @@ const Progress = () => {
           </CustomButton>
         </Box>
       </Box>
+      <ProgressTable />
     </Box>
   );
 };

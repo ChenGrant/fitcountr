@@ -1,8 +1,7 @@
-import { getLexSmallest, PROGRESS_TYPES } from "../../utils";
 import { SET_PROGRESS_PAGE_STAT } from "./progressPageTypes";
 
 const initialState = {
-  stat: getLexSmallest(Object.values(PROGRESS_TYPES)),
+  stat: null,
 };
 
 const progressPageReducer = (state = initialState, action) => {

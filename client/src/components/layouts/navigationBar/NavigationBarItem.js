@@ -9,6 +9,9 @@ import {
   capitalizeFirstCharacterLowercaseRest,
   sortArray,
 } from "../../../utils";
+import { useLocation } from "react-router-dom";
+import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
+import { useSelector } from "react-redux";
 
 // -------------------------------- CONSTANTS --------------------------------
 const ARROW_DIRECTIONS = {
@@ -23,6 +26,8 @@ const NavigationBarItem = ({ isOpen, name, icon, nestedItems, ...rest }) => {
   const { desktop } = useScreenSize();
   const theme = useTheme();
   const [arrowDirection, setArrowDirection] = useState(ARROW_DIRECTIONS.LEFT);
+  const { progressPage } = useSelector((state) => state);
+  const pathName = useLocation().pathname;
 
   const isExpanded = !desktop || isOpen;
   const arrowDirectionIsDown = arrowDirection === ARROW_DIRECTIONS.DOWN;
@@ -76,35 +81,44 @@ const NavigationBarItem = ({ isOpen, name, icon, nestedItems, ...rest }) => {
         {nestedItems &&
           sortArray(nestedItems, (item1, item2) =>
             item1.name.localeCompare(item2.name)
-          ).map(({ name, onClick }) => (
-            <Box
-              key={name}
-              display="flex"
-              alignItems="center"
-              p={1}
-              px={2}
-              borderRadius="10px"
-              gap={2}
-              sx={{
-                cursor: "pointer",
-                "&:hover": {
-                  bgcolor: "rgba(145, 158, 171, 0.12)",
-                },
-              }}
-              ml={3}
-              onClick={onClick}
-            >
+          ).map(({ name, onClick }) => {
+            const isSelected =
+              pathName === ROUTE_PATHS.PROGRESS && progressPage.stat === name;
+
+            return (
               <Box
-                width="5px"
-                height="5px"
-                borderRadius="100%"
-                bgcolor={theme.palette.primary.main}
-              />
-              <Typography>
-                {capitalizeFirstCharacterLowercaseRest(name)}
-              </Typography>
-            </Box>
-          ))}
+                key={name}
+                display="flex"
+                alignItems="center"
+                p={1}
+                px={2}
+                borderRadius="10px"
+                gap={2}
+                sx={{
+                  cursor: "pointer",
+                  "&:hover": {
+                    bgcolor: "rgba(145, 158, 171, 0.12)",
+                  },
+                }}
+                ml={3}
+                onClick={onClick}
+              >
+                <Box
+                  width="5px"
+                  height="5px"
+                  borderRadius="100%"
+                  bgcolor={
+                    isSelected
+                      ? theme.palette.primary.main
+                      : "rgba(0, 0, 0, 0.4)"
+                  }
+                />
+                <Typography>
+                  {capitalizeFirstCharacterLowercaseRest(name)}
+                </Typography>
+              </Box>
+            );
+          })}
       </Collapse>
     </>
   );

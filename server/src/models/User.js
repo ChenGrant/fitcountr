@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  uid: {
+  userUID: {
     type: String,
     required: true,
   },
@@ -49,10 +49,10 @@ const userSchema = new mongoose.Schema({
 
 // ------------------------------------- STATICS -------------------------------------
 
-// given a uid, this function returns true if that uid corresponds to
+// given a userUID, this function returns true if that userUID corresponds to
 // an admin user and false otherwise
-userSchema.statics.isAdmin = async function (uid) {
-  const user = await this.findOne({ uid: uid });
+userSchema.statics.isAdmin = async function (userUID) {
+  const user = await this.findOne({ userUID: userUID });
   return user && user.isAdmin;
 };
 

@@ -16,10 +16,10 @@ const GMAIL_PROVIDER = "GMAIL_PROVIDER";
 const createUser = async (req, res) => {
   try {
     const { user, provider } = req.body;
-    const { uid, email } = user;
+    const { userUID, email } = user;
 
-    // verify uid and email exists in firebase auth
-    await admin.auth().getUser(uid);
+    // verify userUID and email exists in firebase auth
+    await admin.auth().getUser(userUID);
     await admin.auth().getUserByEmail(email);
 
     if (!provider) throw new Error("No provider provided");
@@ -34,8 +34,8 @@ const createUser = async (req, res) => {
 
       // create user in mongodb atlas
       const createdUser = await User.create({
-        _id: uid,
-        uid,
+        _id: userUID,
+        userUID,
         email,
         emailVerification: {
           isVerified: false,
@@ -75,8 +75,8 @@ const createUser = async (req, res) => {
 
       // create user in mongodb atlas if no users with the same email exist
       await User.create({
-        _id: uid,
-        uid,
+        _id: userUID,
+        userUID,
         email,
         emailVerification: { isVerified: true, provider: GMAIL_PROVIDER },
       });

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const dailyGoalsSchema = new mongoose.Schema({
-  userUid: {
+  userUID: {
     type: String,
     required: true,
   },

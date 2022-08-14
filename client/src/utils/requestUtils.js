@@ -68,7 +68,7 @@ export const postSignupData = async (user, provider) => {
       authorization: userIdToken,
     },
     body: JSON.stringify({
-      user,
+      user: { userUID: user.uid, email: user.email },
       provider,
     }),
   });

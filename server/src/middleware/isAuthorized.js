@@ -7,11 +7,14 @@ const PUBLIC = "PUBLIC";
 const isAuthorized = (privacyStatus = PUBLIC) => {
   return async (req, res, next) => {
     try {
-      const { uid } = req.body.user;
+      const { userUID } = req.body.user;
+      console.log(userUID)
+      console.log(req.headerAuthUserUID)
 
-      if (await User.isAdmin(uid)) return next();
+      if (await User.isAdmin(userUID)) return next();
 
-      if (privacyStatus === PRIVATE && req.headerAuthUid === uid) return next();
+      if (privacyStatus === PRIVATE && req.headerAuthUserUID === userUID)
+        return next();
 
       if (privacyStatus === PUBLIC) return next();
 

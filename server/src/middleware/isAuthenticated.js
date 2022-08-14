@@ -5,7 +5,7 @@ const isAuthenticated = async (req, res, next) => {
   try {
     const idToken = req.headers.authorization;
     const user = await auth.verifyIdToken(idToken);
-    req.headerAuthUid = user.uid;
+    req.headerAuthUserUID = user.uid;
     next();
   } catch (err) {
     console.log(err);

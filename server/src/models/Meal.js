@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { ArrayUtils } = require("../utils/index");
 
 const mealSchema = new mongoose.Schema({
-  userUid: {
+  userUID: {
     type: String,
     required: true,
   },

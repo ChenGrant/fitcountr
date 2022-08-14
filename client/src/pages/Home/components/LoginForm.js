@@ -80,9 +80,10 @@ const LoginForm = ({
         email,
         password
       );
+      
       const newUser = userCredential.user;
 
-      if (user.user === newUser && user.isVerified !== null) {
+      if (user.firebase === newUser && user.isVerified !== null) {
         return user.isVerified
           ? navigate(ROUTE_PATHS.DASHBOARD)
           : navigate(`${ROUTE_PATHS.EMAIL_VERIFICATION}/${newUser.email}`);

@@ -2,7 +2,7 @@ import {
   INITIALIZE_USER,
   RESET_USER,
   SET_AUTHENTICATING_USER,
-  SET_USER,
+  SET_USER_FIREBASE_DATA,
   SET_VERIFICATION_STATUS,
 } from "./userTypes";
 
@@ -14,8 +14,8 @@ export const resetUser = () => {
   return { type: RESET_USER };
 };
 
-export const setUser = (user) => {
-  return { type: SET_USER, payload: user };
+export const setUserFirebaseData = (user) => {
+  return { type: SET_USER_FIREBASE_DATA, payload: user };
 };
 
 export const setAuthenticatingUser = (isAuthenticating) => {

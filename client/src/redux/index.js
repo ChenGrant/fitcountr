@@ -6,7 +6,7 @@ export {
 export {
   initializeUser,
   resetUser,
-  setUser,
+  setUserFirebaseData,
   setAuthenticatingUser,
   setVerificationStatus,
 } from "./user/userActions";

@@ -1,10 +1,10 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   initializeUser,
   resetUser,
-  setUser,
+  setUserFirebaseData,
   setVerificationStatus,
 } from "../../redux";
 import { fetchVerificationStatus } from "../../utils";
@@ -29,7 +29,7 @@ const FirebaseUserListener = ({ children }) => {
       if (user.isAuthenticating) return;
 
       dispatch(resetUser(newUser));
-      dispatch(setUser(newUser));
+      dispatch(setUserFirebaseData(newUser));
       if (newUser) {
         const responseData = await fetchVerificationStatus(newUser.email);
         dispatch(setVerificationStatus(responseData.verificationStatus));

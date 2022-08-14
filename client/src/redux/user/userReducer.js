@@ -2,45 +2,40 @@ import {
   INITIALIZE_USER,
   RESET_USER,
   SET_AUTHENTICATING_USER,
-  SET_USER,
+  SET_USER_FIREBASE_DATA,
   SET_VERIFICATION_STATUS,
 } from "./userTypes";
 
 const initialState = {
   isAuthenticating: false,
   isInitialized: false,
-  user: null,
+  firebase: null,
   isVerified: null,
   isLoggedIn: false,
 };
 
 const userReducer = (state = initialState, action) => {
-  let newUser;
-  switch (action.type) {
-    case INITIALIZE_USER:
-      newUser = { ...state, isInitialized: true };
-      break;
+  const newUser = (() => {
+    switch (action.type) {
+      case INITIALIZE_USER:
+        return { ...state, isInitialized: true };
 
-    case RESET_USER:
-      newUser = { ...initialState, isInitialized: state.isInitialized };
-      break;
+      case RESET_USER:
+        return { ...initialState, isInitialized: state.isInitialized };
 
-    case SET_USER:
-      newUser = { ...state, user: action.payload };
-      break;
+      case SET_USER_FIREBASE_DATA:
+        return { ...state, firebase: action.payload };
 
-    case SET_AUTHENTICATING_USER:
-      newUser = { ...state, isAuthenticating: action.payload };
-      break;
+      case SET_AUTHENTICATING_USER:
+        return { ...state, isAuthenticating: action.payload };
 
-    case SET_VERIFICATION_STATUS:
-      newUser = { ...state, isVerified: action.payload === "Verified" };
-      break;
+      case SET_VERIFICATION_STATUS:
+        return { ...state, isVerified: action.payload === "Verified" };
 
-    default:
-      newUser = state;
-      break;
-  }
+      default:
+        return state;
+    }
+  })();
 
   newUser.isLoggedIn =
     newUser.isInitialized &&

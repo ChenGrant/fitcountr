@@ -1,8 +1,17 @@
-import { Avatar, TextField, Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import {
+  Avatar,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+  Box,
+} from "@mui/material";
 import React from "react";
 import CustomCard from "../../../components/ui/CustomCard";
 import CustomButton from "../../../components/ui/CustomButton";
+import { sortArray, TIME_ZONES } from "../../../utils";
 
 const Profile = () => {
   return (
@@ -12,6 +21,7 @@ const Profile = () => {
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
+      pt="15vh"
       gap={5}
     >
       <Box>
@@ -34,15 +44,45 @@ const Profile = () => {
                 onClick={() => console.log("bet")}
               />
             </Box>
-            <Box display="flex" flexDirection="column" gap={5} width="400px">
-              <TextField label={"Birthday"} fullWidth />
-              <TextField label={"Sex"} fullWidth />
-              <TextField label={"Height"} fullWidth />
-              <TextField label={"Timezone"} fullWidth />
-              <TextField label={"Measurement System"} fullWidth />
-              <CustomButton variant="contained" disabled>
-                Save Changes
-              </CustomButton>
+            <Box display="flex" flexDirection="column" gap={5} width="700px">
+              <Box display="flex" gap={5}>
+                <FormControl fullWidth>
+                  <InputLabel id="sex">Sex</InputLabel>
+                  <Select label="Sex" labelId="sex">
+                    <MenuItem value={"Male"}>Male</MenuItem>
+                    <MenuItem value={"Female"}>Female</MenuItem>
+                  </Select>
+                </FormControl>
+                <TextField label={"Height (cm)"} fullWidth type="number" />
+              </Box>
+              <Box display="flex" gap={5}>
+                <TextField label={"Birthday (DD/MM/YYYY)"} fullWidth />
+                <FormControl fullWidth>
+                  <InputLabel id="measurement system">
+                    Measurement System
+                  </InputLabel>
+                  <Select
+                    label="Measurement System"
+                    labelId="measurement system"
+                  >
+                    <MenuItem value={"metric"}>Metric</MenuItem>
+                    <MenuItem value={"imperial"}>Imperial</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+              <FormControl fullWidth>
+                <InputLabel id="timezone">Timezone</InputLabel>
+                <Select label="Timezone" labelId="timezone">
+                  {sortArray(TIME_ZONES, (item1, item2) =>
+                    item1.abbreviation.localeCompare(item2.abbreviation)
+                  ).map(({ abbreviation, name }) => (
+                    <MenuItem key={name} value={name}>
+                      {abbreviation}: {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <CustomButton variant="contained">Save Changes</CustomButton>
             </Box>
           </Box>
         </CustomCard>

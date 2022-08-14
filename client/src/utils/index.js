@@ -19,6 +19,8 @@ export { sortArray, getLexSmallest } from "./arrayUtils";
 
 export { PROGRESS_TYPES } from "./progressUtils";
 
+export { TIME_ZONES } from "./dateUtils";
+
 export {
   FORM_ERROR_HEIGHT,
   EMAIL_ALREADY_IN_USE,

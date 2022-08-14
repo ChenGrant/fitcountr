@@ -1,7 +1,6 @@
-import { Avatar, Badge, TextField, Typography } from "@mui/material";
+import { Avatar, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import CustomCard from "../../../components/ui/CustomCard";
 import CustomButton from "../../../components/ui/CustomButton";
 
@@ -35,16 +34,12 @@ const Profile = () => {
                 onClick={() => console.log("bet")}
               />
             </Box>
-            <Box display="flex" flexDirection="column" gap={5}>
-              <TextField label={"Birthday"} />
-              <Box display="flex" gap={5}>
-                <TextField label={"Sex"} fullWidth />
-                <TextField label={"Height"} fullWidth />
-              </Box>
-              <Box display="flex" gap={5}>
-                <TextField label={"Timezone"} fullWidth />
-                <TextField label={"Measurement System"} fullWidth />
-              </Box>
+            <Box display="flex" flexDirection="column" gap={5} width="400px">
+              <TextField label={"Birthday"} fullWidth />
+              <TextField label={"Sex"} fullWidth />
+              <TextField label={"Height"} fullWidth />
+              <TextField label={"Timezone"} fullWidth />
+              <TextField label={"Measurement System"} fullWidth />
               <CustomButton variant="contained" disabled>
                 Save Changes
               </CustomButton>
@@ -57,15 +52,3 @@ const Profile = () => {
 };
 
 export default Profile;
-// <div>
-//       <Typography>In App Name</Typography>
-//       <Typography>pfp</Typography>
-//       <Typography>height</Typography>
-//       <Typography>weight</Typography>
-//       <Typography>sex</Typography>
-//       <Typography>bday</Typography>
-//       <Typography>Time zone</Typography>
-//       <Typography>units</Typography>
-//       <Typography>email address for notification</Typography>
-//       <Typography>Change password</Typography>
-//     </div>

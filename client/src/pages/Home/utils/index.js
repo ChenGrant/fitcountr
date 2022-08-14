@@ -13,7 +13,12 @@ export const handleAuthWithGmail = async (
   setGmailButtonIsDisabled
 ) => {
   try {
-    const result = await signInWithPopup(auth, new GoogleAuthProvider());
+    const googleAuthProvider = new GoogleAuthProvider();
+    // prevents google auth from automatically selecting gmail
+    googleAuthProvider.setCustomParameters({
+      prompt: "select_account",
+    });
+    const result = await signInWithPopup(auth, googleAuthProvider);
     setGmailButtonIsDisabled(true);
     setGmailOverridePopupState(GMAIL_OVERRIDE_POPUP_STATES.PENDING);
     const { user } = result;

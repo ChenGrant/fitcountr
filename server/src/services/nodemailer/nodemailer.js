@@ -39,7 +39,7 @@ const sendEmailVerificationAsync = async (
     html: `<p>Hi,</p>
       <br>
       <p>To complete the signup process, please verify your email with the following pin.</p>
-      <a href = '${config.WEBSITE}emailverification/${receiverEmail}' 
+      <a href = '${config.WEBSITE}email-verification/${receiverEmail}' 
       style = '
       display: block;
       width: max-content;

@@ -14,11 +14,11 @@ import {
 } from "../../../redux";
 import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
 import { PROGRESS_TYPES } from "../../../utils";
-//import { Icon } from "@mui/material";
+import { Icon } from "@mui/material";
 
 // -------------------------------- CONSTANTS --------------------------------
-// const PROFILE_PIC_SRC =
-//   "https://180dc.org/wp-content/uploads/2016/08/default-profile.png";
+const PROFILE_PIC_SRC =
+  "https://180dc.org/wp-content/uploads/2016/08/default-profile.png";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
@@ -30,19 +30,19 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
 
   const NAVIGATION_BAR_ITEMS = [
     // Profile
-    // {
-    //   name: "Profile",
-    //   icon: (
-    //     <Icon>
-    //       <img
-    //         alt="profilePicture"
-    //         src={PROFILE_PIC_SRC}
-    //         style={{ borderRadius: "100%", height: "24px", width: "24px" }}
-    //       />
-    //     </Icon>
-    //   ),
-    //   onClick: () => navigate(ROUTE_PATHS.PROFILE),
-    // },
+    {
+      name: "Profile",
+      icon: (
+        <Icon>
+          <img
+            alt="profilePicture"
+            src={PROFILE_PIC_SRC}
+            style={{ borderRadius: "100%", height: "24px", width: "24px" }}
+          />
+        </Icon>
+      ),
+      onClick: () => navigate(ROUTE_PATHS.PROFILE),
+    },
     // Dashboard
     {
       name: "Dashboard",

@@ -68,7 +68,7 @@ const Progress = () => {
           );
         })}
       </Tabs>
-      <Box display="flex" alignItems="center" gap={15}>
+      <Box display="flex" alignItems="center" gap={25}>
         <Box display="flex" gap={1} alignItems="center">
           <Typography variant="h6">Goal: {45.7} kg</Typography>
           <IconButton>

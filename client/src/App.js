@@ -11,7 +11,7 @@ import PasswordReset from "./pages/PasswordReset";
 import SearchFood from "./pages/SearchFood";
 import Progress from "./pages/Progress/";
 import Dashboard from "./pages/Dashboard";
-// import Profile from "./pages/Profile";
+import Profile from "./pages/Profile";
 import FontsInitializer from "./setup/fonts/FontsInitializer";
 import FirebaseClientInitializer from "./setup/firebaseClient/FirebaseClientInitializer";
 import FirebaseUserListener from "./setup/firebaseUser/FirebaseUserListener";
@@ -40,7 +40,7 @@ const App = () => {
                     />
                     {/* Authenticated Routes */}
                     <Route element={<AuthenticatedRoutes />}>
-                      {/* <Route path={ROUTE_PATHS.PROFILE} element={<Profile />} /> */}
+                      <Route path={ROUTE_PATHS.PROFILE} element={<Profile />} />
                       <Route
                         path={ROUTE_PATHS.DASHBOARD}
                         element={<Dashboard />}

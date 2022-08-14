@@ -123,155 +123,147 @@ const SignupForm = ({
             dispatch(setAuthenticatingUser(false));
           }}
         >
-          {(formik) => {
-            return (
-              <Form>
-                <Box display="flex" flexDirection="column" gap={3}>
-                  <Typography variant="h1" gutterBottom textAlign="center">
-                    Signup
-                  </Typography>
-                  {/* "Login with Gmail" button */}
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    sx={{ height: "56px" }}
-                  >
-                    {gmailSignupButtonIsDisabled ? (
-                      <CircularProgress />
-                    ) : (
-                      <CustomButton
-                        fullWidth
-                        variant="contained"
-                        onClick={async () => {
-                          dispatch(setAuthenticatingUser(true));
-                          await handleAuthWithGmail(
-                            auth,
-                            setOverriddenGmailUser,
-                            setGmailOverridePopupState,
-                            setGmailSignupButtonIsDisabled
-                          );
-                          dispatch(setAuthenticatingUser(false));
-                        }}
-                        startIcon={
-                          <GoogleIcon
-                            sx={{
-                              transform: "scale(1.5)",
-                              marginRight: "20px",
-                            }}
-                          />
-                        }
-                      >
-                        Signup with Gmail
-                      </CustomButton>
-                    )}
-                  </Box>
-                  {/* login form divider */}
-                  <Box
-                    my={1}
+          <Form>
+            <Box display="flex" flexDirection="column" gap={3}>
+              <Typography variant="h1" gutterBottom textAlign="center">
+                Signup
+              </Typography>
+              {/* "Login with Gmail" button */}
+              <Box
+                display="flex"
+                justifyContent="center"
+                sx={{ height: "56px" }}
+              >
+                {gmailSignupButtonIsDisabled ? (
+                  <CircularProgress />
+                ) : (
+                  <CustomButton
                     fullWidth
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
+                    variant="contained"
+                    onClick={async () => {
+                      dispatch(setAuthenticatingUser(true));
+                      await handleAuthWithGmail(
+                        auth,
+                        setOverriddenGmailUser,
+                        setGmailOverridePopupState,
+                        setGmailSignupButtonIsDisabled
+                      );
+                      dispatch(setAuthenticatingUser(false));
+                    }}
+                    startIcon={
+                      <GoogleIcon
+                        sx={{
+                          transform: "scale(1.5)",
+                          marginRight: "20px",
+                        }}
+                      />
+                    }
                   >
-                    <Box height="1px" flex={1} bgcolor="#B3B3B3" />
-                    <Typography variant="h6" mx={2} sx={{ color: "#B3B3B3" }}>
-                      or
-                    </Typography>
-                    <Box height="1px" flex={1} bgcolor="#B3B3B3" />
-                  </Box>
-                  {/* email input field */}
-                  <FormikControl control="input" label="Email" name="email" />
-                  {/* password input field */}
+                    Signup with Gmail
+                  </CustomButton>
+                )}
+              </Box>
+              {/* login form divider */}
+              <Box
+                my={1}
+                fullWidth
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Box height="1px" flex={1} bgcolor="#B3B3B3" />
+                <Typography variant="h6" mx={2} sx={{ color: "#B3B3B3" }}>
+                  or
+                </Typography>
+                <Box height="1px" flex={1} bgcolor="#B3B3B3" />
+              </Box>
+              {/* email input field */}
+              <FormikControl control="input" label="Email" name="email" />
+              {/* password input field */}
 
-                  <FormikControl
-                    control="input"
-                    label="Password"
-                    name="password"
-                    type={!passwordIsVisible ? "password" : ""}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={() =>
-                            setPasswordIsVisible(!passwordIsVisible)
-                          }
-                        >
-                          {passwordIsVisible ? (
-                            <VisibilityIcon
-                              sx={{ color: theme.palette.primary.main }}
-                            />
-                          ) : (
-                            <VisibilityOffIcon
-                              sx={{ color: theme.palette.primary.main }}
-                            />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                  />
-                  {/* confirm password input field */}
-                  <FormikControl
-                    control="input"
-                    label="Confirm Password"
-                    name="password2"
-                    type={!password2IsVisible ? "password" : ""}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={() =>
-                            setPassword2IsVisible(!password2IsVisible)
-                          }
-                        >
-                          {password2IsVisible ? (
-                            <VisibilityIcon
-                              sx={{ color: theme.palette.primary.main }}
-                            />
-                          ) : (
-                            <VisibilityOffIcon
-                              sx={{ color: theme.palette.primary.main }}
-                            />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                  />
-                  {/* Login button */}
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    sx={{ height: "56px" }}
-                  >
-                    {passwordSignupButtonIsDisabled ? (
-                      <CircularProgress />
-                    ) : (
-                      <CustomButton type="submit" variant="contained" fullWidth>
-                        Signup
-                      </CustomButton>
-                    )}
-                  </Box>
-                  {/* Get started */}
-                  <Box>
-                    <Typography display="inline">
-                      Already have an account?{" "}
-                    </Typography>
-                    <Typography
-                      display="inline"
-                      color="primary"
-                      sx={{
-                        cursor: "pointer",
-                        fontWeight: 600,
-                        "&:hover": {
-                          textDecoration: "underline",
-                        },
-                      }}
-                      onClick={toggleForm}
+              <FormikControl
+                control="input"
+                label="Password"
+                name="password"
+                type={!passwordIsVisible ? "password" : ""}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setPasswordIsVisible(!passwordIsVisible)}
                     >
-                      Login
-                    </Typography>
-                  </Box>
-                </Box>
-              </Form>
-            );
-          }}
+                      {passwordIsVisible ? (
+                        <VisibilityIcon
+                          sx={{ color: theme.palette.primary.main }}
+                        />
+                      ) : (
+                        <VisibilityOffIcon
+                          sx={{ color: theme.palette.primary.main }}
+                        />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+              {/* confirm password input field */}
+              <FormikControl
+                control="input"
+                label="Confirm Password"
+                name="password2"
+                type={!password2IsVisible ? "password" : ""}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setPassword2IsVisible(!password2IsVisible)}
+                    >
+                      {password2IsVisible ? (
+                        <VisibilityIcon
+                          sx={{ color: theme.palette.primary.main }}
+                        />
+                      ) : (
+                        <VisibilityOffIcon
+                          sx={{ color: theme.palette.primary.main }}
+                        />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+              {/* Login button */}
+              <Box
+                display="flex"
+                justifyContent="center"
+                sx={{ height: "56px" }}
+              >
+                {passwordSignupButtonIsDisabled ? (
+                  <CircularProgress />
+                ) : (
+                  <CustomButton type="submit" variant="contained" fullWidth>
+                    Signup
+                  </CustomButton>
+                )}
+              </Box>
+              {/* Get started */}
+              <Box>
+                <Typography display="inline">
+                  Already have an account?{" "}
+                </Typography>
+                <Typography
+                  display="inline"
+                  color="primary"
+                  sx={{
+                    cursor: "pointer",
+                    fontWeight: 600,
+                    "&:hover": {
+                      textDecoration: "underline",
+                    },
+                  }}
+                  onClick={toggleForm}
+                >
+                  Login
+                </Typography>
+              </Box>
+            </Box>
+          </Form>
         </Formik>
       </Box>
     </Card>

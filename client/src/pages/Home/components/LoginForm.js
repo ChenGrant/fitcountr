@@ -137,150 +137,144 @@ const LoginForm = ({
             setPasswordLoginButtonIsDisabled(false);
           }}
         >
-          {(formik) => {
-            return (
-              <Form>
-                <Box display="flex" flexDirection="column" gap={3}>
-                  <Typography variant="h1" gutterBottom textAlign="center">
-                    Login
-                  </Typography>
-                  {/* "Login with Gmail" button */}
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    sx={{ height: "56px" }}
-                  >
-                    {gmailLoginButtonIsDisabled ? (
-                      <CircularProgress />
-                    ) : (
-                      <CustomButton
-                        fullWidth
-                        variant="contained"
-                        onClick={async () => {
-                          dispatch(setAuthenticatingUser(true));
-                          await handleAuthWithGmail(
-                            auth,
-                            setOverriddenGmailUser,
-                            setGmailOverridePopupState,
-                            setGmailLoginButtonIsDisabled
-                          );
-                          dispatch(setAuthenticatingUser(false));
-                        }}
-                        startIcon={
-                          <GoogleIcon
-                            sx={{
-                              transform: "scale(1.5)",
-                              marginRight: "20px",
-                            }}
-                          />
-                        }
-                      >
-                        Login with Gmail
-                      </CustomButton>
-                    )}
-                  </Box>
-                  {/* login form divider */}
-                  <Box
-                    my={1}
+          <Form>
+            <Box display="flex" flexDirection="column" gap={3}>
+              <Typography variant="h1" gutterBottom textAlign="center">
+                Login
+              </Typography>
+              {/* "Login with Gmail" button */}
+              <Box
+                display="flex"
+                justifyContent="center"
+                sx={{ height: "56px" }}
+              >
+                {gmailLoginButtonIsDisabled ? (
+                  <CircularProgress />
+                ) : (
+                  <CustomButton
                     fullWidth
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    <Box height="1px" flex={1} bgcolor="#B3B3B3" />
-                    <Typography variant="h6" mx={2} sx={{ color: "#B3B3B3" }}>
-                      or
-                    </Typography>
-                    <Box height="1px" flex={1} bgcolor="#B3B3B3" />
-                  </Box>
-                  {/* guest login credentials */}
-                  <Typography color="primary" textAlign="center">
-                    Login as guest with email: <b>guest@guest.ca</b> and
-                    password: <b>guest123</b>
-                  </Typography>
-                  {/* email input field */}
-                  <FormikControl control="input" label="Email" name="email" />
-                  {/* password input field */}
-                  <FormikControl
-                    control="input"
-                    label="Password"
-                    name="password"
-                    type={!passwordIsVisible ? "password" : ""}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={() =>
-                            setPasswordIsVisible(!passwordIsVisible)
-                          }
-                        >
-                          {passwordIsVisible ? (
-                            <VisibilityIcon
-                              sx={{ color: theme.palette.primary.main }}
-                            />
-                          ) : (
-                            <VisibilityOffIcon
-                              sx={{ color: theme.palette.primary.main }}
-                            />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
+                    variant="contained"
+                    onClick={async () => {
+                      dispatch(setAuthenticatingUser(true));
+                      await handleAuthWithGmail(
+                        auth,
+                        setOverriddenGmailUser,
+                        setGmailOverridePopupState,
+                        setGmailLoginButtonIsDisabled
+                      );
+                      dispatch(setAuthenticatingUser(false));
+                    }}
+                    startIcon={
+                      <GoogleIcon
+                        sx={{
+                          transform: "scale(1.5)",
+                          marginRight: "20px",
+                        }}
+                      />
                     }
-                  />
-                  {/* 'forgot password' text */}
-                  <Box fullWidth>
-                    <Typography
-                      onClick={() => navigate(ROUTE_PATHS.PASSWORD_RESET)}
-                      textAlign="right"
-                      sx={{
-                        cursor: "pointer",
-                        fontWeight: 600,
-                        "&:hover": {
-                          textDecoration: "underline",
-                        },
-                      }}
-                      color="primary"
-                    >
-                      Forgot password?
-                    </Typography>
-                  </Box>
-                  {/* Login button */}
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    sx={{ height: "56px" }}
                   >
-                    {passwordLoginButtonIsDisabled ? (
-                      <CircularProgress />
-                    ) : (
-                      <CustomButton type="submit" variant="contained" fullWidth>
-                        Login
-                      </CustomButton>
-                    )}
-                  </Box>
-                  {/* Get started */}
-                  <Box>
-                    <Typography display="inline">
-                      Don't have an account?{" "}
-                    </Typography>
-                    <Typography
-                      display="inline"
-                      color="primary"
-                      sx={{
-                        cursor: "pointer",
-                        fontWeight: 600,
-                        "&:hover": {
-                          textDecoration: "underline",
-                        },
-                      }}
-                      onClick={toggleForm}
+                    Login with Gmail
+                  </CustomButton>
+                )}
+              </Box>
+              {/* login form divider */}
+              <Box
+                my={1}
+                fullWidth
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Box height="1px" flex={1} bgcolor="#B3B3B3" />
+                <Typography variant="h6" mx={2} sx={{ color: "#B3B3B3" }}>
+                  or
+                </Typography>
+                <Box height="1px" flex={1} bgcolor="#B3B3B3" />
+              </Box>
+              {/* guest login credentials */}
+              <Typography color="primary" textAlign="center">
+                Login as guest with email: <b>guest@guest.ca</b> and password:{" "}
+                <b>guest123</b>
+              </Typography>
+              {/* email input field */}
+              <FormikControl control="input" label="Email" name="email" />
+              {/* password input field */}
+              <FormikControl
+                control="input"
+                label="Password"
+                name="password"
+                type={!passwordIsVisible ? "password" : ""}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setPasswordIsVisible(!passwordIsVisible)}
                     >
-                      Signup
-                    </Typography>
-                  </Box>
-                </Box>
-              </Form>
-            );
-          }}
+                      {passwordIsVisible ? (
+                        <VisibilityIcon
+                          sx={{ color: theme.palette.primary.main }}
+                        />
+                      ) : (
+                        <VisibilityOffIcon
+                          sx={{ color: theme.palette.primary.main }}
+                        />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+              {/* 'forgot password' text */}
+              <Box fullWidth>
+                <Typography
+                  onClick={() => navigate(ROUTE_PATHS.PASSWORD_RESET)}
+                  textAlign="right"
+                  sx={{
+                    cursor: "pointer",
+                    fontWeight: 600,
+                    "&:hover": {
+                      textDecoration: "underline",
+                    },
+                  }}
+                  color="primary"
+                >
+                  Forgot password?
+                </Typography>
+              </Box>
+              {/* Login button */}
+              <Box
+                display="flex"
+                justifyContent="center"
+                sx={{ height: "56px" }}
+              >
+                {passwordLoginButtonIsDisabled ? (
+                  <CircularProgress />
+                ) : (
+                  <CustomButton type="submit" variant="contained" fullWidth>
+                    Login
+                  </CustomButton>
+                )}
+              </Box>
+              {/* Get started */}
+              <Box>
+                <Typography display="inline">
+                  Don't have an account?{" "}
+                </Typography>
+                <Typography
+                  display="inline"
+                  color="primary"
+                  sx={{
+                    cursor: "pointer",
+                    fontWeight: 600,
+                    "&:hover": {
+                      textDecoration: "underline",
+                    },
+                  }}
+                  onClick={toggleForm}
+                >
+                  Signup
+                </Typography>
+              </Box>
+            </Box>
+          </Form>
         </Formik>
       </Box>
     </Card>

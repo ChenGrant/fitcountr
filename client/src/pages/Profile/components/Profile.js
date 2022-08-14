@@ -12,6 +12,7 @@ import {
   FORM_ERROR_HEIGHT,
   sortArray,
 } from "../../../utils";
+import useScreenSize from "../../../hooks/useScreenSize";
 
 const MAX_HEIGHT_CM = 275;
 
@@ -110,21 +111,30 @@ const onSubmit = (values) => {
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const Profile = () => {
+  const { desktop } = useScreenSize();
   return (
     <Box
       p={5}
+      px={2}
       display="flex"
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      pt="15vh"
+      pt={desktop ? "15vh" : "8vh"}
       gap={5}
     >
       <Box>
         <Typography variant="h1">Profile</Typography>
       </Box>
-      <Box>
-        <CustomCard sx={{ p: 5 }}>
+      <Box width="100%" maxWidth={desktop ? "1000px" : "600px"}>
+        <CustomCard
+          sx={{
+            p: desktop ? 5 : 3,
+            width: desktop
+              ? "calc(100% - 2 * 5 * 8px)"
+              : "calc(100% - 2 * 3 * 8px)",
+          }}
+        >
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -133,28 +143,38 @@ const Profile = () => {
             {(formik) => {
               return (
                 <Form>
-                  <Box display="flex" alignItems="center">
+                  <Box
+                    display="flex"
+                    flexDirection={desktop ? "row" : "column"}
+                    alignItems="center"
+                  >
                     <Box
                       display="flex"
                       flexDirection="column"
                       alignItems="center"
                       justifyContent="center"
-                      mx={5}
-                      mr={10}
+                      mr={desktop && 5}
+                      mt={!desktop && 2}
                     >
                       <Avatar
                         src="https://scontent.fyzd1-2.fna.fbcdn.net/v/t39.30808-6/286520406_4018635011694341_2902533533304022077_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=HSFRkbtGEfwAX-KNgfF&_nc_oc=AQlR9KHJrG8cEBH8_CPLPJF8tss0JtpVG9TClt7TaNtAoMN5TdQnBC4UaqX3_iamafmSoZ-zxiF67GieO-LMbMYl&_nc_ht=scontent.fyzd1-2.fna&oh=00_AT9G30fnfO243CbAu2wUm5qwuoaaucXjzN7iFnbcIUVGEQ&oe=62FC7F73"
-                        sx={{ height: 250, width: 250, cursor: "pointer" }}
+                        sx={{ height: 150, width: 150, cursor: "pointer" }}
                         onClick={() => console.log("bet")}
                       />
                     </Box>
                     <Box
                       display="flex"
                       flexDirection="column"
-                      gap={1}
-                      width="700px"
+                      gap={desktop ? 1 : 2}
+                      flex={1}
+                      width={!desktop && "100%"}
+                      mt={!desktop && 5}
                     >
-                      <Box display="flex" gap={4}>
+                      <Box
+                        display="flex"
+                        flexDirection={desktop ? "row" : "column"}
+                        gap={desktop ? 3 : 2}
+                      >
                         {/* Sex */}
                         <Box
                           mb={
@@ -191,7 +211,11 @@ const Profile = () => {
                           />
                         </Box>
                       </Box>
-                      <Box display="flex" gap={4}>
+                      <Box
+                        display="flex"
+                        gap={desktop ? 3 : 2}
+                        flexDirection={desktop ? "row" : "column"}
+                      >
                         {/* Birthday */}
                         <Box
                           flex={1}

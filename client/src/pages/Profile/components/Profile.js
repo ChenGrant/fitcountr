@@ -8,20 +8,16 @@ import CustomCard from "../../../components/ui/CustomCard";
 import moment from "moment";
 import {
   capitalizeFirstCharacterLowercaseRest,
+  MAX_AGE,
+  MAX_HEIGHT,
+  MEASUREMENT_SYSTEMS,
+  MIN_HEIGHT,
+  SEXES,
   sortArray,
 } from "../../../utils";
 import useScreenSize from "../../../hooks/useScreenSize";
 
-const MAX_HEIGHT_CM = 275;
-
-const MIN_HEIGHT_CM = 0;
-
-const MAX_AGE = 130;
-
-const SEXES = ["MALE", "FEMALE"];
-
-const MEASUREMENT_SYSTEMS = ["METRIC", "IMPERIAL"];
-
+// ---------------------------------------- FORMIK ----------------------------------------
 const sexSelectOptions = sortArray(SEXES, (sex1, sex2) =>
   sex1.localeCompare(sex2)
 ).map((sex) => ({
@@ -52,13 +48,13 @@ const validationSchema = Yup.object({
     .required("Required")
     .test(
       "minHeight",
-      `Height must be greater than ${MIN_HEIGHT_CM} cm`,
-      (height) => height > MIN_HEIGHT_CM
+      `Height must be greater than ${MIN_HEIGHT.value} ${MIN_HEIGHT.unit.abbreviation}`,
+      (height) => height > MIN_HEIGHT.value
     )
     .test(
       "maxHeight",
-      `Height must be less than ${MAX_HEIGHT_CM} cm`,
-      (height) => height < MAX_HEIGHT_CM
+      `Height must be less than ${MAX_HEIGHT.value} ${MAX_HEIGHT.unit.abbreviation}`,
+      (height) => height < MAX_HEIGHT.value
     ),
   birthday: Yup.string()
     .trim()
@@ -90,9 +86,9 @@ const validationSchema = Yup.object({
     )
     .test(
       "dateIsWithinRange",
-      `Date must be within ${MAX_AGE} years of today`,
+      `Date must be within ${MAX_AGE.value} ${MAX_AGE.unit.pluralName} of today`,
       (birthday) =>
-        moment().diff(moment(birthday, "DD/MM/YYYY"), "years") < MAX_AGE
+        moment().diff(moment(birthday, "DD/MM/YYYY"), "years") < MAX_AGE.value
     ),
   measurementSystem: Yup.string()
     .trim()
@@ -110,6 +106,8 @@ const onSubmit = (values) => {
 // ************************************************************************************
 const Profile = () => {
   const { desktop } = useScreenSize();
+
+  // ------------------------------------- RENDER -------------------------------------
   return (
     <Box
       p={5}

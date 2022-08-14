@@ -22,10 +22,19 @@ export { PROGRESS_TYPES } from "./progressUtils";
 export { TIME_ZONES } from "./dateUtils";
 
 export {
+  METRIC,
+  IMPERIAL,
+  MEASUREMENT_SYSTEMS,
+  UNITS,
+} from "./measurementUtils";
+
+export {
   numberWithCommas,
   capitalizeFirstCharacter,
   capitalizeFirstCharacterLowercaseRest,
 } from "./stringUtils";
+
+export { MAX_HEIGHT, MIN_HEIGHT, MAX_AGE, SEXES } from "./humanUtils";
 
 export { sub, round } from "./numberUtils";
 

@@ -42,8 +42,7 @@ const Home = () => {
 
   // ------------------------------------- RENDER -------------------------------------
   if (
-    user.isLoggedIn &&
-    !user.isCreating &&
+    user.auth.isLoggedIn &&
     gmailOverridePopupState === GMAIL_OVERRIDE_POPUP_STATES.CLOSED
   )
     return <Navigate to={ROUTE_PATHS.DASHBOARD} />;

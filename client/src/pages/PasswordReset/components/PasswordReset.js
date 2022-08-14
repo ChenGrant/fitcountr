@@ -257,7 +257,7 @@ const PasswordReset = () => {
           )}
         </Box>
         {passwordResetEmail.successfullySent ? (
-          user.isLoggedIn ? (
+          user.auth.isLoggedIn ? (
             <CustomButton
               variant="contained"
               onClick={() => navigate(ROUTE_PATHS.DASHBOARD)}

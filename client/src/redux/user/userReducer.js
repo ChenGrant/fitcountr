@@ -7,43 +7,54 @@ import {
 } from "./userTypes";
 
 const initialState = {
-  isAuthenticating: false,
-  isInitialized: false,
+  auth: {
+    isInitialized: false,
+    isAuthenticating: false,
+    isVerified: null,
+    isLoggedIn: false,
+  },
   firebase: null,
-  isVerified: null,
-  isLoggedIn: false,
 };
 
 const userReducer = (state = initialState, action) => {
-  const newUser = (() => {
+  const user = (() => {
     switch (action.type) {
       case INITIALIZE_USER:
-        return { ...state, isInitialized: true };
+        return { ...state, auth: { ...state.auth, isInitialized: true } };
 
       case RESET_USER:
-        return { ...initialState, isInitialized: state.isInitialized };
+        return {
+          ...initialState,
+          auth: { ...state.auth, isInitialized: state.isInitialized },
+        };
 
       case SET_USER_FIREBASE_DATA:
         return { ...state, firebase: action.payload };
 
       case SET_AUTHENTICATING_USER:
-        return { ...state, isAuthenticating: action.payload };
+        return {
+          ...state,
+          auth: { ...state.auth, isAuthenticating: action.payload },
+        };
 
       case SET_VERIFICATION_STATUS:
-        return { ...state, isVerified: action.payload === "Verified" };
+        return {
+          ...state,
+          auth: { ...state.auth, isVerified: action.payload === "Verified" },
+        };
 
       default:
         return state;
     }
   })();
 
-  newUser.isLoggedIn =
-    newUser.isInitialized &&
-    newUser.isVerified !== null &&
-    newUser.isVerified &&
-    newUser.user !== null;
+  user.auth.isLoggedIn =
+    user.auth.isInitialized &&
+    user.auth.isVerified !== null &&
+    user.auth.isVerified &&
+    user.firebase !== null;
 
-  return newUser;
+  return user;
 };
 
 export default userReducer;

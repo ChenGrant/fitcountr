@@ -23,7 +23,7 @@ const UnavailableResource = () => {
       <Typography variant="h1" textAlign="center">
         Unavailable Resource
       </Typography>
-      {user.isLoggedIn ? (
+      {user.auth.isLoggedIn ? (
         <CustomButton
           variant="contained"
           onClick={() => navigate(ROUTE_PATHS.DASHBOARD)}

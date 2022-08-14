@@ -7,7 +7,7 @@ import { ROUTE_PATHS } from "./routeUtils";
 const AuthenticatedRoutes = () => {
   const { user } = useSelector((state) => state);
 
-  if (!user.isLoggedIn) return <Navigate to={ROUTE_PATHS.HOME} />;
+  if (!user.auth.isLoggedIn) return <Navigate to={ROUTE_PATHS.HOME} />;
 
   return (
     <NavigationBar>

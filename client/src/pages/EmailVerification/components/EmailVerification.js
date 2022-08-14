@@ -358,7 +358,7 @@ const EmailVerification = () => {
           </>
         )}
         {/* Home Button, make it display 'proceed to dashboard' if user is logged in and email verified */}
-        {user.isLoggedIn && user.firebase.email === email ? (
+        {user.auth.isLoggedIn && user.firebase.email === email ? (
           <CustomButton
             variant="contained"
             onClick={() => navigate(ROUTE_PATHS.DASHBOARD)}

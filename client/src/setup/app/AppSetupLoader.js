@@ -8,7 +8,7 @@ const AppSetupLoader = ({ children }) => {
   const loadingFonts = useContext(FontsInitializerContext);
 
   // user.isInitialized being true implies initializingFirebaseClient is false
-  if (loadingFonts || !user.isInitialized) return <LoadingCircle />;
+  if (loadingFonts || !user.auth.isInitialized) return <LoadingCircle />;
 
   return children;
 };

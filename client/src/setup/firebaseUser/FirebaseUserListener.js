@@ -26,7 +26,7 @@ const FirebaseUserListener = ({ children }) => {
     if (auth === undefined) return;
 
     const unsubscribeAuth = onAuthStateChanged(auth, async (newUser) => {
-      if (user.isAuthenticating) return;
+      if (user.auth.isAuthenticating) return;
 
       dispatch(resetUser(newUser));
       dispatch(setUserFirebaseData(newUser));
@@ -38,7 +38,7 @@ const FirebaseUserListener = ({ children }) => {
     });
 
     return unsubscribeAuth;
-  }, [auth, user.isAuthenticating, dispatch]);
+  }, [auth, user.auth.isAuthenticating, dispatch]);
 
   return children;
 };

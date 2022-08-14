@@ -17,6 +17,8 @@ const MAX_HEIGHT_CM = 275;
 
 const MIN_HEIGHT_CM = 0;
 
+const MAX_AGE = 130;
+
 const SEXES = ["MALE", "FEMALE"];
 
 const MEASUREMENT_SYSTEMS = ["METRIC", "IMPERIAL"];
@@ -81,6 +83,17 @@ const validationSchema = Yup.object({
     )
     .test("validDateString", "Invalid date", (birthday) =>
       moment(birthday, "DD/MM/YYYY", true).isValid()
+    )
+    .test(
+      "dateHasPassed",
+      "Date must be in the past",
+      (birthday) => moment(birthday, "DD/MM/YYYY").toDate() < new Date()
+    )
+    .test(
+      "dateIsWithinRange",
+      `Date must be within ${MAX_AGE} years of today`,
+      (birthday) =>
+        moment().diff(moment(birthday, "DD/MM/YYYY"), "years") < MAX_AGE
     ),
   measurementSystem: Yup.string()
     .trim()

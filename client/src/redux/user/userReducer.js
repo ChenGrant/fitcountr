@@ -25,7 +25,10 @@ const userReducer = (state = initialState, action) => {
       case RESET_USER:
         return {
           ...initialState,
-          auth: { ...initialState.auth, isInitialized: state.isInitialized },
+          auth: {
+            ...initialState.auth,
+            isInitialized: state.auth.isInitialized,
+          },
         };
 
       case SET_USER_FIREBASE_DATA:

@@ -8,8 +8,6 @@ const isAuthorized = (privacyStatus = PUBLIC) => {
   return async (req, res, next) => {
     try {
       const { userUID } = req.body.user;
-      console.log(userUID)
-      console.log(req.headerAuthUserUID)
 
       if (await User.isAdmin(userUID)) return next();
 

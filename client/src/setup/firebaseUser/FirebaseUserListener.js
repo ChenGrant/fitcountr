@@ -34,11 +34,11 @@ const FirebaseUserListener = ({ children }) => {
         const responseData = await fetchVerificationStatus(newUser.email);
         dispatch(setVerificationStatus(responseData.verificationStatus));
       }
-      !user.auth.isInitialized && dispatch(initializeUser());
+      dispatch(initializeUser());
     });
 
     return unsubscribeAuth;
-  }, [auth, user.auth.isAuthenticating, user.auth.isInitialized, dispatch]);
+  }, [auth, user.auth.isAuthenticating, dispatch]);
 
   return children;
 };

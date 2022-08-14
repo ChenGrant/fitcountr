@@ -76,7 +76,7 @@ const Profile = () => {
                   {sortArray(TIME_ZONES, (item1, item2) =>
                     item1.abbreviation.localeCompare(item2.abbreviation)
                   ).map(({ abbreviation, name }) => (
-                    <MenuItem key={name} value={name}>
+                    <MenuItem key={abbreviation} value={abbreviation}>
                       {abbreviation}: {name}
                     </MenuItem>
                   ))}

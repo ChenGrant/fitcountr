@@ -1,4 +1,4 @@
-export const FORM_ERROR_HEIGHT = "15px";
+export const FORM_ERROR_HEIGHT = "24px";
 
 export const EMAIL_ALREADY_IN_USE = "Email already in use";
 

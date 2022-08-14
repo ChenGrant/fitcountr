@@ -8,8 +8,6 @@ import CustomCard from "../../../components/ui/CustomCard";
 import moment from "moment";
 import {
   capitalizeFirstCharacterLowercaseRest,
-  errorIsRendered,
-  FORM_ERROR_HEIGHT,
   sortArray,
 } from "../../../utils";
 import useScreenSize from "../../../hooks/useScreenSize";
@@ -176,28 +174,16 @@ const Profile = () => {
                         gap={desktop ? 3 : 2}
                       >
                         {/* Sex */}
-                        <Box
-                          mb={
-                            !errorIsRendered("sex", formik) && FORM_ERROR_HEIGHT
-                          }
-                          flex={1}
-                        >
+                        <Box flex={1}>
                           <FormikControl
                             control="select"
                             label="Sex"
                             name="sex"
                             options={sexSelectOptions}
-                            errorHeight={FORM_ERROR_HEIGHT}
                           />
                         </Box>
                         {/* Height */}
-                        <Box
-                          flex={1}
-                          mb={
-                            !errorIsRendered("height", formik) &&
-                            FORM_ERROR_HEIGHT
-                          }
-                        >
+                        <Box flex={1}>
                           <FormikControl
                             control="input"
                             type="number"
@@ -207,7 +193,6 @@ const Profile = () => {
                             onKeyDown={(e) =>
                               e.key === "Enter" && e.preventDefault()
                             }
-                            errorHeight={FORM_ERROR_HEIGHT}
                           />
                         </Box>
                       </Box>
@@ -217,13 +202,7 @@ const Profile = () => {
                         flexDirection={desktop ? "row" : "column"}
                       >
                         {/* Birthday */}
-                        <Box
-                          flex={1}
-                          mb={
-                            !errorIsRendered("birthday", formik) &&
-                            FORM_ERROR_HEIGHT
-                          }
-                        >
+                        <Box flex={1}>
                           <FormikControl
                             control="input"
                             label={"Birthday (DD/MM/YYYY)"}
@@ -231,19 +210,12 @@ const Profile = () => {
                           />
                         </Box>
                         {/* Measurement System */}
-                        <Box
-                          flex={1}
-                          mb={
-                            !errorIsRendered("measurementSystem", formik) &&
-                            FORM_ERROR_HEIGHT
-                          }
-                        >
+                        <Box flex={1}>
                           <FormikControl
                             control="select"
                             label="Measurement System"
                             name="measurementSystem"
                             options={measurementSystemSelectOptions}
-                            errorHeight={FORM_ERROR_HEIGHT}
                           />
                         </Box>
                       </Box>

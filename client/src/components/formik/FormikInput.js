@@ -3,7 +3,7 @@ import { ErrorMessage, Field } from "formik";
 import React, { useId } from "react";
 import FormikTextError from "./FormikTextError";
 
-const FormikInput = ({ label, name, type, errorHeight, ...rest }) => {
+const FormikInput = ({ label, name, type, textErrorHeight, ...rest }) => {
   const id = useId();
 
   return (
@@ -31,7 +31,7 @@ const FormikInput = ({ label, name, type, errorHeight, ...rest }) => {
       </Field>
       <ErrorMessage name={name}>
         {(errorMessage) => (
-          <FormikTextError errorHeight={errorHeight}>
+          <FormikTextError textErrorHeight={textErrorHeight}>
             {errorMessage}
           </FormikTextError>
         )}

@@ -22,12 +22,6 @@ export { PROGRESS_TYPES } from "./progressUtils";
 export { TIME_ZONES } from "./dateUtils";
 
 export {
-  FORM_ERROR_HEIGHT,
-  EMAIL_ALREADY_IN_USE,
-  errorIsRendered,
-} from "./inputFieldUtils";
-
-export {
   numberWithCommas,
   capitalizeFirstCharacter,
   capitalizeFirstCharacterLowercaseRest,

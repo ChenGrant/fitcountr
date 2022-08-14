@@ -3,7 +3,7 @@ import { ErrorMessage, Field } from "formik";
 import React, { useId } from "react";
 import FormikTextError from "./FormikTextError";
 
-const FormikSelect = ({ label, name, options, errorHeight }) => {
+const FormikSelect = ({ label, name, options, textErrorHeight }) => {
   const id = useId();
 
   return (
@@ -26,7 +26,9 @@ const FormikSelect = ({ label, name, options, errorHeight }) => {
       </Field>
       <ErrorMessage name={name}>
         {(errorMessage) => (
-          <FormikTextError errorHeight={errorHeight}>{errorMessage}</FormikTextError>
+          <FormikTextError textErrorHeight={textErrorHeight}>
+            {errorMessage}
+          </FormikTextError>
         )}
       </ErrorMessage>
     </>

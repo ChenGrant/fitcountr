@@ -23,8 +23,6 @@ import {
   fetchEmailProvider,
   fetchVerificationStatus,
   GMAIL_PROVIDER,
-  FORM_ERROR_HEIGHT,
-  errorIsRendered,
 } from "../../../utils";
 import { setAuthenticatingUser } from "../../../redux";
 import useScreenSize from "../../../hooks/useScreenSize";
@@ -80,7 +78,7 @@ const LoginForm = ({
         email,
         password
       );
-      
+
       const newUser = userCredential.user;
 
       if (user.firebase === newUser && user.auth.isVerified !== null) {
@@ -201,49 +199,33 @@ const LoginForm = ({
                     password: <b>guest123</b>
                   </Typography>
                   {/* email input field */}
-                  <Box
-                    mb={!errorIsRendered("email", formik) && FORM_ERROR_HEIGHT}
-                  >
-                    <FormikControl
-                      control="input"
-                      label="Email"
-                      name="email"
-                      errorHeight={FORM_ERROR_HEIGHT}
-                    />
-                  </Box>
+                  <FormikControl control="input" label="Email" name="email" />
                   {/* password input field */}
-                  <Box
-                    mb={
-                      !errorIsRendered("password", formik) && FORM_ERROR_HEIGHT
+                  <FormikControl
+                    control="input"
+                    label="Password"
+                    name="password"
+                    type={!passwordIsVisible ? "password" : ""}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() =>
+                            setPasswordIsVisible(!passwordIsVisible)
+                          }
+                        >
+                          {passwordIsVisible ? (
+                            <VisibilityIcon
+                              sx={{ color: theme.palette.primary.main }}
+                            />
+                          ) : (
+                            <VisibilityOffIcon
+                              sx={{ color: theme.palette.primary.main }}
+                            />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
                     }
-                  >
-                    <FormikControl
-                      control="input"
-                      label="Password"
-                      name="password"
-                      type={!passwordIsVisible ? "password" : ""}
-                      errorHeight={FORM_ERROR_HEIGHT}
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={() =>
-                              setPasswordIsVisible(!passwordIsVisible)
-                            }
-                          >
-                            {passwordIsVisible ? (
-                              <VisibilityIcon
-                                sx={{ color: theme.palette.primary.main }}
-                              />
-                            ) : (
-                              <VisibilityOffIcon
-                                sx={{ color: theme.palette.primary.main }}
-                              />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                    />
-                  </Box>
+                  />
                   {/* 'forgot password' text */}
                   <Box fullWidth>
                     <Typography

@@ -1,43 +1,51 @@
-import {
-  Avatar,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-  Box,
-} from "@mui/material";
+import { Avatar, Typography, Box } from "@mui/material";
 import { Form, Formik } from "formik";
 import React from "react";
 import * as Yup from "yup";
 import FormikControl from "../../../components/formik/FormikControl";
 import CustomButton from "../../../components/ui/CustomButton";
 import CustomCard from "../../../components/ui/CustomCard";
+import moment from "moment";
 import {
   capitalizeFirstCharacterLowercaseRest,
   errorIsRendered,
   FORM_ERROR_HEIGHT,
   sortArray,
-  TIME_ZONES,
 } from "../../../utils";
 
-const SEXES = ["male", "female"];
+const MAX_HEIGHT_CM = 275;
 
-const sexSelectOptions = SEXES.map((sex) => ({
+const MIN_HEIGHT_CM = 0;
+
+const SEXES = ["MALE", "FEMALE"];
+
+const MEASUREMENT_SYSTEMS = ["METRIC", "IMPERIAL"];
+
+const sexSelectOptions = sortArray(SEXES, (sex1, sex2) =>
+  sex1.localeCompare(sex2)
+).map((sex) => ({
   label: capitalizeFirstCharacterLowercaseRest(sex),
   value: sex,
+}));
+
+const measurementSystemSelectOptions = sortArray(
+  MEASUREMENT_SYSTEMS,
+  (measurementSystem1, measurementSystem2) =>
+    measurementSystem1.localeCompare(measurementSystem2)
+).map((measurementSystem) => ({
+  label: capitalizeFirstCharacterLowercaseRest(measurementSystem),
+  value: measurementSystem,
 }));
 
 const initialValues = {
   sex: "",
   height: "",
+  birthday: "",
+  measurementSystem: "",
 };
 
-const MAX_HEIGHT_CM = 275;
-const MIN_HEIGHT_CM = 0;
 const validationSchema = Yup.object({
-  sex: Yup.string().required("Required").oneOf(SEXES),
+  sex: Yup.string().trim().required("Required").oneOf(SEXES),
   height: Yup.number()
     .typeError("Height must be a number")
     .required("Required")
@@ -51,6 +59,33 @@ const validationSchema = Yup.object({
       `Height must be less than ${MAX_HEIGHT_CM} cm`,
       (height) => height < MAX_HEIGHT_CM
     ),
+  birthday: Yup.string()
+    .trim()
+    .required("Required")
+    .test(
+      "validDateFormat",
+      "Date must be in the form DD/MM/YYYY",
+      (birthday) => {
+        try {
+          if (birthday.length !== "DD/MM/YYYY".length) return false;
+          if (birthday.charAt(2) !== "/" || birthday.charAt(5) !== "/")
+            return false;
+          const day = birthday.substring(0, 2);
+          const month = birthday.substring(3, 5);
+          const year = birthday.substring(6);
+          return !isNaN(day) && !isNaN(month) && !isNaN(year);
+        } catch (err) {
+          return false;
+        }
+      }
+    )
+    .test("validDateString", "Invalid date", (birthday) =>
+      moment(birthday, "DD/MM/YYYY", true).isValid()
+    ),
+  measurementSystem: Yup.string()
+    .trim()
+    .required("Required")
+    .oneOf(MEASUREMENT_SYSTEMS),
 });
 
 const onSubmit = (values) => {
@@ -58,6 +93,9 @@ const onSubmit = (values) => {
   console.log(values);
 };
 
+// ************************************************************************************
+// ------------------------------------ COMPONENT -------------------------------------
+// ************************************************************************************
 const Profile = () => {
   return (
     <Box
@@ -80,10 +118,9 @@ const Profile = () => {
             onSubmit={onSubmit}
           >
             {(formik) => {
-              console.log(formik);
               return (
                 <Form>
-                  <Box display="flex">
+                  <Box display="flex" alignItems="center">
                     <Box
                       display="flex"
                       flexDirection="column"
@@ -105,6 +142,7 @@ const Profile = () => {
                       width="700px"
                     >
                       <Box display="flex" gap={4}>
+                        {/* Sex */}
                         <Box
                           mb={
                             !errorIsRendered("sex", formik) && FORM_ERROR_HEIGHT
@@ -119,6 +157,7 @@ const Profile = () => {
                             errorHeight={FORM_ERROR_HEIGHT}
                           />
                         </Box>
+                        {/* Height */}
                         <Box
                           flex={1}
                           mb={
@@ -131,37 +170,46 @@ const Profile = () => {
                             type="number"
                             label="Height (cm)"
                             name="height"
+                            step="0.5"
+                            onKeyDown={(e) =>
+                              e.key === "Enter" && e.preventDefault()
+                            }
                             errorHeight={FORM_ERROR_HEIGHT}
                           />
                         </Box>
                       </Box>
                       <Box display="flex" gap={4}>
-                        <TextField label={"Birthday (DD/MM/YYYY)"} fullWidth />
-                        <FormControl fullWidth>
-                          <InputLabel id="measurement system">
-                            Measurement System
-                          </InputLabel>
-                          <Select
+                        {/* Birthday */}
+                        <Box
+                          flex={1}
+                          mb={
+                            !errorIsRendered("birthday", formik) &&
+                            FORM_ERROR_HEIGHT
+                          }
+                        >
+                          <FormikControl
+                            control="input"
+                            label={"Birthday (DD/MM/YYYY)"}
+                            name="birthday"
+                          />
+                        </Box>
+                        {/* Measurement System */}
+                        <Box
+                          flex={1}
+                          mb={
+                            !errorIsRendered("measurementSystem", formik) &&
+                            FORM_ERROR_HEIGHT
+                          }
+                        >
+                          <FormikControl
+                            control="select"
                             label="Measurement System"
-                            labelId="measurement system"
-                          >
-                            <MenuItem value={"metric"}>Metric</MenuItem>
-                            <MenuItem value={"imperial"}>Imperial</MenuItem>
-                          </Select>
-                        </FormControl>
+                            name="measurementSystem"
+                            options={measurementSystemSelectOptions}
+                            errorHeight={FORM_ERROR_HEIGHT}
+                          />
+                        </Box>
                       </Box>
-                      <FormControl fullWidth>
-                        <InputLabel id="timezone">Timezone</InputLabel>
-                        <Select label="Timezone" labelId="timezone">
-                          {sortArray(TIME_ZONES, (item1, item2) =>
-                            item1.abbreviation.localeCompare(item2.abbreviation)
-                          ).map(({ abbreviation, name }) => (
-                            <MenuItem key={abbreviation} value={abbreviation}>
-                              {abbreviation}: {name}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
                       <CustomButton variant="contained" type="submit">
                         Save Changes
                       </CustomButton>

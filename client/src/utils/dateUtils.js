@@ -620,11 +620,6 @@ export const TIME_ZONES = [
     "UTC offset": "UTC+11",
   },
   {
-    abbreviation: "MIT",
-    name: "Marquesas Islands Time",
-    "UTC offset": "UTC−09:30",
-  },
-  {
     abbreviation: "MMT",
     name: "Myanmar Standard Time",
     "UTC offset": "UTC+06:30",

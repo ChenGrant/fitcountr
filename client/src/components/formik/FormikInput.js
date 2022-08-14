@@ -10,7 +10,6 @@ const FormikInput = ({ label, name, type, errorHeight, ...rest }) => {
     <>
       <Field name={name}>
         {({ field }) => {
-          console.log(rest)
           return (
             <FormControl variant="outlined" fullWidth>
               <InputLabel htmlFor={id}>{label}</InputLabel>
@@ -20,6 +19,9 @@ const FormikInput = ({ label, name, type, errorHeight, ...rest }) => {
                 type={type}
                 variant="outlined"
                 autoComplete={type}
+                inputProps={{
+                  step: type === "number" ? "any" : undefined,
+                }}
                 {...rest}
                 {...field}
               />
@@ -29,7 +31,9 @@ const FormikInput = ({ label, name, type, errorHeight, ...rest }) => {
       </Field>
       <ErrorMessage name={name}>
         {(errorMessage) => (
-          <FormikTextError errorHeight={errorHeight}>{errorMessage}</FormikTextError>
+          <FormikTextError errorHeight={errorHeight}>
+            {errorMessage}
+          </FormikTextError>
         )}
       </ErrorMessage>
     </>

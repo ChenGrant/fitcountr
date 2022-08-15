@@ -4,6 +4,7 @@ const {
   getProfileData,
   getProfilePicture,
   createUser,
+  postProfileData,
 } = require("../controllers/userController");
 const { isAuthorized, PRIVATE } = require("../middleware/isAuthorized");
 const isAuthenticated = require("../middleware/isAuthenticated");
@@ -27,6 +28,13 @@ router.post(
   isAuthenticated,
   isAuthorized(PRIVATE),
   createUser
+);
+
+router.post(
+  "/profile/:userUID",
+  isAuthenticated,
+  isAuthorized(PRIVATE),
+  postProfileData
 );
 
 module.exports = router;

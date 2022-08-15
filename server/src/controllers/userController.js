@@ -167,4 +167,22 @@ const getProfileData = async (req, res) => {
   }
 };
 
-module.exports = { getProfilePicture, createUser, getProfileData };
+const postProfileData = async (req, res) => {
+  try {
+    const { userUID } = req.params;
+    const user = await findUserByUserUID(userUID);
+    console.log(user);
+    console.log(req.body);
+    return res.json({});
+  } catch (err) {
+    console.log(err);
+    res.json({ error: { message: "Could not post profile data" } }).status(404);
+  }
+};
+
+module.exports = {
+  getProfilePicture,
+  createUser,
+  getProfileData,
+  postProfileData,
+};

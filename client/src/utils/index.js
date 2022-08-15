@@ -14,6 +14,7 @@ export {
   scanBarcodeImage,
   sendVerificationEmail,
   postSignupData,
+  postProfileData,
 } from "./requestUtils";
 
 export { sortArray, getLexSmallest } from "./arrayUtils";

@@ -19,7 +19,7 @@ import {
 import useScreenSize from "../../../hooks/useScreenSize";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserProfilePictureIsLoading } from "../../../redux";
-import { fetchProfileData } from "../../../utils/requestUtils";
+import { fetchProfileData, postProfileData } from "../../../utils/requestUtils";
 
 // ---------------------------------------- FORMIK ----------------------------------------
 const sexSelectOptions = sortArray(SEXES, (sex1, sex2) =>
@@ -114,16 +114,18 @@ const Profile = () => {
   const dispatch = useDispatch();
   const [postingData, setPostingData] = useState(false);
 
-  const handleProfileDataUpdate = async ({ sex, height, birthday }) => {
+  const handleProfileDataUpdate = async (updatedProfileData) => {
+    const { height, birthday } = updatedProfileData;
     const postData = {
-      sex,
-      height: {
+      ...updatedProfileData,
+      height: height && {
         value: height,
         unit: UNITS.CENTIMETER.abbreviation,
       },
-      birthday: moment(birthday, "DD/MM/YYYY").toDate(),
+      birthday: birthday && moment(birthday, "DD/MM/YYYY").toDate(),
     };
     console.log(postData);
+    await postProfileData(user, postData);
   };
 
   useEffect(() => {

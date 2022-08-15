@@ -102,3 +102,15 @@ export const scanBarcodeImage = async (barcodeImageFile) => {
     body: formData,
   });
 };
+
+export const postProfileData = async ({ firebase }, profileData) => {
+  const userIdToken = await firebase.getIdToken();
+  return await fetchJSON(`/user/profile/${firebase.uid}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: userIdToken,
+    },
+    body: JSON.stringify(profileData),
+  });
+};

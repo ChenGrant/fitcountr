@@ -41,6 +41,16 @@ export const fetchFoodsFromQuery = async (
 export const fetchAssetURLFromAssetName = async (assetName) =>
   await fetchJSON(`/asset/${assetName}`);
 
+export const fetchProfilePicture = async (user) => {
+  const userIdToken = await user.firebase.getIdToken();
+  return await fetchJSON(`/user/profilePicture/${user.firebase.uid}`, {
+    headers: {
+      "Content-Type": "application/json",
+      authorization: userIdToken,
+    },
+  });
+};
+
 // ---------------------------------- POST REQUESTS ----------------------------------
 export const sendVerificationEmail = async (email) =>
   await fetchJSON(`/emailVerification/sendVerificationEmail/${email}`, {
@@ -59,8 +69,8 @@ export const fetchValidatePin = async (email, pin) =>
     }),
   });
 
-export const postSignupData = async (user, provider) => {
-  const userIdToken = await user.getIdToken();
+export const postSignupData = async (firebaseUser, provider) => {
+  const userIdToken = await firebaseUser.getIdToken();
   return await fetchJSON("/signup", {
     method: "POST",
     headers: {
@@ -68,7 +78,7 @@ export const postSignupData = async (user, provider) => {
       authorization: userIdToken,
     },
     body: JSON.stringify({
-      user: { userUID: user.uid, email: user.email },
+      user: { userUID: firebaseUser.uid, email: firebaseUser.email },
       provider,
     }),
   });

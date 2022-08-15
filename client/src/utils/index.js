@@ -10,6 +10,7 @@ export {
   fetchPinLength,
   fetchValidatePin,
   fetchFoodsFromQuery,
+  fetchProfilePicture,
   scanBarcodeImage,
   sendVerificationEmail,
   postSignupData,

@@ -12,6 +12,7 @@ const signupRoutes = require("./src/routes/signupRoutes");
 const assetRoutes = require("./src/routes/assetRoutes");
 const emailVerificationRoutes = require("./src/routes/emailVerificationRoutes");
 const searchFoodRoutes = require("./src/routes/searchFoodRoutes");
+const userRoutes = require("./src/routes/userRoutes");
 
 // ------------------------------------ MIDDLEWARE ------------------------------------
 app.use(express.urlencoded({ extended: true }));
@@ -27,6 +28,7 @@ app.use("/asset", assetRoutes);
 app.use("/signup", signupRoutes);
 app.use("/emailVerification", emailVerificationRoutes);
 app.use("/searchFood", searchFoodRoutes);
+app.use("/user", userRoutes);
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, "../client/build/index.html"));
 });

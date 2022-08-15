@@ -17,8 +17,6 @@ import { PROGRESS_TYPES } from "../../../utils";
 import { Icon } from "@mui/material";
 
 // -------------------------------- CONSTANTS --------------------------------
-const PROFILE_PIC_SRC =
-  "https://180dc.org/wp-content/uploads/2016/08/default-profile.png";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
@@ -36,7 +34,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
         <Icon>
           <img
             alt="profilePicture"
-            src={PROFILE_PIC_SRC}
+            src={""}
             style={{ borderRadius: "100%", height: "24px", width: "24px" }}
           />
         </Icon>

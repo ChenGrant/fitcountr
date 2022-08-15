@@ -105,13 +105,13 @@ const onSubmit = (values) => {
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const Profile = () => {
-  const { desktop } = useScreenSize();
+  const { desktop, tablet, phone } = useScreenSize();
 
   // ------------------------------------- RENDER -------------------------------------
   return (
     <Box
       p={5}
-      px={2}
+      px={!phone ? 4 : 2}
       display="flex"
       flexDirection="column"
       alignItems="center"
@@ -122,7 +122,7 @@ const Profile = () => {
       <Box>
         <Typography variant="h1">Profile</Typography>
       </Box>
-      <Box width="100%" maxWidth={desktop ? "800px" : "600px"}>
+      <Box width="100%" maxWidth={"1000px"}>
         <CustomCard
           sx={{
             p: desktop ? 5 : 3,
@@ -152,7 +152,11 @@ const Profile = () => {
                 >
                   <Avatar
                     src="https://scontent.fyzd1-2.fna.fbcdn.net/v/t39.30808-6/286520406_4018635011694341_2902533533304022077_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=HSFRkbtGEfwAX-KNgfF&_nc_oc=AQlR9KHJrG8cEBH8_CPLPJF8tss0JtpVG9TClt7TaNtAoMN5TdQnBC4UaqX3_iamafmSoZ-zxiF67GieO-LMbMYl&_nc_ht=scontent.fyzd1-2.fna&oh=00_AT9G30fnfO243CbAu2wUm5qwuoaaucXjzN7iFnbcIUVGEQ&oe=62FC7F73"
-                    sx={{ height: 200, width: 200, cursor: "pointer" }}
+                    sx={{
+                      height: desktop ? 225 : tablet ? 200 : 150,
+                      width: desktop ? 225 : tablet ? 200 : 150,
+                      cursor: "pointer",
+                    }}
                     onClick={() => console.log("bet")}
                   />
                 </Box>
@@ -164,57 +168,43 @@ const Profile = () => {
                   width={!desktop && "100%"}
                   mt={!desktop && 5}
                 >
-                  <Box
-                    display="flex"
-                    flexDirection={desktop ? "row" : "column"}
-                    gap={desktop ? 3 : 2}
-                  >
-                    {/* Sex */}
-                    <Box flex={1}>
-                      <FormikControl
-                        control="select"
-                        label="Sex"
-                        name="sex"
-                        options={sexSelectOptions}
-                      />
-                    </Box>
-                    {/* Height */}
-                    <Box flex={1}>
-                      <FormikControl
-                        control="input"
-                        type="number"
-                        label="Height (cm)"
-                        name="height"
-                        step="0.5"
-                        onKeyDown={(e) =>
-                          e.key === "Enter" && e.preventDefault()
-                        }
-                      />
-                    </Box>
+                  {/* Sex */}
+                  <Box flex={1}>
+                    <FormikControl
+                      control="select"
+                      label="Sex"
+                      name="sex"
+                      options={sexSelectOptions}
+                    />
                   </Box>
-                  <Box
-                    display="flex"
-                    gap={desktop ? 3 : 2}
-                    flexDirection={desktop ? "row" : "column"}
-                  >
-                    {/* Birthday */}
-                    <Box flex={1}>
-                      <FormikControl
-                        control="input"
-                        label={"Birthday (DD/MM/YYYY)"}
-                        name="birthday"
-                      />
-                    </Box>
-                    {/* Measurement System */}
-                    {/* <Box flex={1}>
-                          <FormikControl
-                            control="select"
-                            label="Measurement System"
-                            name="measurementSystem"
-                            options={measurementSystemSelectOptions}
-                          />
-                        </Box> */}
+                  {/* Height */}
+                  <Box flex={1}>
+                    <FormikControl
+                      control="input"
+                      type="number"
+                      label="Height (cm)"
+                      name="height"
+                      step="0.5"
+                      onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+                    />
                   </Box>
+                  {/* Birthday */}
+                  <Box flex={1}>
+                    <FormikControl
+                      control="input"
+                      label={"Birthday (DD/MM/YYYY)"}
+                      name="birthday"
+                    />
+                  </Box>
+                  {/* Measurement System */}
+                  {/* <Box flex={1}>
+                    <FormikControl
+                      control="select"
+                      label="Measurement System"
+                      name="measurementSystem"
+                      options={measurementSystemSelectOptions}
+                    />
+                  </Box> */}
                   <CustomButton variant="contained" type="submit">
                     Save Changes
                   </CustomButton>

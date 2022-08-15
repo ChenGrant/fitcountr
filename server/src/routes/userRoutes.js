@@ -9,6 +9,6 @@ const isAuthenticated = require("../middleware/isAuthenticated");
 
 router.get("/profilePicture/:userUID", getProfilePicture);
 
-router.post("/signup", isAuthenticated, isAuthorized(PRIVATE), createUser);
+router.post("/signup/:userUID", isAuthenticated, isAuthorized(PRIVATE), createUser);
 
 module.exports = router;

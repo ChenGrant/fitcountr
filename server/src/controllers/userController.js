@@ -36,8 +36,8 @@ const setUserProfilePicture = async (user) => {
 // ------------------------------- createUser -------------------------------
 const createUser = async (req, res) => {
   try {
-    const { user, provider } = req.body;
-    const { userUID, email } = user;
+    const { email, provider } = req.body;
+    const { userUID } = req.params;
 
     // verify userUID and email exists in firebase auth
     await admin.auth().getUser(userUID);
@@ -72,7 +72,7 @@ const createUser = async (req, res) => {
 
       // set user's profile picture to be the default profile picture
       setUserProfilePicture(createdUser);
-      
+
       return res.json({ userIsCreated: true });
     }
 

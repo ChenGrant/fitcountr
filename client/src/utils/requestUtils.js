@@ -71,14 +71,14 @@ export const fetchValidatePin = async (email, pin) =>
 
 export const postSignupData = async (firebaseUser, provider) => {
   const userIdToken = await firebaseUser.getIdToken();
-  return await fetchJSON("/user/signup", {
+  return await fetchJSON(`/user/signup/${firebaseUser.uid}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       authorization: userIdToken,
     },
     body: JSON.stringify({
-      user: { userUID: firebaseUser.uid, email: firebaseUser.email },
+      email: firebaseUser.email,
       provider,
     }),
   });

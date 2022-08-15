@@ -41,9 +41,9 @@ export const fetchFoodsFromQuery = async (
 export const fetchAssetURLFromAssetName = async (assetName) =>
   await fetchJSON(`/asset/${assetName}`);
 
-export const fetchProfilePicture = async (user) => {
-  const userIdToken = await user.firebase.getIdToken();
-  return await fetchJSON(`/user/profilePicture/${user.firebase.uid}`, {
+export const fetchProfilePictureURL = async ({ firebase }) => {
+  const userIdToken = await firebase.getIdToken();
+  return await fetchJSON(`/user/profilePicture/${firebase.uid}`, {
     headers: {
       "Content-Type": "application/json",
       authorization: userIdToken,

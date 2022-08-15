@@ -3,5 +3,6 @@ const config = require("../../config/config");
 
 // initialize the Firebase Admin SDK
 admin.initializeApp({
-  credential: admin.credential.cert(config.FIREBASE_ADMIN_CREDENTIALS),
+  credential: admin.credential.cert(config.FIREBASE_ADMIN.CREDENTIALS),
+  storageBucket: config.FIREBASE_ADMIN.STORAGE_BUCKET,
 });

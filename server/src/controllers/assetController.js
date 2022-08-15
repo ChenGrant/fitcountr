@@ -5,7 +5,7 @@ const assert = require("assert");
 const getAsset = (req, res) => {
   try {
     const { assetName } = req.params;
-    const assetURL = config.ASSETS[assetName.toUpperCase()];
+    const assetURL = config.ASSETS.URL[assetName.toUpperCase()];
     // verify that there exists an assert with a name of assetName
     assert(assetURL);
     res.json({ assetURL });

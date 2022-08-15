@@ -1,4 +1,6 @@
 const User = require("../models/User");
+const MediaFile = require("../models/MediaFile");
+const config = require("../config/config");
 const admin = require("firebase-admin");
 const {
   sendEmailVerificationAsync,
@@ -7,6 +9,25 @@ const {
 // ------------------------------------ CONSTANTS ------------------------------------
 const EMAIL_PASSWORD_PROVIDER = "EMAIL_PASSWORD_PROVIDER";
 const GMAIL_PROVIDER = "GMAIL_PROVIDER";
+
+const setUserProfilePicture = async (user) => {
+  const DEFAULT_PROFILE_PICTURE_STORAGE_PATH =
+    config.ASSETS.PATH.DEFAULT_PROFILE_PICTURE;
+
+  let defaultProfilePicture = await MediaFile.findMediaFileByFirebasePath(
+    DEFAULT_PROFILE_PICTURE_STORAGE_PATH
+  );
+
+  // if default pfp is not in mongodb, store it in mongodb
+  if (defaultProfilePicture === null) {
+    defaultProfilePicture = await MediaFile.create({
+      firebasePath: DEFAULT_PROFILE_PICTURE_STORAGE_PATH,
+    });
+  }
+
+  user.profilePicture = defaultProfilePicture._id;
+  user.save();
+};
 
 // ************************************************************************************
 // ----------------------------------- CONTROLLERS ------------------------------------
@@ -49,6 +70,9 @@ const createUser = async (req, res) => {
         createdUser.emailVerification.pin
       );
 
+      // set user's profile picture to be the default profile picture
+      setUserProfilePicture(createdUser);
+      
       return res.json({ userIsCreated: true });
     }
 
@@ -74,12 +98,14 @@ const createUser = async (req, res) => {
       }
 
       // create user in mongodb atlas if no users with the same email exist
-      await User.create({
+      const createdUser = await User.create({
         _id: userUID,
         userUID,
         email,
         emailVerification: { isVerified: true, provider: GMAIL_PROVIDER },
       });
+
+      setUserProfilePicture(createdUser);
 
       return res.json({ userIsCreated: true });
     }

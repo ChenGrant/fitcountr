@@ -17,37 +17,45 @@ module.exports = {
     messagingSenderId: process.env.FIREBASE_CLIENT_CONFIG_MESSAGING_SENDER_ID,
     appId: process.env.FIREBASE_CLIENT_CONFIG_APP_ID,
   },
-  FIREBASE_ADMIN_CREDENTIALS: {
-    type: process.env.FIREBASE_ADMIN_CREDENTIALS_TYPE,
-    project_id: process.env.FIREBASE_ADMIN_CREDENTIALS_PROJECT_ID,
-    private_key_id: process.env.FIREBASE_ADMIN_CREDENTIALS_PRIVATE_KEY_ID,
-    private_key: process.env.FIREBASE_ADMIN_CREDENTIALS_PRIVATE_KEY.replace(
-      /\\n/g,
-      "\n"
-    ),
-    client_email: process.env.FIREBASE_ADMIN_CREDENTIALS_CLIENT_EMAIL,
-    client_id: process.env.FIREBASE_ADMIN_CREDENTIALS_CLIENT_ID,
-    auth_uri: process.env.FIREBASE_ADMIN_CREDENTIALS_AUTH_URI,
-    token_uri: process.env.FIREBASE_ADMIN_CREDENTIALS_TOKEN_URI,
-    auth_provider_x509_cert_url:
-      process.env.FIREBASE_ADMIN_CREDENTIALS_AUTH_PROVIDER_X509_CERT_URL,
-    client_x509_cert_url:
-      process.env.FIREBASE_ADMIN_CREDENTIALS_CLIENT_X509_CERT_URL,
+  FIREBASE_ADMIN: {
+    CREDENTIALS: {
+      type: process.env.FIREBASE_ADMIN_CREDENTIALS_TYPE,
+      project_id: process.env.FIREBASE_ADMIN_CREDENTIALS_PROJECT_ID,
+      private_key_id: process.env.FIREBASE_ADMIN_CREDENTIALS_PRIVATE_KEY_ID,
+      private_key: process.env.FIREBASE_ADMIN_CREDENTIALS_PRIVATE_KEY.replace(
+        /\\n/g,
+        "\n"
+      ),
+      client_email: process.env.FIREBASE_ADMIN_CREDENTIALS_CLIENT_EMAIL,
+      client_id: process.env.FIREBASE_ADMIN_CREDENTIALS_CLIENT_ID,
+      auth_uri: process.env.FIREBASE_ADMIN_CREDENTIALS_AUTH_URI,
+      token_uri: process.env.FIREBASE_ADMIN_CREDENTIALS_TOKEN_URI,
+      auth_provider_x509_cert_url:
+        process.env.FIREBASE_ADMIN_CREDENTIALS_AUTH_PROVIDER_X509_CERT_URL,
+      client_x509_cert_url:
+        process.env.FIREBASE_ADMIN_CREDENTIALS_CLIENT_X509_CERT_URL,
+    },
+    STORAGE_BUCKET: process.env.FIREBASE_ADMIN_STORAGE_BUCKET,
   },
   NODEMAILER: {
     GMAIL_USERNAME: process.env.NODEMAILER_GMAIL_USERNAME,
     GMAIL_PASSWORD: process.env.NODEMAILER_GMAIL_PASSWORD,
   },
   ASSETS: {
-    LOGO: process.env.ASSET_LOGO,
-    LAPTOP_PHONE: process.env.ASSET_LAPTOP_PHONE,
-    EMAIL_DENIED: process.env.ASSET_EMAIL_DENIED,
-    EMAIL_PENDING: process.env.ASSET_EMAIL_PENDING,
-    EMAIL_SUCCESS: process.env.ASSET_EMAIL_SUCCESS,
-    SHORT_LOGO: process.env.ASSET_SHORT_LOGO,
-    SEARCH_BARCODE_IMAGE: process.env.ASSET_SEARCH_BARCODE_IMAGE,
-    SEARCH_BARCODE_NUMBER: process.env.ASSET_SEARCH_BARCODE_NUMBER,
-    SEARCH_FOOD_NAME: process.env.ASSET_SEARCH_FOOD_NAME,
+    URL: {
+      LOGO: process.env.ASSET_LOGO,
+      LAPTOP_PHONE: process.env.ASSET_LAPTOP_PHONE,
+      EMAIL_DENIED: process.env.ASSET_EMAIL_DENIED,
+      EMAIL_PENDING: process.env.ASSET_EMAIL_PENDING,
+      EMAIL_SUCCESS: process.env.ASSET_EMAIL_SUCCESS,
+      SHORT_LOGO: process.env.ASSET_SHORT_LOGO,
+      SEARCH_BARCODE_IMAGE: process.env.ASSET_SEARCH_BARCODE_IMAGE,
+      SEARCH_BARCODE_NUMBER: process.env.ASSET_SEARCH_BARCODE_NUMBER,
+      SEARCH_FOOD_NAME: process.env.ASSET_SEARCH_FOOD_NAME,
+    },
+    PATH: {
+      DEFAULT_PROFILE_PICTURE: process.env.ASSET_DEFAULT_PROFILE_PICTURE_PATH,
+    },
   },
   BARCODE_API_KEY: process.env.BARCODE_API_KEY,
   FOOD_DATA_CENTRAL_API_KEY: process.env.FOOD_DATA_CENTRAL_API_KEY,

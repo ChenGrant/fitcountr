@@ -45,6 +45,7 @@ const userSchema = new mongoose.Schema({
     },
     required: true,
   },
+  profilePicture: mongoose.SchemaTypes.ObjectId,
 });
 
 // ------------------------------------- STATICS -------------------------------------

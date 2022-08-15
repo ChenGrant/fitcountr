@@ -51,6 +51,16 @@ export const fetchProfilePictureURL = async ({ firebase }) => {
   });
 };
 
+export const fetchProfileData = async ({ firebase }) => {
+  const userIdToken = await firebase.getIdToken();
+  return await fetchJSON(`/user/profile/${firebase.uid}`, {
+    headers: {
+      "Content-Type": "application/json",
+      authorization: userIdToken,
+    },
+  });
+};
+
 // ---------------------------------- POST REQUESTS ----------------------------------
 export const sendVerificationEmail = async (email) =>
   await fetchJSON(`/emailVerification/sendVerificationEmail/${email}`, {

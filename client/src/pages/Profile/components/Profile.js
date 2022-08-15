@@ -1,6 +1,6 @@
 import { Avatar, Typography, Box } from "@mui/material";
 import { Form, Formik } from "formik";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import FormikControl from "../../../components/formik/FormikControl";
 import CustomButton from "../../../components/ui/CustomButton";
@@ -14,10 +14,12 @@ import {
   MIN_HEIGHT,
   SEXES,
   sortArray,
+  UNITS,
 } from "../../../utils";
 import useScreenSize from "../../../hooks/useScreenSize";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserProfilePictureIsLoading } from "../../../redux";
+import { fetchProfileData } from "../../../utils/requestUtils";
 
 // ---------------------------------------- FORMIK ----------------------------------------
 const sexSelectOptions = sortArray(SEXES, (sex1, sex2) =>
@@ -110,6 +112,26 @@ const Profile = () => {
   const { desktop, tablet, phone } = useScreenSize();
   const { user } = useSelector((state) => state);
   const dispatch = useDispatch();
+  const [postingData, setPostingData] = useState(false);
+
+  const handleProfileDataUpdate = async ({ sex, height, birthday }) => {
+    const postData = {
+      sex,
+      height: {
+        value: height,
+        unit: UNITS.CENTIMETER.abbreviation,
+      },
+      birthday: moment(birthday, "DD/MM/YYYY").toDate(),
+    };
+    console.log(postData);
+  };
+
+  useEffect(() => {
+    (async () => {
+      const fetchedProfileData = await fetchProfileData(user);
+      console.log(fetchedProfileData);
+    })();
+  }, [user]);
 
   // ------------------------------------- RENDER -------------------------------------
   return (
@@ -138,7 +160,11 @@ const Profile = () => {
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={onSubmit}
+            onSubmit={async (formValues, formik) => {
+              setPostingData(true);
+              await handleProfileDataUpdate(formValues);
+              setPostingData(false);
+            }}
           >
             <Form>
               <Box

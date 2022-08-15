@@ -14,6 +14,12 @@ const GMAIL_PROVIDER = "GMAIL_PROVIDER";
 
 const bucket = getStorage().bucket();
 
+const findUserByUserUID = async (userUID) => {
+  const user = await User.findOne({ userUID });
+  if (user === null) throw new Error("No user matched");
+  return user;
+};
+
 const setUserProfilePicture = async (user) => {
   const DEFAULT_PROFILE_PICTURE_STORAGE_PATH =
     config.ASSETS.PATH.DEFAULT_PROFILE_PICTURE;
@@ -126,8 +132,7 @@ const createUser = async (req, res) => {
 const getProfilePicture = async (req, res) => {
   try {
     const { userUID } = req.params;
-    const user = await User.findOne({ userUID });
-    if (user === null) throw new Error("No user matched");
+    const user = await findUserByUserUID(userUID);
 
     const profilePicture = await MediaFile.findById(user.profilePicture);
 
@@ -147,4 +152,19 @@ const getProfilePicture = async (req, res) => {
   }
 };
 
-module.exports = { getProfilePicture, createUser };
+const getProfileData = async (req, res) => {
+  try {
+    const { userUID } = req.params;
+    const user = await findUserByUserUID(userUID);
+
+    const { sex, height, birthday } = user;
+    return res.json({ sex, height, birthday });
+  } catch (err) {
+    console.log(err);
+    res
+      .json({ error: { message: "Could not retrieve profile data" } })
+      .status(404);
+  }
+};
+
+module.exports = { getProfilePicture, createUser, getProfileData };

@@ -8,7 +8,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
 const firebaseClientConfigRoutes = require("./src/routes/firebaseClientConfigRoutes");
-const signupRoutes = require("./src/routes/signupRoutes");
 const assetRoutes = require("./src/routes/assetRoutes");
 const emailVerificationRoutes = require("./src/routes/emailVerificationRoutes");
 const searchFoodRoutes = require("./src/routes/searchFoodRoutes");
@@ -25,7 +24,6 @@ app.use(morgan("dev"));
 // -------------------------------------- ROUTES --------------------------------------
 app.use("/firebaseClientConfig", firebaseClientConfigRoutes);
 app.use("/asset", assetRoutes);
-app.use("/signup", signupRoutes);
 app.use("/emailVerification", emailVerificationRoutes);
 app.use("/searchFood", searchFoodRoutes);
 app.use("/user", userRoutes);

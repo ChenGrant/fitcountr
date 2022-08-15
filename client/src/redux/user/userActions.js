@@ -3,6 +3,8 @@ import {
   RESET_USER,
   SET_AUTHENTICATING_USER,
   SET_USER_FIREBASE_DATA,
+  SET_USER_PROFILE_PICTURE_IS_LOADING,
+  SET_USER_PROFILE_PICTURE_URL,
   SET_VERIFICATION_STATUS,
 } from "./userTypes";
 
@@ -24,3 +26,13 @@ export const setAuthenticatingUser = (isAuthenticating) => {
 export const setVerificationStatus = (verificationStatus) => {
   return { type: SET_VERIFICATION_STATUS, payload: verificationStatus };
 };
+
+export const setUserProfilePictureURL = (profilePictureURL) => ({
+  type: SET_USER_PROFILE_PICTURE_URL,
+  payload: profilePictureURL,
+});
+
+export const setUserProfilePictureIsLoading = (loadingState) => ({
+  type: SET_USER_PROFILE_PICTURE_IS_LOADING,
+  payload: loadingState,
+});

@@ -3,6 +3,8 @@ import {
   RESET_USER,
   SET_AUTHENTICATING_USER,
   SET_USER_FIREBASE_DATA,
+  SET_USER_PROFILE_PICTURE_IS_LOADING,
+  SET_USER_PROFILE_PICTURE_URL,
   SET_VERIFICATION_STATUS,
 } from "./userTypes";
 
@@ -14,6 +16,10 @@ const initialState = {
     isLoggedIn: false,
   },
   firebase: null,
+  profilePicture: {
+    URL: null,
+    isLoading: true,
+  },
 };
 
 const userReducer = (state = initialState, action) => {
@@ -44,6 +50,24 @@ const userReducer = (state = initialState, action) => {
         return {
           ...state,
           auth: { ...state.auth, isVerified: action.payload === "Verified" },
+        };
+
+      case SET_USER_PROFILE_PICTURE_URL:
+        return {
+          ...state,
+          profilePicture: {
+            ...state.profilePicture,
+            URL: action.payload,
+          },
+        };
+
+      case SET_USER_PROFILE_PICTURE_IS_LOADING:
+        return {
+          ...state,
+          profilePicture: {
+            ...state.profilePicture,
+            isLoading: action.payload,
+          },
         };
 
       default:

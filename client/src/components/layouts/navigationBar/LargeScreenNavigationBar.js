@@ -6,6 +6,7 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import useAsset from "../../../hooks/useAsset";
 import LoadingCircle from "../../miscellaneous/LoadingCircle";
 import NavigationBarItemList from "./NavigationBarItemList";
+import { useSelector } from "react-redux";
 
 // ------------------------------------ CONSTANTS ------------------------------------
 const OPEN_SIDE_NAV_WIDTH = "233px";
@@ -34,8 +35,9 @@ const LargeScreenNavigationBar = ({ children }) => {
   const [assets, assetsDispatchers, loadingAssets] = useAsset({
     shortLogo: { name: "short_logo" },
   });
+  const {user} = useSelector(state => state)
 
-  const pageIsLoading = loadingAssets;
+  const pageIsLoading = loadingAssets || user.profilePicture.isLoading;
 
   // ----------------------------------- FUNCTIONS -----------------------------------
   const toggleIconDirection = () =>

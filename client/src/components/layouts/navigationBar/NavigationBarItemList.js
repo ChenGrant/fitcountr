@@ -6,11 +6,12 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import SearchIcon from "@mui/icons-material/Search";
 import { getAuth, signOut } from "firebase/auth";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   resetProgressPageStat,
   resetSearchFoodPages,
   setProgressPageStat,
+  setUserProfilePictureIsLoading,
 } from "../../../redux";
 import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
 import { PROGRESS_TYPES } from "../../../utils";
@@ -25,6 +26,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const auth = getAuth();
+  const { user } = useSelector((state) => state);
 
   const NAVIGATION_BAR_ITEMS = [
     // Profile
@@ -34,8 +36,9 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
         <Icon>
           <img
             alt="profilePicture"
-            src={""}
+            src={user.profilePicture.URL}
             style={{ borderRadius: "100%", height: "24px", width: "24px" }}
+            onLoad={() => dispatch(setUserProfilePictureIsLoading(false))}
           />
         </Icon>
       ),

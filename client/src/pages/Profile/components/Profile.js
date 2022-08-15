@@ -16,6 +16,8 @@ import {
   sortArray,
 } from "../../../utils";
 import useScreenSize from "../../../hooks/useScreenSize";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserProfilePictureIsLoading } from "../../../redux";
 
 // ---------------------------------------- FORMIK ----------------------------------------
 const sexSelectOptions = sortArray(SEXES, (sex1, sex2) =>
@@ -106,6 +108,8 @@ const onSubmit = (values) => {
 // ************************************************************************************
 const Profile = () => {
   const { desktop, tablet, phone } = useScreenSize();
+  const { user } = useSelector((state) => state);
+  const dispatch = useDispatch();
 
   // ------------------------------------- RENDER -------------------------------------
   return (
@@ -151,7 +155,11 @@ const Profile = () => {
                   mt={!desktop && 2}
                 >
                   <Avatar
-                    src="https://scontent.fyzd1-2.fna.fbcdn.net/v/t39.30808-6/286520406_4018635011694341_2902533533304022077_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=HSFRkbtGEfwAX-KNgfF&_nc_oc=AQlR9KHJrG8cEBH8_CPLPJF8tss0JtpVG9TClt7TaNtAoMN5TdQnBC4UaqX3_iamafmSoZ-zxiF67GieO-LMbMYl&_nc_ht=scontent.fyzd1-2.fna&oh=00_AT9G30fnfO243CbAu2wUm5qwuoaaucXjzN7iFnbcIUVGEQ&oe=62FC7F73"
+                    src={user.profilePicture.URL}
+                    onLoad={() =>
+                      user.profilePicture.isLoading &&
+                      dispatch(setUserProfilePictureIsLoading(false))
+                    }
                     sx={{
                       height: desktop ? 225 : tablet ? 200 : 150,
                       width: desktop ? 225 : tablet ? 200 : 150,

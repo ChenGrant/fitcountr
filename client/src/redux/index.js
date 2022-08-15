@@ -9,6 +9,8 @@ export {
   setUserFirebaseData,
   setAuthenticatingUser,
   setVerificationStatus,
+  setUserProfilePictureURL,
+  setUserProfilePictureIsLoading,
 } from "./user/userActions";
 
 export {

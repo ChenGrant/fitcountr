@@ -5,10 +5,14 @@ const admin = require("firebase-admin");
 const {
   sendEmailVerificationAsync,
 } = require("../services/nodemailer/nodemailer");
+const { getStorage } = require("firebase-admin/storage");
+const { DateUtils } = require("../utils");
 
 // ------------------------------------ CONSTANTS ------------------------------------
 const EMAIL_PASSWORD_PROVIDER = "EMAIL_PASSWORD_PROVIDER";
 const GMAIL_PROVIDER = "GMAIL_PROVIDER";
+
+const bucket = getStorage().bucket();
 
 const setUserProfilePicture = async (user) => {
   const DEFAULT_PROFILE_PICTURE_STORAGE_PATH =
@@ -119,9 +123,22 @@ const createUser = async (req, res) => {
   }
 };
 
-const getProfilePicture = (req, res) => {
+const getProfilePicture = async (req, res) => {
   try {
-    return res.json({ name: "grant" });
+    const { userUID } = req.params;
+    const user = await User.findOne({ userUID });
+    if (user === null) throw new Error("No user matched");
+
+    const profilePicture = await MediaFile.findById(user.profilePicture);
+
+    const response = await bucket
+      .file(profilePicture.firebasePath)
+      .getSignedUrl({
+        action: "read",
+        expires: DateUtils.addDays(new Date(), 7),
+      });
+
+    return res.json({ profilePictureURL: response[0] });
   } catch (err) {
     console.log(err);
     res

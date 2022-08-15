@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 import NavigationBar from "../../components/layouts/navigationBar/NavigationBar";
@@ -10,8 +10,7 @@ const AuthenticatedRoutes = () => {
 
   useEffect(() => {
     (async () => {
-      if (!user.firebase) return
-      console.log(user.firebase)
+      if (!user.auth.isLoggedIn) return;
       const fetchedProfilePicture = await fetchProfilePicture(user);
       console.log(fetchedProfilePicture);
     })();

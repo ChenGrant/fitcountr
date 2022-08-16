@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 
-const GRAM = "g";
-
-const ALL_UNITS = [GRAM];
+const { MeasurementUtils } = require("../utils/index");
 
 const measurementSchema = new mongoose.Schema({
   value: {
@@ -10,9 +8,9 @@ const measurementSchema = new mongoose.Schema({
     required: true,
   },
   unit: {
-    type: String,
+    type: {},
     required: true,
-    validator: (value) => ALL_UNITS.includes(value),
+    validator: MeasurementUtils.unitExists,
     message: (props) => `${props.value} is not included within ${ALL_UNITS}`,
   },
 });

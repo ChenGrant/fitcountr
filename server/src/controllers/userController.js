@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const MediaFile = require("../models/MediaFile");
+const Measurement = require("../models/Measurement");
 const config = require("../config/config");
 const admin = require("firebase-admin");
 const {
@@ -156,7 +157,7 @@ const getProfileData = async (req, res) => {
   try {
     const { userUID } = req.params;
     const user = await findUserByUserUID(userUID);
-
+    await user.populate('height')
     const { sex, height, birthday } = user;
     return res.json({ sex, height, birthday });
   } catch (err) {
@@ -171,8 +172,24 @@ const postProfileData = async (req, res) => {
   try {
     const { userUID } = req.params;
     const user = await findUserByUserUID(userUID);
-    console.log(user);
-    console.log(req.body);
+
+    for (const property in req.body) {
+      const val = req.body[property];
+      switch (property) {
+        case "height":
+          if (!user[property]) {
+            user[property] = (await Measurement.create(val))._id;
+            break;
+          }
+          await Measurement.replaceOne({ _id: user[property] }, val);
+          break;
+
+        default:
+          user[property] = val;
+      }
+    }
+    await user.save();
+
     return res.json({});
   } catch (err) {
     console.log(err);

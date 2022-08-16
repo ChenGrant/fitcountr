@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { NumberUtils } = require("../utils/index");
+const { NumberUtils, HumanUtils } = require("../utils/index");
 
 const EMAIL_VERIFICATION_PIN_LENGTH = 5;
 
@@ -9,20 +9,24 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
   userUID: {
     type: String,
     required: true,
   },
+
   email: {
     type: String,
     required: true,
     lowerCase: true,
   },
+
   createdAt: {
     type: Date,
     immutable: true,
     default: () => Date.now(),
   },
+
   emailVerification: {
     type: {
       pin: {
@@ -45,7 +49,23 @@ const userSchema = new mongoose.Schema({
     },
     required: true,
   },
-  profilePicture: mongoose.SchemaTypes.ObjectId,
+
+  profilePicture: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "MediaFile",
+  },
+
+  height: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "Measurement",
+  },
+
+  sex: {
+    type: String,
+    validator: HumanUtils.SEXES.has,
+    message: (props) => `${props.value} is not a valid sex`,
+  },
+  birthday: Date,
 });
 
 // ------------------------------------- STATICS -------------------------------------

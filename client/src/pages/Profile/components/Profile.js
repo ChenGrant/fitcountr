@@ -8,7 +8,7 @@ import {
   Alert,
 } from "@mui/material";
 import { Form, Formik } from "formik";
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import * as Yup from "yup";
 import FormikControl from "../../../components/formik/FormikControl";
 import CustomButton from "../../../components/ui/CustomButton";
@@ -157,16 +157,20 @@ const Profile = () => {
   const dispatch = useDispatch();
   const [postingData, setPostingData] = useState(false);
   const [initialFormValues, setInitialFormValues] = useState();
+  const inputFileRef = useRef();
   const [snackbar, snackbarDispatch] = useReducer(
     snackbarReducer,
     INITIAL_SNACKBAR_STATE
   );
+
+  const [profilePicture, setProfilePicture] = useState(user.profilePicture.URL);
 
   const pageIsLoading = !initialFormValues || user.profilePicture.isLoading;
 
   // ----------------------------------- FUNCTIONS -----------------------------------
   const handleProfileDataUpdate = async (updatedProfileData) => {
     try {
+      console.log(profilePicture);
       const { height, birthday } = updatedProfileData;
       const response = await postProfileData(user, {
         ...updatedProfileData,
@@ -270,8 +274,19 @@ const Profile = () => {
                           mr={desktop && 5}
                           mt={!desktop && 2}
                         >
+                          <input
+                            type="file"
+                            style={{ display: "none" }}
+                            ref={inputFileRef}
+                            onChange={(e) =>
+                              e.target.files.length !== 0 &&
+                              setProfilePicture(
+                                URL.createObjectURL(e.target.files[0])
+                              )
+                            }
+                          />
                           <Avatar
-                            src={user.profilePicture.URL}
+                            src={profilePicture}
                             onLoad={() =>
                               user.profilePicture.isLoading &&
                               dispatch(setUserProfilePictureIsLoading(false))
@@ -281,7 +296,7 @@ const Profile = () => {
                               width: desktop ? 225 : tablet ? 200 : 150,
                               cursor: "pointer",
                             }}
-                            onClick={() => console.log("bet")}
+                            onClick={() => inputFileRef.current.click()}
                           />
                         </Box>
                         <Box
@@ -340,10 +355,13 @@ const Profile = () => {
                               <CircularProgress />
                             ) : (
                               <CustomButton
-                                disabled={objectsAreEqual(
-                                  formik.values,
-                                  initialFormValues
-                                )}
+                                disabled={
+                                  objectsAreEqual(
+                                    formik.values,
+                                    initialFormValues
+                                  ) &&
+                                  profilePicture === user.profilePicture.URL
+                                }
                                 variant="contained"
                                 type="submit"
                                 sx={{ width: "100%" }}

@@ -368,6 +368,7 @@ const Profile = () => {
           onClose={() => snackbarDispatch({ type: SNACKBAR_ACTIONS.CLOSE })}
         >
           <Alert
+            variant="filled"
             severity={snackbar.severity || "info"}
             sx={{
               width: "100%",

@@ -15,6 +15,7 @@ export {
   sendVerificationEmail,
   postSignupData,
   postProfileData,
+  postProfilePicture,
 } from "./requestUtils";
 
 export { sortArray, getLexSmallest } from "./arrayUtils";
@@ -42,7 +43,7 @@ export { sub, round } from "./numberUtils";
 
 export { Stack, NutrientPrioritySet } from "./dataStructureUtils";
 
-export { objectIsEmpty, objectsAreEqual} from "./objectUtils";
+export { objectIsEmpty, objectsAreEqual } from "./objectUtils";
 
 export {
   SEARCH_FOOD_PAGES,

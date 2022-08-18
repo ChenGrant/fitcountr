@@ -157,7 +157,7 @@ const getProfileData = async (req, res) => {
   try {
     const { userUID } = req.params;
     const user = await findUserByUserUID(userUID);
-    await user.populate('height')
+    await user.populate("height");
     const { sex, height, birthday } = user;
     return res.json({ sex, height, birthday });
   } catch (err) {
@@ -190,10 +190,23 @@ const postProfileData = async (req, res) => {
     }
     await user.save();
 
-    return res.json({});
+    return res.json({ message: "Profile data updated" });
   } catch (err) {
     console.log(err);
     res.json({ error: { message: "Could not post profile data" } }).status(404);
+  }
+};
+
+const postProfilePicture = async (req, res) => {
+  try {
+    const { profilePictureFile } = req.files;
+    console.log(profilePictureFile);
+    return res.json({ message: "Profile picture updated" });
+  } catch (err) {
+    console.log(err);
+    return res
+      .json({ error: { message: "Could not scan update profile picture" } })
+      .status(404);
   }
 };
 
@@ -202,4 +215,5 @@ module.exports = {
   createUser,
   getProfileData,
   postProfileData,
+  postProfilePicture,
 };

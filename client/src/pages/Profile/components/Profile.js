@@ -29,11 +29,38 @@ import {
 import useScreenSize from "../../../hooks/useScreenSize";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserProfilePictureIsLoading } from "../../../redux";
-import { fetchProfileData, postProfileData } from "../../../utils/requestUtils";
+import {
+  fetchProfileData,
+  postProfileData,
+  postProfilePicture,
+} from "../../../utils/requestUtils";
 
-// -------------------------------- CONSTANTS --------------------------------
+// ------------------------------------ CONSTANTS ------------------------------------
 const DATE_FORMAT = "DD/MM/YYYY";
 
+// ------------------------ PROFILE PICTURE REDUCER CONSTANTS ------------------------
+const PROFILE_PICTURE_ACTIONS = {
+  SET_INITIAL_PROFILE_PICTURE_URL: "SET_INITIAL_PROFILE_PICTURE_URL",
+  SET_PROFILE_PICTURE: "SET_PROFILE_PICTURE",
+};
+
+const profilePictureReducer = (state, action) => {
+  switch (action.type) {
+    case PROFILE_PICTURE_ACTIONS.SET_INITIAL_PROFILE_PICTURE_URL:
+      return { ...state, initialURL: action.payload };
+    case PROFILE_PICTURE_ACTIONS.SET_PROFILE_PICTURE:
+      const file = action.payload;
+      return {
+        ...state,
+        file,
+        URL: URL.createObjectURL(file),
+      };
+    default:
+      return state;
+  }
+};
+
+// ---------------------------- SNACKBAR REDUCER CONSTANTS ----------------------------
 const SNACKBAR_ACTIONS = {
   SUCCESS: "SUCCESS",
   FAILURE: "FAILURE",
@@ -46,8 +73,8 @@ const INITIAL_SNACKBAR_STATE = {
   message: "",
 };
 
-const snackbarReducer = (state, actions) => {
-  switch (actions.type) {
+const snackbarReducer = (state, action) => {
+  switch (action.type) {
     case SNACKBAR_ACTIONS.CLOSE:
       return { ...INITIAL_SNACKBAR_STATE };
     case SNACKBAR_ACTIONS.SUCCESS:
@@ -85,13 +112,6 @@ const sexSelectOptions = sortArray(SEXES, (sex1, sex2) =>
 //   label: capitalizeFirstCharacterLowercaseRest(measurementSystem),
 //   value: measurementSystem,
 // }));
-
-const initialValues = {
-  sex: "",
-  height: "",
-  birthday: "",
-  //measurementSystem: "",
-};
 
 const validationSchema = Yup.object({
   sex: Yup.string().trim().required("Required").oneOf(SEXES),
@@ -163,28 +183,52 @@ const Profile = () => {
     INITIAL_SNACKBAR_STATE
   );
 
-  const [profilePicture, setProfilePicture] = useState(user.profilePicture.URL);
+  const [profilePicture, profilePictureDispatch] = useReducer(
+    profilePictureReducer,
+    {
+      initialURL: user.profilePicture.URL,
+      URL: user.profilePicture.URL,
+      file: null,
+    }
+  );
 
   const pageIsLoading = !initialFormValues || user.profilePicture.isLoading;
 
   // ----------------------------------- FUNCTIONS -----------------------------------
+
+  // in the future, refactor handleProfileDataUpdate execute postProfileData and
+  // postProfilePicture at the same time instead of having postProfileData wait on
+  // postProfilePicture
   const handleProfileDataUpdate = async (updatedProfileData) => {
     try {
-      console.log(profilePicture);
-      const { height, birthday } = updatedProfileData;
-      const response = await postProfileData(user, {
-        ...updatedProfileData,
-        height: height && {
-          value: height,
-          unit: UNITS.CENTIMETER,
-        },
-        birthday: birthday && moment(birthday, DATE_FORMAT).toDate(),
-      });
-      if (response.error) {
+      // update profile picture
+      if (profilePicture.URL !== user.profilePicture.URL) {
+        console.log("pfp");
+        // verify profile picture is the right file size and format 
+        const response = await postProfilePicture(user, profilePicture.file);
+        profilePictureDispatch({
+          type: PROFILE_PICTURE_ACTIONS.SET_INITIAL_PROFILE_PICTURE_URL,
+          payload: profilePicture.URL,
+        });
         console.log(response);
-        snackbarDispatch({ type: SNACKBAR_ACTIONS.FAILURE });
-        return;
+        // update redux store
       }
+
+      // update sex, height, birthday
+      if (!objectsAreEqual(updatedProfileData, initialFormValues)) {
+        console.log("form");
+        const { height, birthday } = updatedProfileData;
+        const response = await postProfileData(user, {
+          ...updatedProfileData,
+          height: height && {
+            value: height,
+            unit: UNITS.CENTIMETER,
+          },
+          birthday: birthday && moment(birthday, DATE_FORMAT).toDate(),
+        });
+        if (response.error) throw new Error(response);
+      }
+
       snackbarDispatch({ type: SNACKBAR_ACTIONS.SUCCESS });
       setInitialFormValues(updatedProfileData);
     } catch (err) {
@@ -204,7 +248,12 @@ const Profile = () => {
     (async () => {
       const fetchedProfileData = await fetchProfileData(user);
       if (objectIsEmpty(fetchedProfileData))
-        return setInitialFormValues(initialValues);
+        return setInitialFormValues({
+          sex: "",
+          height: "",
+          birthday: "",
+          //measurementSystem: "",
+        });
       const { birthday, height, sex } = fetchedProfileData;
       setInitialFormValues({
         birthday: moment(birthday).format(DATE_FORMAT),
@@ -280,13 +329,14 @@ const Profile = () => {
                             ref={inputFileRef}
                             onChange={(e) =>
                               e.target.files.length !== 0 &&
-                              setProfilePicture(
-                                URL.createObjectURL(e.target.files[0])
-                              )
+                              profilePictureDispatch({
+                                type: PROFILE_PICTURE_ACTIONS.SET_PROFILE_PICTURE,
+                                payload: e.target.files[0],
+                              })
                             }
                           />
                           <Avatar
-                            src={profilePicture}
+                            src={profilePicture.URL}
                             onLoad={() =>
                               user.profilePicture.isLoading &&
                               dispatch(setUserProfilePictureIsLoading(false))
@@ -360,7 +410,8 @@ const Profile = () => {
                                     formik.values,
                                     initialFormValues
                                   ) &&
-                                  profilePicture === user.profilePicture.URL
+                                  profilePicture.URL ===
+                                    profilePicture.initialURL
                                 }
                                 variant="contained"
                                 type="submit"

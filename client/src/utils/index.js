@@ -42,7 +42,7 @@ export { sub, round } from "./numberUtils";
 
 export { Stack, NutrientPrioritySet } from "./dataStructureUtils";
 
-export { objectIsEmpty } from "./objectUtils";
+export { objectIsEmpty, objectsAreEqual} from "./objectUtils";
 
 export {
   SEARCH_FOOD_PAGES,

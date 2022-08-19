@@ -15,7 +15,7 @@ import {
 } from "../../../redux";
 import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
 import { PROGRESS_TYPES } from "../../../utils";
-import { Icon } from "@mui/material";
+import { Avatar, Icon } from "@mui/material";
 
 // -------------------------------- CONSTANTS --------------------------------
 
@@ -34,7 +34,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
       name: "Profile",
       icon: (
         <Icon>
-          <img
+          <Avatar
             alt="profilePicture"
             src={user.profilePicture.URL}
             style={{ borderRadius: "100%", height: "24px", width: "24px" }}

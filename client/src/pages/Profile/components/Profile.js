@@ -27,16 +27,17 @@ import { setUserProfilePictureURL } from "../../../redux";
 const validationSchema = Yup.object({
   sex: Yup.string().trim().oneOf(SEXES),
   height: Yup.number()
+    .nullable()
     .typeError("Height must be a number")
     .test(
       "minHeight",
       `Height must be greater than ${MIN_HEIGHT.value} ${MIN_HEIGHT.unit.abbreviation}`,
-      (height) => height === undefined || height > MIN_HEIGHT.value
+      (height) => height == null || height > MIN_HEIGHT.value
     )
     .test(
       "maxHeight",
       `Height must be less than ${MAX_HEIGHT.value} ${MAX_HEIGHT.unit.abbreviation}`,
-      (height) => height === undefined || height < MAX_HEIGHT.value
+      (height) => height == null || height < MAX_HEIGHT.value
     ),
   birthday: Yup.string()
     .trim()
@@ -141,7 +142,7 @@ const Profile = () => {
               case "profilePicture":
                 return value.file && value.URL !== initialFormValues[key].URL;
               default:
-                return value && value !== initialFormValues[key];
+                return value !== initialFormValues[key];
             }
           })
           .map(([key, value]) => {

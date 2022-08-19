@@ -139,7 +139,14 @@ const getProfileData = async (req, res) => {
     verifyUserExists(user);
     await user.populate("height");
     const { sex, height, birthday } = user;
-    return res.json({ sex, height, birthday });
+
+    const profileData = Object.fromEntries(
+      Object.entries({ sex, height, birthday }).filter(
+        ([key, val]) => val !== null
+      )
+    );
+
+    return res.json(profileData);
   } catch (err) {
     console.log(err);
     res

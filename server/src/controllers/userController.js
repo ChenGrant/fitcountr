@@ -138,12 +138,17 @@ const getProfileData = async (req, res) => {
     const user = await User.findUserByUserUID(userUID);
     verifyUserExists(user);
     await user.populate("height");
+    
     const { sex, height, birthday } = user;
-
     const profileData = Object.fromEntries(
-      Object.entries({ sex, height, birthday }).filter(
-        ([key, val]) => val !== null
-      )
+      Object.entries({ sex, height, birthday }).filter(([key, val]) => {
+        switch (key) {
+          case "height":
+            return val.value !== null;
+          default:
+            return val !== null;
+        }
+      })
     );
 
     return res.json(profileData);

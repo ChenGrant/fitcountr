@@ -6,22 +6,23 @@ import { Form, Formik } from "formik";
 import CustomCard from "../../../components/ui/CustomCard";
 import ProfilePicture from "./ProfilePicture";
 import ProfileInputFields from "./ProfileInputFields";
-import ProfileSaveButton from "./ProfileSaveButton";
+import SaveProfileButton from "./SaveProfileButton";
 import { fetchProfileData, postProfileData } from "../../../utils/requestUtils";
 import {
-  objectIsEmpty,
   SEXES,
   MIN_HEIGHT,
   MAX_HEIGHT,
   MAX_AGE,
-  objectsAreEqual,
-  UNITS,
   DATE_FORMAT,
 } from "../../../utils";
 import moment from "moment";
 import * as Yup from "yup";
 import CustomSnackbar from "../../../components/ui/CustomSnackbar";
 import { setUserProfilePictureURL } from "../../../redux";
+import {
+  getFormValuesFromProfileData,
+  getProfileDataFromFormValues,
+} from "../utils";
 
 // -------------------------------------- FORMIK --------------------------------------
 const validationSchema = Yup.object({
@@ -131,41 +132,18 @@ const Profile = () => {
   const pageIsLoading = !initialFormValues || user.profilePicture.isLoading;
 
   // ----------------------------------- FUNCTIONS -----------------------------------
-  const handleProfileDataUpdate = async (profileData) => {
+  const handleProfileDataUpdate = async (formValues) => {
     try {
-      if (objectsAreEqual(initialFormValues, profileData)) return;
-
-      const cleanedProfileData = Object.fromEntries(
-        Object.entries(profileData)
-          .filter(([key, value]) => {
-            switch (key) {
-              case "profilePicture":
-                return value.file && value.URL !== initialFormValues[key].URL;
-              default:
-                return value !== initialFormValues[key];
-            }
-          })
-          .map(([key, value]) => {
-            switch (key) {
-              case "profilePicture":
-                return [key, value.file];
-              case "height":
-                return [key, { value, unit: UNITS.CENTIMETER }];
-              case "birthday":
-                return [key, moment(value, DATE_FORMAT).toDate()];
-              default:
-                return [key, value];
-            }
-          })
+      const response = await postProfileData(
+        user,
+        getProfileDataFromFormValues(formValues, initialFormValues)
       );
-
-      const response = await postProfileData(user, cleanedProfileData);
 
       if (response.error) throw new Error(response);
 
       snackbarDispatch({ type: SNACKBAR_ACTIONS.SUCCESS });
-      setInitialFormValues(profileData);
-      dispatch(setUserProfilePictureURL(profileData.profilePicture.URL));
+      setInitialFormValues(formValues);
+      dispatch(setUserProfilePictureURL(formValues.profilePicture.URL));
     } catch (err) {
       console.log(err);
       snackbarDispatch({ type: SNACKBAR_ACTIONS.FAILURE });
@@ -178,33 +156,9 @@ const Profile = () => {
       if (initialFormValues) return;
 
       const fetchedProfileData = await fetchProfileData(user);
-
-      const initialValues = {
-        profilePicture: {
-          URL: user.profilePicture.URL,
-          file: null,
-        },
-        sex: "",
-        height: "",
-        birthday: "",
-      };
-
-      if (!objectIsEmpty(fetchedProfileData)) {
-        Object.entries(fetchedProfileData).forEach(([key, value]) => {
-          switch (key) {
-            case "birthday":
-              initialValues[key] = moment(value).format(DATE_FORMAT);
-              break;
-            case "height":
-              initialValues[key] = value.value;
-              break;
-            default:
-              initialValues[key] = value;
-          }
-        });
-      }
-
-      setInitialFormValues(initialValues);
+      setInitialFormValues(
+        getFormValuesFromProfileData(user, fetchedProfileData)
+      );
     })();
   }, [user, initialFormValues]);
 
@@ -281,7 +235,7 @@ const Profile = () => {
                       mt={!desktop && 5}
                     >
                       <ProfileInputFields />
-                      <ProfileSaveButton
+                      <SaveProfileButton
                         {...{ postingData, initialFormValues }}
                       />
                     </Box>

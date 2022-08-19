@@ -4,7 +4,7 @@ import { objectsAreEqual } from "../../../utils";
 import CustomButton from "../../../components/ui/CustomButton";
 import { FormikContext, useFormikContext } from "formik";
 
-const ProfileSaveButton = ({ postingData, initialFormValues }) => {
+const SaveProfileButton = ({ postingData, initialFormValues }) => {
   const formik = useFormikContext(FormikContext);
 
   return (
@@ -18,11 +18,11 @@ const ProfileSaveButton = ({ postingData, initialFormValues }) => {
           type="submit"
           sx={{ width: "100%" }}
         >
-          Save Changes
+          Save Profile
         </CustomButton>
       )}
     </Box>
   );
 };
 
-export default ProfileSaveButton;
+export default SaveProfileButton;

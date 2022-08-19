@@ -11,7 +11,7 @@ const CustomSnackbar = ({ open, severity, message, onClose }) => {
     >
       <Alert
         variant="filled"
-        severity={severity}
+        severity={severity || "success"}
         sx={{
           display: severity ? "flex" : "none",
           width: "100%",

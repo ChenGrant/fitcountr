@@ -32,12 +32,12 @@ const validationSchema = Yup.object({
     .test(
       "minHeight",
       `Height must be greater than ${MIN_HEIGHT.value} ${MIN_HEIGHT.unit.abbreviation}`,
-      (height) => !height || height > MIN_HEIGHT.value
+      (height) => height === undefined || height > MIN_HEIGHT.value
     )
     .test(
       "maxHeight",
       `Height must be less than ${MAX_HEIGHT.value} ${MAX_HEIGHT.unit.abbreviation}`,
-      (height) => !height || height < MAX_HEIGHT.value
+      (height) => height === undefined || height < MAX_HEIGHT.value
     ),
   birthday: Yup.string()
     .trim()

@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Box, LinearProgress, Typography } from "@mui/material";
 import useScreenSize from "../../../hooks/useScreenSize";
 import { Form, Formik } from "formik";
@@ -20,6 +20,7 @@ import {
 import moment from "moment";
 import * as Yup from "yup";
 import CustomSnackbar from "../../../components/ui/CustomSnackbar";
+import { setUserProfilePictureURL } from "../../../redux";
 
 const DATE_FORMAT = "DD/MM/YYYY";
 
@@ -119,6 +120,7 @@ const snackbarReducer = (state, action) => {
 // ************************************************************************************
 const Profile = () => {
   const { user } = useSelector((state) => state);
+  const dispatch = useDispatch();
   const { desktop, phone } = useScreenSize();
   const [initialFormValues, setInitialFormValues] = useState();
   const [postingData, setPostingData] = useState(false);
@@ -163,6 +165,7 @@ const Profile = () => {
 
       snackbarDispatch({ type: SNACKBAR_ACTIONS.SUCCESS });
       setInitialFormValues(profileData);
+      dispatch(setUserProfilePictureURL(profileData.profilePicture.URL));
     } catch (err) {
       console.log(err);
       snackbarDispatch({ type: SNACKBAR_ACTIONS.FAILURE });

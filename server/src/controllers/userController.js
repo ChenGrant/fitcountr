@@ -21,22 +21,20 @@ const findUserByUserUID = async (userUID) => {
   return user;
 };
 
-const setUserProfilePicture = async (user) => {
-  const DEFAULT_PROFILE_PICTURE_STORAGE_PATH =
-    config.ASSETS.PATH.DEFAULT_PROFILE_PICTURE;
+const setUserProfilePicture = async (
+  user,
+  storagePath = config.ASSETS.PATH.DEFAULT_PROFILE_PICTURE
+) => {
+  let profilePicture = await MediaFile.findMediaFileByFirebasePath(storagePath);
 
-  let defaultProfilePicture = await MediaFile.findMediaFileByFirebasePath(
-    DEFAULT_PROFILE_PICTURE_STORAGE_PATH
-  );
-
-  // if default pfp is not in mongodb, store it in mongodb
-  if (defaultProfilePicture === null) {
-    defaultProfilePicture = await MediaFile.create({
-      firebasePath: DEFAULT_PROFILE_PICTURE_STORAGE_PATH,
+  // if pfp is not in mongodb, store it in mongodb
+  if (profilePicture === null) {
+    profilePicture = await MediaFile.create({
+      firebasePath: storagePath,
     });
   }
 
-  user.profilePicture = defaultProfilePicture._id;
+  user.profilePicture = profilePicture._id;
   user.save();
 };
 
@@ -199,8 +197,19 @@ const postProfileData = async (req, res) => {
 
 const postProfilePicture = async (req, res) => {
   try {
+    const { userUID } = req.params;
+    const user = await findUserByUserUID(userUID);
+
     const { profilePictureFile } = req.files;
-    console.log(profilePictureFile);
+
+    const storagePath = `assets/profile_picture/${userUID}`;
+
+    await bucket.file(storagePath).save(profilePictureFile.data, {
+      metadata: { contentType: profilePictureFile.mimetype },
+    });
+
+    setUserProfilePicture(user, storagePath);
+
     return res.json({ message: "Profile picture updated" });
   } catch (err) {
     console.log(err);

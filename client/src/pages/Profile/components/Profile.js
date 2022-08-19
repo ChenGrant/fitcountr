@@ -205,7 +205,7 @@ const Profile = () => {
 
       setInitialFormValues(initialValues);
     })();
-  }, [user]);
+  }, [user, initialFormValues]);
 
   // ------------------------------------- RENDER -------------------------------------
   return (

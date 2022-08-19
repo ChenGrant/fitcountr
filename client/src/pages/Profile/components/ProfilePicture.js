@@ -9,8 +9,9 @@ const ProfilePicture = () => {
   const fileRef = useRef();
 
   const handleFileInputChange = (e) => {
-    const newFile = e.target.files?.[0] ?? null;
-    const newURL = newFile ? URL.createObjectURL(newFile) : "";
+    if (e.target.files.length === 0) return;
+    const newFile = e.target.files[0];
+    const newURL = URL.createObjectURL(newFile);
     formik.setFieldValue("profilePicture.file", newFile);
     formik.setFieldValue("profilePicture.URL", newURL);
   };

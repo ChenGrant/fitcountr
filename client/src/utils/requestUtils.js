@@ -97,19 +97,18 @@ export const postSignupData = async (firebaseUser, provider) => {
 export const scanBarcodeImage = async (barcodeImageFile) => {
   const formData = new FormData();
   formData.append("barcodeImageFile", barcodeImageFile);
-  console.log(barcodeImageFile)
+  console.log(barcodeImageFile);
   return await fetchJSON(`/searchFood/scanBarcodeImage`, {
     method: "POST",
     body: formData,
   });
 };
 
-export const postProfilePicture = async ({ firebase }, profilePictureFile) => {
-  const userIdToken = await firebase.getIdToken();
+export const postProfilePicture = async (user, profilePictureFile) => {
+  const userIdToken = await user.firebase.getIdToken();
   const formData = new FormData();
   formData.append("profilePictureFile", profilePictureFile);
-  console.log(profilePictureFile)
-  return await fetchJSON(`/user/profilePicture/${firebase.uid}`, {
+  return await fetchJSON(`/user/profilePicture/${user.firebase.uid}`, {
     method: "POST",
     headers: {
       authorization: userIdToken,
@@ -118,14 +117,24 @@ export const postProfilePicture = async ({ firebase }, profilePictureFile) => {
   });
 };
 
-export const postProfileData = async ({ firebase }, profileData) => {
-  const userIdToken = await firebase.getIdToken();
-  return await fetchJSON(`/user/profile/${firebase.uid}`, {
+export const postProfileData = async (user, profileData) => {
+  const userIdToken = await user.firebase.getIdToken();
+  const profileDataCopy = { ...profileData };
+  if (profileDataCopy.profilePicture) {
+    const response = await postProfilePicture(
+      user,
+      profileDataCopy.profilePicture
+    );
+    if (response.error) return response;
+    delete profileDataCopy.profilePicture;
+  }
+
+  return await fetchJSON(`/user/profile/${user.firebase.uid}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       authorization: userIdToken,
     },
-    body: JSON.stringify(profileData),
+    body: JSON.stringify(profileDataCopy),
   });
 };

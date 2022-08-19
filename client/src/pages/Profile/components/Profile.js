@@ -1,64 +1,82 @@
-import {
-  Avatar,
-  Typography,
-  Box,
-  CircularProgress,
-  LinearProgress,
-  Snackbar,
-  Alert,
-} from "@mui/material";
+import React, { useEffect, useReducer, useState } from "react";
+import { useSelector } from "react-redux";
+import { Box, LinearProgress, Typography } from "@mui/material";
+import useScreenSize from "../../../hooks/useScreenSize";
 import { Form, Formik } from "formik";
-import React, { useEffect, useReducer, useRef, useState } from "react";
-import * as Yup from "yup";
-import FormikControl from "../../../components/formik/FormikControl";
-import CustomButton from "../../../components/ui/CustomButton";
 import CustomCard from "../../../components/ui/CustomCard";
-import moment from "moment";
+import ProfilePicture from "./ProfilePicture";
+import ProfileInputFields from "./ProfileInputFields";
+import ProfileSaveButton from "./ProfileSaveButton";
+import { fetchProfileData, postProfileData } from "../../../utils/requestUtils";
 import {
-  capitalizeFirstCharacterLowercaseRest,
-  MAX_AGE,
-  MAX_HEIGHT,
-  //MEASUREMENT_SYSTEMS,
-  MIN_HEIGHT,
   objectIsEmpty,
-  objectsAreEqual,
   SEXES,
-  sortArray,
+  MIN_HEIGHT,
+  MAX_HEIGHT,
+  MAX_AGE,
+  objectsAreEqual,
   UNITS,
 } from "../../../utils";
-import useScreenSize from "../../../hooks/useScreenSize";
-import { useDispatch, useSelector } from "react-redux";
-import { setUserProfilePictureIsLoading } from "../../../redux";
-import {
-  fetchProfileData,
-  postProfileData,
-  postProfilePicture,
-} from "../../../utils/requestUtils";
+import moment from "moment";
+import * as Yup from "yup";
+import CustomSnackbar from "../../../components/ui/CustomSnackbar";
 
-// ------------------------------------ CONSTANTS ------------------------------------
 const DATE_FORMAT = "DD/MM/YYYY";
 
-// ------------------------ PROFILE PICTURE REDUCER CONSTANTS ------------------------
-const PROFILE_PICTURE_ACTIONS = {
-  SET_INITIAL_PROFILE_PICTURE_URL: "SET_INITIAL_PROFILE_PICTURE_URL",
-  SET_PROFILE_PICTURE: "SET_PROFILE_PICTURE",
-};
-
-const profilePictureReducer = (state, action) => {
-  switch (action.type) {
-    case PROFILE_PICTURE_ACTIONS.SET_INITIAL_PROFILE_PICTURE_URL:
-      return { ...state, initialURL: action.payload };
-    case PROFILE_PICTURE_ACTIONS.SET_PROFILE_PICTURE:
-      const file = action.payload;
-      return {
-        ...state,
-        file,
-        URL: URL.createObjectURL(file),
-      };
-    default:
-      return state;
-  }
-};
+// -------------------------------------- FORMIK --------------------------------------
+const validationSchema = Yup.object({
+  sex: Yup.string().trim().oneOf(SEXES),
+  height: Yup.number()
+    .typeError("Height must be a number")
+    .test(
+      "minHeight",
+      `Height must be greater than ${MIN_HEIGHT.value} ${MIN_HEIGHT.unit.abbreviation}`,
+      (height) => !height || height > MIN_HEIGHT.value
+    )
+    .test(
+      "maxHeight",
+      `Height must be less than ${MAX_HEIGHT.value} ${MAX_HEIGHT.unit.abbreviation}`,
+      (height) => !height || height < MAX_HEIGHT.value
+    ),
+  birthday: Yup.string()
+    .trim()
+    .test(
+      "validDateFormat",
+      `Date must be in the form ${DATE_FORMAT}`,
+      (birthday) => {
+        try {
+          if (!birthday) return true;
+          if (birthday.length !== DATE_FORMAT.length) return false;
+          if (birthday.charAt(2) !== "/" || birthday.charAt(5) !== "/")
+            return false;
+          const day = birthday.substring(0, 2);
+          const month = birthday.substring(3, 5);
+          const year = birthday.substring(6);
+          return !isNaN(day) && !isNaN(month) && !isNaN(year);
+        } catch (err) {
+          return false;
+        }
+      }
+    )
+    .test(
+      "validDateString",
+      "Invalid date",
+      (birthday) => !birthday || moment(birthday, DATE_FORMAT, true).isValid()
+    )
+    .test(
+      "dateHasPassed",
+      "Date must be in the past",
+      (birthday) =>
+        !birthday || moment(birthday, DATE_FORMAT).toDate() < new Date()
+    )
+    .test(
+      "dateIsWithinRange",
+      `Date must be within ${MAX_AGE.value} ${MAX_AGE.unit.pluralName} of today`,
+      (birthday) =>
+        !birthday ||
+        moment().diff(moment(birthday, DATE_FORMAT), "years") < MAX_AGE.value
+    ),
+});
 
 // ---------------------------- SNACKBAR REDUCER CONSTANTS ----------------------------
 const SNACKBAR_ACTIONS = {
@@ -96,170 +114,92 @@ const snackbarReducer = (state, action) => {
   }
 };
 
-// ---------------------------------------- FORMIK ----------------------------------------
-const sexSelectOptions = sortArray(SEXES, (sex1, sex2) =>
-  sex1.localeCompare(sex2)
-).map((sex) => ({
-  label: capitalizeFirstCharacterLowercaseRest(sex),
-  value: sex,
-}));
-
-// const measurementSystemSelectOptions = sortArray(
-//   MEASUREMENT_SYSTEMS,
-//   (measurementSystem1, measurementSystem2) =>
-//     measurementSystem1.localeCompare(measurementSystem2)
-// ).map((measurementSystem) => ({
-//   label: capitalizeFirstCharacterLowercaseRest(measurementSystem),
-//   value: measurementSystem,
-// }));
-
-const validationSchema = Yup.object({
-  sex: Yup.string().trim().required("Required").oneOf(SEXES),
-  height: Yup.number()
-    .typeError("Height must be a number")
-    .required("Required")
-    .test(
-      "minHeight",
-      `Height must be greater than ${MIN_HEIGHT.value} ${MIN_HEIGHT.unit.abbreviation}`,
-      (height) => height > MIN_HEIGHT.value
-    )
-    .test(
-      "maxHeight",
-      `Height must be less than ${MAX_HEIGHT.value} ${MAX_HEIGHT.unit.abbreviation}`,
-      (height) => height < MAX_HEIGHT.value
-    ),
-  birthday: Yup.string()
-    .trim()
-    .required("Required")
-    .test(
-      "validDateFormat",
-      `Date must be in the form ${DATE_FORMAT}`,
-      (birthday) => {
-        try {
-          if (birthday.length !== DATE_FORMAT.length) return false;
-          if (birthday.charAt(2) !== "/" || birthday.charAt(5) !== "/")
-            return false;
-          const day = birthday.substring(0, 2);
-          const month = birthday.substring(3, 5);
-          const year = birthday.substring(6);
-          return !isNaN(day) && !isNaN(month) && !isNaN(year);
-        } catch (err) {
-          return false;
-        }
-      }
-    )
-    .test("validDateString", "Invalid date", (birthday) =>
-      moment(birthday, DATE_FORMAT, true).isValid()
-    )
-    .test(
-      "dateHasPassed",
-      "Date must be in the past",
-      (birthday) => moment(birthday, DATE_FORMAT).toDate() < new Date()
-    )
-    .test(
-      "dateIsWithinRange",
-      `Date must be within ${MAX_AGE.value} ${MAX_AGE.unit.pluralName} of today`,
-      (birthday) =>
-        moment().diff(moment(birthday, DATE_FORMAT), "years") < MAX_AGE.value
-    ),
-  // measurementSystem: Yup.string()
-  //   .trim()
-  //   .required("Required")
-  //   .oneOf(MEASUREMENT_SYSTEMS),
-});
-
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const Profile = () => {
-  const { desktop, tablet, phone } = useScreenSize();
   const { user } = useSelector((state) => state);
-  const dispatch = useDispatch();
-  const [postingData, setPostingData] = useState(false);
+  const { desktop, phone } = useScreenSize();
   const [initialFormValues, setInitialFormValues] = useState();
-  const inputFileRef = useRef();
+  const [postingData, setPostingData] = useState(false);
   const [snackbar, snackbarDispatch] = useReducer(
     snackbarReducer,
     INITIAL_SNACKBAR_STATE
   );
-
-  const [profilePicture, profilePictureDispatch] = useReducer(
-    profilePictureReducer,
-    {
-      initialURL: user.profilePicture.URL,
-      URL: user.profilePicture.URL,
-      file: null,
-    }
-  );
-
   const pageIsLoading = !initialFormValues || user.profilePicture.isLoading;
 
   // ----------------------------------- FUNCTIONS -----------------------------------
-
-  // in the future, refactor handleProfileDataUpdate execute postProfileData and
-  // postProfilePicture at the same time instead of having postProfileData wait on
-  // postProfilePicture
-  const handleProfileDataUpdate = async (updatedProfileData) => {
+  const handleProfileDataUpdate = async (profileData) => {
     try {
-      // update profile picture
-      if (profilePicture.URL !== user.profilePicture.URL) {
-        console.log("pfp");
-        // verify profile picture is the right file size and format 
-        const response = await postProfilePicture(user, profilePicture.file);
-        profilePictureDispatch({
-          type: PROFILE_PICTURE_ACTIONS.SET_INITIAL_PROFILE_PICTURE_URL,
-          payload: profilePicture.URL,
-        });
-        console.log(response);
-        // update redux store
-      }
+      if (objectsAreEqual(initialFormValues, profileData)) return;
 
-      // update sex, height, birthday
-      if (!objectsAreEqual(updatedProfileData, initialFormValues)) {
-        console.log("form");
-        const { height, birthday } = updatedProfileData;
-        const response = await postProfileData(user, {
-          ...updatedProfileData,
-          height: height && {
-            value: height,
-            unit: UNITS.CENTIMETER,
-          },
-          birthday: birthday && moment(birthday, DATE_FORMAT).toDate(),
-        });
-        if (response.error) throw new Error(response);
-      }
+      const cleanedProfileData = Object.fromEntries(
+        Object.entries(profileData)
+          .filter(([key, value]) => {
+            switch (key) {
+              case "profilePicture":
+                return value.file;
+              default:
+                return value;
+            }
+          })
+          .map(([key, value]) => {
+            switch (key) {
+              case "profilePicture":
+                return [key, value.file];
+              case "height":
+                return [key, { value, unit: UNITS.CENTIMETER }];
+              case "birthday":
+                return [key, moment(value, DATE_FORMAT).toDate()];
+              default:
+                return [key, value];
+            }
+          })
+      );
+
+      const response = await postProfileData(user, cleanedProfileData);
+
+      if (response.error) throw new Error(response);
 
       snackbarDispatch({ type: SNACKBAR_ACTIONS.SUCCESS });
-      setInitialFormValues(updatedProfileData);
+      setInitialFormValues(profileData);
     } catch (err) {
       console.log(err);
       snackbarDispatch({ type: SNACKBAR_ACTIONS.FAILURE });
     }
   };
 
-  const handleFormSubmission = async (formValues) => {
-    setPostingData(true);
-    await handleProfileDataUpdate(formValues);
-    setPostingData(false);
-  };
-
   // ----------------------------------- USE EFFECT -----------------------------------
   useEffect(() => {
     (async () => {
       const fetchedProfileData = await fetchProfileData(user);
-      if (objectIsEmpty(fetchedProfileData))
-        return setInitialFormValues({
-          sex: "",
-          height: "",
-          birthday: "",
-          //measurementSystem: "",
+
+      const initialValues = {
+        profilePicture: {
+          URL: user.profilePicture.URL,
+          file: null,
+        },
+        sex: "",
+        height: "",
+        birthday: "",
+      };
+
+      if (!objectIsEmpty(fetchedProfileData)) {
+        Object.entries(fetchedProfileData).forEach(([key, value]) => {
+          switch (key) {
+            case "birthday":
+              initialValues[key] = moment(value).format(DATE_FORMAT);
+              break;
+            case "height":
+              initialValues[key] = value.value;
+              break;
+            default:
+              initialValues[key] = value;
+          }
         });
-      const { birthday, height, sex } = fetchedProfileData;
-      setInitialFormValues({
-        birthday: moment(birthday).format(DATE_FORMAT),
-        sex,
-        height: height.value,
-      });
+      }
+
+      setInitialFormValues(initialValues);
     })();
   }, [user]);
 
@@ -305,152 +245,53 @@ const Profile = () => {
                 enableReinitialize
                 initialValues={initialFormValues}
                 validationSchema={validationSchema}
-                onSubmit={handleFormSubmission}
-              >
-                {(formik) => {
-                  return (
-                    <Form>
-                      <Box
-                        display="flex"
-                        flexDirection={desktop ? "row" : "column"}
-                        alignItems="center"
-                      >
-                        <Box
-                          display="flex"
-                          flexDirection="column"
-                          alignItems="center"
-                          justifyContent="center"
-                          mr={desktop && 5}
-                          mt={!desktop && 2}
-                        >
-                          <input
-                            type="file"
-                            style={{ display: "none" }}
-                            ref={inputFileRef}
-                            onChange={(e) =>
-                              e.target.files.length !== 0 &&
-                              profilePictureDispatch({
-                                type: PROFILE_PICTURE_ACTIONS.SET_PROFILE_PICTURE,
-                                payload: e.target.files[0],
-                              })
-                            }
-                          />
-                          <Avatar
-                            src={profilePicture.URL}
-                            onLoad={() =>
-                              user.profilePicture.isLoading &&
-                              dispatch(setUserProfilePictureIsLoading(false))
-                            }
-                            sx={{
-                              height: desktop ? 225 : tablet ? 200 : 150,
-                              width: desktop ? 225 : tablet ? 200 : 150,
-                              cursor: "pointer",
-                            }}
-                            onClick={() => inputFileRef.current.click()}
-                          />
-                        </Box>
-                        <Box
-                          display="flex"
-                          flexDirection="column"
-                          gap={desktop ? 1 : 2}
-                          flex={1}
-                          width={!desktop && "100%"}
-                          mt={!desktop && 5}
-                        >
-                          {/* Sex */}
-                          <Box flex={1}>
-                            <FormikControl
-                              control="select"
-                              label="Sex"
-                              name="sex"
-                              options={sexSelectOptions}
-                            />
-                          </Box>
-                          {/* Height */}
-                          <Box flex={1}>
-                            <FormikControl
-                              control="input"
-                              type="number"
-                              label="Height (cm)"
-                              name="height"
-                              step="0.5"
-                              onKeyDown={(e) =>
-                                e.key === "Enter" && e.preventDefault()
-                              }
-                            />
-                          </Box>
-                          {/* Birthday */}
-                          <Box flex={1}>
-                            <FormikControl
-                              control="input"
-                              label={"Birthday (DD/MM/YYYY)"}
-                              name="birthday"
-                            />
-                          </Box>
-                          {/* Measurement System */}
-                          {/* <Box flex={1}>
-                          <FormikControl
-                            control="select"
-                            label="Measurement System"
-                            name="measurementSystem"
-                            options={measurementSystemSelectOptions}
-                          />
-                        </Box> */}
-                          <Box
-                            height="56px"
-                            display="grid"
-                            sx={{ placeItems: "center" }}
-                          >
-                            {postingData ? (
-                              <CircularProgress />
-                            ) : (
-                              <CustomButton
-                                disabled={
-                                  objectsAreEqual(
-                                    formik.values,
-                                    initialFormValues
-                                  ) &&
-                                  profilePicture.URL ===
-                                    profilePicture.initialURL
-                                }
-                                variant="contained"
-                                type="submit"
-                                sx={{ width: "100%" }}
-                              >
-                                Save Changes
-                              </CustomButton>
-                            )}
-                          </Box>
-                        </Box>
-                      </Box>
-                    </Form>
-                  );
+                onSubmit={async (formValues) => {
+                  setPostingData(true);
+                  await handleProfileDataUpdate(formValues);
+                  setPostingData(false);
                 }}
+              >
+                <Form>
+                  <Box
+                    display="flex"
+                    flexDirection={desktop ? "row" : "column"}
+                    alignItems="center"
+                  >
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="center"
+                      justifyContent="center"
+                      mr={desktop && 5}
+                      mt={!desktop && 2}
+                    >
+                      <ProfilePicture />
+                    </Box>
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      gap={desktop ? 1 : 2}
+                      flex={1}
+                      width={!desktop && "100%"}
+                      mt={!desktop && 5}
+                    >
+                      <ProfileInputFields />
+                      <ProfileSaveButton
+                        {...{ postingData, initialFormValues }}
+                      />
+                    </Box>
+                  </Box>
+                </Form>
               </Formik>
             )}
           </CustomCard>
         </Box>
-        <Snackbar
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          open={snackbar.open}
-          autoHideDuration={4000}
-          onClose={() => snackbarDispatch({ type: SNACKBAR_ACTIONS.CLOSE })}
-        >
-          <Alert
-            variant="filled"
-            severity={snackbar.severity || "info"}
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Box display="flex" alignItems="center" justifyContent="center">
-              <Typography>{snackbar.message}</Typography>
-            </Box>
-          </Alert>
-        </Snackbar>
+        <CustomSnackbar
+          {...{
+            ...snackbar,
+            onClose: () => snackbarDispatch({ type: SNACKBAR_ACTIONS.CLOSE }),
+          }}
+        />
       </Box>
     </>
   );

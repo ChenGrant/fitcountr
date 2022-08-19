@@ -5,7 +5,7 @@ const {
   getProfilePicture,
   createUser,
   postProfileData,
-  postProfilePicture,
+  postProfilePicture
 } = require("../controllers/userController");
 const { isAuthorized, PRIVATE } = require("../middleware/isAuthorized");
 const isAuthenticated = require("../middleware/isAuthenticated");

@@ -205,7 +205,7 @@ const postProfilePicture = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res
-      .json({ error: { message: "Could not scan update profile picture" } })
+      .json({ error: { message: "Could not update profile picture" } })
       .status(404);
   }
 };

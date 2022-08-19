@@ -1,7 +1,6 @@
 const User = require("../models/User");
 const MediaFile = require("../models/MediaFile");
 const Measurement = require("../models/Measurement");
-const config = require("../config/config");
 const admin = require("firebase-admin");
 const {
   sendEmailVerificationAsync,
@@ -15,27 +14,8 @@ const GMAIL_PROVIDER = "GMAIL_PROVIDER";
 
 const bucket = getStorage().bucket();
 
-const findUserByUserUID = async (userUID) => {
-  const user = await User.findOne({ userUID });
+const verifyUserExists = async (user) => {
   if (user === null) throw new Error("No user matched");
-  return user;
-};
-
-const setUserProfilePicture = async (
-  user,
-  storagePath = config.ASSETS.PATH.DEFAULT_PROFILE_PICTURE
-) => {
-  let profilePicture = await MediaFile.findMediaFileByFirebasePath(storagePath);
-
-  // if pfp is not in mongodb, store it in mongodb
-  if (profilePicture === null) {
-    profilePicture = await MediaFile.create({
-      firebasePath: storagePath,
-    });
-  }
-
-  user.profilePicture = profilePicture._id;
-  user.save();
 };
 
 // ************************************************************************************
@@ -80,7 +60,7 @@ const createUser = async (req, res) => {
       );
 
       // set user's profile picture to be the default profile picture
-      setUserProfilePicture(createdUser);
+      User.setUserProfilePicture(createdUser);
 
       return res.json({ userIsCreated: true });
     }
@@ -114,7 +94,7 @@ const createUser = async (req, res) => {
         emailVerification: { isVerified: true, provider: GMAIL_PROVIDER },
       });
 
-      setUserProfilePicture(createdUser);
+      User.setUserProfilePicture(createdUser);
 
       return res.json({ userIsCreated: true });
     }
@@ -131,7 +111,8 @@ const createUser = async (req, res) => {
 const getProfilePicture = async (req, res) => {
   try {
     const { userUID } = req.params;
-    const user = await findUserByUserUID(userUID);
+    const user = await User.findUserByUserUID(userUID);
+    verifyUserExists(user);
 
     const profilePicture = await MediaFile.findById(user.profilePicture);
 
@@ -154,7 +135,8 @@ const getProfilePicture = async (req, res) => {
 const getProfileData = async (req, res) => {
   try {
     const { userUID } = req.params;
-    const user = await findUserByUserUID(userUID);
+    const user = await User.findUserByUserUID(userUID);
+    verifyUserExists(user);
     await user.populate("height");
     const { sex, height, birthday } = user;
     return res.json({ sex, height, birthday });
@@ -169,7 +151,8 @@ const getProfileData = async (req, res) => {
 const postProfileData = async (req, res) => {
   try {
     const { userUID } = req.params;
-    const user = await findUserByUserUID(userUID);
+    const user = await User.findUserByUserUID(userUID);
+    verifyUserExists(user);
 
     for (const property in req.body) {
       const val = req.body[property];
@@ -187,7 +170,6 @@ const postProfileData = async (req, res) => {
       }
     }
     await user.save();
-
     return res.json({ message: "Profile data updated" });
   } catch (err) {
     console.log(err);
@@ -198,7 +180,8 @@ const postProfileData = async (req, res) => {
 const postProfilePicture = async (req, res) => {
   try {
     const { userUID } = req.params;
-    const user = await findUserByUserUID(userUID);
+    const user = await User.findUserByUserUID(userUID);
+    verifyUserExists(user);
 
     const { profilePictureFile } = req.files;
 
@@ -208,7 +191,7 @@ const postProfilePicture = async (req, res) => {
       metadata: { contentType: profilePictureFile.mimetype },
     });
 
-    setUserProfilePicture(user, storagePath);
+    User.setUserProfilePicture(user, storagePath);
 
     return res.json({ message: "Profile picture updated" });
   } catch (err) {

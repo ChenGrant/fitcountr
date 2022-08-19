@@ -53,7 +53,7 @@ export const fetchProfilePictureURL = async ({ firebase }) => {
 
 export const fetchProfileData = async ({ firebase }) => {
   const userIdToken = await firebase.getIdToken();
-  return await fetchJSON(`/user/profile/${firebase.uid}`, {
+  return await fetchJSON(`/user/${firebase.uid}`, {
     headers: {
       "Content-Type": "application/json",
       authorization: userIdToken,
@@ -129,7 +129,7 @@ export const postProfileData = async (user, profileData) => {
     delete profileDataCopy.profilePicture;
   }
 
-  return await fetchJSON(`/user/profile/${user.firebase.uid}`, {
+  return await fetchJSON(`/user/${user.firebase.uid}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

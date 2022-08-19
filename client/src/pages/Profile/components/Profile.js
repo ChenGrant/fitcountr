@@ -16,13 +16,12 @@ import {
   MAX_AGE,
   objectsAreEqual,
   UNITS,
+  DATE_FORMAT,
 } from "../../../utils";
 import moment from "moment";
 import * as Yup from "yup";
 import CustomSnackbar from "../../../components/ui/CustomSnackbar";
 import { setUserProfilePictureURL } from "../../../redux";
-
-const DATE_FORMAT = "DD/MM/YYYY";
 
 // -------------------------------------- FORMIK --------------------------------------
 const validationSchema = Yup.object({
@@ -140,9 +139,9 @@ const Profile = () => {
           .filter(([key, value]) => {
             switch (key) {
               case "profilePicture":
-                return value.file;
+                return value.file && value.URL !== initialFormValues[key].URL;
               default:
-                return value;
+                return value && value !== initialFormValues[key];
             }
           })
           .map(([key, value]) => {
@@ -175,6 +174,8 @@ const Profile = () => {
   // ----------------------------------- USE EFFECT -----------------------------------
   useEffect(() => {
     (async () => {
+      if (initialFormValues) return;
+
       const fetchedProfileData = await fetchProfileData(user);
 
       const initialValues = {

@@ -5,17 +5,12 @@ const {
   getProfilePicture,
   createUser,
   postProfileData,
-  postProfilePicture
+  postProfilePicture,
 } = require("../controllers/userController");
 const { isAuthorized, PRIVATE } = require("../middleware/isAuthorized");
 const isAuthenticated = require("../middleware/isAuthenticated");
 
-router.get(
-  "/profile/:userUID",
-  isAuthenticated,
-  isAuthorized(PRIVATE),
-  getProfileData
-);
+router.get("/:userUID", isAuthenticated, isAuthorized(PRIVATE), getProfileData);
 
 router.get(
   "/profilePicture/:userUID",
@@ -32,7 +27,7 @@ router.post(
 );
 
 router.post(
-  "/profile/:userUID",
+  "/:userUID",
   isAuthenticated,
   isAuthorized(PRIVATE),
   postProfileData

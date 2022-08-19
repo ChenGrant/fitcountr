@@ -1035,3 +1035,5 @@ export const TIME_ZONES = [
     "UTC offset": "UTC+05",
   },
 ];
+
+export const DATE_FORMAT = "DD/MM/YYYY";

@@ -97,7 +97,6 @@ export const postSignupData = async (firebaseUser, provider) => {
 export const scanBarcodeImage = async (barcodeImageFile) => {
   const formData = new FormData();
   formData.append("barcodeImageFile", barcodeImageFile);
-  console.log(barcodeImageFile);
   return await fetchJSON(`/searchFood/scanBarcodeImage`, {
     method: "POST",
     body: formData,

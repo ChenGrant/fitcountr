@@ -1,10 +1,13 @@
 import React from "react";
 import { Box, Dialog } from "@mui/material";
-const CustomDialog = ({ open, onClose, children }) => {
+const CustomDialog = ({ open, onClose, onExited, children }) => {
   return (
     <Dialog
       open={open}
       onClose={onClose}
+      TransitionProps={{
+        onExited,
+      }}
       PaperProps={{ style: { borderRadius: "10px" } }}
     >
       <Box

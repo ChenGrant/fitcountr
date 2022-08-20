@@ -3,7 +3,14 @@ import { ErrorMessage, Field } from "formik";
 import React, { useId } from "react";
 import FormikTextError from "./FormikTextError";
 
-const FormikInput = ({ label, name, type, textErrorHeight, ...rest }) => {
+const FormikInput = ({
+  label,
+  name,
+  type,
+  textErrorHeight,
+  disabled,
+  ...rest
+}) => {
   const id = useId();
 
   return (
@@ -14,6 +21,7 @@ const FormikInput = ({ label, name, type, textErrorHeight, ...rest }) => {
             <FormControl variant="outlined" fullWidth>
               <InputLabel htmlFor={id}>{label}</InputLabel>
               <OutlinedInput
+                disabled={disabled}
                 id={id}
                 label={label}
                 type={type}

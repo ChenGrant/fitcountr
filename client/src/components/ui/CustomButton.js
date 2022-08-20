@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import React from "react";
 
 const CustomButton = (props) => {
-  if (props.variant !== "contained") return <Button {...props} />;
+  //if (props.variant !== "contained") return <Button {...props} />;
 
   const { sx, ...rest } = props;
   return (
@@ -10,7 +10,7 @@ const CustomButton = (props) => {
       sx={{
         borderRadius: "10px",
         textTransform: "none",
-        color: "white",
+        color: props.variant === "contained" && "white",
         ...sx,
       }}
       {...rest}

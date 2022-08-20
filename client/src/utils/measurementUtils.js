@@ -7,12 +7,26 @@ export const UNITS = {
   YEAR: {
     singularName: "year",
     pluralName: "years",
-    abbreviation: "yr",
+    symbol: "yr",
   },
   CENTIMETER: {
     singularName: "centimeter",
     pluralName: "centimeters",
-    abbreviation: "cm",
+    symbol: "cm",
     system: METRIC,
   },
+  KILOGRAM: {
+    singularName: "kilogram",
+    pluralName: "kilograms",
+    symbol: "kg",
+    system: METRIC,
+  },
+  POUND: {
+    singularName: "pound",
+    pluralName: "pounds",
+    symbol: "lbs",
+    system: IMPERIAL,
+  },
 };
+
+export const WEIGHT_UNITS = [UNITS.KILOGRAM, UNITS.POUND];

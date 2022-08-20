@@ -8,12 +8,13 @@ import {
 } from "../../../utils";
 
 // ------------------------------------ CONSTANTS ------------------------------------
-const SEX_SELECT_OPTIONS = sortArray(SEXES, (sex1, sex2) =>
-  sex1.localeCompare(sex2)
-).map((sex) => ({
-  label: capitalizeFirstCharacterLowercaseRest(sex),
-  value: sex,
-}));
+const SEX_SELECT_OPTIONS = sortArray(
+  SEXES.map((sex) => ({
+    label: capitalizeFirstCharacterLowercaseRest(sex),
+    value: sex,
+  })),
+  (sex1, sex2) => sex1.label.localeCompare(sex2.label)
+);
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
@@ -37,7 +38,6 @@ const ProfileInputFields = () => {
           type="number"
           label="Height (cm)"
           name="height"
-          step="0.5"
           onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
         />
       </Box>

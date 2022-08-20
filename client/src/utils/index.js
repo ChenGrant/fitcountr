@@ -21,13 +21,14 @@ export { sortArray, getLexSmallest } from "./arrayUtils";
 
 export { PROGRESS_TYPES } from "./progressUtils";
 
-export { TIME_ZONES, DATE_FORMAT } from "./dateUtils";
+export { TIME_ZONES, DATE_FORMAT, TIME_FORMAT } from "./dateUtils";
 
 export {
   METRIC,
   IMPERIAL,
   MEASUREMENT_SYSTEMS,
   UNITS,
+  WEIGHT_UNITS,
 } from "./measurementUtils";
 
 export {

@@ -1,6 +1,6 @@
 import { IconButton, Tab, Tabs, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingCircle from "../../../components/miscellaneous/LoadingCircle";
 import CustomButton from "../../../components/ui/CustomButton";
@@ -14,9 +14,11 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import ProgressTable from "./ProgressTable";
+import AddProgressPopup from "./AddProgressPopup";
 const Progress = () => {
   const { progressPage } = useSelector((state) => state);
   const dispatch = useDispatch();
+  const [addProgressPopupIsOpen, setAddProgressPopupIsOpen] = useState(false);
 
   const pageIsLoading = progressPage.stat === null;
 
@@ -76,7 +78,10 @@ const Progress = () => {
           </IconButton>
         </Box>
         <Box>
-          <CustomButton variant="contained">
+          <CustomButton
+            variant="contained"
+            onClick={() => setAddProgressPopupIsOpen(true)}
+          >
             <Box
               display="flex"
               alignItems="center"
@@ -84,12 +89,22 @@ const Progress = () => {
               gap={1}
             >
               <AddIcon />
-              <Typography variant="h6">New Weight</Typography>
+              <Typography variant="h6">
+                New{" "}
+                {capitalizeFirstCharacterLowercaseRest(progressPage.stat).slice(
+                  0,
+                  -1
+                )}
+              </Typography>
             </Box>
           </CustomButton>
         </Box>
       </Box>
       <ProgressTable />
+      <AddProgressPopup
+        addProgressPopupIsOpen={addProgressPopupIsOpen}
+        setAddProgressPopupIsOpen={setAddProgressPopupIsOpen}
+      />
     </Box>
   );
 };

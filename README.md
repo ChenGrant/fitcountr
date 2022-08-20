@@ -1,5 +1,5 @@
 # fitcountr
 
-Version: 0.5.15
+Version: 0.6.0
 
-Last Edited: August 19, 2022
+Last Edited: August 20, 2022

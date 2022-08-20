@@ -13,11 +13,14 @@ import {
   DATE_FORMAT,
   MIN_WEIGHT,
   objectsAreEqual,
+  postProgress,
   sortArray,
   TIME_FORMAT,
   WEIGHT_UNITS,
 } from "../../../utils";
 import * as Yup from "yup";
+import { TIME_PERIODS } from "../../../utils/dateUtils";
+import { getProgressFromFormValues } from "../utils";
 
 // ------------------------------------ CONSTANTS ------------------------------------
 const UNIT_SELECT_OPTIONS = sortArray(
@@ -35,7 +38,7 @@ const AddProgressPopup = ({
   addProgressPopupIsOpen,
   setAddProgressPopupIsOpen,
 }) => {
-  const { progressPage } = useSelector((state) => state);
+  const { user, progressPage } = useSelector((state) => state);
 
   const [isAddingStat, setIsAddingStat] = useState(false);
 
@@ -99,6 +102,24 @@ const AddProgressPopup = ({
       then: Yup.string()
         .required("Required")
         .trim()
+        .test(
+          "validDateFormat",
+          `Time must be in the form ${TIME_FORMAT}`,
+          (time) => {
+            try {
+              if (time.charAt(2) !== ":" || time.charAt(5) !== " ")
+                return false;
+              const hour = time.substring(0, 2);
+              const minute = time.substring(3, 5);
+              const period = time.substring(6).toUpperCase();
+              return (
+                !isNaN(hour) && !isNaN(minute) && TIME_PERIODS.includes(period)
+              );
+            } catch (err) {
+              return false;
+            }
+          }
+        )
         .test("validTimeString", "Invalid time", (time) =>
           moment(time, TIME_FORMAT, true).isValid()
         ),
@@ -111,8 +132,12 @@ const AddProgressPopup = ({
   const handleClose = () => setAddProgressPopupIsOpen(false);
 
   const addStat = async (values) => {
-    console.log(values);
-    await new Promise((r) => setTimeout(r, 2000));
+    const response = await postProgress(
+      user,
+      getProgressFromFormValues(values, progressPage.stat)
+    );
+    console.log(response);
+    // render snackbar confirmation for success/error
   };
 
   const onSubmit = async (values) => {

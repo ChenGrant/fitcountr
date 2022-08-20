@@ -8,6 +8,9 @@ const {
   fetchFoodFromBarcodeNumberOpenFoodFacts,
 } = require("../services/openFoodFacts/openFoodFact");
 const { UNITS } = require("../utils/foodUtils");
+const { RequestUtils } = require("../utils");
+
+const { INTERNAL_SERVER_ERROR_CODE } = RequestUtils;
 
 // ************************************************************************************
 // ----------------------------------- CONTROLLERS ------------------------------------
@@ -32,7 +35,7 @@ const getFoodFromBarcodeNumber = async (req, res) => {
     console.log(err);
     return res
       .json({ error: { message: "Could not fetch food data" } })
-      .status(404);
+      .status(INTERNAL_SERVER_ERROR_CODE);
   }
 };
 
@@ -45,7 +48,7 @@ const scanBarcodeImage = async (req, res) => {
     console.log(err);
     return res
       .json({ error: { message: "Could not scan barcode image" } })
-      .status(404);
+      .status(INTERNAL_SERVER_ERROR_CODE);
   }
 };
 
@@ -67,7 +70,7 @@ const getFoodsFromQuery = async (req, res) => {
     console.log(err);
     return res
       .json({ error: { message: "Could not fetch food data" } })
-      .status(404);
+      .status(INTERNAL_SERVER_ERROR_CODE);
   }
 };
 

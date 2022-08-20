@@ -1,5 +1,8 @@
 const config = require("../config/config");
 const assert = require("assert");
+const { RequestUtils } = require("../utils");
+
+const { INTERNAL_SERVER_ERROR_CODE } = RequestUtils;
 
 // ------------------------------------- getAsset -------------------------------------
 const getAsset = (req, res) => {
@@ -11,7 +14,9 @@ const getAsset = (req, res) => {
     res.json({ assetURL });
   } catch (err) {
     console.log(err);
-    res.json({ error: { message: "Could not retrieve asset" } }).status(404);
+    res
+      .json({ error: { message: "Could not retrieve asset" } })
+      .status(INTERNAL_SERVER_ERROR_CODE);
   }
 };
 

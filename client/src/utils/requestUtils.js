@@ -137,3 +137,15 @@ export const postProfileData = async (user, profileData) => {
     body: JSON.stringify(profileDataCopy),
   });
 };
+
+export const postProgress = async (user, progress) => {
+  const userIdToken = await user.firebase.getIdToken();
+  return await fetchJSON(`/user/progress/${user.firebase.uid}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: userIdToken,
+    },
+    body: JSON.stringify(progress),
+  });
+};

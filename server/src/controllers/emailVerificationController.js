@@ -3,8 +3,11 @@ const { NumberUtils } = require("../utils/index");
 const {
   sendEmailVerificationAsync,
 } = require("../services/nodemailer/nodemailer");
+const { RequestUtils } = require("../utils");
 
 // ------------------------------------ CONSTANTS ------------------------------------
+const { INTERNAL_SERVER_ERROR_CODE } = RequestUtils;
+
 const EMAIL_NOT_IN_USE = "EMAIL_NOT_IN_USE";
 
 const verifyEmailIsInUse = async (email) => {
@@ -27,7 +30,7 @@ const getEmailIsInUse = async (req, res) => {
       .json({
         error: { message: "Could not determine if email is in use" },
       })
-      .status(404);
+      .status(INTERNAL_SERVER_ERROR_CODE);
   }
 };
 
@@ -51,7 +54,7 @@ const getVerificationStatus = async (req, res) => {
       .json({
         error: { message: "Could not get email verification status" },
       })
-      .status(404);
+      .status(INTERNAL_SERVER_ERROR_CODE);
   }
 };
 
@@ -69,7 +72,7 @@ const getEmailVerificationProvider = async (req, res) => {
     console.log(err);
     return res
       .json({ error: { message: "Could not get email provider" } })
-      .status(404);
+      .status(INTERNAL_SERVER_ERROR_CODE);
   }
 };
 
@@ -89,7 +92,7 @@ const getPinLength = async (req, res) => {
     console.log(err);
     return res
       .json({ error: { message: "Could not get pin length" } })
-      .status(404);
+      .status(INTERNAL_SERVER_ERROR_CODE);
   }
 };
 
@@ -118,7 +121,7 @@ const validatePin = async (req, res) => {
     console.log(err);
     return res
       .json({ error: { message: "Could not validate pin" } })
-      .status(404);
+      .status(INTERNAL_SERVER_ERROR_CODE);
   }
 };
 
@@ -141,7 +144,7 @@ const sendVerificationEmail = async (req, res) => {
       .json({
         error: { message: "Could not send verification email" },
       })
-      .status(404);
+      .status(INTERNAL_SERVER_ERROR_CODE);
   }
 };
 

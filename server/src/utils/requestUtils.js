@@ -1,0 +1,5 @@
+const INTERNAL_SERVER_ERROR_CODE = 505;
+
+module.exports = {
+  INTERNAL_SERVER_ERROR_CODE,
+};

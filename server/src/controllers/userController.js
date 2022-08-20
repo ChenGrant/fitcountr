@@ -7,6 +7,9 @@ const {
 } = require("../services/nodemailer/nodemailer");
 const { getStorage } = require("firebase-admin/storage");
 const { DateUtils } = require("../utils");
+const { RequestUtils } = require("../utils");
+
+const { INTERNAL_SERVER_ERROR_CODE } = RequestUtils;
 
 // ------------------------------------ CONSTANTS ------------------------------------
 const EMAIL_PASSWORD_PROVIDER = "EMAIL_PASSWORD_PROVIDER";
@@ -104,7 +107,7 @@ const createUser = async (req, res) => {
     console.log(err.message);
     return res
       .json({ error: { message: "Could not create user" } })
-      .status(404);
+      .status(INTERNAL_SERVER_ERROR_CODE);
   }
 };
 
@@ -128,7 +131,7 @@ const getProfilePicture = async (req, res) => {
     console.log(err);
     res
       .json({ error: { message: "Could not retrieve profile picture" } })
-      .status(404);
+      .status(INTERNAL_SERVER_ERROR_CODE);
   }
 };
 
@@ -138,7 +141,7 @@ const getProfileData = async (req, res) => {
     const user = await User.findUserByUserUID(userUID);
     verifyUserExists(user);
     await user.populate("height");
-    
+
     const { sex, height, birthday } = user;
     const profileData = Object.fromEntries(
       Object.entries({ sex, height, birthday }).filter(([key, val]) => {
@@ -156,7 +159,7 @@ const getProfileData = async (req, res) => {
     console.log(err);
     res
       .json({ error: { message: "Could not retrieve profile data" } })
-      .status(404);
+      .status(INTERNAL_SERVER_ERROR_CODE);
   }
 };
 
@@ -185,7 +188,9 @@ const postProfileData = async (req, res) => {
     return res.json({ message: "Profile data updated" });
   } catch (err) {
     console.log(err);
-    res.json({ error: { message: "Could not post profile data" } }).status(404);
+    res
+      .json({ error: { message: "Could not post profile data" } })
+      .status(INTERNAL_SERVER_ERROR_CODE);
   }
 };
 
@@ -210,7 +215,19 @@ const postProfilePicture = async (req, res) => {
     console.log(err);
     return res
       .json({ error: { message: "Could not update profile picture" } })
-      .status(404);
+      .status(INTERNAL_SERVER_ERROR_CODE);
+  }
+};
+
+const postProgress = async (req, res) => {
+  try {
+    console.log(req.body);
+    return res.json({ message: "Progress added" });
+  } catch (err) {
+    console.log(err);
+    return res
+      .json({ error: { message: "Could not post progress" } })
+      .status(INTERNAL_SERVER_ERROR_CODE);
   }
 };
 
@@ -220,4 +237,5 @@ module.exports = {
   getProfileData,
   postProfileData,
   postProfilePicture,
+  postProgress,
 };

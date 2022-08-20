@@ -5,6 +5,7 @@ const StringUtils = require("./stringUtils");
 const DateUtils = require("./dateUtils");
 const HumanUtils = require("./humanUtils");
 const MeasurementUtils = require("./measurementUtils");
+const RequestUtils = require("./requestUtils");
 
 module.exports = {
   ArrayUtils,
@@ -14,4 +15,5 @@ module.exports = {
   DateUtils,
   HumanUtils,
   MeasurementUtils,
+  RequestUtils,
 };

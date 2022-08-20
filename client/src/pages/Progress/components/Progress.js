@@ -90,17 +90,13 @@ const Progress = () => {
             >
               <AddIcon />
               <Typography variant="h6">
-                New{" "}
-                {capitalizeFirstCharacterLowercaseRest(progressPage.stat).slice(
-                  0,
-                  -1
-                )}
+                New {capitalizeFirstCharacterLowercaseRest(progressPage.stat)}
               </Typography>
             </Box>
           </CustomButton>
         </Box>
       </Box>
-      <ProgressTable />
+      {/* <ProgressTable /> */}
       <AddProgressPopup
         addProgressPopupIsOpen={addProgressPopupIsOpen}
         setAddProgressPopupIsOpen={setAddProgressPopupIsOpen}

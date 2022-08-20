@@ -1,5 +1,5 @@
 export const PROGRESS_TYPES = {
-  WEIGHTS: "WEIGHTS",
+  WEIGHT: "WEIGHT",
   STEPS: "STEPS",
-  //MEALS: "MEALS",
+  MEAL: "MEAL",
 };

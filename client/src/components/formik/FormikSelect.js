@@ -3,15 +3,15 @@ import { ErrorMessage, Field } from "formik";
 import React, { useId } from "react";
 import FormikTextError from "./FormikTextError";
 
-const FormikSelect = ({ label, name, options, textErrorHeight }) => {
+const FormikSelect = ({ label, name, options, textErrorHeight, ...rest }) => {
   const id = useId();
 
   return (
     <>
-      <Field id={id} name={name}>
+      <Field name={name}>
         {({ field }) => {
           return (
-            <FormControl fullWidth>
+            <FormControl fullWidth {...rest}>
               <InputLabel htmlFor={id}>{label}</InputLabel>
               <Select labelId={id} label={label} {...field}>
                 {options.map((option) => (

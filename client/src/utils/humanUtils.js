@@ -15,4 +15,9 @@ export const MAX_AGE = {
   unit: UNITS.YEAR,
 };
 
+export const MIN_WEIGHT = {
+  value: 0,
+  unit: UNITS.KILOGRAM,
+};
+
 export const SEXES = ["MALE", "FEMALE"];

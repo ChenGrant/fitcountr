@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import { FormikContext, useFormikContext } from "formik";
 import React from "react";
+import FormikCheckbox from "./FormikCheckbox";
 import FormikInput from "./FormikInput";
 import FormikSelect from "./FormikSelect";
 
@@ -17,13 +18,21 @@ const FormikControl = ({ control, textErrorHeight = "24px", ...rest }) => {
 
   // ------------------------------------- RENDER -------------------------------------
   return (
-    <Box mb={!errorIsRendered(rest.name, formik) && textErrorHeight}>
+    <Box
+      mb={
+        control !== "checkbox" &&
+        !errorIsRendered(rest.name, formik) &&
+        textErrorHeight
+      }
+    >
       {(() => {
         switch (control) {
           case "input":
             return <FormikInput {...fieldProps} />;
           case "select":
             return <FormikSelect {...fieldProps} />;
+          case "checkbox":
+            return <FormikCheckbox {...fieldProps} />;
           default:
             return null;
         }

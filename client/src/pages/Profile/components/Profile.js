@@ -6,7 +6,6 @@ import { Form, Formik } from "formik";
 import CustomCard from "../../../components/ui/CustomCard";
 import ProfilePicture from "./ProfilePicture";
 import ProfileInputFields from "./ProfileInputFields";
-import SaveProfileButton from "./SaveProfileButton";
 import { fetchProfileData, postProfileData } from "../../../utils/requestUtils";
 import {
   SEXES,
@@ -14,6 +13,7 @@ import {
   MAX_HEIGHT,
   MAX_AGE,
   DATE_FORMAT,
+  objectsAreEqual,
 } from "../../../utils";
 import moment from "moment";
 import * as Yup from "yup";
@@ -23,6 +23,7 @@ import {
   getFormValuesFromProfileData,
   getProfileDataFromFormValues,
 } from "../utils";
+import PostDataButton from "../../../components/ui/PostDataButton";
 
 // -------------------------------------- FORMIK --------------------------------------
 const validationSchema = Yup.object({
@@ -32,12 +33,12 @@ const validationSchema = Yup.object({
     .typeError("Height must be a number")
     .test(
       "minHeight",
-      `Height must be greater than ${MIN_HEIGHT.value} ${MIN_HEIGHT.unit.abbreviation}`,
+      `Height must be greater than ${MIN_HEIGHT.value} ${MIN_HEIGHT.unit.symbol}`,
       (height) => height == null || height > MIN_HEIGHT.value
     )
     .test(
       "maxHeight",
-      `Height must be less than ${MAX_HEIGHT.value} ${MAX_HEIGHT.unit.abbreviation}`,
+      `Height must be less than ${MAX_HEIGHT.value} ${MAX_HEIGHT.unit.symbol}`,
       (height) => height == null || height < MAX_HEIGHT.value
     ),
   birthday: Yup.string()
@@ -124,7 +125,7 @@ const Profile = () => {
   const dispatch = useDispatch();
   const { desktop, phone } = useScreenSize();
   const [initialFormValues, setInitialFormValues] = useState();
-  const [postingData, setPostingData] = useState(false);
+  const [isPostingData, setIsPostingData] = useState(false);
   const [snackbar, snackbarDispatch] = useReducer(
     snackbarReducer,
     INITIAL_SNACKBAR_STATE
@@ -205,42 +206,53 @@ const Profile = () => {
                 initialValues={initialFormValues}
                 validationSchema={validationSchema}
                 onSubmit={async (formValues) => {
-                  setPostingData(true);
+                  setIsPostingData(true);
                   await handleProfileDataUpdate(formValues);
-                  setPostingData(false);
+                  setIsPostingData(false);
                 }}
               >
-                <Form>
-                  <Box
-                    display="flex"
-                    flexDirection={desktop ? "row" : "column"}
-                    alignItems="center"
-                  >
+                {(formik) => (
+                  <Form>
                     <Box
                       display="flex"
-                      flexDirection="column"
+                      flexDirection={desktop ? "row" : "column"}
                       alignItems="center"
-                      justifyContent="center"
-                      mr={desktop && 5}
-                      mt={!desktop && 2}
                     >
-                      <ProfilePicture />
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="center"
+                        justifyContent="center"
+                        mr={desktop && 5}
+                        mt={!desktop && 2}
+                      >
+                        <ProfilePicture />
+                      </Box>
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        gap={desktop ? 1 : 2}
+                        flex={1}
+                        width={!desktop && "100%"}
+                        mt={!desktop && 5}
+                      >
+                        <ProfileInputFields />
+                        <PostDataButton
+                          isPostingData={isPostingData}
+                          sx={{ width: "100%" }}
+                          type="submit"
+                          variant="contained"
+                          disabled={objectsAreEqual(
+                            formik.values,
+                            initialFormValues
+                          )}
+                        >
+                          Save Profile
+                        </PostDataButton>
+                      </Box>
                     </Box>
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      gap={desktop ? 1 : 2}
-                      flex={1}
-                      width={!desktop && "100%"}
-                      mt={!desktop && 5}
-                    >
-                      <ProfileInputFields />
-                      <SaveProfileButton
-                        {...{ postingData, initialFormValues }}
-                      />
-                    </Box>
-                  </Box>
-                </Form>
+                  </Form>
+                )}
               </Formik>
             )}
           </CustomCard>

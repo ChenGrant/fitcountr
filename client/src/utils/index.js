@@ -37,7 +37,13 @@ export {
   capitalizeFirstCharacterLowercaseRest,
 } from "./stringUtils";
 
-export { MAX_HEIGHT, MIN_HEIGHT, MAX_AGE, SEXES } from "./humanUtils";
+export {
+  MAX_HEIGHT,
+  MIN_HEIGHT,
+  MAX_AGE,
+  MIN_WEIGHT,
+  SEXES,
+} from "./humanUtils";
 
 export { sub, round } from "./numberUtils";
 

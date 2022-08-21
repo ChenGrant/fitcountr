@@ -24,7 +24,7 @@ const NavigationBarItem = ({ isOpen, name, icon, nestedItems, ...rest }) => {
   const theme = useTheme();
   const [arrowDirection, setArrowDirection] = useState(ARROW_DIRECTIONS.LEFT);
   const { progressType } = useSelector((state) => state.progressPage);
-  const pathName = useLocation().pathname;
+  const currentPath = useLocation().pathname;
 
   const isExpanded = !desktop || isOpen;
   const arrowDirectionIsDown = arrowDirection === ARROW_DIRECTIONS.DOWN;
@@ -79,8 +79,14 @@ const NavigationBarItem = ({ isOpen, name, icon, nestedItems, ...rest }) => {
           sortArray(nestedItems, (item1, item2) =>
             item1.name.localeCompare(item2.name)
           ).map(({ name, onClick }) => {
-            const isSelected =
-              pathName === ROUTE_PATHS.PROGRESS && progressType === name;
+            const isSelected = (() => {
+              switch (currentPath) {
+                case ROUTE_PATHS.PROGRESS:
+                  return name === progressType;
+                default:
+                  return false;
+              }
+            })();
 
             return (
               <Box

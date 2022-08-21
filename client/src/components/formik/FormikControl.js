@@ -13,15 +13,15 @@ const FormikControl = ({ control, textErrorHeight = "24px", ...rest }) => {
   const fieldProps = { ...rest, textErrorHeight };
 
   // ----------------------------------- FUNCTIONS -----------------------------------
-  const errorIsRendered = (fieldName, formik) =>
-    formik.errors[fieldName] && formik.touched[fieldName];
+  const errorIsNotRendered = (fieldName, formik) =>
+    !formik.errors[fieldName] || !formik.touched[fieldName];
 
   // ------------------------------------- RENDER -------------------------------------
   return (
     <Box
       mb={
         control !== "checkbox" &&
-        !errorIsRendered(rest.name, formik) &&
+        errorIsNotRendered(rest.name, formik) &&
         textErrorHeight
       }
     >

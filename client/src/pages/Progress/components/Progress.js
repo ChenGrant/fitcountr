@@ -14,7 +14,7 @@ import {
 } from "../../../utils";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
-import AddProgressPopup from "./AddProgressPopup/AddProgressPopup";
+import AddProgressPopup from "./AddProgressPopup";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------

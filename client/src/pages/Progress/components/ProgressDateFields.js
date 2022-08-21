@@ -1,10 +1,10 @@
 import { Box } from "@mui/material";
 import { FormikContext, useFormikContext } from "formik";
 import React from "react";
-import FormikControl from "../../../../components/formik/FormikControl";
-import { DATE_FORMAT, TIME_FORMAT } from "../../../../utils";
+import FormikControl from "../../../components/formik/FormikControl";
+import { DATE_FORMAT, TIME_FORMAT } from "../../../utils";
 
-const AddProgressPopupDateFields = () => {
+const ProgressDateFields = () => {
   const formik = useFormikContext(FormikContext);
   const { currentTimeIsUsed } = formik.values;
 
@@ -33,4 +33,4 @@ const AddProgressPopupDateFields = () => {
   );
 };
 
-export default AddProgressPopupDateFields;
+export default ProgressDateFields;

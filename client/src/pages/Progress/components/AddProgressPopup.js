@@ -3,23 +3,22 @@ import { Box } from "@mui/system";
 import { Form, Formik } from "formik";
 import React, { useEffect, useReducer, useState } from "react";
 import { useSelector } from "react-redux";
-import CustomButton from "../../../../components/ui/CustomButton";
-import CustomDialog from "../../../../components/ui/CustomDialog";
-import PostDataButton from "../../../../components/ui/PostDataButton";
+import CustomButton from "../../../components/ui/CustomButton";
+import CustomDialog from "../../../components/ui/CustomDialog";
+import PostDataButton from "../../../components/ui/PostDataButton";
 import {
   capitalizeOnlyFirstChar,
   objectsAreEqual,
   postProgress,
-  PROGRESS_TYPES,
   PROGRESS_TYPE_NAMES,
-} from "../../../../utils";
+} from "../../../utils";
 import {
   getInitialValuesFromProgressType,
   getProgressFromFormValues,
   getValidationSchemaFromProgressType,
-} from "../../utils";
-import AddProgressPopupDateFields from "./AddProgressPopupDateFields";
-import WeightFields from "../WeightFields";
+} from "../utils";
+import ProgressDateFields from "./ProgressDateFields";
+import ProgressTypeFields from "./ProgressTypeFields";
 
 // ----------------------------------- FORM REDUCER -----------------------------------
 const FORM_ACTIONS = {
@@ -51,15 +50,6 @@ const AddProgressPopup = ({ setAddProgressPopupIsOpen }) => {
   const popupIsLoading = objectsAreEqual(form, INITIAL_FORM_STATE);
 
   // ----------------------------------- FUNCTIONS -----------------------------------
-  const renderProgressFields = (progressType) => {
-    switch (progressType) {
-      case PROGRESS_TYPES.WEIGHTS:
-        return <WeightFields />;
-      default:
-        return null;
-    }
-  };
-
   const handleClose = () => setAddProgressPopupIsOpen(false);
 
   const addStat = async (values) => {
@@ -120,9 +110,9 @@ const AddProgressPopup = ({ setAddProgressPopupIsOpen }) => {
                   sx={{ minWidth: "350px" }}
                 >
                   {/* Progress Type */}
-                  {renderProgressFields(progressType)}
+                  <ProgressTypeFields />
                   {/* Date */}
-                  <AddProgressPopupDateFields />
+                  <ProgressDateFields />
                 </Box>
                 <Box display="flex" gap={2} width="100%">
                   {/* Back Button */}

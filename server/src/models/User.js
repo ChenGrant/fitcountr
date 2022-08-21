@@ -57,15 +57,14 @@ const userSchema = new mongoose.Schema({
     ref: "MediaFile",
   },
 
-  height: {
-    type: mongoose.SchemaTypes.ObjectId,
-    ref: "Measurement",
-  },
+  height: {},
 
   sex: {
     type: String,
-    validator: HumanUtils.SEXES.has,
-    message: (props) => `${props.value} is not a valid sex`,
+    validate: {
+      validator: HumanUtils.SEXES.has,
+      message: (props) => `${props.value} is not a valid sex`,
+    },
   },
   birthday: Date,
 });

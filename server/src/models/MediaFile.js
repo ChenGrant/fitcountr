@@ -5,8 +5,10 @@ const mediaFileSchema = new mongoose.Schema({
   firebasePath: {
     type: String,
     required: true,
-    validator: (value) => !StringUtils.getStringIsEmpty(value),
-    message: (props) => `${props.value} is empty`,
+    validate: {
+      validator: (value) => !StringUtils.getStringIsEmpty(value),
+      message: (props) => `${props.value} is empty`,
+    },
   },
 });
 

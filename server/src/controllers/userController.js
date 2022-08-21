@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const MediaFile = require("../models/MediaFile");
-const Measurement = require("../models/Measurement");
+const Progress = require("../models/Progress");
 const admin = require("firebase-admin");
 const {
   sendEmailVerificationAsync,
@@ -140,18 +140,12 @@ const getProfileData = async (req, res) => {
     const { userUID } = req.params;
     const user = await User.findUserByUserUID(userUID);
     verifyUserExists(user);
-    await user.populate("height");
 
     const { sex, height, birthday } = user;
     const profileData = Object.fromEntries(
-      Object.entries({ sex, height, birthday }).filter(([key, val]) => {
-        switch (key) {
-          case "height":
-            return val.value !== null;
-          default:
-            return val !== null;
-        }
-      })
+      Object.entries({ sex, height, birthday }).filter(
+        ([key, val]) => val !== null
+      )
     );
 
     return res.json(profileData);
@@ -169,21 +163,8 @@ const postProfileData = async (req, res) => {
     const user = await User.findUserByUserUID(userUID);
     verifyUserExists(user);
 
-    for (const property in req.body) {
-      const val = req.body[property];
-      switch (property) {
-        case "height":
-          if (!user[property]) {
-            user[property] = (await Measurement.create(val))._id;
-            break;
-          }
-          await Measurement.replaceOne({ _id: user[property] }, val);
-          break;
+    Object.entries(req.body).forEach(([key, value]) => (user[key] = value));
 
-        default:
-          user[property] = val;
-      }
-    }
     await user.save();
     return res.json({ message: "Profile data updated" });
   } catch (err) {
@@ -221,7 +202,14 @@ const postProfilePicture = async (req, res) => {
 
 const postProgress = async (req, res) => {
   try {
-    console.log(req.body);
+    const { userUID } = req.params;
+    const progress = req.body;
+
+    await Progress.create({
+      ...progress,
+      userUID,
+    });
+
     return res.json({ message: "Progress added" });
   } catch (err) {
     console.log(err);

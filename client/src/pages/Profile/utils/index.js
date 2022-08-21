@@ -40,15 +40,21 @@ export const getProfileDataFromFormValues = (formValues, initialFormValues) =>
         }
       })
       .map(([key, value]) => {
-        switch (key) {
-          case "profilePicture":
-            return [key, value.file];
-          case "height":
-            return [key, { value, unit: UNITS.CENTIMETER }];
-          case "birthday":
-            return [key, moment(value, DATE_FORMAT).toDate()];
-          default:
-            return [key, value];
-        }
+        const formattedValue = (() => {
+          switch (key) {
+            case "profilePicture":
+              return value.file;
+
+            case "height":
+              return value === "" ? null : { value, unit: UNITS.CENTIMETER };
+
+            case "birthday":
+              return moment(value, DATE_FORMAT).toDate();
+              
+            default:
+              return value;
+          }
+        })();
+        return [key, formattedValue];
       })
   );

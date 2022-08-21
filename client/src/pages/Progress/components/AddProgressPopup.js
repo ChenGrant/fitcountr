@@ -21,6 +21,8 @@ import {
 import * as Yup from "yup";
 import { TIME_PERIODS } from "../../../utils/dateUtils";
 import { getProgressFromFormValues } from "../utils";
+import AddProgressPopupDateFields from "./AddProgressPopupDateFields";
+import AddProgressPopupWeightFields from "./AddProgressPopupWeightFields";
 
 // ------------------------------------ CONSTANTS ------------------------------------
 const UNIT_SELECT_OPTIONS = sortArray(
@@ -176,61 +178,11 @@ const AddProgressPopup = ({
                   sx={{ minWidth: "350px" }}
                 >
                   {/* Stat */}
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    gap={1}
-                    textAlign="left"
-                  >
-                    <FormikControl
-                      control="input"
-                      type="number"
-                      label={stat}
-                      name={progressPage.stat}
-                      onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
-                    />
-                    <FormikControl
-                      control="select"
-                      label="Unit"
-                      name="unit"
-                      options={UNIT_SELECT_OPTIONS}
-                      sx={{ textAlign: "left" }}
-                    />
-                  </Box>
+                  <AddProgressPopupWeightFields
+                    UNIT_SELECT_OPTIONS={UNIT_SELECT_OPTIONS}
+                  />
                   {/* Date */}
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    gap={1}
-                    textAlign="left"
-                  >
-                    <FormikControl
-                      control="checkbox"
-                      label="Use current time"
-                      name="currentTimeIsUsed"
-                    />
-                    <FormikControl
-                      disabled={formik.values.currentTimeIsUsed}
-                      control="input"
-                      label={`Date (${DATE_FORMAT})`}
-                      name="date"
-                      sx={{
-                        bgcolor:
-                          formik.values.currentTimeIsUsed && "rgba(0,0,0,0.1)",
-                      }}
-                    />
-                    <FormikControl
-                      value={"hello"}
-                      disabled={formik.values.currentTimeIsUsed}
-                      control="input"
-                      label={`Time (${TIME_FORMAT})`}
-                      name="time"
-                      sx={{
-                        bgcolor:
-                          formik.values.currentTimeIsUsed && "rgba(0,0,0,0.1)",
-                      }}
-                    />
-                  </Box>
+                  <AddProgressPopupDateFields />
                 </Box>
                 {/* Buttons */}
                 <Box display="flex" gap={2} width="100%">

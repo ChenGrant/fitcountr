@@ -4,31 +4,31 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingCircle from "../../../components/miscellaneous/LoadingCircle";
 import CustomButton from "../../../components/ui/CustomButton";
-import { setProgressPageStat } from "../../../redux";
+import { setProgressPageType } from "../../../redux";
 import {
-  capitalizeFirstCharacterLowercaseRest,
+  capitalizeOnlyFirstChar,
   getLexSmallest,
   PROGRESS_TYPES,
+  PROGRESS_TYPE_NAMES,
   sortArray,
 } from "../../../utils";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
-import ProgressTable from "./ProgressTable";
 import AddProgressPopup from "./AddProgressPopup";
 const Progress = () => {
-  const { progressPage } = useSelector((state) => state);
+  const { progressType } = useSelector((state) => state.progressPage);
   const dispatch = useDispatch();
   const [addProgressPopupIsOpen, setAddProgressPopupIsOpen] = useState(false);
 
-  const pageIsLoading = progressPage.stat === null;
+  const pageIsLoading = progressType === null;
 
   useEffect(() => {
-    if (progressPage.stat === null) {
+    if (progressType === null) {
       dispatch(
-        setProgressPageStat(getLexSmallest(Object.values(PROGRESS_TYPES)))
+        setProgressPageType(getLexSmallest(Object.values(PROGRESS_TYPES)))
       );
     }
-  }, [progressPage.stat, dispatch]);
+  }, [progressType, dispatch]);
 
   if (pageIsLoading) return <LoadingCircle />;
 
@@ -42,9 +42,9 @@ const Progress = () => {
     >
       <Typography variant="h1">Progress</Typography>
       <Tabs
-        value={progressPage.stat}
-        onChange={(e, newProgressType) =>
-          dispatch(setProgressPageStat(newProgressType))
+        value={progressType}
+        onChange={(e, progressType) =>
+          dispatch(setProgressPageType(progressType))
         }
       >
         {sortArray(
@@ -63,7 +63,7 @@ const Progress = () => {
               value={progressType}
               label={
                 <span style={{ fontSize: "20px" }}>
-                  {capitalizeFirstCharacterLowercaseRest(progressType)}
+                  {capitalizeOnlyFirstChar(progressType)}
                 </span>
               }
             />
@@ -90,7 +90,10 @@ const Progress = () => {
             >
               <AddIcon />
               <Typography variant="h6">
-                New {capitalizeFirstCharacterLowercaseRest(progressPage.stat)}
+                New{" "}
+                {capitalizeOnlyFirstChar(
+                  PROGRESS_TYPE_NAMES[progressType].singular
+                )}
               </Typography>
             </Box>
           </CustomButton>

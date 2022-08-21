@@ -1,18 +1,18 @@
 import {
-  RESET_PROGRESS_PAGE_STAT,
-  SET_PROGRESS_PAGE_STAT,
+  RESET_PROGRESS_PAGE_TYPE,
+  SET_PROGRESS_PAGE_TYPE,
 } from "./progressPageTypes";
 
 const initialState = {
-  stat: null,
+  progressType: null,
 };
 
 const progressPageReducer = (state = initialState, action) => {
   switch (action.type) {
-    case RESET_PROGRESS_PAGE_STAT:
+    case RESET_PROGRESS_PAGE_TYPE:
       return initialState;
-    case SET_PROGRESS_PAGE_STAT:
-      return { ...state, stat: action.payload };
+    case SET_PROGRESS_PAGE_TYPE:
+      return { ...state, progressType: action.payload };
     default:
       return state;
   }

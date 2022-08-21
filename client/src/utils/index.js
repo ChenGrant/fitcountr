@@ -20,7 +20,7 @@ export {
 
 export { sortArray, getLexSmallest } from "./arrayUtils";
 
-export { PROGRESS_TYPES } from "./progressUtils";
+export { PROGRESS_TYPES, PROGRESS_TYPE_NAMES } from "./progressUtils";
 
 export { TIME_ZONES, DATE_FORMAT, TIME_FORMAT } from "./dateUtils";
 
@@ -35,7 +35,7 @@ export {
 export {
   numberWithCommas,
   capitalizeFirstCharacter,
-  capitalizeFirstCharacterLowercaseRest,
+  capitalizeOnlyFirstChar,
 } from "./stringUtils";
 
 export {

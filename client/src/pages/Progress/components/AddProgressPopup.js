@@ -4,16 +4,16 @@ import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import moment from "moment";
 import { useSelector } from "react-redux";
-import FormikControl from "../../../components/formik/FormikControl";
 import CustomButton from "../../../components/ui/CustomButton";
 import CustomDialog from "../../../components/ui/CustomDialog";
 import PostDataButton from "../../../components/ui/PostDataButton";
 import {
-  capitalizeFirstCharacterLowercaseRest,
+  capitalizeOnlyFirstChar,
   DATE_FORMAT,
   MIN_WEIGHT,
   objectsAreEqual,
   postProgress,
+  PROGRESS_TYPE_NAMES,
   sortArray,
   TIME_FORMAT,
   WEIGHT_UNITS,
@@ -40,14 +40,12 @@ const AddProgressPopup = ({
   addProgressPopupIsOpen,
   setAddProgressPopupIsOpen,
 }) => {
-  const { user, progressPage } = useSelector((state) => state);
-
+  const { user } = useSelector((state) => state);
+  const { progressType } = useSelector((state) => state.progressPage);
   const [isAddingStat, setIsAddingStat] = useState(false);
 
-  const stat = capitalizeFirstCharacterLowercaseRest(progressPage.stat);
-
   const initialValues = {
-    [progressPage.stat]: "",
+    [progressType]: "",
     unit: UNIT_SELECT_OPTIONS?.[0].value ?? "",
     currentTimeIsUsed: true,
     date: "",
@@ -55,7 +53,7 @@ const AddProgressPopup = ({
   };
 
   const validationSchema = Yup.object({
-    [progressPage.stat]: Yup.number()
+    [progressType]: Yup.number()
       .required("Required")
       .typeError("Height must be a number")
       .test(
@@ -136,7 +134,7 @@ const AddProgressPopup = ({
   const addStat = async (values) => {
     const response = await postProgress(
       user,
-      getProgressFromFormValues(values, progressPage.stat)
+      getProgressFromFormValues(values, progressType)
     );
     console.log(response);
     // render snackbar confirmation for success/error
@@ -167,7 +165,10 @@ const AddProgressPopup = ({
                 {/* Header */}
                 <Box>
                   <Typography variant="h4" gutterBottom>
-                    Add New {stat}
+                    Add New{" "}
+                    {capitalizeOnlyFirstChar(
+                      PROGRESS_TYPE_NAMES[progressType].singular
+                    )}
                   </Typography>
                 </Box>
                 {/* Form Fields */}
@@ -177,7 +178,7 @@ const AddProgressPopup = ({
                   gap={4}
                   sx={{ minWidth: "350px" }}
                 >
-                  {/* Stat */}
+                  {/* Progress Type */}
                   <AddProgressPopupWeightFields
                     UNIT_SELECT_OPTIONS={UNIT_SELECT_OPTIONS}
                   />

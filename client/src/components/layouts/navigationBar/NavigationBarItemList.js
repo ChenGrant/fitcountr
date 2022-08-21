@@ -8,9 +8,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import { getAuth, signOut } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  resetProgressPageStat,
+  resetProgressPageType,
   resetSearchFoodPages,
-  setProgressPageStat,
+  setProgressPageType,
   setUserProfilePictureIsLoading,
 } from "../../../redux";
 import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
@@ -66,7 +66,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
       nestedItems: Object.values(PROGRESS_TYPES).map((progressType) => ({
         name: progressType,
         onClick: () => {
-          dispatch(setProgressPageStat(progressType));
+          dispatch(setProgressPageType(progressType));
           navigate(ROUTE_PATHS.PROGRESS);
         },
       })),
@@ -90,7 +90,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
       }}
       isOpen={isOpen}
       onClick={() => {
-        item.name !== "Progress" && dispatch(resetProgressPageStat());
+        item.name !== "Progress" && dispatch(resetProgressPageType());
         setMenuIsOpen && setMenuIsOpen(false);
         item.onClick();
       }}

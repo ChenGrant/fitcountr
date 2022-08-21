@@ -1,6 +1,6 @@
 export {
-  setProgressPageStat,
-  resetProgressPageStat,
+  setProgressPageType,
+  resetProgressPageType,
 } from "./progressPage/progressPageActions";
 
 export {

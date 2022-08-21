@@ -35,7 +35,7 @@ const LargeScreenNavigationBar = ({ children }) => {
   const [assets, assetsDispatchers, loadingAssets] = useAsset({
     shortLogo: { name: "short_logo" },
   });
-  const {user} = useSelector(state => state)
+  const { user } = useSelector((state) => state);
 
   const pageIsLoading = loadingAssets || user.profilePicture.isLoading;
 

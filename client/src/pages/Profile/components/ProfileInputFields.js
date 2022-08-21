@@ -1,16 +1,12 @@
 import { Box } from "@mui/material";
 import React from "react";
 import FormikControl from "../../../components/formik/FormikControl";
-import {
-  capitalizeFirstCharacterLowercaseRest,
-  SEXES,
-  sortArray,
-} from "../../../utils";
+import { capitalizeOnlyFirstChar, SEXES, sortArray } from "../../../utils";
 
 // ------------------------------------ CONSTANTS ------------------------------------
 const SEX_SELECT_OPTIONS = sortArray(
   SEXES.map((sex) => ({
-    label: capitalizeFirstCharacterLowercaseRest(sex),
+    label: capitalizeOnlyFirstChar(sex),
     value: sex,
   })),
   (sex1, sex2) => sex1.label.localeCompare(sex2.label)

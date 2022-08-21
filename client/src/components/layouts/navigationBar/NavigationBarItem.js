@@ -5,10 +5,7 @@ import React, { useState } from "react";
 import useScreenSize from "../../../hooks/useScreenSize";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import {
-  capitalizeFirstCharacterLowercaseRest,
-  sortArray,
-} from "../../../utils";
+import { capitalizeOnlyFirstChar, sortArray } from "../../../utils";
 import { useLocation } from "react-router-dom";
 import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
 import { useSelector } from "react-redux";
@@ -26,7 +23,7 @@ const NavigationBarItem = ({ isOpen, name, icon, nestedItems, ...rest }) => {
   const { desktop } = useScreenSize();
   const theme = useTheme();
   const [arrowDirection, setArrowDirection] = useState(ARROW_DIRECTIONS.LEFT);
-  const { progressPage } = useSelector((state) => state);
+  const { progressType } = useSelector((state) => state.progressPage);
   const pathName = useLocation().pathname;
 
   const isExpanded = !desktop || isOpen;
@@ -83,7 +80,7 @@ const NavigationBarItem = ({ isOpen, name, icon, nestedItems, ...rest }) => {
             item1.name.localeCompare(item2.name)
           ).map(({ name, onClick }) => {
             const isSelected =
-              pathName === ROUTE_PATHS.PROGRESS && progressPage.stat === name;
+              pathName === ROUTE_PATHS.PROGRESS && progressType === name;
 
             return (
               <Box
@@ -113,9 +110,7 @@ const NavigationBarItem = ({ isOpen, name, icon, nestedItems, ...rest }) => {
                       : "rgba(0, 0, 0, 0.4)"
                   }
                 />
-                <Typography>
-                  {capitalizeFirstCharacterLowercaseRest(name)}
-                </Typography>
+                <Typography>{capitalizeOnlyFirstChar(name)}</Typography>
               </Box>
             );
           })}

@@ -14,14 +14,18 @@ import {
 } from "../../../utils";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
-import AddProgressPopup from "./AddProgressPopup";
+import AddProgressPopup from "./AddProgressPopup/AddProgressPopup";
+
+// ************************************************************************************
+// ------------------------------------ COMPONENT -------------------------------------
+// ************************************************************************************
 const Progress = () => {
   const { progressType } = useSelector((state) => state.progressPage);
   const dispatch = useDispatch();
   const [addProgressPopupIsOpen, setAddProgressPopupIsOpen] = useState(false);
-
   const pageIsLoading = progressType === null;
 
+  // ----------------------------------- USE EFFECT -----------------------------------
   useEffect(() => {
     if (progressType === null) {
       dispatch(
@@ -30,6 +34,7 @@ const Progress = () => {
     }
   }, [progressType, dispatch]);
 
+  // ------------------------------------- RENDER -------------------------------------
   if (pageIsLoading) return <LoadingCircle />;
 
   return (
@@ -40,7 +45,9 @@ const Progress = () => {
       gap={5}
       alignItems="center"
     >
+      {/* Header */}
       <Typography variant="h1">Progress</Typography>
+      {/* Progress Tabs */}
       <Tabs
         value={progressType}
         onChange={(e, progressType) =>
@@ -71,12 +78,14 @@ const Progress = () => {
         })}
       </Tabs>
       <Box display="flex" alignItems="center" gap={25}>
+        {/* Goal */}
         <Box display="flex" gap={1} alignItems="center">
           <Typography variant="h6">Goal: {45.7} kg</Typography>
           <IconButton>
             <EditIcon />
           </IconButton>
         </Box>
+        {/* Add New Progress */}
         <Box>
           <CustomButton
             variant="contained"
@@ -100,10 +109,11 @@ const Progress = () => {
         </Box>
       </Box>
       {/* <ProgressTable /> */}
-      <AddProgressPopup
-        addProgressPopupIsOpen={addProgressPopupIsOpen}
-        setAddProgressPopupIsOpen={setAddProgressPopupIsOpen}
-      />
+      {addProgressPopupIsOpen && (
+        <AddProgressPopup
+          setAddProgressPopupIsOpen={setAddProgressPopupIsOpen}
+        />
+      )}
     </Box>
   );
 };

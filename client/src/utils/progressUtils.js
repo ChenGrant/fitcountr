@@ -1,7 +1,7 @@
 export const PROGRESS_TYPES = {
   WEIGHTS: "WEIGHTS",
   STEPS: "STEPS",
-  MEALS: "MEALS",
+  //MEALS: "MEALS",
 };
 
 export const PROGRESS_TYPE_NAMES = {

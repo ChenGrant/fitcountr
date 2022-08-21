@@ -21,3 +21,5 @@ export const MIN_WEIGHT = {
 };
 
 export const SEXES = ["MALE", "FEMALE"];
+
+export const MIN_STEPS = 0;

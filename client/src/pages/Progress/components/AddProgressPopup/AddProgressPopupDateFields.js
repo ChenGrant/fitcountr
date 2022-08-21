@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 import { FormikContext, useFormikContext } from "formik";
 import React from "react";
-import FormikControl from "../../../components/formik/FormikControl";
-import { DATE_FORMAT, TIME_FORMAT } from "../../../utils";
+import FormikControl from "../../../../components/formik/FormikControl";
+import { DATE_FORMAT, TIME_FORMAT } from "../../../../utils";
 
 const AddProgressPopupDateFields = () => {
   const formik = useFormikContext(FormikContext);
@@ -23,7 +23,6 @@ const AddProgressPopupDateFields = () => {
         sx={{ bgcolor: currentTimeIsUsed && "rgba(0,0,0,0.1)" }}
       />
       <FormikControl
-        value={"hello"}
         disabled={currentTimeIsUsed}
         control="input"
         label={`Time (${TIME_FORMAT})`}

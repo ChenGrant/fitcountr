@@ -44,6 +44,7 @@ export {
   MAX_AGE,
   MIN_WEIGHT,
   SEXES,
+  MIN_STEPS,
 } from "./humanUtils";
 
 export { sub, round } from "./numberUtils";

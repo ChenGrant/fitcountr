@@ -23,8 +23,7 @@ import WeightFields from "../WeightFields";
 
 // ----------------------------------- FORM REDUCER -----------------------------------
 const FORM_ACTIONS = {
-  SET_INITIAL_VALUES: "SET_INITIAL_VALUES",
-  SET_VALIDATION_SCHEMA: "SET_VALIDATION_SCHEMA",
+  INITIALIZE: "INITIALIZE",
 };
 
 const INITIAL_FORM_STATE = {
@@ -34,10 +33,8 @@ const INITIAL_FORM_STATE = {
 
 const formReducer = (state, action) => {
   switch (action.type) {
-    case FORM_ACTIONS.SET_INITIAL_VALUES:
-      return { ...state, initialValues: action.payload };
-    case FORM_ACTIONS.SET_VALIDATION_SCHEMA:
-      return { ...state, validationSchema: action.payload };
+    case FORM_ACTIONS.INITIALIZE:
+      return { ...state, ...action.payload };
     default:
       return state;
   }
@@ -83,13 +80,11 @@ const AddProgressPopup = ({ setAddProgressPopupIsOpen }) => {
   // ----------------------------------- USE EFFECT -----------------------------------
   useEffect(() => {
     formDispatch({
-      type: FORM_ACTIONS.SET_INITIAL_VALUES,
-      payload: getInitialValuesFromProgressType(progressType),
-    });
-
-    formDispatch({
-      type: FORM_ACTIONS.SET_VALIDATION_SCHEMA,
-      payload: getValidationSchemaFromProgressType(progressType),
+      type: FORM_ACTIONS.INITIALIZE,
+      payload: {
+        initialValues: getInitialValuesFromProgressType(progressType),
+        validationSchema: getValidationSchemaFromProgressType(progressType),
+      },
     });
   }, [progressType]);
 

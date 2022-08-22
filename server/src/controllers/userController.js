@@ -222,8 +222,13 @@ const postProgress = async (req, res) => {
 const postGoal = async (req, res) => {
   try {
     const { userUID } = req.params;
+    const user = await User.findUserByUserUID(userUID);
+    verifyUserExists(user);
+
     const goal = req.body;
-    console.log(goal);
+    user.goals = { ...user.goals, ...goal };
+    await user.save();
+
     return res.json({ message: "Goal added" });
   } catch (err) {
     console.log(err);

@@ -2,7 +2,9 @@ const mongoose = require("mongoose");
 const { NumberUtils, HumanUtils } = require("../utils/index");
 const MediaFile = require("../models/MediaFile");
 const config = require("../config/config");
+const { ProgressUtils } = require("../utils");
 
+const { PROGRESS_TYPES, hasExactlyOneProgressType } = ProgressUtils;
 const EMAIL_VERIFICATION_PIN_LENGTH = 5;
 
 // -------------------------------------- SCHEMA --------------------------------------
@@ -66,7 +68,25 @@ const userSchema = new mongoose.Schema({
       message: (props) => `${props.value} is not a valid sex`,
     },
   },
+
   birthday: Date,
+
+  goals: {
+    [PROGRESS_TYPES.WEIGHT.toLowerCase()]: {
+      type: {
+        value: Number,
+        unit: {},
+      },
+    },
+
+    [PROGRESS_TYPES.STEPS.toLowerCase()]: {
+      type: Number,
+      validate: {
+        validator: (steps) => Number.isInteger(steps) && steps >= 0,
+        message: (props) => `${props.value} is not a valid step count`,
+      },
+    },
+  },
 });
 
 // ------------------------------------- STATICS -------------------------------------

@@ -42,6 +42,24 @@ export const getProgressFromFormValues = (formValues, progressType) => {
   return progress;
 };
 
+export const getGoalFromFormValues = (formValues, progressType) => {
+  const goal = {};
+  const singularProgressType = PROGRESS_TYPE_NAMES[progressType].singular;
+  switch (progressType) {
+    case PROGRESS_TYPES.WEIGHTS:
+      goal[singularProgressType] = {
+        value: formValues[singularProgressType],
+        unit: Object.values(UNITS).filter(
+          ({ symbol }) => symbol === formValues.unit
+        )[0],
+      };
+      break;
+    default:
+      goal[singularProgressType] = formValues[singularProgressType];
+  }
+  return goal;
+};
+
 export const getInitialValues = (progressType, popupType) => {
   const initialValues = {};
 

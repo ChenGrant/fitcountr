@@ -15,6 +15,7 @@ import {
   PROGRESS_TYPE_NAMES,
 } from "../../../utils";
 import {
+  getGoalFromFormValues,
   getInitialValues,
   getProgressFromFormValues,
   getValidationSchema,
@@ -96,7 +97,10 @@ const ProgressPopup = ({ popupType, closePopup, snackbarDispatch }) => {
             getProgressFromFormValues(values, progressType)
           );
         case PROGRESS_POPUP_TYPES.SET_GOAL:
-          return await postGoal(user, values);
+          return await postGoal(
+            user,
+            getGoalFromFormValues(values, progressType)
+          );
         default:
           return null;
       }

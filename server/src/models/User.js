@@ -62,7 +62,7 @@ const userSchema = new mongoose.Schema({
   sex: {
     type: String,
     validate: {
-      validator: sex => HumanUtils.SEXES.has(sex),
+      validator: (sex) => HumanUtils.SEXES.has(sex),
       message: (props) => `${props.value} is not a valid sex`,
     },
   },

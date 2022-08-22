@@ -1,16 +1,7 @@
 const mongoose = require("mongoose");
+const { ProgressUtils } = require("../utils");
 
-const PROGRESS_TYPES = {
-  WEIGHT: "weight",
-  STEPS: "steps",
-};
-
-function hasExactlyOneProgressType() {
-  return (
-    Object.keys(this._doc).filter((key) => PROGRESS_TYPES[key.toUpperCase()])
-      .length === 1
-  );
-}
+const { PROGRESS_TYPES, hasExactlyOneProgressType } = ProgressUtils;
 
 const progressSchema = new mongoose.Schema({
   userUID: {
@@ -23,22 +14,31 @@ const progressSchema = new mongoose.Schema({
     required: true,
   },
 
-  [PROGRESS_TYPES.WEIGHT]: {
+  [PROGRESS_TYPES.WEIGHT.toLowerCase()]: {
     type: {
       value: Number,
       unit: {},
     },
     validate: {
-      validator: hasExactlyOneProgressType,
+      validator: function () {
+        return hasExactlyOneProgressType(this._doc);
+      },
       message: (props) => `${props.value} is invalid`,
     },
   },
 
-  [PROGRESS_TYPES.STEPS]: {
+  [PROGRESS_TYPES.STEPS.toLowerCase()]: {
     type: Number,
-    validator: (steps) =>
-      hasExactlyOneProgressType && Number.isInteger(steps) && steps >= 0,
-    message: (props) => `${props.value} is not a valid step count`,
+    validate: {
+      validator: function (steps) {
+        return (
+          hasExactlyOneProgressType(this._doc) &&
+          Number.isInteger(steps) &&
+          steps >= 0
+        );
+      },
+      message: (props) => `${props.value} is not a valid step count`,
+    },
   },
 });
 

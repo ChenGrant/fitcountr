@@ -2,6 +2,7 @@ import {
   INITIALIZE_USER,
   RESET_USER,
   SET_AUTHENTICATING_USER,
+  SET_USER_PROFILE,
   SET_USER_FIREBASE_DATA,
   SET_USER_PROFILE_PICTURE_IS_LOADING,
   SET_USER_PROFILE_PICTURE_URL,
@@ -35,4 +36,9 @@ export const setUserProfilePictureURL = (profilePictureURL) => ({
 export const setUserProfilePictureIsLoading = (loadingState) => ({
   type: SET_USER_PROFILE_PICTURE_IS_LOADING,
   payload: loadingState,
+});
+
+export const setUserProfile = (profile) => ({
+  type: SET_USER_PROFILE,
+  payload: profile,
 });

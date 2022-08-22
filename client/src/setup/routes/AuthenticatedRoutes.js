@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 import NavigationBar from "../../components/layouts/navigationBar/NavigationBar";
 import LoadingCircle from "../../components/miscellaneous/LoadingCircle";
-import { setUserProfilePictureURL } from "../../redux";
-import { fetchProfilePictureURL } from "../../utils";
+import { setUserProfile, setUserProfilePictureURL } from "../../redux";
+import { fetchUserProfile, fetchProfilePictureURL } from "../../utils";
 import { ROUTE_PATHS } from "./routeUtils";
 
 const AuthenticatedRoutes = () => {
@@ -15,6 +15,8 @@ const AuthenticatedRoutes = () => {
     (async () => {
       if (!user.auth.isLoggedIn || user.profilePicture.URL !== null) return;
       const { profilePictureURL } = await fetchProfilePictureURL(user);
+      const profileData = await fetchUserProfile(user);
+      user.profile === null && dispatch(setUserProfile(profileData));
       user.profilePicture.URL === null &&
         dispatch(setUserProfilePictureURL(profilePictureURL));
     })();

@@ -2,6 +2,7 @@ import {
   INITIALIZE_USER,
   RESET_USER,
   SET_AUTHENTICATING_USER,
+  SET_USER_PROFILE,
   SET_USER_FIREBASE_DATA,
   SET_USER_PROFILE_PICTURE_IS_LOADING,
   SET_USER_PROFILE_PICTURE_URL,
@@ -20,6 +21,7 @@ const initialState = {
     URL: null,
     isLoading: true,
   },
+  profile: null,
 };
 
 const userReducer = (state = initialState, action) => {
@@ -67,6 +69,15 @@ const userReducer = (state = initialState, action) => {
           profilePicture: {
             ...state.profilePicture,
             isLoading: action.payload,
+          },
+        };
+
+      case SET_USER_PROFILE:
+        return {
+          ...state,
+          profile: {
+            ...state.profile,
+            ...action.payload,
           },
         };
 

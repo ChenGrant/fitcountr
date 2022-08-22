@@ -51,7 +51,7 @@ export const fetchProfilePictureURL = async ({ firebase }) => {
   });
 };
 
-export const fetchProfileData = async ({ firebase }) => {
+export const fetchUserProfile = async ({ firebase }) => {
   const userIdToken = await firebase.getIdToken();
   return await fetchJSON(`/user/${firebase.uid}`, {
     headers: {

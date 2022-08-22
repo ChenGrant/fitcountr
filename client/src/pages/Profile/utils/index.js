@@ -1,7 +1,7 @@
 import { DATE_FORMAT, UNITS } from "../../../utils";
 import moment from "moment";
 
-export const getFormValuesFromProfileData = (user, fetchedProfileData) => {
+export const getFormValuesFromProfile = (user) => {
   const formValues = {
     profilePicture: {
       URL: user.profilePicture.URL,
@@ -12,7 +12,7 @@ export const getFormValuesFromProfileData = (user, fetchedProfileData) => {
     birthday: "",
   };
 
-  Object.entries(fetchedProfileData).forEach(([key, value]) => {
+  Object.entries(user.profile).forEach(([key, value]) => {
     switch (key) {
       case "birthday":
         formValues[key] = moment(value).format(DATE_FORMAT);
@@ -50,7 +50,7 @@ export const getProfileDataFromFormValues = (formValues, initialFormValues) =>
 
             case "birthday":
               return moment(value, DATE_FORMAT).toDate();
-              
+
             default:
               return value;
           }

@@ -6,7 +6,6 @@ import { Form, Formik } from "formik";
 import CustomCard from "../../../components/ui/CustomCard";
 import ProfilePicture from "./ProfilePicture";
 import ProfileInputFields from "./ProfileInputFields";
-import { fetchProfileData, postProfileData } from "../../../utils/requestUtils";
 import {
   SEXES,
   MIN_HEIGHT,
@@ -14,6 +13,7 @@ import {
   MAX_AGE,
   DATE_FORMAT,
   objectsAreEqual,
+  postProfileData,
 } from "../../../utils";
 import moment from "moment";
 import * as Yup from "yup";
@@ -22,9 +22,9 @@ import CustomSnackbar, {
   snackbarReducer,
   SNACKBAR_ACTIONS,
 } from "../../../components/ui/CustomSnackbar";
-import { setUserProfilePictureURL } from "../../../redux";
+import { setUserProfile, setUserProfilePictureURL } from "../../../redux";
 import {
-  getFormValuesFromProfileData,
+  getFormValuesFromProfile,
   getProfileDataFromFormValues,
 } from "../utils";
 import PostDataButton from "../../../components/ui/PostDataButton";
@@ -103,10 +103,12 @@ const Profile = () => {
   // ----------------------------------- FUNCTIONS -----------------------------------
   const handleProfileDataUpdate = async (formValues) => {
     try {
-      const response = await postProfileData(
-        user,
-        getProfileDataFromFormValues(formValues, initialFormValues)
+      const profileData = getProfileDataFromFormValues(
+        formValues,
+        initialFormValues
       );
+
+      const response = await postProfileData(user, profileData);
 
       if (response.error) throw new Error(response);
 
@@ -116,6 +118,7 @@ const Profile = () => {
       });
       setInitialFormValues(formValues);
       dispatch(setUserProfilePictureURL(formValues.profilePicture.URL));
+      dispatch(setUserProfile(profileData));
     } catch (err) {
       console.log(err);
       snackbarDispatch({
@@ -127,14 +130,8 @@ const Profile = () => {
 
   // ----------------------------------- USE EFFECT -----------------------------------
   useEffect(() => {
-    (async () => {
-      if (initialFormValues) return;
-
-      const fetchedProfileData = await fetchProfileData(user);
-      setInitialFormValues(
-        getFormValuesFromProfileData(user, fetchedProfileData)
-      );
-    })();
+    if (initialFormValues) return;
+    setInitialFormValues(getFormValuesFromProfile(user));
   }, [user, initialFormValues]);
 
   // ------------------------------------- RENDER -------------------------------------

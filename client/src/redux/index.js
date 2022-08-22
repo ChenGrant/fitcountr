@@ -11,6 +11,7 @@ export {
   setVerificationStatus,
   setUserProfilePictureURL,
   setUserProfilePictureIsLoading,
+  setUserProfile,
 } from "./user/userActions";
 
 export {

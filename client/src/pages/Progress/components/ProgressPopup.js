@@ -10,6 +10,7 @@ import PostDataButton from "../../../components/ui/PostDataButton";
 import {
   capitalizeOnlyFirstChar,
   objectsAreEqual,
+  postGoal,
   postProgress,
   PROGRESS_TYPE_NAMES,
 } from "../../../utils";
@@ -55,44 +56,54 @@ const ProgressPopup = ({ popupType, closePopup, snackbarDispatch }) => {
   // ----------------------------------- FUNCTIONS -----------------------------------
   const handleClose = () => closePopup();
 
-  const addProgress = async (values) => {
-    const response = await postProgress(
-      user,
-      getProgressFromFormValues(values, progressType)
-    );
+  const getSnackbarActionFromResponse = (response) => {
+    const snackbarType = response.error
+      ? SNACKBAR_ACTIONS.FAILURE
+      : SNACKBAR_ACTIONS.SUCCESS;
 
-    if (response.error)
-      return snackbarDispatch({
-        type: SNACKBAR_ACTIONS.FAILURE,
-        payload: {
-          message: `Could not add new ${PROGRESS_TYPE_NAMES[progressType].singular}`,
-        },
-      });
+    const snackbarMessage = (() => {
+      switch (popupType) {
+        case PROGRESS_POPUP_TYPES.ADD_PROGRESS:
+          return response.error
+            ? `Could not add new ${PROGRESS_TYPE_NAMES[progressType].singular}`
+            : `Added new ${PROGRESS_TYPE_NAMES[progressType].singular}`;
+        case PROGRESS_POPUP_TYPES.SET_GOAL:
+          return response.error
+            ? `Could not set ${PROGRESS_TYPE_NAMES[progressType].singular} goal`
+            : `Set ${PROGRESS_TYPE_NAMES[progressType].singular} goal`;
+        default:
+          return "";
+      }
+    })();
 
-    snackbarDispatch({
-      type: SNACKBAR_ACTIONS.SUCCESS,
+    return {
+      type: snackbarType,
       payload: {
-        message: `Added new ${PROGRESS_TYPE_NAMES[progressType].singular}`,
+        message: snackbarMessage,
       },
-    });
-  };
-
-  const setGoal = async (values) => {
-    console.log(values);
-    await new Promise((r) => setTimeout(r, 2000));
+    };
   };
 
   const onSubmit = async (values) => {
     setIsAddingProgress(true);
-    switch (popupType) {
-      case PROGRESS_POPUP_TYPES.ADD_PROGRESS:
-        await addProgress(values);
-        break;
-      case PROGRESS_POPUP_TYPES.SET_GOAL:
-        await setGoal(values);
-        break;
-      default:
-    }
+
+    // send request
+    const response = await (async () => {
+      switch (popupType) {
+        case PROGRESS_POPUP_TYPES.ADD_PROGRESS:
+          return await postProgress(
+            user,
+            getProgressFromFormValues(values, progressType)
+          );
+        case PROGRESS_POPUP_TYPES.SET_GOAL:
+          return await postGoal(user, values);
+        default:
+          return null;
+      }
+    })();
+
+    // handle response
+    snackbarDispatch(getSnackbarActionFromResponse(response));
 
     handleClose();
   };

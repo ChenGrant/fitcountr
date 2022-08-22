@@ -219,6 +219,20 @@ const postProgress = async (req, res) => {
   }
 };
 
+const postGoal = async (req, res) => {
+  try {
+    const { userUID } = req.params;
+    const goal = req.body;
+    console.log(goal);
+    return res.json({ message: "Goal added" });
+  } catch (err) {
+    console.log(err);
+    return res
+      .json({ error: { message: "Could not add goal" } })
+      .status(INTERNAL_SERVER_ERROR_CODE);
+  }
+};
+
 module.exports = {
   getProfilePicture,
   createUser,
@@ -226,4 +240,5 @@ module.exports = {
   postProfileData,
   postProfilePicture,
   postProgress,
+  postGoal,
 };

@@ -149,3 +149,15 @@ export const postProgress = async (user, progress) => {
     body: JSON.stringify(progress),
   });
 };
+
+export const postGoal = async (user, goal) => {
+  const userIdToken = await user.firebase.getIdToken();
+  return await fetchJSON(`/user/goal/${user.firebase.uid}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: userIdToken,
+    },
+    body: JSON.stringify(goal),
+  });
+};

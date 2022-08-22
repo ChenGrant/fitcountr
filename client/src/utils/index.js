@@ -16,6 +16,7 @@ export {
   postSignupData,
   postProfileData,
   postProgress,
+  postGoal,
 } from "./requestUtils";
 
 export { sortArray, getLexSmallest } from "./arrayUtils";

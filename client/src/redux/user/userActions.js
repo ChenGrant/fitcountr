@@ -7,6 +7,7 @@ import {
   SET_USER_PROFILE_PICTURE_IS_LOADING,
   SET_USER_PROFILE_PICTURE_URL,
   SET_VERIFICATION_STATUS,
+  SET_USER_GOALS,
 } from "./userTypes";
 
 export const initializeUser = () => {
@@ -41,4 +42,9 @@ export const setUserProfilePictureIsLoading = (loadingState) => ({
 export const setUserProfile = (profile) => ({
   type: SET_USER_PROFILE,
   payload: profile,
+});
+
+export const setUserGoals = (goals) => ({
+  type: SET_USER_GOALS,
+  payload: goals,
 });

@@ -142,6 +142,7 @@ const getProfileData = async (req, res) => {
     verifyUserExists(user);
 
     const { sex, height, birthday } = user;
+
     const profileData = Object.fromEntries(
       Object.entries({ sex, height, birthday }).filter(
         ([key, val]) => val !== null
@@ -226,7 +227,7 @@ const postGoal = async (req, res) => {
     verifyUserExists(user);
 
     const goal = req.body;
-    user.goals = { ...user.goals, ...goal };
+    user.goals = { ...user.goals._doc, ...goal };
     await user.save();
 
     return res.json({ message: "Goal added" });
@@ -234,6 +235,31 @@ const postGoal = async (req, res) => {
     console.log(err);
     return res
       .json({ error: { message: "Could not add goal" } })
+      .status(INTERNAL_SERVER_ERROR_CODE);
+  }
+};
+
+const getGoals = async (req, res) => {
+  try {
+    const { userUID } = req.params;
+    const user = await User.findUserByUserUID(userUID);
+    verifyUserExists(user);
+
+    console.log(user.goals)
+
+    if (!user.goals) {
+      console.log('bet')
+      return res.json({})
+    }
+
+    const userGoals = { ...user.goals._doc };
+    delete userGoals._id;
+
+    return res.json(userGoals);
+  } catch (err) {
+    console.log(err);
+    return res
+      .json({ error: { message: "Could not get goals" } })
       .status(INTERNAL_SERVER_ERROR_CODE);
   }
 };
@@ -246,4 +272,5 @@ module.exports = {
   postProfilePicture,
   postProgress,
   postGoal,
+  getGoals,
 };

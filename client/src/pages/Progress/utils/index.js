@@ -192,3 +192,16 @@ export const getValidationSchema = (progressType, popupType) => {
 
   return Yup.object(validationSchemaObject);
 };
+
+export const getGoalString = (goal, progressType) => {
+  console.log(goal)
+  //const singularProgressType = PROGRESS_TYPE_NAMES[progressType].singular;
+  switch (progressType.toUpperCase()) {
+    case PROGRESS_TYPES.WEIGHTS:
+      return "weights";
+    case PROGRESS_TYPES.STEPS:
+      return "steps";
+    default:
+      return "";
+  }
+};

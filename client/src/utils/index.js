@@ -12,6 +12,7 @@ export {
   fetchFoodsFromQuery,
   fetchProfilePictureURL,
   fetchUserProfile,
+  fetchGoals,
   scanBarcodeImage,
   sendVerificationEmail,
   postSignupData,

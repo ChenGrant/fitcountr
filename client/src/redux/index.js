@@ -12,6 +12,7 @@ export {
   setUserProfilePictureURL,
   setUserProfilePictureIsLoading,
   setUserProfile,
+  setUserGoals,
 } from "./user/userActions";
 
 export {

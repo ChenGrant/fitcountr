@@ -20,6 +20,7 @@ import CustomSnackbar, {
   snackbarReducer,
   SNACKBAR_ACTIONS,
 } from "../../../components/ui/CustomSnackbar";
+import { getGoalString } from "../utils";
 
 // ------------------------------ PROGRESS POPUP REDUCER ------------------------------
 export const PROGRESS_POPUP_TYPES = {
@@ -53,7 +54,8 @@ const progressPopupReducer = (state, action) => {
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const Progress = () => {
-  const { progressType } = useSelector((state) => state.progressPage);
+  const { user, progressPage } = useSelector((state) => state);
+  const { progressType } = progressPage;
   const dispatch = useDispatch();
   const [progressPopup, progressPopupDispatch] = useReducer(
     progressPopupReducer,
@@ -121,7 +123,9 @@ const Progress = () => {
         <Box display="flex" alignItems="center" gap={25}>
           {/* Goal */}
           <Box display="flex" gap={1} alignItems="center">
-            <Typography variant="h6">Goal: {45.7} kg</Typography>
+            <Typography variant="h6">
+              {getGoalString(user.goals, progressType)}
+            </Typography>
             <IconButton
               onClick={() =>
                 progressPopupDispatch({

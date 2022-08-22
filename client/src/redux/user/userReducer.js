@@ -7,6 +7,7 @@ import {
   SET_USER_PROFILE_PICTURE_IS_LOADING,
   SET_USER_PROFILE_PICTURE_URL,
   SET_VERIFICATION_STATUS,
+  SET_USER_GOALS,
 } from "./userTypes";
 
 const initialState = {
@@ -22,6 +23,7 @@ const initialState = {
     isLoading: true,
   },
   profile: null,
+  goals: null,
 };
 
 const userReducer = (state = initialState, action) => {
@@ -77,6 +79,15 @@ const userReducer = (state = initialState, action) => {
           ...state,
           profile: {
             ...state.profile,
+            ...action.payload,
+          },
+        };
+
+      case SET_USER_GOALS:
+        return {
+          ...state,
+          goals: {
+            ...state.goals,
             ...action.payload,
           },
         };

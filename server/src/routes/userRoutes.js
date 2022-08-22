@@ -8,11 +8,14 @@ const {
   postProfilePicture,
   postProgress,
   postGoal,
+  getGoals,
 } = require("../controllers/userController");
 const { isAuthorized, PRIVATE } = require("../middleware/isAuthorized");
 const isAuthenticated = require("../middleware/isAuthenticated");
 
 router.get("/:userUID", isAuthenticated, isAuthorized(PRIVATE), getProfileData);
+
+router.get("/goals/:userUID", isAuthenticated, isAuthorized(PRIVATE), getGoals);
 
 router.get(
   "/profilePicture/:userUID",

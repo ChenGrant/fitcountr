@@ -72,20 +72,21 @@ const userSchema = new mongoose.Schema({
   birthday: Date,
 
   goals: {
-    [PROGRESS_TYPES.WEIGHT.toLowerCase()]: {
-      type: {
+    type: {
+      [PROGRESS_TYPES.WEIGHT.toLowerCase()]: {
         value: Number,
         unit: {},
       },
-    },
 
-    [PROGRESS_TYPES.STEPS.toLowerCase()]: {
-      type: Number,
-      validate: {
-        validator: (steps) => Number.isInteger(steps) && steps >= 0,
-        message: (props) => `${props.value} is not a valid step count`,
+      [PROGRESS_TYPES.STEPS.toLowerCase()]: {
+        type: Number,
+        validate: {
+          validator: (steps) => Number.isInteger(steps) && steps >= 0,
+          message: (props) => `${props.value} is not a valid step count`,
+        },
       },
     },
+    default: () => {},
   },
 });
 

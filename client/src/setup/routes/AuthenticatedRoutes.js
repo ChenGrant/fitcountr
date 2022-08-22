@@ -24,7 +24,7 @@ const AuthenticatedRoutes = () => {
 
   if (!user.auth.isLoggedIn) return <Navigate to={ROUTE_PATHS.HOME} />;
 
-  if (!user.profilePicture.URL) return <LoadingCircle />;
+  if (!user.profile || !user.profilePicture.URL) return <LoadingCircle />;
 
   return (
     <NavigationBar>

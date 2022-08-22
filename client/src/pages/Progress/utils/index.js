@@ -12,23 +12,34 @@ import * as Yup from "yup";
 import { TIME_PERIODS } from "../../../utils/dateUtils";
 import { UNIT_SELECT_OPTIONS } from "../components/WeightFields";
 
-export const getProgressFromFormValues = (formValues, progressStat) => ({
-  [progressStat.toLowerCase()]:
-    progressStat === PROGRESS_TYPES.WEIGHTS
-      ? {
-          value: formValues[progressStat],
-          unit: Object.values(UNITS).filter(
-            ({ symbol }) => symbol === formValues.unit
-          )[0],
-        }
-      : {},
-  date: formValues.currentTimeIsUsed
-    ? new Date()
-    : moment(
-        `${formValues.date} ${formValues.time}`,
-        `${DATE_FORMAT} ${TIME_FORMAT}`
-      ).toDate(),
-});
+export const getProgressFromFormValues = (formValues, progressType) => {
+  const progress = {
+    date: formValues.currentTimeIsUsed
+      ? new Date()
+      : moment(
+          `${formValues.date} ${formValues.time}`,
+          `${DATE_FORMAT} ${TIME_FORMAT}`
+        ).toDate(),
+  };
+
+  const singularProgressType = PROGRESS_TYPE_NAMES[progressType].singular;
+
+  switch (progressType) {
+    case PROGRESS_TYPES.WEIGHTS:
+      progress[singularProgressType] = {
+        value: formValues[singularProgressType],
+        unit: Object.values(UNITS).filter(
+          ({ symbol }) => symbol === formValues.unit
+        )[0],
+      };
+      break;
+
+    default:
+      progress[singularProgressType] = formValues[singularProgressType];
+  }
+
+  return progress;
+};
 
 export const getInitialValuesFromProgressType = (progressType) => {
   const initialValues = {

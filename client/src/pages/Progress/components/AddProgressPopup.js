@@ -5,6 +5,7 @@ import React, { useEffect, useReducer, useState } from "react";
 import { useSelector } from "react-redux";
 import CustomButton from "../../../components/ui/CustomButton";
 import CustomDialog from "../../../components/ui/CustomDialog";
+import { SNACKBAR_ACTIONS } from "../../../components/ui/CustomSnackbar";
 import PostDataButton from "../../../components/ui/PostDataButton";
 import {
   capitalizeOnlyFirstChar,
@@ -42,28 +43,42 @@ const formReducer = (state, action) => {
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
-const AddProgressPopup = ({ setAddProgressPopupIsOpen }) => {
+const AddProgressPopup = ({ setAddProgressPopupIsOpen, snackbarDispatch }) => {
   const { user } = useSelector((state) => state);
   const { progressType } = useSelector((state) => state.progressPage);
   const [isAddingStat, setIsAddingStat] = useState(false);
   const [form, formDispatch] = useReducer(formReducer, INITIAL_FORM_STATE);
+
   const popupIsLoading = objectsAreEqual(form, INITIAL_FORM_STATE);
 
   // ----------------------------------- FUNCTIONS -----------------------------------
   const handleClose = () => setAddProgressPopupIsOpen(false);
 
-  const addStat = async (values) => {
+  const addProgress = async (values) => {
     const response = await postProgress(
       user,
       getProgressFromFormValues(values, progressType)
     );
-    console.log(response);
-    // render snackbar confirmation for success/error
+
+    if (response.error)
+      return snackbarDispatch({
+        type: SNACKBAR_ACTIONS.FAILURE,
+        payload: {
+          message: `Could not add new ${PROGRESS_TYPE_NAMES[progressType].singular}`,
+        },
+      });
+
+    snackbarDispatch({
+      type: SNACKBAR_ACTIONS.SUCCESS,
+      payload: {
+        message: `Added new ${PROGRESS_TYPE_NAMES[progressType].singular}`,
+      },
+    });
   };
 
   const onSubmit = async (values) => {
     setIsAddingStat(true);
-    await addStat(values);
+    await addProgress(values);
     handleClose();
   };
 

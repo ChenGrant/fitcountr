@@ -1,6 +1,6 @@
 import { IconButton, Tab, Tabs, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingCircle from "../../../components/miscellaneous/LoadingCircle";
 import CustomButton from "../../../components/ui/CustomButton";
@@ -15,6 +15,11 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import AddProgressPopup from "./AddProgressPopup";
+import CustomSnackbar, {
+  INITIAL_SNACKBAR_STATE,
+  snackbarReducer,
+  SNACKBAR_ACTIONS,
+} from "../../../components/ui/CustomSnackbar";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
@@ -23,6 +28,10 @@ const Progress = () => {
   const { progressType } = useSelector((state) => state.progressPage);
   const dispatch = useDispatch();
   const [addProgressPopupIsOpen, setAddProgressPopupIsOpen] = useState(false);
+  const [snackbar, snackbarDispatch] = useReducer(
+    snackbarReducer,
+    INITIAL_SNACKBAR_STATE
+  );
   const pageIsLoading = progressType === null;
 
   // ----------------------------------- USE EFFECT -----------------------------------
@@ -111,9 +120,17 @@ const Progress = () => {
       {/* <ProgressTable /> */}
       {addProgressPopupIsOpen && (
         <AddProgressPopup
+          snackbarDispatch={snackbarDispatch}
           setAddProgressPopupIsOpen={setAddProgressPopupIsOpen}
         />
       )}
+      {/* Snackbar */}
+      <CustomSnackbar
+        {...{
+          ...snackbar,
+          onClose: () => snackbarDispatch({ type: SNACKBAR_ACTIONS.CLOSE }),
+        }}
+      />
     </Box>
   );
 };

@@ -17,7 +17,11 @@ import {
 } from "../../../utils";
 import moment from "moment";
 import * as Yup from "yup";
-import CustomSnackbar from "../../../components/ui/CustomSnackbar";
+import CustomSnackbar, {
+  INITIAL_SNACKBAR_STATE,
+  snackbarReducer,
+  SNACKBAR_ACTIONS,
+} from "../../../components/ui/CustomSnackbar";
 import { setUserProfilePictureURL } from "../../../redux";
 import {
   getFormValuesFromProfileData,
@@ -81,42 +85,6 @@ const validationSchema = Yup.object({
     ),
 });
 
-// ---------------------------- SNACKBAR REDUCER CONSTANTS ----------------------------
-const SNACKBAR_ACTIONS = {
-  SUCCESS: "SUCCESS",
-  FAILURE: "FAILURE",
-  CLOSE: "CLOSE",
-};
-
-const INITIAL_SNACKBAR_STATE = {
-  open: false,
-  severity: "",
-  message: "",
-};
-
-const snackbarReducer = (state, action) => {
-  switch (action.type) {
-    case SNACKBAR_ACTIONS.CLOSE:
-      return { ...INITIAL_SNACKBAR_STATE };
-    case SNACKBAR_ACTIONS.SUCCESS:
-      return {
-        ...state,
-        open: true,
-        severity: "success",
-        message: "Changes saved",
-      };
-    case SNACKBAR_ACTIONS.FAILURE:
-      return {
-        ...state,
-        open: true,
-        severity: "error",
-        message: "Could not save changes",
-      };
-    default:
-      return state;
-  }
-};
-
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
@@ -142,12 +110,18 @@ const Profile = () => {
 
       if (response.error) throw new Error(response);
 
-      snackbarDispatch({ type: SNACKBAR_ACTIONS.SUCCESS });
+      snackbarDispatch({
+        type: SNACKBAR_ACTIONS.SUCCESS,
+        payload: { message: "Changes saved" },
+      });
       setInitialFormValues(formValues);
       dispatch(setUserProfilePictureURL(formValues.profilePicture.URL));
     } catch (err) {
       console.log(err);
-      snackbarDispatch({ type: SNACKBAR_ACTIONS.FAILURE });
+      snackbarDispatch({
+        type: SNACKBAR_ACTIONS.FAILURE,
+        payload: { message: "Could not save changes" },
+      });
     }
   };
 

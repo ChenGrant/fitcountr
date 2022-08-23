@@ -1,12 +1,15 @@
 import moment from "moment";
 import {
+  capitalizeOnlyFirstChar,
   DATE_FORMAT,
   MIN_STEPS,
   MIN_WEIGHT,
   PROGRESS_TYPES,
   PROGRESS_TYPE_NAMES,
+  round,
   TIME_FORMAT,
   UNITS,
+  weightToKilogram,
 } from "../../../utils";
 import * as Yup from "yup";
 import { TIME_PERIODS } from "../../../utils/dateUtils";
@@ -206,4 +209,54 @@ export const getGoalString = (goal, progressType) => {
     default:
       return "";
   }
+};
+
+export const getColumnsHeaders = (progressType, goals) => {
+  const singularProgressType = PROGRESS_TYPE_NAMES[progressType].singular;
+  switch (progressType) {
+    case PROGRESS_TYPES.WEIGHTS:
+      return [
+        {
+          label: `${capitalizeOnlyFirstChar(singularProgressType)} (${
+            UNITS.KILOGRAM.symbol
+          })`,
+          transformFunction: ({ weight }) => weightToKilogram(weight).value,
+          width: "200px",
+        },
+        {
+          label: "Date",
+          width: "400px",
+          transformFunction: ({ date }) =>
+            `${moment(date).format("ddd MMM Do YYYY")} ${moment(date).format(
+              TIME_FORMAT
+            )}`,
+        },
+        {
+          label: `Goal Difference (${UNITS.KILOGRAM.symbol})`,
+          transformFunction: ({ weight }) => {
+            const goalDiff = round(
+              weightToKilogram(weight).value -
+                goals[singularProgressType].value,
+              2
+            );
+            return `${goalDiff >= 0 ? "+" : ""}${goalDiff}`;
+          },
+          width: "200px",
+        },
+      ];
+    default:
+      return [];
+  }
+};
+
+export const getRows = (progressType, progress, columnHeaders) => {
+  const singularProgressType = PROGRESS_TYPE_NAMES[progressType].singular;
+  return progress[singularProgressType].map((progress) =>
+    Object.fromEntries(
+      columnHeaders?.map(({ label, transformFunction }) => [
+        label,
+        transformFunction(progress),
+      ])
+    )
+  );
 };

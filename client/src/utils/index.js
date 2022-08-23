@@ -34,6 +34,7 @@ export {
   MEASUREMENT_SYSTEMS,
   UNITS,
   WEIGHT_UNITS,
+  weightToKilogram,
 } from "./measurementUtils";
 
 export {

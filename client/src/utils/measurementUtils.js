@@ -1,6 +1,8 @@
 export const METRIC = "METRIC";
 export const IMPERIAL = "IMPERIAL";
 
+const KILOGRAMS_PER_POUND = 0.453592;
+
 export const MEASUREMENT_SYSTEMS = [METRIC, IMPERIAL];
 
 export const UNITS = {
@@ -30,3 +32,19 @@ export const UNITS = {
 };
 
 export const WEIGHT_UNITS = [UNITS.KILOGRAM, UNITS.POUND];
+
+export const weightToKilogram = (weight) => {
+  const value = (() => {
+    switch (weight.unit.symbol) {
+      case UNITS.POUND.symbol:
+        return weight.value * KILOGRAMS_PER_POUND;
+      default:
+        return weight.value;
+    }
+  })();
+
+  return {
+    value,
+    unit: UNITS.KILOGRAM,
+  };
+};

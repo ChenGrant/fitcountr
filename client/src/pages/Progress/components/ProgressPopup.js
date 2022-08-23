@@ -111,12 +111,20 @@ const ProgressPopup = ({ popupType, closePopup, snackbarDispatch }) => {
     // handle response
     snackbarDispatch(getSnackbarActionFromResponse(response));
     if (!response.error) {
-      dispatch(
-        setUserGoals({
-          ...user.goals,
-          ...getGoalFromFormValues(values, progressType),
-        })
-      );
+      switch (popupType) {
+        case PROGRESS_POPUP_TYPES.ADD_PROGRESS:
+          console.log(response)
+          break;
+        case PROGRESS_POPUP_TYPES.SET_GOAL:
+          dispatch(
+            setUserGoals({
+              ...user.goals,
+              ...getGoalFromFormValues(values, progressType),
+            })
+          );
+          break;
+        default:
+      }
     }
 
     handleClose();

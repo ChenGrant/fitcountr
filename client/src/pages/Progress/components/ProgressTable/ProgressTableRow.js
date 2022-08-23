@@ -11,15 +11,6 @@ const ProgressTableRow = ({ row, columnHeaders }) => {
   const [deleteProgressPopupIsOpen, setDeleteProgressPopupIsOpen] =
     useState(false);
 
-  // ----------------------------------- FUNCTIONS -----------------------------------
-  const deleteProgress = (id) => {
-    console.log("delete", id);
-  };
-
-  const editProgress = (id) => {
-    console.log("delete", id);
-  };
-
   // ------------------------------------- RENDER -------------------------------------
   return (
     <Box
@@ -37,10 +28,7 @@ const ProgressTableRow = ({ row, columnHeaders }) => {
           <Typography>{row[label]}</Typography>
         </Box>
       ))}
-      <IconButton
-        sx={{ "&:hover": { color: "primary.main" } }}
-        onClick={() => editProgress(row.id)}
-      >
+      <IconButton sx={{ "&:hover": { color: "primary.main" } }}>
         <EditIcon />
       </IconButton>
       <IconButton
@@ -52,7 +40,7 @@ const ProgressTableRow = ({ row, columnHeaders }) => {
       {deleteProgressPopupIsOpen && (
         <DeleteProgressPopup
           setDeleteProgressPopupIsOpen={setDeleteProgressPopupIsOpen}
-          progress = {row}
+          progress={row}
         />
       )}
     </Box>

@@ -259,12 +259,18 @@ const postProgress = async (req, res) => {
     const { userUID } = req.params;
     const progress = req.body;
 
-    await Progress.create({
+    const createdProgress = await Progress.create({
       ...progress,
       userUID,
     });
 
-    return res.json({ message: "Progress added" });
+    const createdProgressCopy = Object.fromEntries(
+      Object.entries(createdProgress._doc).filter(
+        ([key]) => !["__v", "userUID"].includes(key)
+      )
+    );
+
+    return res.json(createdProgressCopy);
   } catch (err) {
     console.log(err);
     return res

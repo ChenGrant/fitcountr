@@ -6,7 +6,7 @@ const DateUtils = require("./dateUtils");
 const HumanUtils = require("./humanUtils");
 const MeasurementUtils = require("./measurementUtils");
 const RequestUtils = require("./requestUtils");
-const ProgressUtils = require("./ProgressUtils");
+const ProgressUtils = require("./progressUtils");
 
 module.exports = {
   ArrayUtils,

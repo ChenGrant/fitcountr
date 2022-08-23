@@ -57,9 +57,7 @@ const AuthenticatedRoutes = () => {
           type: FETCHING_ACTIONS.SET_FETCHING_GOALS,
           payload: true,
         });
-        const goals = await fetchGoals(user)
-        console.log(goals)
-        dispatch(setUserGoals(goals));
+        dispatch(setUserGoals(await fetchGoals(user)));
         fetchingDispatch({
           type: FETCHING_ACTIONS.SET_FETCHING_GOALS,
           payload: false,

@@ -50,6 +50,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
+      _id: false,
     },
     required: true,
   },
@@ -74,10 +75,12 @@ const userSchema = new mongoose.Schema({
   goals: {
     type: {
       [PROGRESS_TYPES.WEIGHT.toLowerCase()]: {
-        value: Number,
-        unit: {},
+        type: {
+          value: Number,
+          unit: {},
+          _id: false,
+        },
       },
-
       [PROGRESS_TYPES.STEPS.toLowerCase()]: {
         type: Number,
         validate: {
@@ -85,8 +88,9 @@ const userSchema = new mongoose.Schema({
           message: (props) => `${props.value} is not a valid step count`,
         },
       },
+      _id: false,
     },
-    default: () => {},
+    default: {},
   },
 });
 

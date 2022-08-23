@@ -244,18 +244,7 @@ const getGoals = async (req, res) => {
     const { userUID } = req.params;
     const user = await User.findUserByUserUID(userUID);
     verifyUserExists(user);
-
-    console.log(user.goals)
-
-    if (!user.goals) {
-      console.log('bet')
-      return res.json({})
-    }
-
-    const userGoals = { ...user.goals._doc };
-    delete userGoals._id;
-
-    return res.json(userGoals);
+    return res.json(user.goals);
   } catch (err) {
     console.log(err);
     return res

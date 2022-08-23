@@ -2,11 +2,12 @@ import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { Form, Formik } from "formik";
 import React, { useEffect, useReducer, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CustomButton from "../../../components/ui/CustomButton";
 import CustomDialog from "../../../components/ui/CustomDialog";
 import { SNACKBAR_ACTIONS } from "../../../components/ui/CustomSnackbar";
 import PostDataButton from "../../../components/ui/PostDataButton";
+import { setUserGoals } from "../../../redux";
 import {
   capitalizeOnlyFirstChar,
   objectsAreEqual,
@@ -47,8 +48,9 @@ const formReducer = (state, action) => {
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const ProgressPopup = ({ popupType, closePopup, snackbarDispatch }) => {
-  const { user } = useSelector((state) => state);
-  const { progressType } = useSelector((state) => state.progressPage);
+  const { user, progressPage } = useSelector((state) => state);
+  const { progressType } = progressPage;
+  const dispatch = useDispatch();
   const [isAddingProgress, setIsAddingProgress] = useState(false);
   const [form, formDispatch] = useReducer(formReducer, INITIAL_FORM_STATE);
 
@@ -108,6 +110,14 @@ const ProgressPopup = ({ popupType, closePopup, snackbarDispatch }) => {
 
     // handle response
     snackbarDispatch(getSnackbarActionFromResponse(response));
+    if (!response.error) {
+      dispatch(
+        setUserGoals({
+          ...user.goals,
+          ...getGoalFromFormValues(values, progressType),
+        })
+      );
+    }
 
     handleClose();
   };

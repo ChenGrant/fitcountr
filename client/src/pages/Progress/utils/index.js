@@ -29,9 +29,9 @@ export const getProgressFromFormValues = (formValues, progressType) => {
     case PROGRESS_TYPES.WEIGHTS:
       progress[singularProgressType] = {
         value: formValues[singularProgressType],
-        unit: Object.values(UNITS).filter(
+        unit: Object.values(UNITS).find(
           ({ symbol }) => symbol === formValues.unit
-        )[0],
+        ),
       };
       break;
 
@@ -49,9 +49,9 @@ export const getGoalFromFormValues = (formValues, progressType) => {
     case PROGRESS_TYPES.WEIGHTS:
       goal[singularProgressType] = {
         value: formValues[singularProgressType],
-        unit: Object.values(UNITS).filter(
+        unit: Object.values(UNITS).find(
           ({ symbol }) => symbol === formValues.unit
-        )[0],
+        ),
       };
       break;
     default:
@@ -194,13 +194,15 @@ export const getValidationSchema = (progressType, popupType) => {
 };
 
 export const getGoalString = (goal, progressType) => {
-  console.log(goal)
-  //const singularProgressType = PROGRESS_TYPE_NAMES[progressType].singular;
+  const singularProgressType = PROGRESS_TYPE_NAMES[progressType].singular;
+
+  if (!goal[singularProgressType]) return "Goal: None";
+
   switch (progressType.toUpperCase()) {
     case PROGRESS_TYPES.WEIGHTS:
-      return "weights";
+      return `Goal: ${goal[singularProgressType].value} ${goal[singularProgressType].unit.symbol}`;
     case PROGRESS_TYPES.STEPS:
-      return "steps";
+      return `Goal: ${goal[singularProgressType]}`;
     default:
       return "";
   }

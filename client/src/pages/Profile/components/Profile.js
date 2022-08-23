@@ -118,6 +118,7 @@ const Profile = () => {
       });
       setInitialFormValues(formValues);
       dispatch(setUserProfilePictureURL(formValues.profilePicture.URL));
+      delete profileData.profilePicture;
       dispatch(setUserProfile(profileData));
     } catch (err) {
       console.log(err);
@@ -182,48 +183,50 @@ const Profile = () => {
                   setIsPostingData(false);
                 }}
               >
-                {(formik) => (
-                  <Form>
-                    <Box
-                      display="flex"
-                      flexDirection={desktop ? "row" : "column"}
-                      alignItems="center"
-                    >
+                {(formik) => {
+                  return (
+                    <Form>
                       <Box
                         display="flex"
-                        flexDirection="column"
+                        flexDirection={desktop ? "row" : "column"}
                         alignItems="center"
-                        justifyContent="center"
-                        mr={desktop && 5}
-                        mt={!desktop && 2}
                       >
-                        <ProfilePicture />
-                      </Box>
-                      <Box
-                        display="flex"
-                        flexDirection="column"
-                        gap={desktop ? 1 : 2}
-                        flex={1}
-                        width={!desktop && "100%"}
-                        mt={!desktop && 5}
-                      >
-                        <ProfileInputFields />
-                        <PostDataButton
-                          isPostingData={isPostingData}
-                          sx={{ width: "100%" }}
-                          type="submit"
-                          variant="contained"
-                          disabled={objectsAreEqual(
-                            formik.values,
-                            initialFormValues
-                          )}
+                        <Box
+                          display="flex"
+                          flexDirection="column"
+                          alignItems="center"
+                          justifyContent="center"
+                          mr={desktop && 5}
+                          mt={!desktop && 2}
                         >
-                          Save Profile
-                        </PostDataButton>
+                          <ProfilePicture />
+                        </Box>
+                        <Box
+                          display="flex"
+                          flexDirection="column"
+                          gap={desktop ? 1 : 2}
+                          flex={1}
+                          width={!desktop && "100%"}
+                          mt={!desktop && 5}
+                        >
+                          <ProfileInputFields />
+                          <PostDataButton
+                            isPostingData={isPostingData}
+                            sx={{ width: "100%" }}
+                            type="submit"
+                            variant="contained"
+                            disabled={objectsAreEqual(
+                              formik.values,
+                              initialFormValues
+                            )}
+                          >
+                            Save Profile
+                          </PostDataButton>
+                        </Box>
                       </Box>
-                    </Box>
-                  </Form>
-                )}
+                    </Form>
+                  );
+                }}
               </Formik>
             )}
           </CustomCard>

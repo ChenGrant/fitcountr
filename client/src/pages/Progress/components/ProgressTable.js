@@ -60,24 +60,23 @@ const ProgressTable = () => {
           ))}
         </Box>
         {/* Table Rows */}
-        {table.rows?.map((row) => {
-          return (
-            <Box
-              display="flex"
-              alignItems="center"
-              gap={2}
-              width="max-content"
-              borderTop="1px solid #D3D3D3"
-              py={1}
-            >
-              {table.columnHeaders?.map((columnHeader) => (
-                <Box width={columnHeader.width}>
-                  <Typography>{row[columnHeader.label]}</Typography>
-                </Box>
-              ))}
-            </Box>
-          );
-        })}
+        {table.rows?.map((row) => (
+          <Box
+            display="flex"
+            alignItems="center"
+            gap={2}
+            width="max-content"
+            borderTop="1px solid #D3D3D3"
+            py={1}
+            key={row.id}
+          >
+            {table.columnHeaders?.map((columnHeader) => (
+              <Box width={columnHeader.width}>
+                <Typography>{row[columnHeader.label]}</Typography>
+              </Box>
+            ))}
+          </Box>
+        ))}
       </CustomCard>
     </Box>
   );

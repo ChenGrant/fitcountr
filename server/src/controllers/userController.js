@@ -191,11 +191,13 @@ const getProgress = async (req, res) => {
         cleanProgress[weight].push({
           date: doc.date,
           weight: doc[weight],
+          id: doc._id,
         });
       } else if (doc[steps]) {
         cleanProgress[steps].push({
           date: doc.date,
           steps: doc[steps],
+          id: doc._id,
         });
       }
     });

@@ -251,12 +251,15 @@ export const getColumnsHeaders = (progressType, goals) => {
 
 export const getRows = (progressType, progress, columnHeaders) => {
   const singularProgressType = PROGRESS_TYPE_NAMES[progressType].singular;
+
   return progress[singularProgressType].map((progress) =>
     Object.fromEntries(
-      columnHeaders?.map(({ label, transformFunction }) => [
-        label,
-        transformFunction(progress),
-      ])
+      columnHeaders
+        ?.map(({ label, transformFunction }) => [
+          label,
+          transformFunction(progress),
+        ])
+        .concat([["id", progress.id]])
     )
   );
 };

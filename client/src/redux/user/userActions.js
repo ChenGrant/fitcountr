@@ -9,6 +9,7 @@ import {
   SET_VERIFICATION_STATUS,
   SET_USER_GOALS,
   SET_USER_PROGRESS,
+  ADD_USER_PROGRESS_ITEM,
 } from "./userTypes";
 
 export const initializeUser = () => {
@@ -53,4 +54,9 @@ export const setUserGoals = (goals) => ({
 export const setUserProgress = (progress) => ({
   type: SET_USER_PROGRESS,
   payload: progress,
+});
+
+export const addUserProgressItem = (progressItem, progressType) => ({
+  type: ADD_USER_PROGRESS_ITEM,
+  payload: { progressItem, progressType },
 });

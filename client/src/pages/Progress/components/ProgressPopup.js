@@ -7,7 +7,7 @@ import CustomButton from "../../../components/ui/CustomButton";
 import CustomDialog from "../../../components/ui/CustomDialog";
 import { SNACKBAR_ACTIONS } from "../../../components/ui/CustomSnackbar";
 import PostDataButton from "../../../components/ui/PostDataButton";
-import { setUserGoals } from "../../../redux";
+import { addUserProgressItem, setUserGoals } from "../../../redux";
 import {
   capitalizeOnlyFirstChar,
   objectsAreEqual,
@@ -113,7 +113,7 @@ const ProgressPopup = ({ popupType, closePopup, snackbarDispatch }) => {
     if (!response.error) {
       switch (popupType) {
         case PROGRESS_POPUP_TYPES.ADD_PROGRESS:
-          console.log(response)
+          dispatch(addUserProgressItem(response, progressType));
           break;
         case PROGRESS_POPUP_TYPES.SET_GOAL:
           dispatch(

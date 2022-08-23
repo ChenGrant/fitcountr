@@ -1,3 +1,4 @@
+import { PROGRESS_TYPE_NAMES } from "../../utils";
 import {
   INITIALIZE_USER,
   RESET_USER,
@@ -9,7 +10,35 @@ import {
   SET_VERIFICATION_STATUS,
   SET_USER_GOALS,
   SET_USER_PROGRESS,
+  ADD_USER_PROGRESS_ITEM,
 } from "./userTypes";
+
+// uses binary search in the future
+const getInsertIndex = (array, target) => {
+  console.log(array, target);
+  for (let i = 0; i < array.length; i++) {
+    if (target >= array[i]) return i;
+  }
+  return array.length;
+};
+
+// requires allProgress to be sorted by date from most recent to least recent
+const insertProgress = (allProgress, { progressType, progressItem }) => {
+  const singularProgressType = PROGRESS_TYPE_NAMES[progressType].singular;
+
+  const insertIndex = getInsertIndex(
+    allProgress[singularProgressType].map((item) => new Date(item.date)),
+    new Date(progressItem.date)
+  );
+
+  return {
+    [singularProgressType]: [
+      ...allProgress[singularProgressType].slice(0, insertIndex),
+      progressItem,
+      ...allProgress[singularProgressType].slice(insertIndex),
+    ],
+  };
+};
 
 const initialState = {
   auth: {
@@ -98,6 +127,15 @@ const userReducer = (state = initialState, action) => {
         return {
           ...state,
           progress: action.payload,
+        };
+
+      case ADD_USER_PROGRESS_ITEM:
+        return {
+          ...state,
+          progress: {
+            ...state.progress,
+            ...insertProgress(state.progress, action.payload),
+          },
         };
 
       default:

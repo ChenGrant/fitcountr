@@ -265,9 +265,9 @@ const postProgress = async (req, res) => {
     });
 
     const createdProgressCopy = Object.fromEntries(
-      Object.entries(createdProgress._doc).filter(
-        ([key]) => !["__v", "userUID"].includes(key)
-      )
+      Object.entries(createdProgress._doc)
+        .filter(([key]) => !["__v", "userUID"].includes(key))
+        .map(([key, value]) => [key === "_id" ? "id" : key, value])
     );
 
     return res.json(createdProgressCopy);

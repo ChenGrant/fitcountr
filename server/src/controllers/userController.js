@@ -6,8 +6,7 @@ const {
   sendEmailVerificationAsync,
 } = require("../services/nodemailer/nodemailer");
 const { getStorage } = require("firebase-admin/storage");
-const { DateUtils } = require("../utils");
-const { RequestUtils } = require("../utils");
+const { DateUtils, RequestUtils, ProgressUtils } = require("../utils");
 
 const { INTERNAL_SERVER_ERROR_CODE } = RequestUtils;
 
@@ -178,7 +177,30 @@ const getProgress = async (req, res) => {
     const user = await User.findUserByUserUID(userUID);
     verifyUserExists(user);
 
-    return res.json({ progress: "bet" });
+    const progress = await Progress.find({ userUID }).sort({ date: -1 });
+
+    const weight = ProgressUtils.PROGRESS_TYPES.WEIGHT.toLowerCase();
+    const steps = ProgressUtils.PROGRESS_TYPES.STEPS.toLowerCase();
+    let cleanProgress = {
+      [weight]: [],
+      [steps]: [],
+    };
+
+    progress.forEach((doc) => {
+      if (doc[weight]) {
+        cleanProgress[weight].push({
+          date: doc.date,
+          weight: doc[weight],
+        });
+      } else if (doc[steps]) {
+        cleanProgress[steps].push({
+          date: doc.date,
+          steps: doc[steps],
+        });
+      }
+    });
+
+    return res.json(cleanProgress);
   } catch (err) {
     console.log(err);
     return res

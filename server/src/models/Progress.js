@@ -18,6 +18,7 @@ const progressSchema = new mongoose.Schema({
     type: {
       value: Number,
       unit: {},
+      _id: false,
     },
     validate: {
       validator: function () {

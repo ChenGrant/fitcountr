@@ -221,15 +221,17 @@ export const getColumnsHeaders = (progressType, goals) => {
             UNITS.KILOGRAM.symbol
           })`,
           transformFunction: ({ weight }) => weightToKilogram(weight).value,
-          width: "200px",
+          width: "175px",
         },
         {
           label: "Date",
-          width: "400px",
-          transformFunction: ({ date }) =>
-            `${moment(date).format("ddd MMM Do YYYY")} ${moment(date).format(
-              TIME_FORMAT
-            )}`,
+          width: "175px",
+          transformFunction: ({ date }) => moment(date).format(DATE_FORMAT),
+        },
+        {
+          label: "Time",
+          width: "150px",
+          transformFunction: ({ date }) => moment(date).format(TIME_FORMAT),
         },
         {
           label: `Goal Difference (${UNITS.KILOGRAM.symbol})`,
@@ -244,15 +246,40 @@ export const getColumnsHeaders = (progressType, goals) => {
           width: "200px",
         },
       ];
+      
+    case PROGRESS_TYPES.STEPS:
+      return [
+        {
+          label: capitalizeOnlyFirstChar(singularProgressType),
+          transformFunction: ({ steps }) => steps,
+          width: "175px",
+        },
+        {
+          label: "Date",
+          width: "175px",
+          transformFunction: ({ date }) => moment(date).format(DATE_FORMAT),
+        },
+        {
+          label: "Time",
+          width: "150px",
+          transformFunction: ({ date }) => moment(date).format(TIME_FORMAT),
+        },
+        {
+          label: `Goal Difference`,
+          transformFunction: ({ steps }) => {
+            const goalDiff = round(steps - goals[singularProgressType], 2);
+            return `${goalDiff >= 0 ? "+" : ""}${goalDiff}`;
+          },
+          width: "200px",
+        },
+      ];
     default:
       return [];
   }
 };
 
-export const getRows = (progressType, progress, columnHeaders) => {
-  const singularProgressType = PROGRESS_TYPE_NAMES[progressType].singular;
-
-  return progress[singularProgressType].map((progress) =>
+export const getRows = (progressType, progress, columnHeaders) =>
+  progress[PROGRESS_TYPE_NAMES[progressType].singular].map((progress) =>
     Object.fromEntries(
       columnHeaders
         ?.map(({ label, transformFunction }) => [
@@ -262,4 +289,3 @@ export const getRows = (progressType, progress, columnHeaders) => {
         .concat([["id", progress.id]])
     )
   );
-};

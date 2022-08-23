@@ -70,9 +70,9 @@ const ProgressTable = () => {
             py={1}
             key={row.id}
           >
-            {table.columnHeaders?.map((columnHeader) => (
-              <Box width={columnHeader.width}>
-                <Typography>{row[columnHeader.label]}</Typography>
+            {table.columnHeaders?.map(({ label, width }) => (
+              <Box width={width} key={label}>
+                <Typography>{row[label]}</Typography>
               </Box>
             ))}
           </Box>

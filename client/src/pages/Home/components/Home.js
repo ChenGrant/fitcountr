@@ -84,7 +84,7 @@ const Home = () => {
           </Box>
           <Box>
             <Typography variant="h6" textAlign="center">
-              Counting calories couldn't be any easier.
+              Counting calories made easy.
             </Typography>
           </Box>
           {/* Laptop Phone Image */}

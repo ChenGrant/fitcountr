@@ -123,12 +123,7 @@ const AuthenticatedRoutes = () => {
           type: FETCHING_ACTIONS.SET_FETCHING_PROGRESS,
           payload: true,
         });
-
-        const progress = await fetchProgress(user);
-
-        console.log(progress);
-        dispatch(setUserProgress(progress));
-
+        dispatch(setUserProgress(await fetchProgress(user)));
         fetchingDispatch({
           type: FETCHING_ACTIONS.SET_FETCHING_PROGRESS,
           payload: false,

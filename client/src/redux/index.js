@@ -13,6 +13,7 @@ export {
   setUserProfilePictureIsLoading,
   setUserProfile,
   setUserGoals,
+  setUserProgress,
 } from "./user/userActions";
 
 export {

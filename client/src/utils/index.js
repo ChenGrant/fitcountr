@@ -13,6 +13,7 @@ export {
   fetchProfilePictureURL,
   fetchUserProfile,
   fetchGoals,
+  fetchProgress,
   scanBarcodeImage,
   sendVerificationEmail,
   postSignupData,

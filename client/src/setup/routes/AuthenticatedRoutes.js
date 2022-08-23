@@ -7,11 +7,13 @@ import {
   setUserGoals,
   setUserProfile,
   setUserProfilePictureURL,
+  setUserProgress,
 } from "../../redux";
 import {
   fetchUserProfile,
   fetchProfilePictureURL,
   fetchGoals,
+  fetchProgress,
 } from "../../utils";
 import { ROUTE_PATHS } from "./routeUtils";
 
@@ -20,12 +22,14 @@ const FETCHING_ACTIONS = {
   SET_FETCHING_GOALS: "SET_FETCHING_GOALS",
   SET_FETCHING_PROFILE: "SET_FETCHING_PROFILE",
   SET_FETCHING_PROFILE_PICTURE_URL: "SET_FETCHING_PROFILE_PICTURE_URL",
+  SET_FETCHING_PROGRESS: "SET_FETCHING_PROGRESS",
 };
 
 const INITIAL_FETCHING_STATE = {
   goals: false,
   profile: false,
   profilePictureURL: false,
+  progress: false,
 };
 
 const fetchingReducer = (state, action) => {
@@ -36,6 +40,8 @@ const fetchingReducer = (state, action) => {
       return { ...state, profile: action.payload };
     case FETCHING_ACTIONS.SET_FETCHING_PROFILE_PICTURE_URL:
       return { ...state, profilePictureURL: action.payload };
+    case FETCHING_ACTIONS.SET_FETCHING_PROGRESS:
+      return { ...state, progress: action.payload };
     default:
       return state;
   }
@@ -108,10 +114,38 @@ const AuthenticatedRoutes = () => {
     })();
   }, [user, fetching.profilePictureURL, dispatch]);
 
+  useEffect(() => {
+    (async () => {
+      if (!user.auth.isLoggedIn) return;
+
+      if (user.progress === null && !fetching.progress) {
+        fetchingDispatch({
+          type: FETCHING_ACTIONS.SET_FETCHING_PROGRESS,
+          payload: true,
+        });
+
+        const progress = await fetchProgress(user);
+
+        console.log(progress);
+        dispatch(setUserProgress(progress));
+
+        fetchingDispatch({
+          type: FETCHING_ACTIONS.SET_FETCHING_PROGRESS,
+          payload: false,
+        });
+      }
+    })();
+  }, [user, fetching.progress, dispatch]);
+
   // ------------------------------------- RENDER -------------------------------------
   if (!user.auth.isLoggedIn) return <Navigate to={ROUTE_PATHS.HOME} />;
 
-  if (!user.goals || !user.profile || !user.profilePicture.URL)
+  if (
+    !user.goals ||
+    !user.profile ||
+    !user.profilePicture.URL ||
+    !user.progress
+  )
     return <LoadingCircle />;
 
   return (

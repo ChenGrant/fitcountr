@@ -8,6 +8,7 @@ import {
   SET_USER_PROFILE_PICTURE_URL,
   SET_VERIFICATION_STATUS,
   SET_USER_GOALS,
+  SET_USER_PROGRESS,
 } from "./userTypes";
 
 export const initializeUser = () => {
@@ -47,4 +48,9 @@ export const setUserProfile = (profile) => ({
 export const setUserGoals = (goals) => ({
   type: SET_USER_GOALS,
   payload: goals,
+});
+
+export const setUserProgress = (progress) => ({
+  type: SET_USER_PROGRESS,
+  payload: progress,
 });

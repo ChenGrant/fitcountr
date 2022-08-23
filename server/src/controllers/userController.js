@@ -158,6 +158,35 @@ const getProfileData = async (req, res) => {
   }
 };
 
+const getGoals = async (req, res) => {
+  try {
+    const { userUID } = req.params;
+    const user = await User.findUserByUserUID(userUID);
+    verifyUserExists(user);
+    return res.json(user.goals);
+  } catch (err) {
+    console.log(err);
+    return res
+      .json({ error: { message: "Could not get goals" } })
+      .status(INTERNAL_SERVER_ERROR_CODE);
+  }
+};
+
+const getProgress = async (req, res) => {
+  try {
+    const { userUID } = req.params;
+    const user = await User.findUserByUserUID(userUID);
+    verifyUserExists(user);
+
+    return res.json({ progress: "bet" });
+  } catch (err) {
+    console.log(err);
+    return res
+      .json({ error: { message: "Could not get progress" } })
+      .status(INTERNAL_SERVER_ERROR_CODE);
+  }
+};
+
 const postProfileData = async (req, res) => {
   try {
     const { userUID } = req.params;
@@ -239,27 +268,14 @@ const postGoal = async (req, res) => {
   }
 };
 
-const getGoals = async (req, res) => {
-  try {
-    const { userUID } = req.params;
-    const user = await User.findUserByUserUID(userUID);
-    verifyUserExists(user);
-    return res.json(user.goals);
-  } catch (err) {
-    console.log(err);
-    return res
-      .json({ error: { message: "Could not get goals" } })
-      .status(INTERNAL_SERVER_ERROR_CODE);
-  }
-};
-
 module.exports = {
   getProfilePicture,
-  createUser,
+  getGoals,
+  getProgress,
   getProfileData,
+  createUser,
   postProfileData,
   postProfilePicture,
   postProgress,
   postGoal,
-  getGoals,
 };

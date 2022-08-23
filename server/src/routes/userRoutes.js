@@ -3,12 +3,13 @@ const router = express.Router();
 const {
   getProfileData,
   getProfilePicture,
+  getGoals,
+  getProgress,
   createUser,
   postProfileData,
   postProfilePicture,
   postProgress,
   postGoal,
-  getGoals,
 } = require("../controllers/userController");
 const { isAuthorized, PRIVATE } = require("../middleware/isAuthorized");
 const isAuthenticated = require("../middleware/isAuthenticated");
@@ -22,6 +23,13 @@ router.get(
   isAuthenticated,
   isAuthorized(PRIVATE),
   getProfilePicture
+);
+
+router.get(
+  "/progress/:userUID",
+  isAuthenticated,
+  isAuthorized(PRIVATE),
+  getProgress
 );
 
 router.post(

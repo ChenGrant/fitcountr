@@ -41,9 +41,9 @@ export const fetchFoodsFromQuery = async (
 export const fetchAssetURLFromAssetName = async (assetName) =>
   await fetchJSON(`/asset/${assetName}`);
 
-export const fetchProfilePictureURL = async ({ firebase }) => {
-  const userIdToken = await firebase.getIdToken();
-  return await fetchJSON(`/user/profilePicture/${firebase.uid}`, {
+export const fetchProfilePictureURL = async (user) => {
+  const userIdToken = await user.firebase.getIdToken();
+  return await fetchJSON(`/user/profilePicture/${user.firebase.uid}`, {
     headers: {
       "Content-Type": "application/json",
       authorization: userIdToken,
@@ -51,9 +51,9 @@ export const fetchProfilePictureURL = async ({ firebase }) => {
   });
 };
 
-export const fetchUserProfile = async ({ firebase }) => {
-  const userIdToken = await firebase.getIdToken();
-  return await fetchJSON(`/user/${firebase.uid}`, {
+export const fetchUserProfile = async (user) => {
+  const userIdToken = await user.firebase.getIdToken();
+  return await fetchJSON(`/user/${user.firebase.uid}`, {
     headers: {
       "Content-Type": "application/json",
       authorization: userIdToken,
@@ -61,9 +61,19 @@ export const fetchUserProfile = async ({ firebase }) => {
   });
 };
 
-export const fetchGoals = async ({ firebase }) => {
-  const userIdToken = await firebase.getIdToken();
-  return await fetchJSON(`/user/goals/${firebase.uid}`, {
+export const fetchGoals = async (user) => {
+  const userIdToken = await user.firebase.getIdToken();
+  return await fetchJSON(`/user/goals/${user.firebase.uid}`, {
+    headers: {
+      "Content-Type": "application/json",
+      authorization: userIdToken,
+    },
+  });
+};
+
+export const fetchProgress = async (user) => {
+  const userIdToken = await user.firebase.getIdToken();
+  return await fetchJSON(`/user/progress/${user.firebase.uid}`, {
     headers: {
       "Content-Type": "application/json",
       authorization: userIdToken,

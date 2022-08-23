@@ -8,6 +8,7 @@ import {
   SET_USER_PROFILE_PICTURE_URL,
   SET_VERIFICATION_STATUS,
   SET_USER_GOALS,
+  SET_USER_PROGRESS,
 } from "./userTypes";
 
 const initialState = {
@@ -24,6 +25,7 @@ const initialState = {
   },
   profile: null,
   goals: null,
+  progress: null,
 };
 
 const userReducer = (state = initialState, action) => {
@@ -90,6 +92,12 @@ const userReducer = (state = initialState, action) => {
             ...state.goals,
             ...action.payload,
           },
+        };
+
+      case SET_USER_PROGRESS:
+        return {
+          ...state,
+          progress: action.payload,
         };
 
       default:

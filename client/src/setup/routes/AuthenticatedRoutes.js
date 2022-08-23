@@ -15,6 +15,7 @@ import {
 } from "../../utils";
 import { ROUTE_PATHS } from "./routeUtils";
 
+// --------------------------------- FETCHING REDUCER ---------------------------------
 const FETCHING_ACTIONS = {
   SET_FETCHING_GOALS: "SET_FETCHING_GOALS",
   SET_FETCHING_PROFILE: "SET_FETCHING_PROFILE",
@@ -40,6 +41,9 @@ const fetchingReducer = (state, action) => {
   }
 };
 
+// ************************************************************************************
+// ------------------------------------ COMPONENT -------------------------------------
+// ************************************************************************************
 const AuthenticatedRoutes = () => {
   const { user } = useSelector((state) => state);
   const dispatch = useDispatch();
@@ -48,6 +52,7 @@ const AuthenticatedRoutes = () => {
     INITIAL_FETCHING_STATE
   );
 
+  // ----------------------------------- USE EFFECT -----------------------------------
   useEffect(() => {
     (async () => {
       if (!user.auth.isLoggedIn) return;
@@ -63,6 +68,12 @@ const AuthenticatedRoutes = () => {
           payload: false,
         });
       }
+    })();
+  }, [user, fetching.goals, dispatch]);
+
+  useEffect(() => {
+    (async () => {
+      if (!user.auth.isLoggedIn) return;
 
       if (user.profile === null && !fetching.profile) {
         fetchingDispatch({
@@ -75,6 +86,12 @@ const AuthenticatedRoutes = () => {
           payload: false,
         });
       }
+    })();
+  }, [user, fetching.profile, dispatch]);
+
+  useEffect(() => {
+    (async () => {
+      if (!user.auth.isLoggedIn) return;
 
       if (user.profilePicture.URL === null && !fetching.profilePictureURL) {
         fetchingDispatch({
@@ -89,14 +106,9 @@ const AuthenticatedRoutes = () => {
         });
       }
     })();
-  }, [
-    user,
-    fetching.goals,
-    fetching.profile,
-    fetching.profilePictureURL,
-    dispatch,
-  ]);
+  }, [user, fetching.profilePictureURL, dispatch]);
 
+  // ------------------------------------- RENDER -------------------------------------
   if (!user.auth.isLoggedIn) return <Navigate to={ROUTE_PATHS.HOME} />;
 
   if (!user.goals || !user.profile || !user.profilePicture.URL)

@@ -1,8 +1,9 @@
 import { Box, Typography } from "@mui/material";
 import React, { useEffect, useReducer } from "react";
 import { useSelector } from "react-redux";
-import CustomCard from "../../../components/ui/CustomCard";
-import { getColumnsHeaders, getRows } from "../utils";
+import CustomCard from "../../../../components/ui/CustomCard";
+import { getColumnsHeaders, getRows } from "../../utils";
+import ProgressTableRow from "./ProgressTableRow";
 
 // ---------------------------------- TABLE REDUCER ----------------------------------
 const TABLE_ACTIONS = {
@@ -52,7 +53,13 @@ const ProgressTable = () => {
     <Box sx={{ display: "grid", placeItems: "center", width: "max-content" }}>
       <CustomCard>
         {/* Table Column Headers */}
-        <Box display="flex" alignItems="center" gap={2} width="max-content">
+        <Box
+          display="flex"
+          alignItems="center"
+          gap={2}
+          width="max-content"
+          px={1}
+        >
           {table.columnHeaders?.map(({ label, width }) => (
             <Box width={width} key={label}>
               <Typography sx={{ fontWeight: 600 }}>{label}</Typography>
@@ -61,21 +68,11 @@ const ProgressTable = () => {
         </Box>
         {/* Table Rows */}
         {table.rows?.map((row) => (
-          <Box
-            display="flex"
-            alignItems="center"
-            gap={2}
-            width="max-content"
-            borderTop="1px solid #D3D3D3"
-            py={1}
+          <ProgressTableRow
             key={row.id}
-          >
-            {table.columnHeaders?.map(({ label, width }) => (
-              <Box width={width} key={label}>
-                <Typography>{row[label]}</Typography>
-              </Box>
-            ))}
-          </Box>
+            row={row}
+            columnHeaders={table.columnHeaders}
+          />
         ))}
       </CustomCard>
     </Box>

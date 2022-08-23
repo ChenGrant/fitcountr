@@ -15,7 +15,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import ProgressPopup from "./ProgressPopup";
-import ProgressTable from "./ProgressTable";
+import ProgressTable from "./ProgressTable/ProgressTable";
 import CustomSnackbar, {
   INITIAL_SNACKBAR_STATE,
   snackbarReducer,

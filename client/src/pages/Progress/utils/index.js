@@ -213,6 +213,7 @@ export const getGoalString = (goal, progressType) => {
 
 export const getColumnsHeaders = (progressType, goals) => {
   const singularProgressType = PROGRESS_TYPE_NAMES[progressType].singular;
+  const DECIMAL_PRECISION = 2;
   switch (progressType) {
     case PROGRESS_TYPES.WEIGHTS:
       return [
@@ -220,7 +221,8 @@ export const getColumnsHeaders = (progressType, goals) => {
           label: `${capitalizeOnlyFirstChar(singularProgressType)} (${
             UNITS.KILOGRAM.symbol
           })`,
-          transformFunction: ({ weight }) => weightToKilogram(weight).value,
+          transformFunction: ({ weight }) =>
+            round(weightToKilogram(weight).value, DECIMAL_PRECISION),
           width: "175px",
         },
         {
@@ -238,7 +240,7 @@ export const getColumnsHeaders = (progressType, goals) => {
           transformFunction: ({ weight }) => {
             const goalDiff = round(
               weightToKilogram(weight).value -
-                goals[singularProgressType].value,
+              weightToKilogram(goals[singularProgressType]).value,
               2
             );
             return `${goalDiff >= 0 ? "+" : ""}${goalDiff}`;
@@ -246,7 +248,7 @@ export const getColumnsHeaders = (progressType, goals) => {
           width: "200px",
         },
       ];
-      
+
     case PROGRESS_TYPES.STEPS:
       return [
         {
@@ -267,7 +269,10 @@ export const getColumnsHeaders = (progressType, goals) => {
         {
           label: `Goal Difference`,
           transformFunction: ({ steps }) => {
-            const goalDiff = round(steps - goals[singularProgressType], 2);
+            const goalDiff = round(
+              steps - goals[singularProgressType],
+              DECIMAL_PRECISION
+            );
             return `${goalDiff >= 0 ? "+" : ""}${goalDiff}`;
           },
           width: "200px",

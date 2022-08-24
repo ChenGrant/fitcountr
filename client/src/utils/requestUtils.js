@@ -184,7 +184,6 @@ export const postGoal = async (user, goal) => {
 
 // ----------------------------------- PUT REQUESTS -----------------------------------
 export const editProgress = async (user, progress, progressID) => {
-  console.log(progressID)
   const userIdToken = await user.firebase.getIdToken();
   return await fetchJSON(`/user/progress/${user.firebase.uid}`, {
     method: "PUT",

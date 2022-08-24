@@ -11,6 +11,7 @@ import {
   SET_USER_PROGRESS,
   ADD_USER_PROGRESS_ITEM,
   REMOVE_USER_PROGRESS_ITEM,
+  EDIT_USER_PROGRESS_ITEM,
 } from "./userTypes";
 
 export const initializeUser = () => {
@@ -65,4 +66,17 @@ export const addUserProgressItem = (progressItem, progressType) => ({
 export const removeUserProgressItem = (progressItemID, progressType) => ({
   type: REMOVE_USER_PROGRESS_ITEM,
   payload: { progressItemID, progressType },
+});
+
+export const editUserProgressItem = (
+  progressItem,
+  progressItemID,
+  progressType
+) => ({
+  type: EDIT_USER_PROGRESS_ITEM,
+  payload: {
+    progressItem,
+    progressItemID,
+    progressType,
+  },
 });

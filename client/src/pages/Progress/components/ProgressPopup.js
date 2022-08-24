@@ -7,7 +7,11 @@ import CustomButton from "../../../components/ui/CustomButton";
 import CustomDialog from "../../../components/ui/CustomDialog";
 import { SNACKBAR_ACTIONS } from "../../../components/ui/CustomSnackbar";
 import PostDataButton from "../../../components/ui/PostDataButton";
-import { addUserProgressItem, setUserGoals } from "../../../redux";
+import {
+  addUserProgressItem,
+  editUserProgressItem,
+  setUserGoals,
+} from "../../../redux";
 import {
   capitalizeOnlyFirstChar,
   editProgress,
@@ -138,8 +142,14 @@ const ProgressPopup = ({ progressPopup, closePopup }) => {
           );
           break;
         case PROGRESS_POPUP_TYPES.EDIT_PROGRESS:
-          // update the progress in redux
-          console.log("does not affect redux yet");
+          dispatch(
+            editUserProgressItem(
+              response,
+              progressPopup.progressID,
+              progressType
+            )
+          );
+          break;
         default:
       }
     }

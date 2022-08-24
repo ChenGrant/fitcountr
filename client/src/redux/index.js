@@ -16,6 +16,7 @@ export {
   setUserProgress,
   addUserProgressItem,
   removeUserProgressItem,
+  editUserProgressItem,
 } from "./user/userActions";
 
 export {

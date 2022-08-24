@@ -305,8 +305,16 @@ const editProgress = async (req, res) => {
     Object.entries(req.body.progress).forEach(
       ([key, value]) => (progress[key] = value)
     );
+
     await progress.save();
-    return res.json({ message: "Progress edited" });
+
+    const editedProgressCopy = Object.fromEntries(
+      Object.entries(progress._doc)
+        .filter(([key]) => !["__v", "userUID"].includes(key))
+        .map(([key, value]) => [key === "_id" ? "id" : key, value])
+    );
+
+    return res.json(editedProgressCopy);
   } catch (err) {
     console.log(err);
     return res

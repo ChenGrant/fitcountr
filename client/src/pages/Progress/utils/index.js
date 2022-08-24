@@ -116,8 +116,6 @@ export const getValidationSchema = (progressType, progressPopup) => {
 
   const popupType = progressPopup.type;
 
-  console.log(progressPopup);
-
   switch (popupType) {
     case PROGRESS_POPUP_TYPES.ADD_PROGRESS:
     case PROGRESS_POPUP_TYPES.EDIT_PROGRESS:

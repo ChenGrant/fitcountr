@@ -181,3 +181,16 @@ export const postGoal = async (user, goal) => {
     body: JSON.stringify(goal),
   });
 };
+
+// --------------------------------- DELETE REQUESTS ---------------------------------
+export const deleteProgress = async (user, progressID) => {
+  const userIdToken = await user.firebase.getIdToken();
+  return await fetchJSON(`/user/progress/${user.firebase.uid}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: userIdToken,
+    },
+    body: JSON.stringify({ progressID }),
+  });
+};

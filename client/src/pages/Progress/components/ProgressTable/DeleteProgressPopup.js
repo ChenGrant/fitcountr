@@ -5,12 +5,14 @@ import PostDataButton from "../../../../components/ui/PostDataButton";
 import { useSelector } from "react-redux";
 import {
   capitalizeOnlyFirstChar,
+  deleteProgress,
   PROGRESS_TYPE_NAMES,
 } from "../../../../utils";
 import { Box, Typography } from "@mui/material";
 
 const DeleteProgressPopup = ({ setDeleteProgressPopupIsOpen, progress }) => {
-  const { progressType } = useSelector((state) => state.progressPage);
+  const { user, progressPage } = useSelector((state) => state);
+  const { progressType } = progressPage;
   const [isDeletingProgress, setIsDeletingProgress] = useState(false);
 
   const handleClose = () => setDeleteProgressPopupIsOpen(false);
@@ -18,7 +20,9 @@ const DeleteProgressPopup = ({ setDeleteProgressPopupIsOpen, progress }) => {
   const handleDeleteProgress = async (id) => {
     setIsDeletingProgress(true);
     console.log(id);
-    await new Promise((r) => setTimeout(r, 2000));
+    const response = await deleteProgress(user, id);
+    console.log(response)
+    // remove progress from redux store
     handleClose();
   };
 

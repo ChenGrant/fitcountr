@@ -20,6 +20,7 @@ export {
   postProfileData,
   postProgress,
   postGoal,
+  deleteProgress,
 } from "./requestUtils";
 
 export { sortArray, getLexSmallest } from "./arrayUtils";

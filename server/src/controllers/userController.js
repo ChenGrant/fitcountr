@@ -298,6 +298,19 @@ const postGoal = async (req, res) => {
   }
 };
 
+const deleteProgress = async (req, res) => {
+  try {
+    const { progressID } = req.body;
+    const progress = await Progress.findByIdAndDelete(progressID);
+    return res.json({ message: "Progress deleted" });
+  } catch (err) {
+    console.log(err);
+    return res
+      .json({ error: { message: "Could not delete progress" } })
+      .status(INTERNAL_SERVER_ERROR_CODE);
+  }
+};
+
 module.exports = {
   getProfilePicture,
   getGoals,
@@ -308,4 +321,5 @@ module.exports = {
   postProfilePicture,
   postProgress,
   postGoal,
+  deleteProgress,
 };

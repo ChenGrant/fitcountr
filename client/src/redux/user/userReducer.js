@@ -54,12 +54,13 @@ const editProgressItem = (
   allProgress,
   { progressItem, progressItemID, progressType }
 ) => {
-  const singularProgressType = PROGRESS_TYPE_NAMES[progressType].singular;
-  return {
-    [singularProgressType]: allProgress[singularProgressType].map((progress) =>
-      progress.id === progressItemID ? progressItem : progress
-    ),
-  };
+  return addProgressItem(
+    removeProgressItem(allProgress, {
+      progressItemID,
+      progressType,
+    }),
+    { progressType, progressItem }
+  );
 };
 
 const initialState = {

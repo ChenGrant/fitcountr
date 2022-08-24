@@ -63,26 +63,47 @@ export const getGoalFromFormValues = (formValues, progressType) => {
   return goal;
 };
 
-export const getInitialValues = (progressType, popupType) => {
-  const initialValues = {};
+export const getInitialValues = (progressType, progressPopup, user) => {
+  const popupType = progressPopup.type;
+  const { progressID } = progressPopup;
 
+  const singularProgressType = PROGRESS_TYPE_NAMES[progressType].singular;
+
+  const progressItem = user.progress[singularProgressType].find(
+    ({ id }) => id === progressID
+  );
+
+  const initialValues = {};
   switch (popupType) {
     case PROGRESS_POPUP_TYPES.ADD_PROGRESS:
       initialValues.currentTimeIsUsed = true;
       initialValues.date = "";
       initialValues.time = "";
       break;
+    case PROGRESS_POPUP_TYPES.EDIT_PROGRESS:
+      initialValues.currentTimeIsUsed = false;
+      initialValues.date = moment(progressItem.date).format(DATE_FORMAT);
+      initialValues.time = moment(progressItem.date).format(TIME_FORMAT);
+      break;
     default:
   }
 
-  const singularProgressType = PROGRESS_TYPE_NAMES[progressType].singular;
   switch (progressType) {
     case PROGRESS_TYPES.WEIGHTS:
-      initialValues[singularProgressType] = "";
-      initialValues.unit = UNIT_SELECT_OPTIONS?.[0].value ?? "";
+      initialValues[singularProgressType] =
+        popupType === PROGRESS_POPUP_TYPES.EDIT_PROGRESS
+          ? progressItem[singularProgressType].value
+          : "";
+      initialValues.unit =
+        popupType === PROGRESS_POPUP_TYPES.EDIT_PROGRESS
+          ? progressItem[singularProgressType].unit.symbol
+          : UNIT_SELECT_OPTIONS?.[0].value ?? "";
       break;
     case PROGRESS_TYPES.STEPS:
-      initialValues[singularProgressType] = "";
+      initialValues[singularProgressType] =
+        popupType === PROGRESS_POPUP_TYPES.EDIT_PROGRESS
+          ? progressItem[singularProgressType]
+          : "";
       break;
     default:
   }
@@ -90,11 +111,16 @@ export const getInitialValues = (progressType, popupType) => {
   return initialValues;
 };
 
-export const getValidationSchema = (progressType, popupType) => {
+export const getValidationSchema = (progressType, progressPopup) => {
   const validationSchemaObject = {};
+
+  const popupType = progressPopup.type;
+
+  console.log(progressPopup);
 
   switch (popupType) {
     case PROGRESS_POPUP_TYPES.ADD_PROGRESS:
+    case PROGRESS_POPUP_TYPES.EDIT_PROGRESS:
       validationSchemaObject.date = Yup.string().when("currentTimeIsUsed", {
         is: false,
         then: Yup.string()
@@ -240,7 +266,7 @@ export const getColumnsHeaders = (progressType, goals) => {
           transformFunction: ({ weight }) => {
             const goalDiff = round(
               weightToKilogram(weight).value -
-              weightToKilogram(goals[singularProgressType]).value,
+                weightToKilogram(goals[singularProgressType]).value,
               2
             );
             return `${goalDiff >= 0 ? "+" : ""}${goalDiff}`;

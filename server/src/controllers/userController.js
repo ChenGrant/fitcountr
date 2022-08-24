@@ -298,6 +298,18 @@ const postGoal = async (req, res) => {
   }
 };
 
+const editProgress = async (req, res) => {
+  try {
+    console.log(req.body);
+    return res.json({ message: "Progress edited" });
+  } catch (err) {
+    console.log(err);
+    return res
+      .json({ error: { message: "Could not edit progress" } })
+      .status(INTERNAL_SERVER_ERROR_CODE);
+  }
+};
+
 const deleteProgress = async (req, res) => {
   try {
     const { progressID } = req.body;
@@ -321,5 +333,6 @@ module.exports = {
   postProfilePicture,
   postProgress,
   postGoal,
+  editProgress,
   deleteProgress,
 };

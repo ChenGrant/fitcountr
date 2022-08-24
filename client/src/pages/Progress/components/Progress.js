@@ -23,6 +23,7 @@ import CustomSnackbar, {
 } from "../../../components/ui/CustomSnackbar";
 import { getGoalString } from "../utils";
 import { SnackbarDispatchProvider } from "../context/SnackbarDispatchContext";
+import { ProgressPopupDispatchProvider } from "../context/ProgressPopupDispatchContext";
 
 // ------------------------------ PROGRESS POPUP REDUCER ------------------------------
 export const PROGRESS_POPUP_TYPES = {
@@ -34,9 +35,10 @@ export const PROGRESS_POPUP_TYPES = {
 const INITIAL_PROGRESS_POPUP_STATE = {
   isOpen: false,
   type: null,
+  progressID: null,
 };
 
-const PROGRESS_POPUP_ACTIONS = {
+export const PROGRESS_POPUP_ACTIONS = {
   OPEN: "OPEN",
   CLOSE: "CLOSE",
 };
@@ -44,7 +46,12 @@ const PROGRESS_POPUP_ACTIONS = {
 const progressPopupReducer = (state, action) => {
   switch (action.type) {
     case PROGRESS_POPUP_ACTIONS.OPEN:
-      return { ...state, isOpen: true, type: action.payload.type };
+      return {
+        ...state,
+        isOpen: true,
+        type: action.payload.type,
+        progressID: action.payload.progressID ?? null,
+      };
     case PROGRESS_POPUP_ACTIONS.CLOSE:
       return { ...INITIAL_PROGRESS_POPUP_STATE };
     default:
@@ -82,115 +89,117 @@ const Progress = () => {
   if (pageIsLoading) return <LoadingCircle />;
 
   return (
-    <SnackbarDispatchProvider value={snackbarDispatch}>
-      <Box
-        p={5}
-        display="flex"
-        flexDirection="column"
-        gap={5}
-        alignItems="center"
-      >
-        {/* Header */}
-        <Typography variant="h1">Progress</Typography>
-        {/* Progress Tabs */}
-        <Tabs
-          value={progressType}
-          onChange={(e, progressType) =>
-            dispatch(setProgressPageType(progressType))
-          }
+    <ProgressPopupDispatchProvider value={progressPopupDispatch}>
+      <SnackbarDispatchProvider value={snackbarDispatch}>
+        <Box
+          p={5}
+          display="flex"
+          flexDirection="column"
+          gap={5}
+          alignItems="center"
         >
-          {sortArray(
-            Object.values(PROGRESS_TYPES),
-            (progressType1, progressType2) =>
-              progressType1.localeCompare(progressType2)
-          ).map((progressType) => {
-            return (
-              <Tab
-                sx={{
-                  textTransform: "none",
-                  fontSize: "220px",
-                  color: "black",
-                }}
-                key={progressType}
-                value={progressType}
-                label={
-                  <span style={{ fontSize: "20px" }}>
-                    {capitalizeOnlyFirstChar(progressType)}
-                  </span>
+          {/* Header */}
+          <Typography variant="h1">Progress</Typography>
+          {/* Progress Tabs */}
+          <Tabs
+            value={progressType}
+            onChange={(e, progressType) =>
+              dispatch(setProgressPageType(progressType))
+            }
+          >
+            {sortArray(
+              Object.values(PROGRESS_TYPES),
+              (progressType1, progressType2) =>
+                progressType1.localeCompare(progressType2)
+            ).map((progressType) => {
+              return (
+                <Tab
+                  sx={{
+                    textTransform: "none",
+                    fontSize: "220px",
+                    color: "black",
+                  }}
+                  key={progressType}
+                  value={progressType}
+                  label={
+                    <span style={{ fontSize: "20px" }}>
+                      {capitalizeOnlyFirstChar(progressType)}
+                    </span>
+                  }
+                />
+              );
+            })}
+          </Tabs>
+          <Box display="flex" alignItems="center" gap={25}>
+            {/* Goal */}
+            <Box display="flex" gap={1} alignItems="center">
+              <Typography variant="h6">
+                {getGoalString(user.goals, progressType)}
+              </Typography>
+              <IconButton
+                onClick={() =>
+                  progressPopupDispatch({
+                    type: PROGRESS_POPUP_ACTIONS.OPEN,
+                    payload: {
+                      type: PROGRESS_POPUP_TYPES.SET_GOAL,
+                    },
+                  })
                 }
-              />
-            );
-          })}
-        </Tabs>
-        <Box display="flex" alignItems="center" gap={25}>
-          {/* Goal */}
-          <Box display="flex" gap={1} alignItems="center">
-            <Typography variant="h6">
-              {getGoalString(user.goals, progressType)}
-            </Typography>
-            <IconButton
-              onClick={() =>
-                progressPopupDispatch({
-                  type: PROGRESS_POPUP_ACTIONS.OPEN,
-                  payload: {
-                    type: PROGRESS_POPUP_TYPES.SET_GOAL,
-                  },
-                })
-              }
-            >
-              <EditIcon color="primary" />
-            </IconButton>
-          </Box>
-          {/* Add New Progress */}
-          <Box>
-            <CustomButton
-              variant="contained"
-              onClick={() =>
-                progressPopupDispatch({
-                  type: PROGRESS_POPUP_ACTIONS.OPEN,
-                  payload: {
-                    type: PROGRESS_POPUP_TYPES.ADD_PROGRESS,
-                  },
-                })
-              }
-            >
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                gap={1}
               >
-                <AddIcon />
-                <Typography variant="h6">
-                  New{" "}
-                  {capitalizeOnlyFirstChar(
-                    PROGRESS_TYPE_NAMES[progressType].singular
-                  )}
-                </Typography>
-              </Box>
-            </CustomButton>
+                <EditIcon color="primary" />
+              </IconButton>
+            </Box>
+            {/* Add New Progress */}
+            <Box>
+              <CustomButton
+                variant="contained"
+                onClick={() =>
+                  progressPopupDispatch({
+                    type: PROGRESS_POPUP_ACTIONS.OPEN,
+                    payload: {
+                      type: PROGRESS_POPUP_TYPES.ADD_PROGRESS,
+                    },
+                  })
+                }
+              >
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  gap={1}
+                >
+                  <AddIcon />
+                  <Typography variant="h6">
+                    New{" "}
+                    {capitalizeOnlyFirstChar(
+                      PROGRESS_TYPE_NAMES[progressType].singular
+                    )}
+                  </Typography>
+                </Box>
+              </CustomButton>
+            </Box>
           </Box>
+          {/* <ProgressTable /> */}
+          <ProgressTable />
+          {/* Snackbar */}
+          <CustomSnackbar
+            {...{
+              ...snackbar,
+              onClose: () => snackbarDispatch({ type: SNACKBAR_ACTIONS.CLOSE }),
+            }}
+          />
         </Box>
-        {/* <ProgressTable /> */}
-        <ProgressTable snackbarDispatch={snackbarDispatch} />
-        {/* Snackbar */}
-        <CustomSnackbar
-          {...{
-            ...snackbar,
-            onClose: () => snackbarDispatch({ type: SNACKBAR_ACTIONS.CLOSE }),
-          }}
-        />
-      </Box>
-      {/* Add Progress */}
-      {progressPopup.isOpen && (
-        <ProgressPopup
-          popupType={progressPopup.type}
-          closePopup={() =>
-            progressPopupDispatch({ type: PROGRESS_POPUP_ACTIONS.CLOSE })
-          }
-        />
-      )}
-    </SnackbarDispatchProvider>
+        {/* Add Progress */}
+        {progressPopup.isOpen && (
+          <ProgressPopup
+            progressPopup={progressPopup}
+            closePopup={() =>
+              progressPopupDispatch({ type: PROGRESS_POPUP_ACTIONS.CLOSE })
+            }
+          />
+        )}
+      </SnackbarDispatchProvider>
+    </ProgressPopupDispatchProvider>
   );
 };
 

@@ -10,6 +10,7 @@ import PostDataButton from "../../../components/ui/PostDataButton";
 import { addUserProgressItem, setUserGoals } from "../../../redux";
 import {
   capitalizeOnlyFirstChar,
+  editProgress,
   objectsAreEqual,
   postGoal,
   postProgress,
@@ -48,9 +49,10 @@ const formReducer = (state, action) => {
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
-const ProgressPopup = ({ popupType, closePopup }) => {
+const ProgressPopup = ({ progressPopup, closePopup }) => {
   const { user, progressPage } = useSelector((state) => state);
   const { progressType } = progressPage;
+  const popupType = progressPopup.type;
   const snackbarDispatch = useContext(SnackbarDispatchContext);
   const dispatch = useDispatch();
   const [isAddingProgress, setIsAddingProgress] = useState(false);
@@ -72,6 +74,10 @@ const ProgressPopup = ({ popupType, closePopup }) => {
           return response.error
             ? `Could not add new ${PROGRESS_TYPE_NAMES[progressType].singular}`
             : `Added new ${PROGRESS_TYPE_NAMES[progressType].singular}`;
+        case PROGRESS_POPUP_TYPES.EDIT_PROGRESS:
+          return response.error
+            ? `Could not edit ${PROGRESS_TYPE_NAMES[progressType].singular}`
+            : `Edited ${PROGRESS_TYPE_NAMES[progressType].singular}`;
         case PROGRESS_POPUP_TYPES.SET_GOAL:
           return response.error
             ? `Could not set ${PROGRESS_TYPE_NAMES[progressType].singular} goal`
@@ -105,6 +111,12 @@ const ProgressPopup = ({ popupType, closePopup }) => {
             user,
             getGoalFromFormValues(values, progressType)
           );
+        case PROGRESS_POPUP_TYPES.EDIT_PROGRESS:
+          return await editProgress(
+            user,
+            getProgressFromFormValues(values, progressType),
+            progressPopup.progressID
+          );
         default:
           return null;
       }
@@ -125,6 +137,9 @@ const ProgressPopup = ({ popupType, closePopup }) => {
             })
           );
           break;
+        case PROGRESS_POPUP_TYPES.EDIT_PROGRESS:
+          // update the progress in redux
+          console.log("does not affect redux yet");
         default:
       }
     }
@@ -137,11 +152,11 @@ const ProgressPopup = ({ popupType, closePopup }) => {
     formDispatch({
       type: FORM_ACTIONS.INITIALIZE,
       payload: {
-        initialValues: getInitialValues(progressType, popupType),
-        validationSchema: getValidationSchema(progressType, popupType),
+        initialValues: getInitialValues(progressType, progressPopup, user),
+        validationSchema: getValidationSchema(progressType, progressPopup),
       },
     });
-  }, [progressType, popupType]);
+  }, [progressType, progressPopup, user]);
 
   // ------------------------------------- RENDER -------------------------------------
   if (popupIsLoading) return null;
@@ -172,6 +187,11 @@ const ProgressPopup = ({ popupType, closePopup }) => {
                           return `Set ${capitalizeOnlyFirstChar(
                             PROGRESS_TYPE_NAMES[progressType].singular
                           )} Goal`;
+                        case PROGRESS_POPUP_TYPES.EDIT_PROGRESS:
+                          return `Edit
+                          ${capitalizeOnlyFirstChar(
+                            PROGRESS_TYPE_NAMES[progressType].singular
+                          )}`;
                         default:
                           return null;
                       }

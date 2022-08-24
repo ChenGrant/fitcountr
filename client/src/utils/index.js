@@ -20,6 +20,7 @@ export {
   postProfileData,
   postProgress,
   postGoal,
+  editProgress,
   deleteProgress,
 } from "./requestUtils";
 

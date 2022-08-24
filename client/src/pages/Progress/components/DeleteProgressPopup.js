@@ -1,17 +1,17 @@
 import React, { useContext, useState } from "react";
-import CustomDialog from "../../../../components/ui/CustomDialog";
-import CustomButton from "../../../../components/ui/CustomButton";
-import PostDataButton from "../../../../components/ui/PostDataButton";
+import CustomDialog from "../../../components/ui/CustomDialog";
+import CustomButton from "../../../components/ui/CustomButton";
+import PostDataButton from "../../../components/ui/PostDataButton";
 import { useDispatch, useSelector } from "react-redux";
 import {
   capitalizeOnlyFirstChar,
   deleteProgress,
   PROGRESS_TYPE_NAMES,
-} from "../../../../utils";
+} from "../../../utils";
 import { Box, Typography } from "@mui/material";
-import { SnackbarDispatchContext } from "../../context/SnackbarDispatchContext";
-import { SNACKBAR_ACTIONS } from "../../../../components/ui/CustomSnackbar";
-import { removeUserProgressItem } from "../../../../redux";
+import { SnackbarDispatchContext } from "../context/SnackbarDispatchContext";
+import { SNACKBAR_ACTIONS } from "../../../components/ui/CustomSnackbar";
+import { removeUserProgressItem } from "../../../redux";
 
 const DeleteProgressPopup = ({ setDeleteProgressPopupIsOpen, progress }) => {
   const { user, progressPage } = useSelector((state) => state);

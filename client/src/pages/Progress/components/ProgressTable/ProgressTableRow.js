@@ -2,7 +2,7 @@ import { Box, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import DeleteProgressPopup from "./DeleteProgressPopup";
+import DeleteProgressPopup from "../DeleteProgressPopup";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------

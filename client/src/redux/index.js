@@ -15,6 +15,7 @@ export {
   setUserGoals,
   setUserProgress,
   addUserProgressItem,
+  removeUserProgressItem,
 } from "./user/userActions";
 
 export {

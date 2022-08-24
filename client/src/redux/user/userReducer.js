@@ -11,6 +11,7 @@ import {
   SET_USER_GOALS,
   SET_USER_PROGRESS,
   ADD_USER_PROGRESS_ITEM,
+  REMOVE_USER_PROGRESS_ITEM,
 } from "./userTypes";
 
 // uses binary search in the future
@@ -22,7 +23,7 @@ const getInsertIndex = (array, target) => {
 };
 
 // requires allProgress to be sorted by date from most recent to least recent
-const insertProgress = (allProgress, { progressType, progressItem }) => {
+const insertProgressItem = (allProgress, { progressType, progressItem }) => {
   const singularProgressType = PROGRESS_TYPE_NAMES[progressType].singular;
 
   const insertIndex = getInsertIndex(
@@ -36,6 +37,15 @@ const insertProgress = (allProgress, { progressType, progressItem }) => {
       progressItem,
       ...allProgress[singularProgressType].slice(insertIndex),
     ],
+  };
+};
+
+const removeProgressItem = (allProgress, { progressItemID, progressType }) => {
+  const singularProgressType = PROGRESS_TYPE_NAMES[progressType].singular;
+  return {
+    [singularProgressType]: allProgress[singularProgressType].filter(
+      ({ id }) => id !== progressItemID
+    ),
   };
 };
 
@@ -133,10 +143,18 @@ const userReducer = (state = initialState, action) => {
           ...state,
           progress: {
             ...state.progress,
-            ...insertProgress(state.progress, action.payload),
+            ...insertProgressItem(state.progress, action.payload),
           },
         };
 
+      case REMOVE_USER_PROGRESS_ITEM:
+        return {
+          ...state,
+          progress: {
+            ...state.progress,
+            ...removeProgressItem(state.progress, action.payload),
+          },
+        };
       default:
         return state;
     }

@@ -15,7 +15,6 @@ import {
 
 // uses binary search in the future
 const getInsertIndex = (array, target) => {
-  console.log(array, target);
   for (let i = 0; i < array.length; i++) {
     if (target >= array[i]) return i;
   }

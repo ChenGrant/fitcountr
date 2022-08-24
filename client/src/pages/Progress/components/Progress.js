@@ -22,6 +22,7 @@ import CustomSnackbar, {
   SNACKBAR_ACTIONS,
 } from "../../../components/ui/CustomSnackbar";
 import { getGoalString } from "../utils";
+import { SnackbarDispatchProvider } from "../context/SnackbarDispatchContext";
 
 // ------------------------------ PROGRESS POPUP REDUCER ------------------------------
 export const PROGRESS_POPUP_TYPES = {
@@ -81,7 +82,7 @@ const Progress = () => {
   if (pageIsLoading) return <LoadingCircle />;
 
   return (
-    <>
+    <SnackbarDispatchProvider value={snackbarDispatch}>
       <Box
         p={5}
         display="flex"
@@ -137,7 +138,7 @@ const Progress = () => {
                 })
               }
             >
-              <EditIcon color="primary"/>
+              <EditIcon color="primary" />
             </IconButton>
           </Box>
           {/* Add New Progress */}
@@ -171,7 +172,7 @@ const Progress = () => {
           </Box>
         </Box>
         {/* <ProgressTable /> */}
-        <ProgressTable />
+        <ProgressTable snackbarDispatch={snackbarDispatch} />
         {/* Snackbar */}
         <CustomSnackbar
           {...{
@@ -184,13 +185,12 @@ const Progress = () => {
       {progressPopup.isOpen && (
         <ProgressPopup
           popupType={progressPopup.type}
-          snackbarDispatch={snackbarDispatch}
           closePopup={() =>
             progressPopupDispatch({ type: PROGRESS_POPUP_ACTIONS.CLOSE })
           }
         />
       )}
-    </>
+    </SnackbarDispatchProvider>
   );
 };
 

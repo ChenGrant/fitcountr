@@ -301,7 +301,7 @@ const postGoal = async (req, res) => {
 const deleteProgress = async (req, res) => {
   try {
     const { progressID } = req.body;
-    const progress = await Progress.findByIdAndDelete(progressID);
+    await Progress.findByIdAndDelete(progressID);
     return res.json({ message: "Progress deleted" });
   } catch (err) {
     console.log(err);

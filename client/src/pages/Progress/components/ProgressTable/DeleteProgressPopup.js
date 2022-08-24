@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import CustomDialog from "../../../../components/ui/CustomDialog";
 import CustomButton from "../../../../components/ui/CustomButton";
 import PostDataButton from "../../../../components/ui/PostDataButton";
@@ -9,19 +9,32 @@ import {
   PROGRESS_TYPE_NAMES,
 } from "../../../../utils";
 import { Box, Typography } from "@mui/material";
+import { SnackbarDispatchContext } from "../../context/SnackbarDispatchContext";
+import { SNACKBAR_ACTIONS } from "../../../../components/ui/CustomSnackbar";
 
 const DeleteProgressPopup = ({ setDeleteProgressPopupIsOpen, progress }) => {
   const { user, progressPage } = useSelector((state) => state);
   const { progressType } = progressPage;
   const [isDeletingProgress, setIsDeletingProgress] = useState(false);
+  const snackbarDispatch = useContext(SnackbarDispatchContext);
 
   const handleClose = () => setDeleteProgressPopupIsOpen(false);
 
   const handleDeleteProgress = async (id) => {
     setIsDeletingProgress(true);
-    console.log(id);
     const response = await deleteProgress(user, id);
-    console.log(response)
+    snackbarDispatch({
+      type: response.error
+        ? SNACKBAR_ACTIONS.FAILURE
+        : SNACKBAR_ACTIONS.SUCCESS,
+      payload: {
+        message: response.error
+          ? `Could not delete ${PROGRESS_TYPE_NAMES[progressType].singular} progress`
+          : `${capitalizeOnlyFirstChar(
+              PROGRESS_TYPE_NAMES[progressType].singular
+            )} progress deleted`,
+      },
+    });
     // remove progress from redux store
     handleClose();
   };

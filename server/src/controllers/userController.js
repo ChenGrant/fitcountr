@@ -300,7 +300,12 @@ const postGoal = async (req, res) => {
 
 const editProgress = async (req, res) => {
   try {
-    console.log(req.body);
+    const { progressID } = req.body;
+    const progress = await Progress.findById(progressID);
+    Object.entries(req.body.progress).forEach(
+      ([key, value]) => (progress[key] = value)
+    );
+    await progress.save();
     return res.json({ message: "Progress edited" });
   } catch (err) {
     console.log(err);

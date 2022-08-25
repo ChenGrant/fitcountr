@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import React from "react";
 import ErrorIcon from "@mui/icons-material/Error";
 import { useTheme } from "@emotion/react";
-import { fetchFoodFromBarcodeNumber } from "../../../utils";
+import { fetchFoodFromBarcodeNumber, postFood } from "../../../utils";
 import CustomButton from "../../../components/ui/CustomButton";
 import { Box } from "@mui/system";
 import CustomCard from "../../../components/ui/CustomCard";
@@ -16,11 +16,13 @@ import {
 } from "../../../utils";
 import BackArrow from "../../../components/ui/BackArrow";
 import useFetch from "../../../hooks/useFetch";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { removeSearchFoodPage } from "../../../redux";
 import LoadingCircle from "../../../components/miscellaneous/LoadingCircle";
 import PostDataButton from "../../../components/ui/PostDataButton";
 
+const BARCODE_SEARCH_METHOD = "BARCODE_SEARCH_METHOD";
+const FOOD_NAME_SEARCH_METHOD = "FOOD_NAME_SEARCH_METHOD";
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
@@ -28,6 +30,7 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
   const { desktop } = useScreenSize();
   const dispatch = useDispatch();
   const theme = useTheme();
+  const { user } = useSelector((state) => state);
   const [foodData] = useFetch(
     initialBarcodeNumber
       ? async () =>
@@ -38,10 +41,21 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
   );
   const pageIsLoading = !foodData.hasFetched;
 
-  const addFoodToProgress = () => {
-    console.log(foodData.data);
-  };
+  const addFoodToProgress = async () => {
+    const { name, nutrients, servingSize } = foodData.data;
 
+    const response = await postFood(user, {
+      name,
+      nutrients,
+      servingSize,
+      searchMethod: initialBarcodeNumber
+        ? BARCODE_SEARCH_METHOD
+        : FOOD_NAME_SEARCH_METHOD,
+      barcodeNumber: initialBarcodeNumber || undefined,
+    });
+
+    console.log(response);
+  };
   // // -------------------------------------- RENDER ------------------------------------
   if (pageIsLoading) return <LoadingCircle />;
 

@@ -182,6 +182,18 @@ export const postGoal = async (user, goal) => {
   });
 };
 
+export const postFood = async (user, food) => {
+  const userIdToken = await user.firebase.getIdToken();
+  return await fetchJSON(`/user/food/${user.firebase.uid}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: userIdToken,
+    },
+    body: JSON.stringify(food),
+  });
+}
+
 // ----------------------------------- PUT REQUESTS -----------------------------------
 export const editProgress = async (user, progress, progressID) => {
   const userIdToken = await user.firebase.getIdToken();

@@ -298,6 +298,17 @@ const postGoal = async (req, res) => {
   }
 };
 
+const postFood = async (req, res) => {
+  try {
+    console.log(req.body);
+    return res.json({ message: "Food added" });
+  } catch (err) {
+    console.log(err);
+    return res
+      .json({ error: { message: "Could not add food" } })
+      .status(INTERNAL_SERVER_ERROR_CODE);
+  }
+};
 const editProgress = async (req, res) => {
   try {
     const { progressID } = req.body;
@@ -346,6 +357,7 @@ module.exports = {
   postProfilePicture,
   postProgress,
   postGoal,
+  postFood,
   editProgress,
   deleteProgress,
 };

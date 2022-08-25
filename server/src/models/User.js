@@ -4,7 +4,7 @@ const MediaFile = require("../models/MediaFile");
 const config = require("../config/config");
 const { ProgressUtils } = require("../utils");
 
-const { PROGRESS_TYPES, hasExactlyOneProgressType } = ProgressUtils;
+const { PROGRESS_TYPES } = ProgressUtils;
 const EMAIL_VERIFICATION_PIN_LENGTH = 5;
 
 // -------------------------------------- SCHEMA --------------------------------------

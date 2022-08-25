@@ -10,8 +10,9 @@ const {
   postProfilePicture,
   postProgress,
   postGoal,
+  postFood,
   editProgress,
-  deleteProgress
+  deleteProgress,
 } = require("../controllers/userController");
 const { isAuthorized, PRIVATE } = require("../middleware/isAuthorized");
 const isAuthenticated = require("../middleware/isAuthenticated");
@@ -63,6 +64,8 @@ router.post(
 );
 
 router.post("/goal/:userUID", isAuthenticated, isAuthorized(PRIVATE), postGoal);
+
+router.post("/food/:userUID", isAuthenticated, isAuthorized(PRIVATE), postFood);
 
 router.put(
   "/progress/:userUID",

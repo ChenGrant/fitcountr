@@ -19,6 +19,7 @@ import useFetch from "../../../hooks/useFetch";
 import { useDispatch } from "react-redux";
 import { removeSearchFoodPage } from "../../../redux";
 import LoadingCircle from "../../../components/miscellaneous/LoadingCircle";
+import PostDataButton from "../../../components/ui/PostDataButton";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
@@ -37,13 +38,26 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
   );
   const pageIsLoading = !foodData.hasFetched;
 
+  const addFoodToProgress = () => {
+    console.log(foodData.data);
+  };
+
   // // -------------------------------------- RENDER ------------------------------------
   if (pageIsLoading) return <LoadingCircle />;
 
   return (
     <>
       <BackArrow onClick={() => dispatch(removeSearchFoodPage())} />
-      <Box sx={{ width: "100%", display: "grid", placeItems: "center" }}>
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 5,
+        }}
+      >
         {foodData.data ? (
           <CustomCard
             sx={{
@@ -123,6 +137,24 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
             </Box>
           </Box>
         )}
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: "calc(600px + 2 * 5 * 8px)",
+            ...(!desktop && {
+              width: "calc(100% - 2 * 2 * 8px)",
+              maxWidth: "calc(600px + 2 * 2 * 8px)",
+            }),
+          }}
+        >
+          <PostDataButton
+            onClick={addFoodToProgress}
+            variant="contained"
+            sx={{ width: "100%" }}
+          >
+            Add Food To Progress
+          </PostDataButton>
+        </Box>
       </Box>
     </>
   );

@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import ErrorIcon from "@mui/icons-material/Error";
 import { useTheme } from "@emotion/react";
 import { fetchFoodFromBarcodeNumber, postFood } from "../../../utils";
@@ -39,9 +39,11 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
           )
       : () => cleanFoodsFetchedFromQuery(initialFoodData)
   );
+  const [isPostingFood, setIsPostingFood] = useState(false);
   const pageIsLoading = !foodData.hasFetched;
 
   const addFoodToProgress = async () => {
+    setIsPostingFood(true);
     const { name, nutrients, servingSize } = foodData.data;
 
     const response = await postFood(user, {
@@ -55,6 +57,14 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
     });
 
     console.log(response);
+
+    // think about when a user's foods is fetched, and how the timing of the fetch affects the redux store
+    
+
+    // render snackbar for confirmation
+    // update redux (if no initial fetch => when we do fetch, we have to consider the existing foods in redux)
+    // if initial fetch, just modify redux
+    setIsPostingFood(false);
   };
   // // -------------------------------------- RENDER ------------------------------------
   if (pageIsLoading) return <LoadingCircle />;
@@ -162,6 +172,7 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
           }}
         >
           <PostDataButton
+            isPostingData={isPostingFood}
             onClick={addFoodToProgress}
             variant="contained"
             sx={{ width: "100%" }}

@@ -4,6 +4,12 @@ const foodSchema = new mongoose.Schema({
   userUID: {
     type: String,
     required: true,
+    validate: {
+      validator: (userUID) => {
+        //validate that a user exists
+        return true;
+      },
+    },
   },
 
   name: {

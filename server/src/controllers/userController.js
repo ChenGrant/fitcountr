@@ -304,6 +304,13 @@ const postFood = async (req, res) => {
     const { userUID } = req.params;
     const food = req.body;
 
+    // if there is a doc with the same userUID, same searchMethod of barcodeNumber, and same barcodeNumber, update that doc with the incoming data
+
+    // if there is a doc with the same userUID, same searchMethod of food name, and same food name, then update that doc with the incoming data
+
+    // have different responses depending on
+    // if a doc was created/updated
+
     const createdFood = await Food.create({
       ...food,
       userUID,

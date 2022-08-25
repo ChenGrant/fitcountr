@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const MediaFile = require("../models/MediaFile");
 const Progress = require("../models/Progress");
+const Food = require("../models/Food");
 const admin = require("firebase-admin");
 const {
   sendEmailVerificationAsync,
@@ -300,8 +301,21 @@ const postGoal = async (req, res) => {
 
 const postFood = async (req, res) => {
   try {
-    console.log(req.body);
-    return res.json({ message: "Food added" });
+    const { userUID } = req.params;
+    const food = req.body;
+
+    const createdFood = await Food.create({
+      ...food,
+      userUID,
+    });
+
+    const createdFoodCopy = Object.fromEntries(
+      Object.entries(createdFood._doc)
+        .filter(([key]) => !["__v", "userUID"].includes(key))
+        .map(([key, value]) => [key === "_id" ? "id" : key, value])
+    );
+
+    return res.json(createdFoodCopy);
   } catch (err) {
     console.log(err);
     return res
@@ -309,6 +323,7 @@ const postFood = async (req, res) => {
       .status(INTERNAL_SERVER_ERROR_CODE);
   }
 };
+
 const editProgress = async (req, res) => {
   try {
     const { progressID } = req.body;

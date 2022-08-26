@@ -304,12 +304,36 @@ const postFood = async (req, res) => {
     const { userUID } = req.params;
     const food = req.body;
 
-    // if there is a doc with the same userUID, same searchMethod of barcodeNumber, and same barcodeNumber, update that doc with the incoming data
+    const existingFoodDoc =
+      (await Food.findOne({
+        userUID,
+        searchMethod: "BARCODE_SEARCH_METHOD",
+        barcodeNumber: food.barcodeNumber,
+      })) ||
+      (await Food.findOne({
+        userUID,
+        searchMethod: "FOOD_NAME_SEARCH_METHOD",
+        name: food.name,
+      }));
 
-    // if there is a doc with the same userUID, same searchMethod of food name, and same food name, then update that doc with the incoming data
+    if (existingFoodDoc) {
+      Object.entries(food).forEach(
+        ([key, value]) => (existingFoodDoc[key] = value)
+      );
 
-    // have different responses depending on
-    // if a doc was created/updated
+      await existingFoodDoc.save();
+
+      const existingFoodDocCopy = Object.fromEntries(
+        Object.entries(existingFoodDoc._doc)
+          .filter(([key]) => !["__v", "userUID"].includes(key))
+          .map(([key, value]) => [key === "_id" ? "id" : key, value])
+      );
+
+      return res.send({
+        message: "Updated existing food",
+        foodDoc: existingFoodDocCopy,
+      });
+    }
 
     const createdFood = await Food.create({
       ...food,

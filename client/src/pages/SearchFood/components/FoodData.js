@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useReducer, useState } from "react";
 import ErrorIcon from "@mui/icons-material/Error";
 import { useTheme } from "@emotion/react";
 import { fetchFoodFromBarcodeNumber, postFood } from "../../../utils";
@@ -20,6 +20,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeSearchFoodPage } from "../../../redux";
 import LoadingCircle from "../../../components/miscellaneous/LoadingCircle";
 import PostDataButton from "../../../components/ui/PostDataButton";
+import CustomSnackbar, {
+  INITIAL_SNACKBAR_STATE,
+  snackbarReducer,
+  SNACKBAR_ACTIONS,
+} from "../../../components/ui/CustomSnackbar";
 
 const BARCODE_SEARCH_METHOD = "BARCODE_SEARCH_METHOD";
 const FOOD_NAME_SEARCH_METHOD = "FOOD_NAME_SEARCH_METHOD";
@@ -40,6 +45,10 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
       : () => cleanFoodsFetchedFromQuery(initialFoodData)
   );
   const [isPostingFood, setIsPostingFood] = useState(false);
+  const [snackbar, snackbarDispatch] = useReducer(
+    snackbarReducer,
+    INITIAL_SNACKBAR_STATE
+  );
   const pageIsLoading = !foodData.hasFetched;
 
   const addFoodToProgress = async () => {
@@ -56,14 +65,18 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
       barcodeNumber: initialBarcodeNumber || undefined,
     });
 
-    console.log(response);
+    snackbarDispatch({
+      type: response.error
+        ? SNACKBAR_ACTIONS.FAILURE
+        : SNACKBAR_ACTIONS.SUCCESS,
+      payload: {
+        message: response.error
+          ? "Could not add food to progress"
+          : response.message,
+      },
+    });
 
-    // think about when a user's foods is fetched, and how the timing of the fetch affects the redux store
-    
-
-    // render snackbar for confirmation
-    // update redux (if no initial fetch => when we do fetch, we have to consider the existing foods in redux)
-    // if initial fetch, just modify redux
+    // if redux user's foods is not null, update
     setIsPostingFood(false);
   };
   // // -------------------------------------- RENDER ------------------------------------
@@ -181,6 +194,12 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
           </PostDataButton>
         </Box>
       </Box>
+      <CustomSnackbar
+        {...{
+          ...snackbar,
+          onClose: () => snackbarDispatch({ type: SNACKBAR_ACTIONS.CLOSE }),
+        }}
+      />
     </>
   );
 };

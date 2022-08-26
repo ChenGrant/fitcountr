@@ -331,7 +331,7 @@ const postFood = async (req, res) => {
 
       return res.send({
         message: "Updated existing food",
-        foodDoc: existingFoodDocCopy,
+        food: existingFoodDocCopy,
       });
     }
 
@@ -346,7 +346,10 @@ const postFood = async (req, res) => {
         .map(([key, value]) => [key === "_id" ? "id" : key, value])
     );
 
-    return res.json(createdFoodCopy);
+    return res.json({
+      message: "Added food to progress",
+      food: createdFoodCopy,
+    });
   } catch (err) {
     console.log(err);
     return res

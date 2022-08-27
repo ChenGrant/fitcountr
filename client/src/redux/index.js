@@ -14,6 +14,7 @@ export {
   setUserProfile,
   setUserGoals,
   setUserProgress,
+  setUserFoods,
   addUserProgressItem,
   removeUserProgressItem,
   editUserProgressItem,

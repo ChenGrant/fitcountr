@@ -4,6 +4,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import NavigationBar from "../../components/layouts/navigationBar/NavigationBar";
 import LoadingCircle from "../../components/miscellaneous/LoadingCircle";
 import {
+  setUserFoods,
   setUserGoals,
   setUserProfile,
   setUserProfilePictureURL,
@@ -14,6 +15,7 @@ import {
   fetchProfilePictureURL,
   fetchGoals,
   fetchProgress,
+  fetchFoods,
 } from "../../utils";
 import { ROUTE_PATHS } from "./routeUtils";
 
@@ -23,6 +25,7 @@ const FETCHING_ACTIONS = {
   SET_FETCHING_PROFILE: "SET_FETCHING_PROFILE",
   SET_FETCHING_PROFILE_PICTURE_URL: "SET_FETCHING_PROFILE_PICTURE_URL",
   SET_FETCHING_PROGRESS: "SET_FETCHING_PROGRESS",
+  SET_FETCHING_FOODS: "SET_FETCHING_FOODS",
 };
 
 const INITIAL_FETCHING_STATE = {
@@ -30,6 +33,7 @@ const INITIAL_FETCHING_STATE = {
   profile: false,
   profilePictureURL: false,
   progress: false,
+  foods: false,
 };
 
 const fetchingReducer = (state, action) => {
@@ -41,6 +45,8 @@ const fetchingReducer = (state, action) => {
     case FETCHING_ACTIONS.SET_FETCHING_PROFILE_PICTURE_URL:
       return { ...state, profilePictureURL: action.payload };
     case FETCHING_ACTIONS.SET_FETCHING_PROGRESS:
+      return { ...state, progress: action.payload };
+    case FETCHING_ACTIONS.SET_FETCHING_FOODS:
       return { ...state, progress: action.payload };
     default:
       return state;
@@ -76,6 +82,24 @@ const AuthenticatedRoutes = () => {
       }
     })();
   }, [user, fetching.goals, dispatch]);
+
+  useEffect(() => {
+    (async () => {
+      if (!user.auth.isLoggedIn) return;
+
+      if (user.foods === null && !fetching.foods) {
+        fetchingDispatch({
+          type: FETCHING_ACTIONS.SET_FETCHING_FOODS,
+          payload: true,
+        });
+        dispatch(setUserFoods(await fetchFoods(user)));
+        fetchingDispatch({
+          type: FETCHING_ACTIONS.SET_FETCHING_FOODS,
+          payload: false,
+        });
+      }
+    })();
+  }, [user, fetching.foods, dispatch]);
 
   useEffect(() => {
     (async () => {
@@ -139,7 +163,8 @@ const AuthenticatedRoutes = () => {
     !user.goals ||
     !user.profile ||
     !user.profilePicture.URL ||
-    !user.progress
+    !user.progress ||
+    !user.foods
   )
     return <LoadingCircle />;
 

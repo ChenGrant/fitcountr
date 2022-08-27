@@ -14,6 +14,7 @@ export {
   fetchUserProfile,
   fetchGoals,
   fetchProgress,
+  fetchFoods,
   scanBarcodeImage,
   sendVerificationEmail,
   postSignupData,

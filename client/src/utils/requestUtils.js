@@ -81,6 +81,16 @@ export const fetchProgress = async (user) => {
   });
 };
 
+export const fetchFoods = async (user) => {
+  const userIdToken = await user.firebase.getIdToken();
+  return await fetchJSON(`/user/foods/${user.firebase.uid}`, {
+    headers: {
+      "Content-Type": "application/json",
+      authorization: userIdToken,
+    },
+  });
+};
+
 // ---------------------------------- POST REQUESTS ----------------------------------
 export const sendVerificationEmail = async (email) =>
   await fetchJSON(`/emailVerification/sendVerificationEmail/${email}`, {
@@ -192,7 +202,7 @@ export const postFood = async (user, food) => {
     },
     body: JSON.stringify(food),
   });
-}
+};
 
 // ----------------------------------- PUT REQUESTS -----------------------------------
 export const editProgress = async (user, progress, progressID) => {

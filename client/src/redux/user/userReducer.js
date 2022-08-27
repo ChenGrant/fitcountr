@@ -13,6 +13,7 @@ import {
   ADD_USER_PROGRESS_ITEM,
   REMOVE_USER_PROGRESS_ITEM,
   EDIT_USER_PROGRESS_ITEM,
+  SET_USER_FOODS,
 } from "./userTypes";
 
 // uses binary search in the future
@@ -78,6 +79,7 @@ const initialState = {
   profile: null,
   goals: null,
   progress: null,
+  foods: null,
 };
 
 const userReducer = (state = initialState, action) => {
@@ -178,6 +180,12 @@ const userReducer = (state = initialState, action) => {
             ...editProgressItem(state.progress, action.payload),
           },
         };
+
+      case SET_USER_FOODS:
+        return {
+          ...state,
+          foods: action.payload
+        }
 
       default:
         return state;

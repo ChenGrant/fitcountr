@@ -5,6 +5,7 @@ const {
   getProfilePicture,
   getGoals,
   getProgress,
+  getFoods,
   createUser,
   postProfileData,
   postProfilePicture,
@@ -33,6 +34,13 @@ router.get(
   isAuthenticated,
   isAuthorized(PRIVATE),
   getProgress
+);
+
+router.get(
+  "/foods/:userUID",
+  isAuthenticated,
+  isAuthorized(PRIVATE),
+  getFoods
 );
 
 router.post(

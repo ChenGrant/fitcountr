@@ -212,6 +212,34 @@ const getProgress = async (req, res) => {
   }
 };
 
+const getFoods = async (req, res) => {
+  try {
+    const { userUID } = req.params;
+    const user = await User.findUserByUserUID(userUID);
+    verifyUserExists(user);
+
+    const foods = await Food.find({ userUID });
+
+    const cleanFoods = Object.fromEntries(
+      foods.map((food) => [
+        food._id,
+        {
+          name: food.name,
+          nutrients: food.nutrients,
+          servingSize: food.servingSize,
+        },
+      ])
+    );
+
+    return res.json(cleanFoods);
+  } catch (err) {
+    console.log(err);
+    return res
+      .json({ error: { message: "Could not get foods" } })
+      .status(INTERNAL_SERVER_ERROR_CODE);
+  }
+};
+
 const postProfileData = async (req, res) => {
   try {
     const { userUID } = req.params;
@@ -401,6 +429,7 @@ module.exports = {
   getGoals,
   getProgress,
   getProfileData,
+  getFoods,
   createUser,
   postProfileData,
   postProfilePicture,

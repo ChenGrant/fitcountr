@@ -14,6 +14,7 @@ import {
   REMOVE_USER_PROGRESS_ITEM,
   EDIT_USER_PROGRESS_ITEM,
   SET_USER_FOODS,
+  ADD_USER_FOOD,
 } from "./userTypes";
 
 // uses binary search in the future
@@ -184,9 +185,17 @@ const userReducer = (state = initialState, action) => {
       case SET_USER_FOODS:
         return {
           ...state,
-          foods: action.payload
-        }
+          foods: action.payload,
+        };
 
+      case ADD_USER_FOOD:
+        return {
+          ...state,
+          foods: {
+            ...state.foods,
+            ...action.payload,
+          },
+        };
       default:
         return state;
     }

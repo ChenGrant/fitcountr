@@ -17,7 +17,7 @@ import {
 import BackArrow from "../../../components/ui/BackArrow";
 import useFetch from "../../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
-import { removeSearchFoodPage } from "../../../redux";
+import { addUserFood, removeSearchFoodPage } from "../../../redux";
 import LoadingCircle from "../../../components/miscellaneous/LoadingCircle";
 import PostDataButton from "../../../components/ui/PostDataButton";
 import CustomSnackbar, {
@@ -76,7 +76,19 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
       },
     });
 
-    // if redux user's foods is not null, update
+    if (!response.error) {
+      const { id, name, nutrients, servingSize } = response.food;
+      dispatch(
+        addUserFood({
+          [id]: {
+            name,
+            nutrients,
+            servingSize,
+          },
+        })
+      );
+    }
+    
     setIsPostingFood(false);
   };
   // // -------------------------------------- RENDER ------------------------------------

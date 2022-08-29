@@ -160,7 +160,11 @@ const ProgressPopup = ({ progressPopup, closePopup }) => {
       type: FORM_ACTIONS.INITIALIZE,
       payload: {
         initialValues: getInitialValues(progressType, progressPopup, user),
-        validationSchema: getValidationSchema(progressType, progressPopup),
+        validationSchema: getValidationSchema(
+          progressType,
+          progressPopup,
+          user
+        ),
       },
     });
   }, [progressType, progressPopup, user]);
@@ -177,7 +181,7 @@ const ProgressPopup = ({ progressPopup, closePopup }) => {
         onSubmit={onSubmit}
       >
         {(formik) => {
-          console.log(formik)
+          console.log(formik);
           return (
             <Form>
               <Box display="flex" flexDirection="column" gap={6}>

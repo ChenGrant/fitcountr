@@ -117,7 +117,7 @@ export const getInitialValues = (progressType, progressPopup, user) => {
   return initialValues;
 };
 
-export const getValidationSchema = (progressType, progressPopup) => {
+export const getValidationSchema = (progressType, progressPopup, user) => {
   const validationSchemaObject = {};
 
   const popupType = progressPopup.type;
@@ -194,7 +194,7 @@ export const getValidationSchema = (progressType, progressPopup) => {
     case PROGRESS_TYPES.WEIGHTS:
       validationSchemaObject[singularProgressType] = Yup.number()
         .required("Required")
-        .typeError("Height must be a number")
+        .typeError("Weight must be a number")
         .test(
           "minWeight",
           `Weight must be greater than ${MIN_WEIGHT.value} ${MIN_WEIGHT.unit.symbol}`,
@@ -204,6 +204,25 @@ export const getValidationSchema = (progressType, progressPopup) => {
         .trim()
         .required("Required")
         .oneOf(UNIT_SELECT_OPTIONS.map(({ value }) => value));
+      break;
+
+    case PROGRESS_TYPES.CALORIES:
+      validationSchemaObject[singularProgressType] = Yup.string()
+        .trim()
+        .required("Required")
+        .oneOf(Object.keys(user.foods));
+      validationSchemaObject["weight"] = Yup.number()
+        .required("Required")
+        .typeError("Weight must be a number")
+        .test(
+          "minWeight",
+          `Weight must be greater than ${MIN_WEIGHT.value} ${MIN_WEIGHT.unit.symbol}`,
+          (weight) => weight > MIN_WEIGHT.value
+        );
+      validationSchemaObject["unit"] = Yup.string()
+        .trim()
+        .required("Required")
+        .oneOf(FOOD_UNIT_SELECT_OPTIONS.map(({ value }) => value));
       break;
 
     case PROGRESS_TYPES.STEPS:

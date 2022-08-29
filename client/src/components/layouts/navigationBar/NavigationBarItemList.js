@@ -82,8 +82,15 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
   // ------------------------------------- RENDER -------------------------------------
   return NAVIGATION_BAR_ITEMS.map((item) => (
     <NavigationBarItem
-      key={item.name}
       {...item}
+      key={item.name}
+      nestedItems={item.nestedItems?.map((nestedItem) => ({
+        ...nestedItem,
+        onClick: () => {
+          nestedItem.onClick();
+          setMenuIsOpen && setMenuIsOpen(false);
+        },
+      }))}
       icon={{
         ...item.icon,
         ...(item.name !== "Profile" && { props: { color: "primary" } }),

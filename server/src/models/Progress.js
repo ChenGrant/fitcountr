@@ -41,6 +41,21 @@ const progressSchema = new mongoose.Schema({
       message: (props) => `${props.value} is not a valid step count`,
     },
   },
+
+  [PROGRESS_TYPES.MEAL.toLowerCase()]: {
+    type: {
+      meal: {},
+      weight: Number,
+      unit: {},
+      _id: false,
+    },
+    validate: {
+      validator: function () {
+        return hasExactlyOneProgressType(this._doc);
+      },
+      message: (props) => `${props.value} is invalid`,
+    },
+  },
 });
 
 module.exports = mongoose.model("Progress", progressSchema);

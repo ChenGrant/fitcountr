@@ -17,7 +17,7 @@ import { UNIT_SELECT_OPTIONS } from "../components/ProgressTypeFields/WeightFiel
 import { PROGRESS_POPUP_TYPES } from "../components/Progress";
 import { FOOD_UNIT_SELECT_OPTIONS } from "../components/ProgressTypeFields/MealField";
 
-export const getProgressFromFormValues = (formValues, progressType) => {
+export const getProgressFromFormValues = (formValues, progressType, user) => {
   const progress = {
     date: formValues.currentTimeIsUsed
       ? new Date()
@@ -33,6 +33,15 @@ export const getProgressFromFormValues = (formValues, progressType) => {
     case PROGRESS_TYPES.WEIGHTS:
       progress[singularProgressType] = {
         value: formValues[singularProgressType],
+        unit: Object.values(UNITS).find(
+          ({ symbol }) => symbol === formValues.unit
+        ),
+      };
+      break;
+    case PROGRESS_TYPES.CALORIES:
+      progress[singularProgressType] = {
+        meal: Object.entries(user.foods).find(([id]) => id === formValues[singularProgressType])[1],
+        weight: formValues.weight,
         unit: Object.values(UNITS).find(
           ({ symbol }) => symbol === formValues.unit
         ),

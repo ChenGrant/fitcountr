@@ -105,7 +105,7 @@ const ProgressPopup = ({ progressPopup, closePopup }) => {
         case PROGRESS_POPUP_TYPES.ADD_PROGRESS:
           return await postProgress(
             user,
-            getProgressFromFormValues(values, progressType)
+            getProgressFromFormValues(values, progressType, user)
           );
         case PROGRESS_POPUP_TYPES.SET_GOAL:
           return await postGoal(
@@ -115,7 +115,7 @@ const ProgressPopup = ({ progressPopup, closePopup }) => {
         case PROGRESS_POPUP_TYPES.EDIT_PROGRESS:
           return await editProgress(
             user,
-            getProgressFromFormValues(values, progressType),
+            getProgressFromFormValues(values, progressType, user),
             progressPopup.progressID
           );
         default:
@@ -181,7 +181,6 @@ const ProgressPopup = ({ progressPopup, closePopup }) => {
         onSubmit={onSubmit}
       >
         {(formik) => {
-          console.log(formik);
           return (
             <Form>
               <Box display="flex" flexDirection="column" gap={6}>

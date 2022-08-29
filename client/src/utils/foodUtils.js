@@ -1,5 +1,7 @@
 import { NutrientPrioritySet, UNITS, objectsAreEqual } from "./";
 
+export const MIN_CALORIES = 0
+
 export const SEARCH_FOOD_PAGES = {
   SELECT_SEARCH_METHOD: "SELECT_SEARCH_METHOD",
   SEARCH_BARCODE_IMAGE: "SEARCH_BARCODE_IMAGE",

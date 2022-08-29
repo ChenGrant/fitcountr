@@ -88,6 +88,14 @@ const userSchema = new mongoose.Schema({
           message: (props) => `${props.value} is not a valid step count`,
         },
       },
+      calories: {
+        type: Number,
+        validate: {
+          validator: (calories) => calories >= 0,
+          message: (props) => `${props.value} is not a valid calorie goal`,
+        },
+
+      },
       _id: false,
     },
     default: {},

@@ -323,6 +323,7 @@ const postGoal = async (req, res) => {
     verifyUserExists(user);
 
     const goal = req.body;
+    console.log(goal)
     user.goals = { ...user.goals._doc, ...goal };
     await user.save();
 

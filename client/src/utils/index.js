@@ -68,6 +68,7 @@ export {
   cleanFoodsFetchedFromQuery,
   cleanFoodsFetchedFromBarcodeNumber,
   getNutrientFromFood,
+  MIN_CALORIES
 } from "./foodUtils";
 
 export { theme } from "./themeUtils";

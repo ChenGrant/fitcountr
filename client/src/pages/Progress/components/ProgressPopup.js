@@ -19,6 +19,7 @@ import {
   objectsAreEqual,
   postGoal,
   postProgress,
+  PROGRESS_TYPES,
   PROGRESS_TYPE_NAMES,
 } from "../../../utils";
 import {
@@ -79,6 +80,10 @@ const ProgressPopup = ({ progressPopup, closePopup }) => {
             ? `Could not edit ${PROGRESS_TYPE_NAMES[progressType].singular}`
             : `Edited ${PROGRESS_TYPE_NAMES[progressType].singular}`;
         case PROGRESS_POPUP_TYPES.SET_GOAL:
+          if (progressType === PROGRESS_TYPES.CALORIES)
+            return response.error
+              ? "Could not set calorie goal"
+              : "Set calorie goal";
           return response.error
             ? `Could not set ${PROGRESS_TYPE_NAMES[progressType].singular} goal`
             : `Set ${PROGRESS_TYPE_NAMES[progressType].singular} goal`;
@@ -195,9 +200,11 @@ const ProgressPopup = ({ progressPopup, closePopup }) => {
                             PROGRESS_TYPE_NAMES[progressType].singular
                           )}`;
                         case PROGRESS_POPUP_TYPES.SET_GOAL:
-                          return `Set ${capitalizeOnlyFirstChar(
-                            PROGRESS_TYPE_NAMES[progressType].singular
-                          )} Goal`;
+                          return progressType === PROGRESS_TYPES.CALORIES
+                            ? "Set Calories Goal"
+                            : `Set ${capitalizeOnlyFirstChar(
+                                PROGRESS_TYPE_NAMES[progressType].singular
+                              )} Goal`;
                         case PROGRESS_POPUP_TYPES.EDIT_PROGRESS:
                           return `Edit
                           ${capitalizeOnlyFirstChar(
@@ -217,7 +224,7 @@ const ProgressPopup = ({ progressPopup, closePopup }) => {
                   sx={{ minWidth: "350px" }}
                 >
                   {/* Progress Type */}
-                  <ProgressTypeFields />
+                  <ProgressTypeFields popupType={popupType} />
                   {/* Date */}
                   {popupType !== PROGRESS_POPUP_TYPES.SET_GOAL && (
                     <ProgressDateFields />

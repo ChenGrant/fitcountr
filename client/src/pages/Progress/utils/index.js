@@ -3,6 +3,7 @@ import {
   capitalizeOnlyFirstChar,
   DATE_FORMAT,
   getNutrientFromFood,
+  MIN_CALORIES,
   MIN_STEPS,
   MIN_WEIGHT,
   PROGRESS_TYPES,
@@ -73,6 +74,9 @@ export const getGoalFromFormValues = (formValues, progressType) => {
         ),
       };
       break;
+    case PROGRESS_TYPES.CALORIES:
+      goal.calories = formValues.calories;
+      break;
     default:
       goal[singularProgressType] = formValues[singularProgressType];
   }
@@ -122,18 +126,25 @@ export const getInitialValues = (progressType, progressPopup, user) => {
           : "";
       break;
     case PROGRESS_TYPES.CALORIES:
-      initialValues[singularProgressType] =
-        popupType === PROGRESS_POPUP_TYPES.EDIT_PROGRESS
-          ? progressItem[singularProgressType].food.id
-          : "";
-      initialValues.weight =
-        popupType === PROGRESS_POPUP_TYPES.EDIT_PROGRESS
-          ? progressItem[singularProgressType].weight
-          : "";
-      initialValues.unit =
-        popupType === PROGRESS_POPUP_TYPES.EDIT_PROGRESS
-          ? progressItem[singularProgressType].unit.symbol
-          : FOOD_UNIT_SELECT_OPTIONS?.[0].value ?? "";
+      switch (popupType) {
+        case PROGRESS_POPUP_TYPES.SET_GOAL:
+          initialValues.calories = user.goals.calories ?? "";
+          break;
+        default:
+          initialValues[singularProgressType] =
+            popupType === PROGRESS_POPUP_TYPES.EDIT_PROGRESS
+              ? progressItem[singularProgressType].food.id
+              : "";
+          initialValues.weight =
+            popupType === PROGRESS_POPUP_TYPES.EDIT_PROGRESS
+              ? progressItem[singularProgressType].weight
+              : "";
+          initialValues.unit =
+            popupType === PROGRESS_POPUP_TYPES.EDIT_PROGRESS
+              ? progressItem[singularProgressType].unit.symbol
+              : FOOD_UNIT_SELECT_OPTIONS?.[0].value ?? "";
+          break;
+      }
       break;
     default:
   }
@@ -231,22 +242,36 @@ export const getValidationSchema = (progressType, progressPopup, user) => {
       break;
 
     case PROGRESS_TYPES.CALORIES:
-      validationSchemaObject[singularProgressType] = Yup.string()
-        .trim()
-        .required("Required")
-        .oneOf(Object.keys(user.foods));
-      validationSchemaObject["weight"] = Yup.number()
-        .required("Required")
-        .typeError("Weight must be a number")
-        .test(
-          "minWeight",
-          `Weight must be greater than ${MIN_WEIGHT.value} ${MIN_WEIGHT.unit.symbol}`,
-          (weight) => weight > MIN_WEIGHT.value
-        );
-      validationSchemaObject["unit"] = Yup.string()
-        .trim()
-        .required("Required")
-        .oneOf(FOOD_UNIT_SELECT_OPTIONS.map(({ value }) => value));
+      switch (popupType) {
+        case PROGRESS_POPUP_TYPES.SET_GOAL:
+          validationSchemaObject["calories"] = Yup.number()
+            .required("Required")
+            .typeError("Calories must be a number")
+            .test(
+              "minCalories",
+              `Calories must be greater than or equal to ${MIN_CALORIES}`,
+              (calories) => calories >= MIN_CALORIES
+            );
+          break;
+        default:
+          validationSchemaObject[singularProgressType] = Yup.string()
+            .trim()
+            .required("Required")
+            .oneOf(Object.keys(user.foods));
+          validationSchemaObject["weight"] = Yup.number()
+            .required("Required")
+            .typeError("Weight must be a number")
+            .test(
+              "minWeight",
+              `Weight must be greater than ${MIN_WEIGHT.value} ${MIN_WEIGHT.unit.symbol}`,
+              (weight) => weight > MIN_WEIGHT.value
+            );
+          validationSchemaObject["unit"] = Yup.string()
+            .trim()
+            .required("Required")
+            .oneOf(FOOD_UNIT_SELECT_OPTIONS.map(({ value }) => value));
+          break;
+      }
       break;
 
     case PROGRESS_TYPES.STEPS:
@@ -272,13 +297,19 @@ export const getValidationSchema = (progressType, progressPopup, user) => {
 export const getGoalString = (goal, progressType) => {
   const singularProgressType = PROGRESS_TYPE_NAMES[progressType].singular;
 
-  if (!goal[singularProgressType]) return "Goal: None";
+  if (
+    (!goal[singularProgressType] && progressType !== PROGRESS_TYPES.CALORIES) ||
+    !goal.calories
+  )
+    return "Goal: None";
 
   switch (progressType.toUpperCase()) {
     case PROGRESS_TYPES.WEIGHTS:
       return `Goal: ${goal[singularProgressType].value} ${goal[singularProgressType].unit.symbol}`;
     case PROGRESS_TYPES.STEPS:
       return `Goal: ${goal[singularProgressType]}`;
+    case PROGRESS_TYPES.CALORIES:
+      return `Goal: ${goal.calories}`;
     default:
       return "";
   }

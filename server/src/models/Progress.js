@@ -42,9 +42,9 @@ const progressSchema = new mongoose.Schema({
     },
   },
 
-  [PROGRESS_TYPES.MEAL.toLowerCase()]: {
+  [PROGRESS_TYPES.FOOD.toLowerCase()]: {
     type: {
-      meal: {},
+      food: {},
       weight: Number,
       unit: {},
       _id: false,

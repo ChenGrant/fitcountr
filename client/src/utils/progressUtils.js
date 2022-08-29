@@ -2,7 +2,6 @@ export const PROGRESS_TYPES = {
   WEIGHTS: "WEIGHTS",
   STEPS: "STEPS",
   CALORIES: "CALORIES",
-  //MEALS: "MEALS",
 };
 
 export const PROGRESS_TYPE_NAMES = {
@@ -15,11 +14,7 @@ export const PROGRESS_TYPE_NAMES = {
     singular: "steps",
   },
   CALORIES: {
-    plural: "meals",
-    singular: "meal",
+    plural: "foods",
+    singular: "food",
   },
-  // MEALS: {
-  //   plural: "meals",
-  //   singular: "meal",
-  // },
 };

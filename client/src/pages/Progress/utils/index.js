@@ -40,7 +40,7 @@ export const getProgressFromFormValues = (formValues, progressType, user) => {
       break;
     case PROGRESS_TYPES.CALORIES:
       progress[singularProgressType] = {
-        meal: Object.entries(user.foods).find(([id]) => id === formValues[singularProgressType])[1],
+        food: Object.entries(user.foods).find(([id]) => id === formValues[singularProgressType])[1],
         weight: formValues.weight,
         unit: Object.values(UNITS).find(
           ({ symbol }) => symbol === formValues.unit

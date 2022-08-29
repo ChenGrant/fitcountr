@@ -302,7 +302,7 @@ export const getColumnsHeaders = (progressType, goals) => {
           width: "125px",
         },
         {
-          label: "Protein",
+          label: "Protein(g)",
           transformFunction: ({ food }) =>
             round(getNutrientFromFood(food, "protein"), DECIMAL_PRECISION),
           width: "125px",

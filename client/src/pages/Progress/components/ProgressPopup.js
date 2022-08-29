@@ -177,6 +177,7 @@ const ProgressPopup = ({ progressPopup, closePopup }) => {
         onSubmit={onSubmit}
       >
         {(formik) => {
+          console.log(formik)
           return (
             <Form>
               <Box display="flex" flexDirection="column" gap={6}>

@@ -15,6 +15,7 @@ import * as Yup from "yup";
 import { TIME_PERIODS } from "../../../utils/dateUtils";
 import { UNIT_SELECT_OPTIONS } from "../components/ProgressTypeFields/WeightFields";
 import { PROGRESS_POPUP_TYPES } from "../components/Progress";
+import { FOOD_UNIT_SELECT_OPTIONS } from "../components/ProgressTypeFields/MealField";
 
 export const getProgressFromFormValues = (formValues, progressType) => {
   const progress = {
@@ -104,6 +105,11 @@ export const getInitialValues = (progressType, progressPopup, user) => {
         popupType === PROGRESS_POPUP_TYPES.EDIT_PROGRESS
           ? progressItem[singularProgressType]
           : "";
+      break;
+    case PROGRESS_TYPES.CALORIES:
+      initialValues[singularProgressType] = "";
+      initialValues.weight = "";
+      initialValues.unit = FOOD_UNIT_SELECT_OPTIONS?.[0].value ?? "";
       break;
     default:
   }

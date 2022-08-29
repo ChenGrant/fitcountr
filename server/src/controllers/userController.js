@@ -182,9 +182,11 @@ const getProgress = async (req, res) => {
 
     const weight = ProgressUtils.PROGRESS_TYPES.WEIGHT.toLowerCase();
     const steps = ProgressUtils.PROGRESS_TYPES.STEPS.toLowerCase();
+    const meal = ProgressUtils.PROGRESS_TYPES.MEAL.toLowerCase();
     let cleanProgress = {
       [weight]: [],
       [steps]: [],
+      [meal]: [],
     };
 
     progress.forEach((doc) => {

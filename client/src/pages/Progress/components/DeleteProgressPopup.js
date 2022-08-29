@@ -9,27 +9,26 @@ import {
   PROGRESS_TYPE_NAMES,
 } from "../../../utils";
 import { Box, Typography } from "@mui/material";
-import { SnackbarDispatchContext } from "../context/SnackbarDispatchContext";
-import { SNACKBAR_ACTIONS } from "../../../components/ui/CustomSnackbar";
 import { removeUserProgressItem } from "../../../redux";
+import { CustomSnackbarDispatchContext } from "../../../components/layouts/snackbar/CustomSnackbarDispatchContext";
+import { CUSTOM_SNACKBAR_ACTIONS } from "../../../components/layouts/snackbar/CustomSnackbar";
 
 const DeleteProgressPopup = ({ setDeleteProgressPopupIsOpen, progress }) => {
   const { user, progressPage } = useSelector((state) => state);
   const dispatch = useDispatch();
   const { progressType } = progressPage;
   const [isDeletingProgress, setIsDeletingProgress] = useState(false);
-  const snackbarDispatch = useContext(SnackbarDispatchContext);
+  const customSnackbarDispatch = useContext(CustomSnackbarDispatchContext);
 
   const handleClose = () => setDeleteProgressPopupIsOpen(false);
 
   const handleDeleteProgress = async (id) => {
     setIsDeletingProgress(true);
     const response = await deleteProgress(user, id);
-    snackbarDispatch({
-      type: response.error
-        ? SNACKBAR_ACTIONS.FAILURE
-        : SNACKBAR_ACTIONS.SUCCESS,
+    customSnackbarDispatch({
+      type: CUSTOM_SNACKBAR_ACTIONS.OPEN,
       payload: {
+        severity: response.error ? "error" : "success",
         message: response.error
           ? `Could not delete ${PROGRESS_TYPE_NAMES[progressType].singular} progress`
           : `${capitalizeOnlyFirstChar(

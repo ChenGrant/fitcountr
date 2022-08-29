@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, LinearProgress, Typography } from "@mui/material";
 import useScreenSize from "../../../hooks/useScreenSize";
@@ -17,17 +17,14 @@ import {
 } from "../../../utils";
 import moment from "moment";
 import * as Yup from "yup";
-import CustomSnackbar, {
-  INITIAL_SNACKBAR_STATE,
-  snackbarReducer,
-  SNACKBAR_ACTIONS,
-} from "../../../components/ui/CustomSnackbar";
 import { setUserProfile, setUserProfilePictureURL } from "../../../redux";
 import {
   getFormValuesFromProfile,
   getProfileDataFromFormValues,
 } from "../utils";
 import PostDataButton from "../../../components/ui/PostDataButton";
+import { CustomSnackbarDispatchContext } from "../../../components/layouts/snackbar/CustomSnackbarDispatchContext";
+import { CUSTOM_SNACKBAR_ACTIONS } from "../../../components/layouts/snackbar/CustomSnackbar";
 
 // -------------------------------------- FORMIK --------------------------------------
 const validationSchema = Yup.object({
@@ -91,13 +88,11 @@ const validationSchema = Yup.object({
 const Profile = () => {
   const { user } = useSelector((state) => state);
   const dispatch = useDispatch();
+  const customSnackbarDispatch = useContext(CustomSnackbarDispatchContext);
   const { desktop, phone } = useScreenSize();
   const [initialFormValues, setInitialFormValues] = useState();
   const [isPostingData, setIsPostingData] = useState(false);
-  const [snackbar, snackbarDispatch] = useReducer(
-    snackbarReducer,
-    INITIAL_SNACKBAR_STATE
-  );
+
   const pageIsLoading = !initialFormValues || user.profilePicture.isLoading;
 
   // ----------------------------------- FUNCTIONS -----------------------------------
@@ -112,9 +107,9 @@ const Profile = () => {
 
       if (response.error) throw new Error(response);
 
-      snackbarDispatch({
-        type: SNACKBAR_ACTIONS.SUCCESS,
-        payload: { message: "Changes saved" },
+      customSnackbarDispatch({
+        type: CUSTOM_SNACKBAR_ACTIONS.OPEN,
+        payload: { severity: "success", message: "Changes saved" },
       });
       setInitialFormValues(formValues);
       dispatch(setUserProfilePictureURL(formValues.profilePicture.URL));
@@ -122,9 +117,9 @@ const Profile = () => {
       dispatch(setUserProfile(profileData));
     } catch (err) {
       console.log(err);
-      snackbarDispatch({
-        type: SNACKBAR_ACTIONS.FAILURE,
-        payload: { message: "Could not save changes" },
+      customSnackbarDispatch({
+        type: CUSTOM_SNACKBAR_ACTIONS.OPEN,
+        payload: { severity: "error", message: "Could not save changes" },
       });
     }
   };
@@ -231,12 +226,6 @@ const Profile = () => {
             )}
           </CustomCard>
         </Box>
-        <CustomSnackbar
-          {...{
-            ...snackbar,
-            onClose: () => snackbarDispatch({ type: SNACKBAR_ACTIONS.CLOSE }),
-          }}
-        />
       </Box>
     </>
   );

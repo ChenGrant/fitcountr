@@ -3,9 +3,10 @@ import { Box } from "@mui/system";
 import { Form, Formik } from "formik";
 import React, { useContext, useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { CUSTOM_SNACKBAR_ACTIONS } from "../../../components/layouts/snackbar/CustomSnackbar";
+import { CustomSnackbarDispatchContext } from "../../../components/layouts/snackbar/CustomSnackbarDispatchContext";
 import CustomButton from "../../../components/ui/CustomButton";
 import CustomDialog from "../../../components/ui/CustomDialog";
-import { SNACKBAR_ACTIONS } from "../../../components/ui/CustomSnackbar";
 import PostDataButton from "../../../components/ui/PostDataButton";
 import {
   addUserProgressItem,
@@ -20,7 +21,6 @@ import {
   postProgress,
   PROGRESS_TYPE_NAMES,
 } from "../../../utils";
-import { SnackbarDispatchContext } from "../context/SnackbarDispatchContext";
 import {
   getGoalFromFormValues,
   getInitialValues,
@@ -57,7 +57,7 @@ const ProgressPopup = ({ progressPopup, closePopup }) => {
   const { user, progressPage } = useSelector((state) => state);
   const { progressType } = progressPage;
   const popupType = progressPopup.type;
-  const snackbarDispatch = useContext(SnackbarDispatchContext);
+  const customSnackbarDispatch = useContext(CustomSnackbarDispatchContext);
   const dispatch = useDispatch();
   const [isAddingProgress, setIsAddingProgress] = useState(false);
   const [form, formDispatch] = useReducer(formReducer, INITIAL_FORM_STATE);
@@ -68,10 +68,6 @@ const ProgressPopup = ({ progressPopup, closePopup }) => {
   const handleClose = () => closePopup();
 
   const getSnackbarActionFromResponse = (response) => {
-    const snackbarType = response.error
-      ? SNACKBAR_ACTIONS.FAILURE
-      : SNACKBAR_ACTIONS.SUCCESS;
-
     const snackbarMessage = (() => {
       switch (popupType) {
         case PROGRESS_POPUP_TYPES.ADD_PROGRESS:
@@ -92,8 +88,9 @@ const ProgressPopup = ({ progressPopup, closePopup }) => {
     })();
 
     return {
-      type: snackbarType,
+      type: CUSTOM_SNACKBAR_ACTIONS.OPEN,
       payload: {
+        severity: response.error ? "error" : "success",
         message: snackbarMessage,
       },
     };
@@ -127,7 +124,7 @@ const ProgressPopup = ({ progressPopup, closePopup }) => {
     })();
 
     // handle response
-    snackbarDispatch(getSnackbarActionFromResponse(response));
+    customSnackbarDispatch(getSnackbarActionFromResponse(response));
     if (!response.error) {
       switch (popupType) {
         case PROGRESS_POPUP_TYPES.ADD_PROGRESS:

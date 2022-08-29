@@ -3,7 +3,7 @@ import React, { useReducer } from "react";
 import { CustomSnackbarDispatchProvider } from "./CustomSnackbarDispatchContext";
 
 // ---------------------------- SNACKBAR REDUCER CONSTANTS ----------------------------
-export const SNACKBAR_ACTIONS = {
+export const CUSTOM_SNACKBAR_ACTIONS = {
   OPEN: "OPEN",
   CLOSE: "CLOSE",
 };
@@ -16,9 +16,9 @@ const INITIAL_SNACKBAR_STATE = {
 
 const snackbarReducer = (state, action) => {
   switch (action.type) {
-    case SNACKBAR_ACTIONS.CLOSE:
+    case CUSTOM_SNACKBAR_ACTIONS.CLOSE:
       return { ...INITIAL_SNACKBAR_STATE };
-    case SNACKBAR_ACTIONS.OPEN:
+    case CUSTOM_SNACKBAR_ACTIONS.OPEN:
       return { ...state, open: true, ...action.payload };
     default:
       return state;
@@ -42,7 +42,9 @@ const CustomSnackbar = ({ children }) => {
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         open={snackbar.open}
         autoHideDuration={4000}
-        onClose={() => snackbarDispatch({ type: SNACKBAR_ACTIONS.CLOSE })}
+        onClose={() =>
+          snackbarDispatch({ type: CUSTOM_SNACKBAR_ACTIONS.CLOSE })
+        }
       >
         <Alert
           variant="filled"

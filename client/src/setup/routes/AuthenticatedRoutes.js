@@ -2,6 +2,7 @@ import React, { useEffect, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 import NavigationBar from "../../components/layouts/navigationBar/NavigationBar";
+import CustomSnackbar from "../../components/layouts/snackbar/CustomSnackbar";
 import LoadingCircle from "../../components/miscellaneous/LoadingCircle";
 import {
   setUserFoods,
@@ -170,7 +171,9 @@ const AuthenticatedRoutes = () => {
 
   return (
     <NavigationBar>
-      <Outlet />
+      <CustomSnackbar>
+        <Outlet />
+      </CustomSnackbar>
     </NavigationBar>
   );
 };

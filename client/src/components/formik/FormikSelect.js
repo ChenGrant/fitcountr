@@ -13,7 +13,12 @@ const FormikSelect = ({ label, name, options, textErrorHeight, ...rest }) => {
           return (
             <FormControl fullWidth {...rest}>
               <InputLabel htmlFor={id}>{label}</InputLabel>
-              <Select labelId={id} label={label} {...field}>
+              <Select
+                labelId={id}
+                label={label}
+                sx={{ textAlign: "left" }}
+                {...field}
+              >
                 {options.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}

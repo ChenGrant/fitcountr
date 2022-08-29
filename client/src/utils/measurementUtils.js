@@ -29,9 +29,15 @@ export const UNITS = {
     symbol: "lbs",
     system: IMPERIAL,
   },
+  GRAM: {
+    singularName: "gram",
+    pluralName: "grams",
+    symbol: "g",
+    system: METRIC,
+  },
 };
 
-export const WEIGHT_UNITS = [UNITS.KILOGRAM, UNITS.POUND];
+export const WEIGHT_UNITS = [UNITS.GRAM, UNITS.KILOGRAM, UNITS.POUND];
 
 export const weightToKilogram = (weight) => {
   const value = (() => {

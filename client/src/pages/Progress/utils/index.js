@@ -2,6 +2,7 @@ import moment from "moment";
 import {
   capitalizeOnlyFirstChar,
   DATE_FORMAT,
+  getNutrientFromFood,
   MIN_STEPS,
   MIN_WEIGHT,
   PROGRESS_TYPES,
@@ -40,7 +41,9 @@ export const getProgressFromFormValues = (formValues, progressType, user) => {
       break;
     case PROGRESS_TYPES.CALORIES:
       progress[singularProgressType] = {
-        food: Object.entries(user.foods).find(([id]) => id === formValues[singularProgressType])[1],
+        food: Object.entries(user.foods).find(
+          ([id]) => id === formValues[singularProgressType]
+        )[1],
         weight: formValues.weight,
         unit: Object.values(UNITS).find(
           ({ symbol }) => symbol === formValues.unit
@@ -273,6 +276,36 @@ export const getColumnsHeaders = (progressType, goals) => {
   const singularProgressType = PROGRESS_TYPE_NAMES[progressType].singular;
   const DECIMAL_PRECISION = 2;
   switch (progressType) {
+    case PROGRESS_TYPES.CALORIES:
+      return [
+        {
+          label: capitalizeOnlyFirstChar(singularProgressType),
+          transformFunction: ({ food }) => food.food.name,
+          width: "300px",
+        },
+        {
+          label: "Calories",
+          transformFunction: ({ food }) =>
+            round(getNutrientFromFood(food, "calories"), DECIMAL_PRECISION),
+          width: "125px",
+        },
+        {
+          label: "Protein",
+          transformFunction: ({ food }) =>
+            round(getNutrientFromFood(food, "protein"), DECIMAL_PRECISION),
+          width: "125px",
+        },
+        {
+          label: "Date",
+          width: "175px",
+          transformFunction: ({ date }) => moment(date).format(DATE_FORMAT),
+        },
+        {
+          label: "Time",
+          width: "150px",
+          transformFunction: ({ date }) => moment(date).format(TIME_FORMAT),
+        },
+      ];
     case PROGRESS_TYPES.WEIGHTS:
       return [
         {

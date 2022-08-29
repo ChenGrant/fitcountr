@@ -67,6 +67,7 @@ export {
   sortByNutrient,
   cleanFoodsFetchedFromQuery,
   cleanFoodsFetchedFromBarcodeNumber,
+  getNutrientFromFood,
 } from "./foodUtils";
 
 export { theme } from "./themeUtils";

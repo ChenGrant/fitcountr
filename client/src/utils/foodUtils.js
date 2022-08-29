@@ -1,4 +1,4 @@
-import { NutrientPrioritySet } from "./";
+import { NutrientPrioritySet, UNITS, objectsAreEqual } from "./";
 
 export const SEARCH_FOOD_PAGES = {
   SELECT_SEARCH_METHOD: "SELECT_SEARCH_METHOD",
@@ -88,4 +88,10 @@ export const cleanFoodsFetchedFromQuery = (rawFoodData) => {
     },
     nutrients,
   };
+};
+
+export const getNutrientFromFood = ({ food, weight, unit }, nutrient) => {
+  if (!objectsAreEqual(unit, UNITS.GRAM)) return;
+  if (UNITS.GRAM.symbol !== food.servingSize.unit) return;
+  return (food.nutrients[nutrient].value * weight) / food.servingSize.value;
 };

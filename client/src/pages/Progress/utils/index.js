@@ -41,9 +41,12 @@ export const getProgressFromFormValues = (formValues, progressType, user) => {
       break;
     case PROGRESS_TYPES.CALORIES:
       progress[singularProgressType] = {
-        food: Object.entries(user.foods).find(
-          ([id]) => id === formValues[singularProgressType]
-        )[1],
+        food: (() => {
+          const [id, food] = Object.entries(user.foods).find(
+            ([id]) => id === formValues[singularProgressType]
+          );
+          return { ...food, id };
+        })(),
         weight: formValues.weight,
         unit: Object.values(UNITS).find(
           ({ symbol }) => symbol === formValues.unit
@@ -119,9 +122,18 @@ export const getInitialValues = (progressType, progressPopup, user) => {
           : "";
       break;
     case PROGRESS_TYPES.CALORIES:
-      initialValues[singularProgressType] = "";
-      initialValues.weight = "";
-      initialValues.unit = FOOD_UNIT_SELECT_OPTIONS?.[0].value ?? "";
+      initialValues[singularProgressType] =
+        popupType === PROGRESS_POPUP_TYPES.EDIT_PROGRESS
+          ? progressItem[singularProgressType].food.id
+          : "";
+      initialValues.weight =
+        popupType === PROGRESS_POPUP_TYPES.EDIT_PROGRESS
+          ? progressItem[singularProgressType].weight
+          : "";
+      initialValues.unit =
+        popupType === PROGRESS_POPUP_TYPES.EDIT_PROGRESS
+          ? progressItem[singularProgressType].unit.symbol
+          : FOOD_UNIT_SELECT_OPTIONS?.[0].value ?? "";
       break;
     default:
   }

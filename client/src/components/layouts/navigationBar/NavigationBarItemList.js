@@ -87,6 +87,8 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
       nestedItems={item.nestedItems?.map((nestedItem) => ({
         ...nestedItem,
         onClick: () => {
+          item.name !== "Search Food" && dispatch(resetSearchFoodPages());
+          item.name !== "Progress" && dispatch(resetProgressPageType());
           nestedItem.onClick();
           setMenuIsOpen && setMenuIsOpen(false);
         },
@@ -97,6 +99,7 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
       }}
       isOpen={isOpen}
       onClick={() => {
+        item.name !== "Search Food" && dispatch(resetSearchFoodPages());
         item.name !== "Progress" && dispatch(resetProgressPageType());
         setMenuIsOpen && setMenuIsOpen(false);
         item.onClick();

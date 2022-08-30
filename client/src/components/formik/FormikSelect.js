@@ -20,7 +20,11 @@ const FormikSelect = ({ label, name, options, textErrorHeight, ...rest }) => {
                 {...field}
               >
                 {options.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
+                  <MenuItem
+                    key={option.value}
+                    value={option.value}
+                    onClick={option.onClick}
+                  >
                     {option.label}
                   </MenuItem>
                 ))}

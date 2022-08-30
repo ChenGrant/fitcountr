@@ -8,6 +8,8 @@ import {
   UNITS,
   WEIGHT_UNITS,
 } from "../../../../utils";
+import { useNavigate } from "react-router-dom";
+import { ROUTE_PATHS } from "../../../../setup/routes/routeUtils";
 
 export const FOOD_UNIT_SELECT_OPTIONS = sortArray(
   WEIGHT_UNITS.map((unit) => ({
@@ -20,6 +22,7 @@ export const FOOD_UNIT_SELECT_OPTIONS = sortArray(
 const MealField = () => {
   const { user } = useSelector((state) => state);
   const { progressType } = useSelector((state) => state.progressPage);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -29,12 +32,20 @@ const MealField = () => {
           PROGRESS_TYPE_NAMES[progressType].singular
         )}
         name={PROGRESS_TYPE_NAMES[progressType].singular}
-        options={sortArray(
-          Object.entries(user.foods).map(([id, food]) => ({
-            label: capitalizeOnlyFirstChar(food.name),
-            value: id,
-          })),
-          (food1, food2) => food1.label.localeCompare(food2.label)
+        options={[
+          {
+            label: "Add New Food",
+            value: "Add New Food",
+            onClick: () => navigate(ROUTE_PATHS.SEARCH_FOOD),
+          },
+        ].concat(
+          sortArray(
+            Object.entries(user.foods).map(([id, food]) => ({
+              label: capitalizeOnlyFirstChar(food.name),
+              value: id,
+            })),
+            (food1, food2) => food1.label.localeCompare(food2.label)
+          )
         )}
       />
       <FormikControl

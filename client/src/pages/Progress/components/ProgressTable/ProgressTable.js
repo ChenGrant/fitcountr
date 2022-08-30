@@ -94,6 +94,7 @@ const ProgressTable = () => {
           gap={2}
           width="max-content"
           px={1}
+          py={1}
         >
           {table.columnHeaders?.map(({ label, width }) => (
             <Box width={width} key={label}>

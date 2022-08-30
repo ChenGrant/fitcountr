@@ -188,7 +188,7 @@ const ProgressPopup = ({ progressPopup, closePopup }) => {
         {(formik) => {
           return (
             <Form>
-              <Box display="flex" flexDirection="column" gap={6}>
+              <Box display="flex" flexDirection="column" gap={2}>
                 {/* Header */}
                 <Box>
                   <Typography variant="h4" gutterBottom>
@@ -220,7 +220,7 @@ const ProgressPopup = ({ progressPopup, closePopup }) => {
                 <Box
                   display="flex"
                   flexDirection="column"
-                  gap={4}
+                  gap={2}
                   sx={{ minWidth: "350px" }}
                 >
                   {/* Progress Type */}

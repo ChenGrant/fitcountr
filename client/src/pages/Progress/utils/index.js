@@ -373,6 +373,7 @@ export const getColumnsHeaders = (progressType, goals) => {
         {
           label: `Goal Difference (${UNITS.KILOGRAM.symbol})`,
           transformFunction: ({ weight }) => {
+            if (!goals[singularProgressType]) return "No Goal";
             const goalDiff = round(
               weightToKilogram(weight).value -
                 weightToKilogram(goals[singularProgressType]).value,
@@ -404,6 +405,7 @@ export const getColumnsHeaders = (progressType, goals) => {
         {
           label: `Goal Difference`,
           transformFunction: ({ steps }) => {
+            if (!goals[singularProgressType]) return "No Goal";
             const goalDiff = round(
               steps - goals[singularProgressType],
               DECIMAL_PRECISION

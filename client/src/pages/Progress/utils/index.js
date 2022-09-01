@@ -298,8 +298,9 @@ export const getGoalString = (goal, progressType) => {
   const singularProgressType = PROGRESS_TYPE_NAMES[progressType].singular;
 
   if (
-    (!goal[singularProgressType] && progressType !== PROGRESS_TYPES.CALORIES) ||
-    !goal.calories
+    (goal[singularProgressType] === undefined &&
+      progressType !== PROGRESS_TYPES.CALORIES) ||
+    (goal.calories === undefined && progressType === PROGRESS_TYPES.CALORIES)
   )
     return "Goal: None";
 

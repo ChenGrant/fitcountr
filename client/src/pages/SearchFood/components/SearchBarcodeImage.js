@@ -11,9 +11,9 @@ import SearchBarcodeImageConfirmPopup from "./SearchBarcodeImageConfirmPopup";
 import SearchBarcodeImageErrorPopup from "./SearchBarcodeImageErrorPopup";
 import { SEARCH_FOOD_PAGES, scanBarcodeImage } from "../../../utils";
 import useScreenSize from "../../../hooks/useScreenSize";
-import BackArrow from "../../../components/ui/BackArrow";
 import { useDispatch } from "react-redux";
 import { removeSearchFoodPage, setCurrentSearchFoodPage } from "../../../redux";
+import BackArrow from "../../../components/layouts/backArrow/BackArrow";
 
 // -------------------------------- CONSTANTS --------------------------------
 const FILE_ACTIONS = {
@@ -129,8 +129,7 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
 
   // ------------------------------------- RENDER -------------------------------------
   return (
-    <>
-      <BackArrow onClick={() => dispatch(removeSearchFoodPage())} />
+    <BackArrow onClick={() => dispatch(removeSearchFoodPage())}>
       <Box
         display="flex"
         flexDirection="column"
@@ -250,7 +249,7 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
         barcodeErrorPopupIsOpen={barcodeErrorPopupIsOpen}
         setBarcodeErrorPopupIsOpen={setBarcodeErrorPopupIsOpen}
       />
-    </>
+    </BackArrow>
   );
 };
 

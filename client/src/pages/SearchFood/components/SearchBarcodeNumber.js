@@ -10,9 +10,13 @@ import SearchIcon from "@mui/icons-material/Search";
 import CustomButton from "../../../components/ui/CustomButton";
 import { SEARCH_FOOD_PAGES } from "../../../utils";
 import useScreenSize from "../../../hooks/useScreenSize";
-import BackArrow from "../../../components/ui/BackArrow";
+import BackArrow from "../../../components/layouts/backArrow/BackArrow";
 import { useDispatch } from "react-redux";
-import { addSearchFoodPage, removeSearchFoodPage, setCurrentSearchFoodPage } from "../../../redux";
+import {
+  addSearchFoodPage,
+  removeSearchFoodPage,
+  setCurrentSearchFoodPage,
+} from "../../../redux";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
@@ -42,8 +46,7 @@ const SearchBarcodeNumber = ({ initialBarcodeNumber = "" }) => {
 
   // ------------------------------------- RENDER -------------------------------------
   return (
-    <>
-      <BackArrow onClick={() => dispatch(removeSearchFoodPage())}/>
+    <BackArrow onClick={() => dispatch(removeSearchFoodPage())}>
       <Box
         display="flex"
         flexDirection="column"
@@ -90,7 +93,7 @@ const SearchBarcodeNumber = ({ initialBarcodeNumber = "" }) => {
           </CustomButton>
         </Box>
       </Box>
-    </>
+    </BackArrow>
   );
 };
 

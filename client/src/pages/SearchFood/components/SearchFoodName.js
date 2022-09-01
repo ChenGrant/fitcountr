@@ -13,7 +13,7 @@ import { SEARCH_FOOD_PAGES, fetchFoodsFromQuery } from "../../../utils";
 import useScreenSize from "../../../hooks/useScreenSize";
 import SearchFoodNameListTable from "./SearchFoodNameListTable";
 import FoodNameErrorPopup from "./SearchFoodNameErrorPopup";
-import BackArrow from "../../../components/ui/BackArrow";
+import BackArrow from "../../../components/layouts/backArrow/BackArrow";
 import { useDispatch } from "react-redux";
 import { removeSearchFoodPage, setCurrentSearchFoodPage } from "../../../redux";
 
@@ -96,8 +96,7 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
   };
 
   return (
-    <>
-      <BackArrow onClick={() => dispatch(removeSearchFoodPage())} />
+    <BackArrow onClick={() => dispatch(removeSearchFoodPage())}>
       <Box
         display="flex"
         flexDirection="column"
@@ -176,7 +175,7 @@ const SearchFoodName = ({ initialFoodName = "" }) => {
         foodNameErrorPopupIsOpen={foodNameErrorPopupIsOpen}
         setFoodNameErrorPopupIsOpen={setFoodNameErrorPopupIsOpen}
       />
-    </>
+    </BackArrow>
   );
 };
 

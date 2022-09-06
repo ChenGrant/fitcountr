@@ -8,6 +8,7 @@ import { CustomSnackbarDispatchContext } from "../../../components/layouts/snack
 import CustomButton from "../../../components/ui/CustomButton";
 import CustomDialog from "../../../components/ui/CustomDialog";
 import PostDataButton from "../../../components/ui/PostDataButton";
+import useScreenSize from "../../../hooks/useScreenSize";
 import {
   addUserProgressItem,
   editUserProgressItem,
@@ -58,6 +59,7 @@ const ProgressPopup = ({ progressPopup, closePopup }) => {
   const { user, progressPage } = useSelector((state) => state);
   const { progressType } = progressPage;
   const popupType = progressPopup.type;
+  const { desktop, phone } = useScreenSize();
   const customSnackbarDispatch = useContext(CustomSnackbarDispatchContext);
   const dispatch = useDispatch();
   const [isAddingProgress, setIsAddingProgress] = useState(false);
@@ -221,7 +223,7 @@ const ProgressPopup = ({ progressPopup, closePopup }) => {
                   display="flex"
                   flexDirection="column"
                   gap={2}
-                  sx={{ minWidth: "350px" }}
+                  sx={{ minWidth: desktop && "350px" }}
                 >
                   {/* Progress Type */}
                   <ProgressTypeFields popupType={popupType} />
@@ -230,7 +232,12 @@ const ProgressPopup = ({ progressPopup, closePopup }) => {
                     <ProgressDateFields />
                   )}
                 </Box>
-                <Box display="flex" gap={2} width="100%">
+                <Box
+                  display="flex"
+                  gap={2}
+                  flexDirection={phone ? "column-reverse" : "row"}
+                  width="100%"
+                >
                   {/* Back Button */}
                   <Box flex={1}>
                     <CustomButton

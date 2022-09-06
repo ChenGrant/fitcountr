@@ -3,6 +3,7 @@ import { Box, Pagination, Typography } from "@mui/material";
 import React, { useEffect, useReducer } from "react";
 import { useSelector } from "react-redux";
 import CustomCard from "../../../../components/ui/CustomCard";
+import useScreenSize from "../../../../hooks/useScreenSize";
 import { PROGRESS_TYPE_NAMES } from "../../../../utils";
 import { getColumnsHeaders, getRows } from "../../utils";
 import ProgressTableRow from "./ProgressTableRow";
@@ -42,6 +43,7 @@ const tableReducer = (state, action) => {
 // ************************************************************************************
 const ProgressTable = () => {
   const { progressPage, user } = useSelector((state) => state);
+  const { desktop, tablet, phone } = useScreenSize();
   const { progressType } = progressPage;
   const [table, tableDispatch] = useReducer(tableReducer, INITIAL_TABLE_STATE);
   const theme = useTheme();
@@ -85,7 +87,13 @@ const ProgressTable = () => {
 
   // ------------------------------------- RENDER -------------------------------------
   return (
-    <Box sx={{ display: "grid", placeItems: "center", width: "max-content" }}>
+    <Box
+      sx={{
+        display: "grid",
+        placeItems: "center",
+        width: "max-content",
+      }}
+    >
       <CustomCard>
         {/* Table Column Headers */}
         <Box

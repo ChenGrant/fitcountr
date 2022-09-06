@@ -18,6 +18,7 @@ import ProgressPopup from "./ProgressPopup";
 import ProgressTable from "./ProgressTable/ProgressTable";
 import { getGoalString } from "../utils";
 import { ProgressPopupDispatchProvider } from "../context/ProgressPopupDispatchContext";
+import useScreenSize from "../../../hooks/useScreenSize";
 
 // ------------------------------ PROGRESS POPUP REDUCER ------------------------------
 export const PROGRESS_POPUP_TYPES = {
@@ -58,6 +59,7 @@ const progressPopupReducer = (state, action) => {
 // ************************************************************************************
 const Progress = () => {
   const { user, progressPage } = useSelector((state) => state);
+  const { desktop, phone } = useScreenSize();
   const { progressType } = progressPage;
   const dispatch = useDispatch();
   const [progressPopup, progressPopupDispatch] = useReducer(
@@ -92,6 +94,7 @@ const Progress = () => {
         {/* Progress Tabs */}
         <Tabs
           value={progressType}
+          orientation={phone ? "vertical" : "horizontal"}
           onChange={(e, progressType) =>
             dispatch(setProgressPageType(progressType))
           }
@@ -119,9 +122,14 @@ const Progress = () => {
             );
           })}
         </Tabs>
-        <Box display="flex" alignItems="center" gap={25}>
+        <Box
+          display="flex"
+          alignItems="center"
+          flexDirection={desktop ? "row" : "column"}
+          gap={desktop ? 25 : 2}
+        >
           {/* Goal */}
-          <Box display="flex" gap={1} alignItems="center">
+          <Box display="flex" gap={1} alignItems="center" pl={!desktop && 1.4}>
             <Typography variant="h6">
               {getGoalString(user.goals, progressType)}
             </Typography>

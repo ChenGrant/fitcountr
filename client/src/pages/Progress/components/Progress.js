@@ -84,6 +84,7 @@ const Progress = () => {
     <ProgressPopupDispatchProvider value={progressPopupDispatch}>
       <Box
         p={5}
+        px={!desktop && 2}
         display="flex"
         flexDirection="column"
         gap={5}

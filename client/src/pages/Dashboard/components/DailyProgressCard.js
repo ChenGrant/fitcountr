@@ -1,18 +1,17 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
-import {
-  capitalizeFirstCharacter,
-  numberWithCommas,
-  sub,
-} from "../../../utils";
+import { capitalizeFirstCharacter } from "../../../utils";
 import TrendingFlatIcon from "@mui/icons-material/TrendingFlat";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import CustomCard from "../../../components/ui/CustomCard";
 import useScreenSize from "../../../hooks/useScreenSize";
 
-const DailyProgressCard = ({ stat, goal, current }) => {
+const DailyProgressCard = ({ progressType, progressValue, goalDiff }) => {
   const { desktop } = useScreenSize();
+  const weightValue =
+    progressType === "weight" && Number(goalDiff.split(" ")[0]);
+
   return (
     <CustomCard
       sx={{
@@ -21,10 +20,12 @@ const DailyProgressCard = ({ stat, goal, current }) => {
     >
       <Box display="flex" flexDirection="column" gap={1.8}>
         <Typography sx={{ fontWeight: 600 }}>
-          {capitalizeFirstCharacter(stat)}
+          {capitalizeFirstCharacter(progressType)}
         </Typography>
         <Box display="flex" alignItems="center" gap={1.5}>
-          {current === goal ? (
+          {goalDiff === null ? (
+            <Typography sx={{ fontWeight: 600 }}>No goal set</Typography>
+          ) : goalDiff === 0 || weightValue === 0 ? (
             <>
               <Box
                 height="24px"
@@ -38,10 +39,10 @@ const DailyProgressCard = ({ stat, goal, current }) => {
                 <TrendingFlatIcon sx={{ height: "16px" }} />
               </Box>
               <Typography sx={{ fontWeight: 600 }}>
-                +{numberWithCommas(sub(current, goal))} of goal
+                +{goalDiff} of goal
               </Typography>
             </>
-          ) : current < goal ? (
+          ) : goalDiff < 0 || weightValue < 0 ? (
             <>
               <Box
                 height="24px"
@@ -55,7 +56,24 @@ const DailyProgressCard = ({ stat, goal, current }) => {
                 <TrendingDownIcon sx={{ height: "16px" }} />
               </Box>
               <Typography sx={{ fontWeight: 600 }}>
-                {numberWithCommas(sub(current, goal))} of goal
+                {goalDiff} of goal
+              </Typography>
+            </>
+          ) : goalDiff > 0 || weightValue > 0 ? (
+            <>
+              <Box
+                height="24px"
+                width="24px"
+                borderRadius="100%"
+                bgcolor="rgba(84, 214, 44, 0.16)"
+                color="rgb(84, 214, 44)"
+                display="grid"
+                sx={{ placeItems: "center" }}
+              >
+                <TrendingUpIcon sx={{ height: "16px" }} />
+              </Box>
+              <Typography sx={{ fontWeight: 600 }}>
+                +{goalDiff} of goal
               </Typography>
             </>
           ) : (
@@ -72,12 +90,12 @@ const DailyProgressCard = ({ stat, goal, current }) => {
                 <TrendingUpIcon sx={{ height: "16px" }} />
               </Box>
               <Typography sx={{ fontWeight: 600 }}>
-                +{numberWithCommas(sub(current, goal))} of goal
+                {goalDiff} of goal
               </Typography>
             </>
           )}
         </Box>
-        <Typography variant="h4">{numberWithCommas(current)}</Typography>
+        <Typography variant="h4">{progressValue}</Typography>
       </Box>
     </CustomCard>
   );

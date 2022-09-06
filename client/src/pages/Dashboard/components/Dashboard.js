@@ -7,24 +7,8 @@ import { capitalizeFirstCharacter } from "../../../utils";
 import { useTheme } from "@emotion/react";
 import ProgressLineChart from "./ProgressLineChart";
 import LoadingCircle from "../../../components/miscellaneous/LoadingCircle";
-
-const dailyProgressData = [
-  {
-    stat: "calories",
-    goal: 3000,
-    current: 3000,
-  },
-  {
-    stat: "weight",
-    goal: 65.0,
-    current: 15.6,
-  },
-  {
-    stat: "steps",
-    goal: 10000,
-    current: 12330,
-  },
-];
+import { useSelector } from "react-redux";
+import { getDailyProgress } from "../utils";
 
 const macrosData = [
   { label: "fats", value: 13, unit: "g" },
@@ -36,6 +20,7 @@ const GAP_SIZE = 3;
 
 const Dashboard = () => {
   const { desktop } = useScreenSize();
+  const { user } = useSelector((state) => state);
   const theme = useTheme();
   const { primary } = theme.palette;
   const [macros, setMacros] = useState([]);
@@ -79,8 +64,8 @@ const Dashboard = () => {
         justifyContent="center"
         fullWidth
       >
-        {dailyProgressData.map((stat) => (
-          <DailyProgressCard key={stat.stat} {...stat} />
+        {getDailyProgress(user).map((progress) => (
+          <DailyProgressCard key={progress.progressType} {...progress} />
         ))}
       </Box>
       <Box

@@ -1,9 +1,8 @@
 import React from "react";
 import CustomCard from "../../../components/ui/CustomCard";
-import { Typography, Box, useTheme, IconButton } from "@mui/material";
+import { Typography, Box, useTheme } from "@mui/material";
 import { Line } from "react-chartjs-2";
 import { useSelector } from "react-redux";
-import SettingsIcon from "@mui/icons-material/Settings";
 import {
   Chart as ChartJS,
   CategoryScale,

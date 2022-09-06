@@ -1,4 +1,5 @@
 import {
+  capitalizeFirstCharacter,
   getNutrientFromFood,
   round,
   sortArray,
@@ -83,3 +84,36 @@ export const getDailyProgress = (user) =>
         return {};
     }
   });
+
+export const getDailyMacros = (user, theme) => {
+  const nutrients = ["protein", "carbohydrate", "fat"];
+
+  const macros = Object.fromEntries(
+    nutrients.map((nutrient) => [
+      nutrient,
+      {
+        value: 0,
+      },
+    ])
+  );
+
+  user?.progress?.food
+    ?.filter(({ date }) => new Date(date) > START_OF_TODAY)
+    .forEach(({ food }) => {
+      nutrients.forEach((nutrient) => {
+        macros[nutrient].value += getNutrientFromFood(food, nutrient);
+      });
+    });
+
+  return Object.entries(macros).map(([nutrient, { value }], index) => ({
+    nutrient,
+    text: `${capitalizeFirstCharacter(nutrient)}: ${round(
+      value,
+      DECIMAL_PRECISION
+    )} g`,
+    value: round(value, DECIMAL_PRECISION),
+    color:
+      Object.values(theme.palette.primary)?.[index] ||
+      theme.palette.primary.main,
+  }));
+};

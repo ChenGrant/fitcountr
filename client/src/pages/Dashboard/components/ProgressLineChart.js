@@ -50,106 +50,110 @@ const ProgressLineChart = () => {
             <SettingsIcon />
           </IconButton> */}
         </Box>
-        <Box flex={1}>
-          <Line
-            height="100%"
-            options={{
-              maintainAspectRatio: false,
-              responsive: true,
-              animation: {
-                tension: {
-                  duration: 1000,
-                  easing: "easeInQuad",
-                  from: 1,
-                  to: 0,
+        {data.length !== 0 ? (
+          <Box flex={1}>
+            <Line
+              height="100%"
+              options={{
+                maintainAspectRatio: false,
+                responsive: true,
+                animation: {
+                  tension: {
+                    duration: 1000,
+                    easing: "easeInQuad",
+                    from: 1,
+                    to: 0,
+                  },
                 },
-              },
-              plugins: {
-                legend: {
-                  display: false,
-                },
-                title: {
-                  display: false,
-                  text: "Chart.js Line Chart",
-                },
-              },
-              scales: {
-                x: {
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
                   title: {
-                    display: true,
-                    text: "Date",
-                    font: {
-                      family: "Montserrat,sans-serif",
-                      size: 16,
-                      weight: 600,
-                    },
-                    color: "black",
-                    padding: {
-                      top: 20,
-                    },
-                  },
-                  ticks: {
-                    display: true,
-                    font: {
-                      family: "Montserrat,sans-serif",
-                      size: 16,
-                      weight: 600,
-                    },
-                    color: "black",
-                  },
-                  grid: {
-                    z: 1,
-                    tickLength: 15,
+                    display: false,
+                    text: "Chart.js Line Chart",
                   },
                 },
-                y: {
-                  title: {
-                    display: true,
-                    text: "Weight (kg)",
-                    font: {
-                      family: "Montserrat,sans-serif",
-                      size: 16,
-                      weight: 600,
+                scales: {
+                  x: {
+                    title: {
+                      display: true,
+                      text: "Date",
+                      font: {
+                        family: "Montserrat,sans-serif",
+                        size: 16,
+                        weight: 600,
+                      },
+                      color: "black",
+                      padding: {
+                        top: 20,
+                      },
                     },
-                    color: "black",
-                    padding: {
-                      bottom: 20,
+                    ticks: {
+                      display: true,
+                      font: {
+                        family: "Montserrat,sans-serif",
+                        size: 16,
+                        weight: 600,
+                      },
+                      color: "black",
+                    },
+                    grid: {
+                      z: 1,
+                      tickLength: 15,
                     },
                   },
-                  ticks: {
-                    display: true,
-                    font: {
-                      family: "Montserrat,sans-serif",
-                      size: 16,
-                      weight: 600,
+                  y: {
+                    title: {
+                      display: true,
+                      text: "Weight (kg)",
+                      font: {
+                        family: "Montserrat,sans-serif",
+                        size: 16,
+                        weight: 600,
+                      },
+                      color: "black",
+                      padding: {
+                        bottom: 20,
+                      },
                     },
-                    color: "black",
-                  },
-                  grid: {
-                    z: 1,
-                    tickLength: 15,
+                    ticks: {
+                      display: true,
+                      font: {
+                        family: "Montserrat,sans-serif",
+                        size: 16,
+                        weight: 600,
+                      },
+                      color: "black",
+                    },
+                    grid: {
+                      z: 1,
+                      tickLength: 15,
+                    },
                   },
                 },
-              },
-            }}
-            data={{
-              labels: data.map((dataEntry) =>
-                new Date(dataEntry.date).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                })
-              ),
-              datasets: [
-                {
-                  fill: true,
-                  data: data.map((dataEntry) => dataEntry.weight.value),
-                  borderColor: theme.palette.primary.main,
-                  backgroundColor: theme.palette.primary.light,
-                },
-              ],
-            }}
-          />
-        </Box>
+              }}
+              data={{
+                labels: data.map((dataEntry) =>
+                  new Date(dataEntry.date).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })
+                ),
+                datasets: [
+                  {
+                    fill: true,
+                    data: data.map((dataEntry) => dataEntry.weight.value),
+                    borderColor: theme.palette.primary.main,
+                    backgroundColor: theme.palette.primary.light,
+                  },
+                ],
+              }}
+            />
+          </Box>
+        ) : (
+          <Typography sx={{ fontWeight: 600 }}>No weight progress</Typography>
+        )}
       </Box>
     </CustomCard>
   );

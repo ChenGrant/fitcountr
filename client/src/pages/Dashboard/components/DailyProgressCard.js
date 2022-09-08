@@ -10,7 +10,7 @@ import useScreenSize from "../../../hooks/useScreenSize";
 const DailyProgressCard = ({ progressType, progressValue, goalDiff }) => {
   const { desktop } = useScreenSize();
   const weightValue =
-    progressType === "weight" && Number(goalDiff.split(" ")[0]);
+    progressType === "weight" && Number(goalDiff?.split(" ")[0]);
 
   return (
     <CustomCard

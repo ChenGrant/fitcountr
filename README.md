@@ -1,8 +1,8 @@
 # fitcountr
 
-Version: 1.0.0
+Version: 1.0.1
 
-Last Edited: September 8, 2022
+Last Edited: September 10, 2022
 
 Description: fitcountr is a calorie-tracking web app that graphically visualizes data about user-recorded foods, weights, and steps.
 

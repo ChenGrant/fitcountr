@@ -10,14 +10,18 @@ import {
 import { fetchVerificationStatus } from "../../utils";
 import { FirebaseClientInitializerContext } from "../firebaseClient/FirebaseClientInitializerContext";
 
+// ************************************************************************************
+// ------------------------------------ COMPONENT -------------------------------------
+// ************************************************************************************
 const FirebaseUserListener = ({ children }) => {
+  const { user } = useSelector((state) => state);
+  const dispatch = useDispatch();
   const initializingFirebaseClient = useContext(
     FirebaseClientInitializerContext
   );
   const [auth, setAuth] = useState();
-  const dispatch = useDispatch();
-  const { user } = useSelector((state) => state);
 
+  // ----------------------------------- USE EFFECT -----------------------------------
   useEffect(() => {
     !initializingFirebaseClient && setAuth(getAuth());
   }, [initializingFirebaseClient]);
@@ -40,6 +44,7 @@ const FirebaseUserListener = ({ children }) => {
     return unsubscribeAuth;
   }, [auth, user.auth.isAuthenticating, dispatch]);
 
+  // ------------------------------------- RENDER -------------------------------------
   return children;
 };
 

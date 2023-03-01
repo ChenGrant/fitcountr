@@ -48,7 +48,7 @@ const fetchingReducer = (state, action) => {
     case FETCHING_ACTIONS.SET_FETCHING_PROGRESS:
       return { ...state, progress: action.payload };
     case FETCHING_ACTIONS.SET_FETCHING_FOODS:
-      return { ...state, progress: action.payload };
+      return { ...state, foods: action.payload };
     default:
       return state;
   }

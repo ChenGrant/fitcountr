@@ -77,9 +77,11 @@ const SearchFoodNameListTable = ({
           : { maxWidth: "800px" }
       }
     >
+      {/* Title */}
       <Typography variant="h4" gutterBottom>
         <b>Food Name</b>
       </Typography>
+      {/* List */}
       <Box my={1.5}>
         {foodData.list.foods.length === 0 ? (
           <Typography>No matches found</Typography>
@@ -126,6 +128,7 @@ const SearchFoodNameListTable = ({
           </Box>
         )}
       </Box>
+      {/* Pagination */}
       <Box display="grid" sx={{ placeItems: "center" }}>
         <Pagination
           disabled={foodData.isFetchingNewListPage}

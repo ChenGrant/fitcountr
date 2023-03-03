@@ -19,7 +19,7 @@ const MyFoods = () => {
       height={desktop ? "100vh" : "auto"}
       display="flex"
       flexDirection="column"
-      gap={2}
+      gap={5}
       alignItems="center"
       justifyContent="center"
     >

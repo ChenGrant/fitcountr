@@ -21,11 +21,10 @@ const {
 // ************************************************************************************
 const SearchFood = () => {
   const { searchFoodPage } = useSelector((state) => state);
-
-  // ------------------------------------- RENDER -------------------------------------
   const { name, barcodeImageFile, foodData, foodName, barcodeNumber } =
     searchFoodPage.peek();
 
+  // ------------------------------------- RENDER -------------------------------------
   switch (name) {
     case SELECT_SEARCH_METHOD:
       return <SelectSearchMethod />;

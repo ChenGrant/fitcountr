@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import EmailVerification from "./pages/EmailVerification";
 import PasswordReset from "./pages/PasswordReset";
 import SearchFood from "./pages/SearchFood";
+import MyFoods from "./pages/MyFoods";
 import Progress from "./pages/Progress/";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
@@ -48,6 +49,10 @@ const App = () => {
                       <Route
                         path={ROUTE_PATHS.SEARCH_FOOD}
                         element={<SearchFood />}
+                      />
+                      <Route
+                        path={ROUTE_PATHS.MY_FOODS}
+                        element={<MyFoods />}
                       />
                       <Route
                         path={ROUTE_PATHS.PROGRESS}

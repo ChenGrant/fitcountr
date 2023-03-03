@@ -5,5 +5,6 @@ export const ROUTE_PATHS = {
   PROFILE: "/profile",
   DASHBOARD: "/dashboard",
   SEARCH_FOOD: "/searchFood",
+  MY_FOODS: "/myFoods",
   PROGRESS: "/progress",
 };

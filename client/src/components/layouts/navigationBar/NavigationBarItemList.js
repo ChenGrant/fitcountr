@@ -5,6 +5,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import SearchIcon from "@mui/icons-material/Search";
+import FoodBankIcon from '@mui/icons-material/FoodBank';
 import { getAuth, signOut } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -58,6 +59,12 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
         dispatch(resetSearchFoodPages());
         navigate(ROUTE_PATHS.SEARCH_FOOD);
       },
+    },
+    // My Foods
+    {
+      name: "My Foods",
+      icon: <FoodBankIcon />,
+      onClick: () => navigate(ROUTE_PATHS.MY_FOODS),
     },
     // Progress
     {

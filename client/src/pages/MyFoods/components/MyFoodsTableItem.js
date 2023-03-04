@@ -1,13 +1,14 @@
 import { Box, Typography } from "@mui/material";
-import React, { useState } from "react";
-import MyFoodsItemPopup from "./MyFoodsItemPopup";
+import React, { useContext } from "react";
+import { MyFoodsPageDispatchContext } from "../context/MyFoodsPageDispatchContext";
+import { MY_FOODS_PAGES } from "../utils";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const MyFoodsTableItem = ({ index, food }) => {
-  const [popupIsOpen, setPopupIsOpen] = useState(false);
-  
+  const MyFoodsPageDispatch = useContext(MyFoodsPageDispatchContext);
+
   // ------------------------------------- RENDER -------------------------------------
   return (
     <>
@@ -20,14 +21,18 @@ const MyFoodsTableItem = ({ index, food }) => {
           "&:hover": { bgcolor: "#ededed" },
         }}
       >
-        <Typography p={1} onClick={() => setPopupIsOpen(true)}>
+        <Typography
+          p={1}
+          onClick={() =>
+            MyFoodsPageDispatch({
+              name: MY_FOODS_PAGES.FOOD_DETAILS,
+              food,
+            })
+          }
+        >
           {food.name}
         </Typography>
       </Box>
-      {/* Popup */}
-      {popupIsOpen && (
-        <MyFoodsItemPopup food={food} onClose={() => setPopupIsOpen(false)} />
-      )}
     </>
   );
 };

@@ -1,8 +1,7 @@
-import { Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import { Box, Typography } from "@mui/material";
 import React from "react";
+import BackArrow from "../../../components/layouts/backArrow/BackArrow";
 import CustomButton from "../../../components/ui/CustomButton";
-import CustomDialog from "../../../components/ui/CustomDialog";
 import {
   capitalizeFirstCharacter,
   round,
@@ -12,14 +11,15 @@ import {
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
-const MyFoodsItemPopup = ({ food, onClose }) => {
-  const deleteFood = () => {
-    console.log("delete this");
-  };
+const FoodDetails = ({ backArrowOnClick, food }) => {
+  
+  // ----------------------------------- FUNCTIONS -----------------------------------
+  const deleteFood = () => console.log(food);
 
   // ------------------------------------- RENDER -------------------------------------
   return (
-    <CustomDialog open onClose={onClose}>
+    <BackArrow onClick={backArrowOnClick}>
+      <Box>FoodDetails</Box>
       <Box display="flex" flexDirection="column" gap={2}>
         <Typography variant="h4" gutterBottom>
           <b>{food.name}</b>
@@ -61,8 +61,8 @@ const MyFoodsItemPopup = ({ food, onClose }) => {
           Delete
         </CustomButton>
       </Box>
-    </CustomDialog>
+    </BackArrow>
   );
 };
 
-export default MyFoodsItemPopup;
+export default FoodDetails;

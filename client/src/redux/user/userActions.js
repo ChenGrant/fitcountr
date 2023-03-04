@@ -14,6 +14,7 @@ import {
   EDIT_USER_PROGRESS_ITEM,
   SET_USER_FOODS,
   ADD_USER_FOOD,
+  REMOVE_USER_FOOD,
 } from "./userTypes";
 
 export const initializeUser = () => {
@@ -91,4 +92,9 @@ export const setUserFoods = (foods) => ({
 export const addUserFood = (food) => ({
   type: ADD_USER_FOOD,
   payload: food,
+});
+
+export const removeUserFood = (foodId) => ({
+  type: REMOVE_USER_FOOD,
+  payload: foodId,
 });

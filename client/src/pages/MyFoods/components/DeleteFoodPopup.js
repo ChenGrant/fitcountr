@@ -1,55 +1,57 @@
+import { Typography } from "@mui/material";
 import React, { useContext, useState } from "react";
 import CustomDialog from "../../../components/ui/CustomDialog";
+import { removeUserFood } from "../../../redux/user/userActions";
+import { useDispatch, useSelector } from "react-redux";
+import { Box } from "@mui/system";
 import CustomButton from "../../../components/ui/CustomButton";
 import PostDataButton from "../../../components/ui/PostDataButton";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  capitalizeOnlyFirstChar,
-  deleteProgress,
-  PROGRESS_TYPE_NAMES,
-} from "../../../utils";
-import { Box, Typography } from "@mui/material";
-import { removeUserProgressItem } from "../../../redux";
+import { deleteFood } from "../../../utils/requestUtils";
 import { CustomSnackbarDispatchContext } from "../../../components/layouts/snackbar/CustomSnackbarDispatchContext";
 import { CUSTOM_SNACKBAR_ACTIONS } from "../../../components/layouts/snackbar/CustomSnackbar";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
-const DeleteProgressPopup = ({ setDeleteProgressPopupIsOpen, progress }) => {
-  const { user, progressPage } = useSelector((state) => state);
+const DeleteFoodPopup = ({ isOpen, setIsOpen, food, backArrowOnClick }) => {
+  const { user } = useSelector((state) => state);
   const dispatch = useDispatch();
-  const { progressType } = progressPage;
-  const [isDeletingProgress, setIsDeletingProgress] = useState(false);
+  const [isDeletingFood, setIsDeletingFood] = useState(false);
   const customSnackbarDispatch = useContext(CustomSnackbarDispatchContext);
 
   // ----------------------------------- FUNCTIONS -----------------------------------
-  const handleClose = () => setDeleteProgressPopupIsOpen(false);
+  const handleClose = (functions = []) => {
+    setIsOpen(false);
+    functions.forEach((f) => f());
+  };
 
-  const handleDeleteProgress = async (id) => {
-    setIsDeletingProgress(true);
-    const response = await deleteProgress(user, id);
+  const handleDeleteFood = async (food) => {
+    setIsDeletingFood(true);
+    
+    // remove from backend
+    const response = await deleteFood(user, food.id);
+    console.log(response);
+
+    dispatch(removeUserFood(food.id));
+    backArrowOnClick();
     customSnackbarDispatch({
       type: CUSTOM_SNACKBAR_ACTIONS.OPEN,
       payload: {
         severity: response.error ? "error" : "success",
         message: response.error
-          ? `Could not delete ${PROGRESS_TYPE_NAMES[progressType].singular} progress`
-          : `${capitalizeOnlyFirstChar(
-              PROGRESS_TYPE_NAMES[progressType].singular
-            )} progress deleted`,
+          ? `Could not delete ${food.name}`
+          : `${food.name} deleted`,
       },
     });
-    dispatch(removeUserProgressItem(id, progressType));
-    handleClose();
+
+    handleClose([() => setIsDeletingFood(false)]);
   };
 
   // ------------------------------------- RENDER -------------------------------------
   return (
-    <CustomDialog open onClose={handleClose}>
+    <CustomDialog open={isOpen} onClose={handleClose}>
       <Typography variant="h4" gutterBottom>
-        Delete{" "}
-        {capitalizeOnlyFirstChar(PROGRESS_TYPE_NAMES[progressType].singular)}?
+        Delete "{food.name}"?
       </Typography>
       <Box display="flex" gap={2} width="100%">
         {/* Back Button */}
@@ -63,12 +65,12 @@ const DeleteProgressPopup = ({ setDeleteProgressPopupIsOpen, progress }) => {
           </CustomButton>
         </Box>
         {/* Confirm Button */}
-        <Box width="135px">
+        <Box flex={1}>
           <PostDataButton
-            isPostingData={isDeletingProgress}
+            isPostingData={isDeletingFood}
             variant="contained"
             sx={{ width: "100%" }}
-            onClick={() => handleDeleteProgress(progress.id)}
+            onClick={() => handleDeleteFood(food)}
           >
             Confirm
           </PostDataButton>
@@ -78,4 +80,4 @@ const DeleteProgressPopup = ({ setDeleteProgressPopupIsOpen, progress }) => {
   );
 };
 
-export default DeleteProgressPopup;
+export default DeleteFoodPopup;

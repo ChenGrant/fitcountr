@@ -16,6 +16,7 @@ export {
   setUserProgress,
   setUserFoods,
   addUserFood,
+  removeUserFood,
   addUserProgressItem,
   removeUserProgressItem,
   editUserProgressItem,

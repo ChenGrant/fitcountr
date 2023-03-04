@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import BackArrow from "../../../components/layouts/backArrow/BackArrow";
 import CustomButton from "../../../components/ui/CustomButton";
 import {
@@ -7,21 +7,27 @@ import {
   round,
   sortByNutrient,
 } from "../../../utils";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteFoodPopup from "./DeleteFoodPopup";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
 const FoodDetails = ({ backArrowOnClick, food }) => {
-  
-  // ----------------------------------- FUNCTIONS -----------------------------------
-  const deleteFood = () => console.log(food);
+  const [deleteFoodPopupIsOpen, setDeleteFoodPopupIsOpen] = useState(false);
 
   // ------------------------------------- RENDER -------------------------------------
   return (
     <BackArrow onClick={backArrowOnClick}>
-      <Box>FoodDetails</Box>
-      <Box display="flex" flexDirection="column" gap={2}>
-        <Typography variant="h4" gutterBottom>
+      <Box
+        display="flex"
+        flexDirection="column"
+        mt={3}
+        gap={2}
+        alignItems="center"
+      >
+        <Typography variant="h1" gutterBottom>
           <b>{food.name}</b>
         </Typography>
         <Typography gutterBottom>
@@ -30,9 +36,9 @@ const FoodDetails = ({ backArrowOnClick, food }) => {
             {food.servingSize.unit}
           </b>
         </Typography>
-        <Box>
+        <Box minWidth="400px">
           {sortByNutrient(Object.entries(food.nutrients)).map(
-            ([nutrientName, measurement]) => {
+            ([nutrientName, measurement], index) => {
               const { value, unit } = measurement;
               return (
                 <Box
@@ -55,12 +61,31 @@ const FoodDetails = ({ backArrowOnClick, food }) => {
               );
             }
           )}
+          <Box display="flex" gap={2} mt={4}>
+            <CustomButton
+              variant="contained"
+              startIcon={<EditIcon />}
+              sx={{ flex: 1 }}
+            >
+              Edit
+            </CustomButton>
+            <CustomButton
+              variant="contained"
+              onClick={() => setDeleteFoodPopupIsOpen(true)}
+              startIcon={<DeleteIcon />}
+              sx={{ flex: 1 }}
+            >
+              Delete
+            </CustomButton>
+          </Box>
         </Box>
-        <CustomButton variant="contained">Edit</CustomButton>
-        <CustomButton variant="contained" onClick={deleteFood}>
-          Delete
-        </CustomButton>
       </Box>
+      <DeleteFoodPopup
+        isOpen={deleteFoodPopupIsOpen}
+        setIsOpen={setDeleteFoodPopupIsOpen}
+        food={food}
+        backArrowOnClick = {backArrowOnClick}
+      />
     </BackArrow>
   );
 };

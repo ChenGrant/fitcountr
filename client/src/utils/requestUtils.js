@@ -229,3 +229,8 @@ export const deleteProgress = async (user, progressID) => {
     body: JSON.stringify({ progressID }),
   });
 };
+
+export const deleteFood = async (user, foodID) => {
+  await new Promise((r) => setTimeout(r, 2000));
+  return { body: { foodID } };
+};

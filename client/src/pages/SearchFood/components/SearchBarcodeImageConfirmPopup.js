@@ -7,6 +7,9 @@ import CustomDialog from "../../../components/ui/CustomDialog";
 import { useDispatch } from "react-redux";
 import { addSearchFoodPage } from "../../../redux";
 
+// ************************************************************************************
+// ------------------------------------ COMPONENT -------------------------------------
+// ************************************************************************************
 const SearchBarcodeImageConfirmPopup = ({
   barcodeNumber,
   barcodeConfirmPopupIsOpen,
@@ -41,6 +44,7 @@ const SearchBarcodeImageConfirmPopup = ({
     },
   ];
 
+  // ------------------------------------- RENDER -------------------------------------
   return (
     <CustomDialog
       open={barcodeConfirmPopupIsOpen}

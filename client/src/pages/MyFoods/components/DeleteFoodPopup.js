@@ -27,11 +27,7 @@ const DeleteFoodPopup = ({ isOpen, setIsOpen, food, backArrowOnClick }) => {
 
   const handleDeleteFood = async (food) => {
     setIsDeletingFood(true);
-    
-    // remove from backend
     const response = await deleteFood(user, food.id);
-    console.log(response);
-
     dispatch(removeUserFood(food.id));
     backArrowOnClick();
     customSnackbarDispatch({

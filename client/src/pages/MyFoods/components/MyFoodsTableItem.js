@@ -1,33 +1,34 @@
 import { Box, Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
+import MyFoodsItemPopup from "./MyFoodsItemPopup";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
-const MyFoodsTableItem = ({ food }) => {
-  const { id, name } = food;
-
+const MyFoodsTableItem = ({ index, food }) => {
+  const [popupIsOpen, setPopupIsOpen] = useState(false);
+  
   // ------------------------------------- RENDER -------------------------------------
   return (
-    <Box
-      sx={{
-        cursor: "pointer",
-        "&:hover": { bgcolor: "#ededed" },
-      }}
-    >
-      <Typography
-        p={1}
-        onClick={() =>
-          console.log(
-            id,
-            name,
-            "render popup, show food info, have edit icon to edit, and delete button on the bottom"
-          )
-        }
+    <>
+      {/* Gray Bar */}
+      {index !== 0 && <Box fullWidth height="1px" bgcolor="#D3D3D3" />}
+      {/* Food Name */}
+      <Box
+        sx={{
+          cursor: "pointer",
+          "&:hover": { bgcolor: "#ededed" },
+        }}
       >
-        {name}
-      </Typography>
-    </Box>
+        <Typography p={1} onClick={() => setPopupIsOpen(true)}>
+          {food.name}
+        </Typography>
+      </Box>
+      {/* Popup */}
+      {popupIsOpen && (
+        <MyFoodsItemPopup food={food} onClose={() => setPopupIsOpen(false)} />
+      )}
+    </>
   );
 };
 

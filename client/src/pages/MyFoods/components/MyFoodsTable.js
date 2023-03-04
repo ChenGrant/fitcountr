@@ -47,10 +47,7 @@ const MyFoodsTable = () => {
             FOOD_ITEMS_PER_PAGE * pageNumber
           )
           .map((food, index) => (
-            <React.Fragment key={food.id}>
-              {index !== 0 && <Box fullWidth height="1px" bgcolor="#D3D3D3" />}
-              <MyFoodsTableItem food={food} />
-            </React.Fragment>
+            <MyFoodsTableItem index={index} food={food} key={food.id} />
           ))}
       </Box>
       {/* Pagination */}

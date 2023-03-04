@@ -323,7 +323,7 @@ const postGoal = async (req, res) => {
     verifyUserExists(user);
 
     const goal = req.body;
-    console.log(goal)
+    console.log(goal);
     user.goals = { ...user.goals._doc, ...goal };
     await user.save();
 
@@ -433,6 +433,19 @@ const deleteProgress = async (req, res) => {
   }
 };
 
+const deleteFood = async (req, res) => {
+  try {
+    const { foodID } = req.body;
+    await Food.findByIdAndDelete(foodID);
+    return res.json({ message: "Food deleted" });
+  } catch (err) {
+    console.log(err);
+    return res
+      .json({ error: { message: "Could not delete food" } })
+      .status(INTERNAL_SERVER_ERROR_CODE);
+  }
+};
+
 module.exports = {
   getProfilePicture,
   getGoals,
@@ -447,4 +460,5 @@ module.exports = {
   postFood,
   editProgress,
   deleteProgress,
+  deleteFood,
 };

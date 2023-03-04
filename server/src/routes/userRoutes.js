@@ -14,6 +14,7 @@ const {
   postFood,
   editProgress,
   deleteProgress,
+  deleteFood,
 } = require("../controllers/userController");
 const { isAuthorized, PRIVATE } = require("../middleware/isAuthorized");
 const isAuthenticated = require("../middleware/isAuthenticated");
@@ -36,12 +37,7 @@ router.get(
   getProgress
 );
 
-router.get(
-  "/foods/:userUID",
-  isAuthenticated,
-  isAuthorized(PRIVATE),
-  getFoods
-);
+router.get("/foods/:userUID", isAuthenticated, isAuthorized(PRIVATE), getFoods);
 
 router.post(
   "/signup/:userUID",
@@ -88,4 +84,12 @@ router.delete(
   isAuthorized(PRIVATE),
   deleteProgress
 );
+
+router.delete(
+  "/food/:userUID",
+  isAuthenticated,
+  isAuthorized(PRIVATE),
+  deleteFood
+);
+
 module.exports = router;

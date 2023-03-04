@@ -231,6 +231,13 @@ export const deleteProgress = async (user, progressID) => {
 };
 
 export const deleteFood = async (user, foodID) => {
-  await new Promise((r) => setTimeout(r, 2000));
-  return { body: { foodID } };
+  const userIdToken = await user.firebase.getIdToken();
+  return await fetchJSON(`/user/food/${user.firebase.uid}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: userIdToken,
+    },
+    body: JSON.stringify({ foodID }),
+  });
 };

@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import BackArrow from "../../../components/layouts/backArrow/BackArrow";
 import CustomButton from "../../../components/ui/CustomButton";
 import {
@@ -10,12 +10,18 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteFoodPopup from "./DeleteFoodPopup";
+import { MY_FOODS_PAGES } from "../utils";
+import { MyFoodsPageDispatchContext } from "../context/MyFoodsPageDispatchContext";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
-const FoodDetails = ({ backArrowOnClick, food }) => {
+const FoodDetails = ({ setPage, food }) => {
   const [deleteFoodPopupIsOpen, setDeleteFoodPopupIsOpen] = useState(false);
+
+  // ----------------------------------- FUNCTIONS -----------------------------------
+  const backArrowOnClick = () => setPage({ name: MY_FOODS_PAGES.MY_FOODS });
+  const MyFoodsPageDispatch = useContext(MyFoodsPageDispatchContext);
 
   // ------------------------------------- RENDER -------------------------------------
   return (
@@ -27,7 +33,7 @@ const FoodDetails = ({ backArrowOnClick, food }) => {
         gap={2}
         alignItems="center"
       >
-        <Typography variant="h1" gutterBottom>
+        <Typography variant="h1" textAlign="center" gutterBottom>
           <b>{food.name}</b>
         </Typography>
         <Typography gutterBottom>
@@ -38,7 +44,7 @@ const FoodDetails = ({ backArrowOnClick, food }) => {
         </Typography>
         <Box minWidth="400px">
           {sortByNutrient(Object.entries(food.nutrients)).map(
-            ([nutrientName, measurement], index) => {
+            ([nutrientName, measurement]) => {
               const { value, unit } = measurement;
               return (
                 <Box
@@ -64,6 +70,12 @@ const FoodDetails = ({ backArrowOnClick, food }) => {
           <Box display="flex" gap={2} mt={4}>
             <CustomButton
               variant="contained"
+              onClick={() =>
+                MyFoodsPageDispatch({
+                  name: MY_FOODS_PAGES.EDIT_FOOD,
+                  food,
+                })
+              }
               startIcon={<EditIcon />}
               sx={{ flex: 1 }}
             >
@@ -84,7 +96,7 @@ const FoodDetails = ({ backArrowOnClick, food }) => {
         isOpen={deleteFoodPopupIsOpen}
         setIsOpen={setDeleteFoodPopupIsOpen}
         food={food}
-        backArrowOnClick = {backArrowOnClick}
+        backArrowOnClick={backArrowOnClick}
       />
     </BackArrow>
   );

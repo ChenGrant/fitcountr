@@ -5,7 +5,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import SearchIcon from "@mui/icons-material/Search";
-import FoodBankIcon from '@mui/icons-material/FoodBank';
+import FoodBankIcon from "@mui/icons-material/FoodBank";
 import { getAuth, signOut } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -30,26 +30,23 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
   const { user } = useSelector((state) => state);
 
   const NAVIGATION_BAR_ITEMS = [
-    // Profile
-    {
-      name: "Profile",
-      icon: (
-        <Icon>
-          <Avatar
-            alt="profilePicture"
-            src={user.profilePicture.URL}
-            style={{ borderRadius: "100%", height: "24px", width: "24px" }}
-            onLoad={() => dispatch(setUserProfilePictureIsLoading(false))}
-          />
-        </Icon>
-      ),
-      onClick: () => navigate(ROUTE_PATHS.PROFILE),
-    },
     // Dashboard
     {
       name: "Dashboard",
       icon: <DashboardIcon />,
       onClick: () => navigate(ROUTE_PATHS.DASHBOARD),
+    },
+    // Progress
+    {
+      name: "Progress",
+      icon: <TrendingUpIcon />,
+      nestedItems: Object.values(PROGRESS_TYPES).map((progressType) => ({
+        name: progressType,
+        onClick: () => {
+          dispatch(setProgressPageType(progressType));
+          navigate(ROUTE_PATHS.PROGRESS);
+        },
+      })),
     },
     // Search Food
     {
@@ -66,17 +63,20 @@ const NavigationBarItemList = ({ isOpen, setMenuIsOpen }) => {
       icon: <FoodBankIcon />,
       onClick: () => navigate(ROUTE_PATHS.MY_FOODS),
     },
-    // Progress
+    // Profile
     {
-      name: "Progress",
-      icon: <TrendingUpIcon />,
-      nestedItems: Object.values(PROGRESS_TYPES).map((progressType) => ({
-        name: progressType,
-        onClick: () => {
-          dispatch(setProgressPageType(progressType));
-          navigate(ROUTE_PATHS.PROGRESS);
-        },
-      })),
+      name: "Profile",
+      icon: (
+        <Icon>
+          <Avatar
+            alt="profilePicture"
+            src={user.profilePicture.URL}
+            style={{ borderRadius: "100%", height: "24px", width: "24px" }}
+            onLoad={() => dispatch(setUserProfilePictureIsLoading(false))}
+          />
+        </Icon>
+      ),
+      onClick: () => navigate(ROUTE_PATHS.PROFILE),
     },
     // Logout
     {

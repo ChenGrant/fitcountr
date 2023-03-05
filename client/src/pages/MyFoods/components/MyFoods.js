@@ -8,10 +8,11 @@ import { ROUTE_PATHS } from "../../../setup/routes/routeUtils";
 import { MyFoodsPageDispatchProvider } from "../context/MyFoodsPageDispatchContext";
 import { MY_FOODS_PAGES } from "../utils";
 import AddCustomFood from "./AddCustomFood";
+import EditFood from "./EditFood";
 import FoodDetails from "./FoodDetails";
 import MyFoodsTable from "./MyFoodsTable";
 
-const { MY_FOODS, FOOD_DETAILS, ADD_CUSTOM_FOOD } = MY_FOODS_PAGES;
+const { MY_FOODS, FOOD_DETAILS, EDIT_FOOD, ADD_CUSTOM_FOOD } = MY_FOODS_PAGES;
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
@@ -22,58 +23,61 @@ const MyFoods = () => {
   const [page, setPage] = useState({ name: MY_FOODS });
 
   // ------------------------------------- RENDER -------------------------------------
-  switch (page.name) {
-    case MY_FOODS:
-      return (
-        <MyFoodsPageDispatchProvider value={setPage}>
-          <Box
-            px={4}
-            py={!desktop && 10}
-            height={desktop ? "100vh" : "auto"}
-            display="flex"
-            flexDirection="column"
-            gap={5}
-            alignItems="center"
-            justifyContent="center"
-          >
-            {/* Header */}
-            <Typography variant="h1" textAlign="center">
-              My Foods
-            </Typography>
-            {/* My Foods Table */}
-            <MyFoodsTable />
-            {/* Search/Add Food */}
-            <Box display="flex" gap={2}>
-              <CustomButton
-                variant="contained"
-                onClick={() => navigate(ROUTE_PATHS.SEARCH_FOOD)}
+  return (
+    <MyFoodsPageDispatchProvider value={setPage}>
+      {(() => {
+        switch (page.name) {
+          case MY_FOODS:
+            return (
+              <Box
+                px={4}
+                py={!desktop && 10}
+                height={desktop ? "100vh" : "auto"}
+                display="flex"
+                flexDirection="column"
+                gap={5}
+                alignItems="center"
+                justifyContent="center"
               >
-                Search Food
-              </CustomButton>
-              <CustomButton
-                variant="contained"
-                onClick={() => setPage({ name: ADD_CUSTOM_FOOD })}
-              >
-                Add Custom Food
-              </CustomButton>
-            </Box>
-          </Box>
-        </MyFoodsPageDispatchProvider>
-      );
-    case FOOD_DETAILS:
-      return (
-        <FoodDetails
-          food={page.food}
-          backArrowOnClick={() => setPage({ name: MY_FOODS })}
-        />
-      );
-    case ADD_CUSTOM_FOOD:
-      return (
-        <AddCustomFood backArrowOnClick={() => setPage({ name: MY_FOODS })} />
-      );
-    default:
-      return;
-  }
+                {/* Header */}
+                <Typography variant="h1" textAlign="center">
+                  My Foods
+                </Typography>
+                {/* My Foods Table */}
+                <MyFoodsTable />
+                {/* Search/Add Food */}
+                <Box display="flex" gap={2}>
+                  <CustomButton
+                    variant="contained"
+                    onClick={() => navigate(ROUTE_PATHS.SEARCH_FOOD)}
+                  >
+                    Search Food
+                  </CustomButton>
+                  <CustomButton
+                    variant="contained"
+                    onClick={() => setPage({ name: ADD_CUSTOM_FOOD })}
+                  >
+                    Add Custom Food
+                  </CustomButton>
+                </Box>
+              </Box>
+            );
+
+          case FOOD_DETAILS:
+            return <FoodDetails food={page.food} setPage={setPage} />;
+
+          case EDIT_FOOD:
+            return <EditFood food={page.food} setPage={setPage} />;
+
+          case ADD_CUSTOM_FOOD:
+            return <AddCustomFood setPage={setPage} />;
+
+          default:
+            return;
+        }
+      })()}
+    </MyFoodsPageDispatchProvider>
+  );
 };
 
 export default MyFoods;

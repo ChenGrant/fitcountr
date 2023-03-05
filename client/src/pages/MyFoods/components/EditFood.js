@@ -1,5 +1,4 @@
-import { Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import { Box } from "@mui/material";
 import React from "react";
 import BackArrow from "../../../components/layouts/backArrow/BackArrow";
 import { MY_FOODS_PAGES } from "../utils";
@@ -7,17 +6,18 @@ import { MY_FOODS_PAGES } from "../utils";
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
-const AddCustomFood = ({ setPage }) => {
+const EditFood = ({ food, setPage }) => {
+  console.log(food)
+
   // ----------------------------------- FUNCTIONS -----------------------------------
-  const backArrowOnClick = () => setPage({ name: MY_FOODS_PAGES.MY_FOODS });
+  const backArrowOnClick = () => setPage(MY_FOODS_PAGES.MY_FOODS);
 
   // ------------------------------------- RENDER -------------------------------------
   return (
     <BackArrow onClick={backArrowOnClick}>
-      <Box>AddCustomFood</Box>
-      <Typography>Make sure no name conflicts, barcode conflicts?</Typography>
+      <Box>EditFood</Box>
     </BackArrow>
   );
 };
 
-export default AddCustomFood;
+export default EditFood;

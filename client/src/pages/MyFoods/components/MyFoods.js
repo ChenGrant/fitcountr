@@ -64,13 +64,13 @@ const MyFoods = () => {
             );
 
           case FOOD_DETAILS:
-            return <FoodDetails food={page.food} setPage={setPage} />;
+            return <FoodDetails food={page.food} />;
 
           case EDIT_FOOD:
-            return <EditFood food={page.food} setPage={setPage} />;
+            return <EditFood food={page.food} />;
 
           case ADD_CUSTOM_FOOD:
-            return <AddCustomFood setPage={setPage} />;
+            return <AddCustomFood />;
 
           default:
             return;

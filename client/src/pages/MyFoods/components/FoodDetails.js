@@ -16,12 +16,13 @@ import { MyFoodsPageDispatchContext } from "../context/MyFoodsPageDispatchContex
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
-const FoodDetails = ({ setPage, food }) => {
+const FoodDetails = ({ food }) => {
+  const MyFoodsPageDispatch = useContext(MyFoodsPageDispatchContext);
   const [deleteFoodPopupIsOpen, setDeleteFoodPopupIsOpen] = useState(false);
 
   // ----------------------------------- FUNCTIONS -----------------------------------
-  const backArrowOnClick = () => setPage({ name: MY_FOODS_PAGES.MY_FOODS });
-  const MyFoodsPageDispatch = useContext(MyFoodsPageDispatchContext);
+  const backArrowOnClick = () =>
+    MyFoodsPageDispatch({ name: MY_FOODS_PAGES.MY_FOODS });
 
   // ------------------------------------- RENDER -------------------------------------
   return (

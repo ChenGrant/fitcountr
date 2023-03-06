@@ -1,15 +1,19 @@
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useContext } from "react";
 import BackArrow from "../../../components/layouts/backArrow/BackArrow";
+import { MyFoodsPageDispatchContext } from "../context/MyFoodsPageDispatchContext";
 import { MY_FOODS_PAGES } from "../utils";
 
 // ************************************************************************************
 // ------------------------------------ COMPONENT -------------------------------------
 // ************************************************************************************
-const AddCustomFood = ({ setPage }) => {
+const AddCustomFood = () => {
+  const MyFoodsPageDispatch = useContext(MyFoodsPageDispatchContext);
+
   // ----------------------------------- FUNCTIONS -----------------------------------
-  const backArrowOnClick = () => setPage({ name: MY_FOODS_PAGES.MY_FOODS });
+  const backArrowOnClick = () =>
+    MyFoodsPageDispatch({ name: MY_FOODS_PAGES.MY_FOODS });
 
   // ------------------------------------- RENDER -------------------------------------
   return (

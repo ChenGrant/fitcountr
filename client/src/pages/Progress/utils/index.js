@@ -17,7 +17,7 @@ import * as Yup from "yup";
 import { TIME_PERIODS } from "../../../utils/dateUtils";
 import { UNIT_SELECT_OPTIONS } from "../components/ProgressTypeFields/WeightFields";
 import { PROGRESS_POPUP_TYPES } from "../components/Progress";
-import { FOOD_UNIT_SELECT_OPTIONS } from "../components/ProgressTypeFields/MealField";
+import { FOOD_UNIT_SELECT_OPTIONS } from "../components/ProgressTypeFields/FoodField";
 
 export const getProgressFromFormValues = (formValues, progressType, user) => {
   const progress = {

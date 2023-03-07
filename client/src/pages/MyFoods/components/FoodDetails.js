@@ -8,7 +8,6 @@ import {
   sortByNutrient,
 } from "../../../utils";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteFoodPopup from "./DeleteFoodPopup";
 import { MY_FOODS_PAGES } from "../utils";
 import { MyFoodsPageDispatchContext } from "../context/MyFoodsPageDispatchContext";
@@ -69,7 +68,7 @@ const FoodDetails = ({ food }) => {
             }
           )}
           <Box display="flex" gap={2} mt={4}>
-            <CustomButton
+            {/* <CustomButton
               variant="contained"
               onClick={() =>
                 MyFoodsPageDispatch({
@@ -81,7 +80,7 @@ const FoodDetails = ({ food }) => {
               sx={{ flex: 1 }}
             >
               Edit
-            </CustomButton>
+            </CustomButton> */}
             <CustomButton
               variant="contained"
               onClick={() => setDeleteFoodPopupIsOpen(true)}

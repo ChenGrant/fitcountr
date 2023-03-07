@@ -53,12 +53,12 @@ const MyFoods = () => {
                   >
                     Search Food
                   </CustomButton>
-                  <CustomButton
+                  {/* <CustomButton
                     variant="contained"
                     onClick={() => setPage({ name: ADD_CUSTOM_FOOD })}
                   >
                     Add Custom Food
-                  </CustomButton>
+                  </CustomButton> */}
                 </Box>
               </Box>
             );

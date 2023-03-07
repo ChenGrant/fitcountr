@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { PROGRESS_TYPES } from "../../../../utils";
 import { PROGRESS_POPUP_TYPES } from "../Progress";
 import CaloriesField from "./CaloriesField";
-import MealField from "./MealField";
+import FoodField from "./FoodField";
 import StepsField from "./StepsField";
 import WeightFields from "./WeightFields";
 
@@ -26,7 +26,7 @@ const ProgressTypeFields = ({ popupType }) => {
           case PROGRESS_TYPES.STEPS:
             return <StepsField />;
           case PROGRESS_TYPES.CALORIES:
-            return <MealField />;
+            return <FoodField />;
           default:
             return null;
         }

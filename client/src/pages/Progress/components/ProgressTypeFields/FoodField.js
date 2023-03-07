@@ -19,7 +19,7 @@ export const FOOD_UNIT_SELECT_OPTIONS = sortArray(
   (option1, option2) => option1.label.localeCompare(option2.label)
 );
 
-const MealField = () => {
+const FoodField = () => {
   const { user } = useSelector((state) => state);
   const { progressType } = useSelector((state) => state.progressPage);
   const navigate = useNavigate();
@@ -65,4 +65,4 @@ const MealField = () => {
   );
 };
 
-export default MealField;
+export default FoodField;

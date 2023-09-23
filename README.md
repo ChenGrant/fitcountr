@@ -8,7 +8,7 @@ Description: fitcountr is a calorie-tracking web app that graphically visualizes
 
 Website Link: https://www.fitcountr.com
 
-QR Code: ![Alt Text](https://firebasestorage.googleapis.com/v0/b/fitcountr-c2a46.appspot.com/o/qr-code.png?alt=media&token=e52dd958-e6c8-483e-8ff1-dc06776704fb)
+<!-- QR Code: ![Alt Text](https://firebasestorage.googleapis.com/v0/b/fitcountr-c2a46.appspot.com/o/qr-code.png?alt=media&token=e52dd958-e6c8-483e-8ff1-dc06776704fb) -->
 
 Demo Video: https://youtu.be/S56SCo2RQzY
 

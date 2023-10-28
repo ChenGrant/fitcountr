@@ -4,7 +4,7 @@ const {
   getEmailIsInUse,
   getVerificationStatus,
   getEmailVerificationProvider,
-  getPinLength,
+  getEmailVerificationPinLength,
   validatePin,
   sendVerificationEmail,
 } = require("../controllers/emailVerificationController");
@@ -12,7 +12,7 @@ const {
 // -------------------------------------- ROUTES --------------------------------------
 // handles a GET request containing an email.
 // responds with if the email is in use or not
-router.get("/emailInUse/:email", getEmailIsInUse);
+router.get("/emailIsInUse/:email", getEmailIsInUse);
 
 // handles a GET request containing an email.
 // responds with the email verification provider for the email
@@ -20,7 +20,7 @@ router.get("/provider/:email", getEmailVerificationProvider);
 
 // handles a GET request containing an email.
 // responds with the length of the pin associated with the email
-router.get("/pinLength/:email", getPinLength);
+router.get("/pinLength/:email", getEmailVerificationPinLength);
 
 // handles a GET request containing an email.
 // responds with the verification status of the email

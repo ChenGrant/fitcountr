@@ -1,23 +1,26 @@
 const config = require("../config/config");
-const assert = require("assert");
-const { RequestUtils } = require("../utils");
+const { AssetUtils, RequestUtils } = require("../utils");
 
-const { INTERNAL_SERVER_ERROR_CODE } = RequestUtils;
+// ************************************************************************************
+// ----------------------------------- CONTROLLERS ------------------------------------
+// ************************************************************************************
 
-// ------------------------------------- getAsset -------------------------------------
 const getAsset = (req, res) => {
-  try {
-    const { assetName } = req.params;
-    const assetURL = config.ASSETS.URL[assetName.toUpperCase()];
-    // verify that there exists an assert with a name of assetName
-    assert(assetURL);
-    res.json({ assetURL });
-  } catch (err) {
-    console.log(err);
-    res
-      .json({ error: { message: "Could not retrieve asset" } })
-      .status(INTERNAL_SERVER_ERROR_CODE);
-  }
+    try {
+        const { assetName } = req.params;
+
+        const assetURL = config.ASSETS.URL[assetName.toUpperCase()];
+
+        if (!AssetUtils.urlExists(assetURL))
+            throw new RequestUtils.RequestError(
+                `Could not retrieve url for the "${assetName}" asset.`,
+                RequestUtils.RESOURCE_NOT_FOUND_STATUS_CODE
+            );
+
+        res.json({ assetURL });
+    } catch (err) {
+        RequestUtils.sendErrorResponse(res, err);
+    }
 };
 
 module.exports = { getAsset };

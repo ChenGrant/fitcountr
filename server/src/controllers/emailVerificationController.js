@@ -1,158 +1,150 @@
 const User = require("../models/User");
-const { NumberUtils } = require("../utils/index");
-const {
-  sendEmailVerificationAsync,
-} = require("../services/nodemailer/nodemailer");
-const { RequestUtils } = require("../utils");
+const { emailUtils, NumberUtils, RequestUtils } = require("../utils/index");
 
-// ------------------------------------ CONSTANTS ------------------------------------
-const { INTERNAL_SERVER_ERROR_CODE } = RequestUtils;
+// ************************************************************************************
+// --------------------------------- HELPER FUNCTIONS ---------------------------------
+// ************************************************************************************
 
-const EMAIL_NOT_IN_USE = "EMAIL_NOT_IN_USE";
-
-const verifyEmailIsInUse = async (email) => {
-  if (!(await User.emailInUse(email))) throw new Error(EMAIL_NOT_IN_USE);
+const throwRequestErrorIfEmailIsNotInUse = async (email) => {
+    if (!(await User.emailIsInUse(email)))
+        throw new RequestUtils.RequestError(
+            `The email ${email} does not exist.`,
+            RequestUtils.RESOURCE_NOT_FOUND_STATUS_CODE
+        );
 };
 
 // ************************************************************************************
 // ----------------------------------- CONTROLLERS ------------------------------------
 // ************************************************************************************
 
-// --------------------------------- getEmailIsInUse ---------------------------------
 const getEmailIsInUse = async (req, res) => {
-  try {
-    const { email } = req.params;
-    const emailIsInUse = await User.emailInUse(email);
-    return res.json({ emailIsInUse });
-  } catch (err) {
-    console.log(err);
-    res
-      .json({
-        error: { message: "Could not determine if email is in use" },
-      })
-      .status(INTERNAL_SERVER_ERROR_CODE);
-  }
-};
+    try {
+        const { email } = req.params;
 
-// ------------------------------ getVerificationStatus ------------------------------
-const getVerificationStatus = async (req, res) => {
-  try {
-    const { email } = req.params;
+        const emailIsInUse = await User.emailIsInUse(email);
 
-    // verify email corresponds to a user in the database
-    await verifyEmailIsInUse(email);
-
-    const user = await User.findUserByEmail(email);
-
-    if (user.emailVerification.isVerified)
-      return res.json({ verificationStatus: "Verified" });
-
-    return res.json({ verificationStatus: "Not verified" });
-  } catch (err) {
-    console.log(err);
-    return res
-      .json({
-        error: { message: "Could not get email verification status" },
-      })
-      .status(INTERNAL_SERVER_ERROR_CODE);
-  }
-};
-
-// --------------------------- getEmailVerificationProvider ---------------------------
-const getEmailVerificationProvider = async (req, res) => {
-  try {
-    const { email } = req.params;
-
-    await verifyEmailIsInUse(email);
-
-    const user = await User.findUserByEmail(email);
-
-    return res.json({ emailProvider: user.emailVerification.provider });
-  } catch (err) {
-    console.log(err);
-    return res
-      .json({ error: { message: "Could not get email provider" } })
-      .status(INTERNAL_SERVER_ERROR_CODE);
-  }
-};
-
-// ----------------------------------- getPinLength -----------------------------------
-const getPinLength = async (req, res) => {
-  try {
-    const { email } = req.params;
-
-    await verifyEmailIsInUse(email);
-
-    const user = await User.findUserByEmail(email);
-
-    return res.json({
-      pinLength: NumberUtils.getIntMagnitudeLength(user.emailVerification.pin),
-    });
-  } catch (err) {
-    console.log(err);
-    return res
-      .json({ error: { message: "Could not get pin length" } })
-      .status(INTERNAL_SERVER_ERROR_CODE);
-  }
-};
-
-// ----------------------------------- validatePin -----------------------------------
-const validatePin = async (req, res) => {
-  try {
-    const { email, pin } = req.body;
-
-    // verify email corresponds to a user in the database
-    await verifyEmailIsInUse(email);
-
-    const user = await User.findUserByEmail(email);
-
-    // check if the request object's body contains a 'pin' property
-    if (!pin) throw new Error("No pin provided");
-
-    // if the pins match
-    if (user.emailVerification.pin === pin) {
-      user.emailVerification.isVerified = true;
-      await user.save();
-      return res.json({ message: "Pin is valid" });
+        return res.json({ emailIsInUse });
+    } catch (err) {
+        RequestUtils.sendErrorResponse(res, err);
     }
-
-    return res.json({ message: "Pin is invalid" });
-  } catch (err) {
-    console.log(err);
-    return res
-      .json({ error: { message: "Could not validate pin" } })
-      .status(INTERNAL_SERVER_ERROR_CODE);
-  }
 };
 
-// ------------------------------- sendVerificationEmail -------------------------------
+const getEmailVerificationPinLength = async (req, res) => {
+    try {
+        const { email } = req.params;
+
+        await throwRequestErrorIfEmailIsNotInUse(email);
+
+        const user = await User.findUserByEmail(email);
+
+        const emailVerificationPinLength = NumberUtils.getIntMagnitudeLength(
+            user.emailVerification.pin
+        );
+
+        return res.json({ pinLength: emailVerificationPinLength });
+    } catch (err) {
+        RequestUtils.sendErrorResponse(res, err);
+    }
+};
+
+const getEmailVerificationProvider = async (req, res) => {
+    try {
+        const { email } = req.params;
+
+        await throwRequestErrorIfEmailIsNotInUse(email);
+
+        const user = await User.findUserByEmail(email);
+
+        const emailProvider = user.emailVerification.provider;
+
+        return res.json({ emailProvider });
+    } catch (err) {
+        RequestUtils.sendErrorResponse(res, err);
+    }
+};
+
+const getVerificationStatus = async (req, res) => {
+    try {
+        const { email } = req.params;
+
+        await throwRequestErrorIfEmailIsNotInUse(email);
+
+        const user = await User.findUserByEmail(email);
+
+        const verificationStatus = user.emailVerification.isVerified
+            ? emailUtils.EMAIL_IS_VERIFIED
+            : emailUtils.EMAIL_IS_NOT_VERIFIED;
+
+        return res.json({ verificationStatus });
+    } catch (err) {
+        RequestUtils.sendErrorResponse(res, err);
+    }
+};
+
 const sendVerificationEmail = async (req, res) => {
-  try {
-    const { email } = req.params;
+    try {
+        const { email } = req.params;
 
-    // verify email corresponds to a user in the database
-    await verifyEmailIsInUse(email);
+        await throwRequestErrorIfEmailIsNotInUse(email);
 
-    const user = await User.findUserByEmail(email);
-    // send verification email
+        const user = await User.findUserByEmail(email);
 
-    await sendEmailVerificationAsync(user.email, user.emailVerification.pin);
-    return res.json({ message: "Verification email sent" });
-  } catch (err) {
-    console.log(err);
-    return res
-      .json({
-        error: { message: "Could not send verification email" },
-      })
-      .status(INTERNAL_SERVER_ERROR_CODE);
-  }
+        const verificationEmailOptions = emailUtils.getVerificationEmailOptions(
+            user.email,
+            user.emailVerification.pin
+        );
+
+        const sendEmailResponse = await emailUtils.sendEmail(
+            verificationEmailOptions
+        );
+
+        if (!sendEmailResponse.success)
+            throw new RequestUtils.RequestError(
+                `Could not send verification email to ${user.email}.`
+            );
+
+        return res.json({ message: "Verification email sent" });
+    } catch (err) {
+        RequestUtils.sendErrorResponse(res, err);
+    }
+};
+
+const validatePin = async (req, res) => {
+    try {
+        const { email, pin } = req.body;
+
+        if (!pin)
+            throw new RequestUtils.RequestError(
+                `No email verification pin provided.`,
+                RequestUtils.BAD_REQUEST_STATUS_CODE
+            );
+
+        await throwRequestErrorIfEmailIsNotInUse(email);
+
+        const user = await User.findUserByEmail(email);
+
+        const requestPinIsValid = user.emailVerification.pin === pin;
+
+        if (requestPinIsValid) {
+            user.emailVerification.isVerified = true;
+            await user.save();
+        }
+
+        const responseMessage = requestPinIsValid
+            ? "Pin is valid"
+            : "Pin is invalid";
+
+        return res.json({ message: responseMessage });
+    } catch (err) {
+        RequestUtils.sendErrorResponse(res, err);
+    }
 };
 
 module.exports = {
-  getEmailIsInUse,
-  getVerificationStatus,
-  getEmailVerificationProvider,
-  getPinLength,
-  validatePin,
-  sendVerificationEmail,
+    getEmailIsInUse,
+    getEmailVerificationPinLength,
+    getEmailVerificationProvider,
+    getVerificationStatus,
+    sendVerificationEmail,
+    validatePin,
 };

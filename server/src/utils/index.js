@@ -1,21 +1,25 @@
-const ObjectUtils = require("./objectUtils");
-const NumberUtils = require("./numberUtils");
 const ArrayUtils = require("./arrayUtils");
-const StringUtils = require("./stringUtils");
+const AssetUtils = require("./assetUtils");
 const DateUtils = require("./dateUtils");
+const emailUtils = require("./emailUtils");
 const HumanUtils = require("./humanUtils");
 const MeasurementUtils = require("./measurementUtils");
-const RequestUtils = require("./requestUtils");
+const NumberUtils = require("./numberUtils");
+const ObjectUtils = require("./objectUtils");
 const ProgressUtils = require("./progressUtils");
+const RequestUtils = require("./requestUtils");
+const StringUtils = require("./stringUtils");
 
 module.exports = {
-  ArrayUtils,
-  ObjectUtils,
-  NumberUtils,
-  StringUtils,
-  DateUtils,
-  HumanUtils,
-  MeasurementUtils,
-  RequestUtils,
-  ProgressUtils,
+    ArrayUtils,
+    AssetUtils,
+    DateUtils,
+    emailUtils,
+    HumanUtils,
+    MeasurementUtils,
+    NumberUtils,
+    ObjectUtils,
+    ProgressUtils,
+    RequestUtils,
+    StringUtils,
 };

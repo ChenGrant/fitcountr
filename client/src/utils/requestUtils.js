@@ -21,7 +21,7 @@ export const fetchEmailProvider = async (email) =>
   await fetchJSON(`/emailVerification/provider/${email}`);
 
 export const fetchEmailIsInUse = async (email) =>
-  await fetchJSON(`/emailVerification/emailInUse/${email}`);
+  await fetchJSON(`/emailVerification/emailIsInUse/${email}`);
 
 export const fetchVerificationStatus = async (email) =>
   await fetchJSON(`/emailVerification/verificationStatus/${email}`);

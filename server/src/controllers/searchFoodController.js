@@ -1,81 +1,62 @@
-const {
-  scanBarcodeImageCloudmersive,
-} = require("../services/cloudmersive/cloudmersive");
-const {
-  fetchFoodsFromQueryFoodDataCentral,
-} = require("../services/foodDataCentral/foodDataCentral");
-const {
-  fetchFoodFromBarcodeNumberOpenFoodFacts,
-} = require("../services/openFoodFacts/openFoodFact");
-const { UNITS } = require("../utils/foodUtils");
-const { RequestUtils } = require("../utils");
-
-const { INTERNAL_SERVER_ERROR_STATUS_CODE } = RequestUtils;
+const { RequestUtils, FoodUtils } = require("../utils");
 
 // ************************************************************************************
 // ----------------------------------- CONTROLLERS ------------------------------------
 // ************************************************************************************
 
-// ----------------------------- getFoodFromBarcodeNumber -----------------------------
 const getFoodFromBarcodeNumber = async (req, res) => {
-  try {
-    const { barcodeNumber } = req.params;
+    try {
+        const { barcodeNumber } = req.params;
 
-    const fetchedFood = await fetchFoodFromBarcodeNumberOpenFoodFacts(
-      barcodeNumber
-    );
+        const fetchFoodResponse =
+            await FoodUtils.fetchFoodFromBarcodeNumberOpenFoodFacts(
+                barcodeNumber
+            );
 
-    return res.json({
-      name: fetchedFood.data.product.product_name,
-      servingSize: { value: 100, unit: UNITS.GRAM },
-      nutrients: fetchedFood.data.product.nutriments,
-      barcodeNumber,
-    });
-  } catch (err) {
-    console.log(err);
-    return res
-      .json({ error: { message: "Could not fetch food data" } })
-      .status(INTERNAL_SERVER_ERROR_STATUS_CODE);
-  }
+        if (!fetchFoodResponse.hasFoodData)
+            throw new RequestUtils.RequestError(
+                `Could not find data for the barcode number ${barcodeNumber}`,
+                RequestUtils.RESOURCE_NOT_FOUND_STATUS_CODE
+            );
+
+        const fetchedFoodData = fetchFoodResponse.data;
+
+        return res.json(fetchedFoodData);
+    } catch (err) {
+        RequestUtils.sendErrorResponse(res, err);
+    }
 };
 
-// --------------------------------- scanBarcodeImage ---------------------------------
 const scanBarcodeImage = async (req, res) => {
-  try {
-    const { barcodeImageFile } = req.files;
-    return res.json(await scanBarcodeImageCloudmersive(barcodeImageFile.data));
-  } catch (err) {
-    console.log(err);
-    return res
-      .json({ error: { message: "Could not scan barcode image" } })
-      .status(INTERNAL_SERVER_ERROR_STATUS_CODE);
-  }
+    try {
+        const { barcodeImageFile } = req.files;
+
+        const barcodeImageData = await FoodUtils.scanBarcodeImageCloudmersive(
+            barcodeImageFile.data
+        );
+
+        return res.json(barcodeImageData);
+    } catch (err) {
+        RequestUtils.sendErrorResponse(res, err);
+    }
 };
 
-// -------------------------------- getFoodsFromQuery --------------------------------
 const getFoodsFromQuery = async (req, res) => {
-  try {
-    const { query, pageNumber, pageSize } = req.params;
+    try {
+        const { query, pageNumber, pageSize } = req.params;
 
-    const fetchedFoods = await fetchFoodsFromQueryFoodDataCentral({
-      query,
-      pageNumber,
-      dataType: ["Survey (FNDDS)"],
-      pageSize,
-      requireAllWords: true,
-    });
+        const fetchedFoods = await FoodUtils.fetchFoodsFromQueryFoodDataCentral(
+            { query, pageNumber, pageSize }
+        );
 
-    return res.json(fetchedFoods.data);
-  } catch (err) {
-    console.log(err);
-    return res
-      .json({ error: { message: "Could not fetch food data" } })
-      .status(INTERNAL_SERVER_ERROR_STATUS_CODE);
-  }
+        return res.json(fetchedFoods.data);
+    } catch (err) {
+        RequestUtils.sendErrorResponse(res, err);
+    }
 };
 
 module.exports = {
-  getFoodFromBarcodeNumber,
-  scanBarcodeImage,
-  getFoodsFromQuery,
+    getFoodFromBarcodeNumber,
+    scanBarcodeImage,
+    getFoodsFromQuery,
 };

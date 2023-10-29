@@ -11,15 +11,14 @@ const getAsset = (req, res) => {
 
         const assetURL = config.ASSETS.URL[assetName.toUpperCase()];
 
-        if (!AssetUtils.urlExists(assetURL))
-            throw new RequestUtils.RequestError(
-                `Could not retrieve url for the "${assetName}" asset.`,
-                RequestUtils.RESOURCE_NOT_FOUND_STATUS_CODE
-            );
+        AssetUtils.assertAssetUrlExists(assetURL);
 
         res.json({ assetURL });
     } catch (err) {
-        RequestUtils.sendErrorResponse(res, err);
+        RequestUtils.sendErrorResponse(res, err.message, {
+            [AssetUtils.COULD_NOT_RETRIEVE_ASSET_URL_ERROR_MESSAGE]:
+                RequestUtils.RESOURCE_NOT_FOUND_STATUS_CODE,
+        });
     }
 };
 

@@ -1,12 +1,12 @@
-const COULD_NOT_RETRIEVE_ASSET_URL_ERROR_MESSAGE =
-    "Could not retrieve asset url.";
+const ASSET_URL_DOES_NOT_EXIST_ERROR_MESSAGE =
+    "Asset url does not exist.";
 
 const assertAssetUrlExists = (assetURL) => {
     if (assetURL === undefined)
-        throw new Error(COULD_NOT_RETRIEVE_ASSET_URL_ERROR_MESSAGE);
+        throw new Error(ASSET_URL_DOES_NOT_EXIST_ERROR_MESSAGE);
 };
 
 module.exports = {
-    COULD_NOT_RETRIEVE_ASSET_URL_ERROR_MESSAGE,
+    ASSET_URL_DOES_NOT_EXIST_ERROR_MESSAGE,
     assertAssetUrlExists,
 };

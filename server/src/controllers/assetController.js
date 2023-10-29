@@ -16,7 +16,7 @@ const getAsset = (req, res) => {
         res.json({ assetURL });
     } catch (err) {
         RequestUtils.sendErrorResponse(res, err.message, {
-            [AssetUtils.COULD_NOT_RETRIEVE_ASSET_URL_ERROR_MESSAGE]:
+            [AssetUtils.ASSET_URL_DOES_NOT_EXIST_ERROR_MESSAGE]:
                 RequestUtils.RESOURCE_NOT_FOUND_STATUS_CODE,
         });
     }

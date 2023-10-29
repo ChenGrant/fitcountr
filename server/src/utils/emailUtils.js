@@ -1,6 +1,19 @@
 const config = require("../config/config");
+const User = require("../models/User");
 const nodemailer = require("nodemailer");
 
+// ************************************************************************************
+// --------------------------------- ERROR MESSAGES ----------------------------------
+// ************************************************************************************
+
+const EMAIL_IS_NOT_IN_USE_ERROR_MESSAGE = "Email is not in use.";
+const NO_EMAIL_VERIFICATION_PIN_PROVIDED_ERROR_MESSAGE =
+    "No email verification pin provided.";
+const NO_EMAIL_IS_PROVIDED_ERROR_MESSAGE = "Email is not provided.";
+
+// ************************************************************************************
+// ------------------------------------ CONSTANTS -------------------------------------
+// ************************************************************************************
 const EMAIL_IS_VERIFIED = "Verified";
 const EMAIL_IS_NOT_VERIFIED = "Not verified";
 const GMAIL_USERNAME = config.NODEMAILER.GMAIL_USERNAME;
@@ -13,6 +26,27 @@ const transport = nodemailer.createTransport({
         pass: GMAIL_PASSWORD,
     },
 });
+
+// ************************************************************************************
+// -------------------------------- ASSERT FUNCTIONS ---------------------------------
+// ************************************************************************************
+
+const assertEmailIsInUse = async (email) => {
+    if (!(await User.emailIsInUse(email)))
+        throw new Error(EMAIL_IS_NOT_IN_USE_ERROR_MESSAGE);
+};
+
+const assertEmailIsProvided = (email) => {
+    if (!email) throw new Error(NO_EMAIL_IS_PROVIDED_ERROR_MESSAGE);
+};
+
+const assertEmailVerificationPinIsProvided = (pin) => {
+    if (!pin) throw new Error(NO_EMAIL_VERIFICATION_PIN_PROVIDED_ERROR_MESSAGE);
+};
+
+const sendEmail = async ({ from = GMAIL_USERNAME, ...rest }) => {
+    await transport.sendMail({ from, ...rest });
+};
 
 const getVerificationEmailOptions = (recipientEmail, emailVerificationPin) => ({
     to: recipientEmail,
@@ -39,18 +73,15 @@ const getVerificationEmailOptions = (recipientEmail, emailVerificationPin) => ({
       <p>fitcountr</p>`,
 });
 
-const sendEmail = async ({ from = GMAIL_USERNAME, ...rest }) => {
-    try {
-        await transport.sendMail({ from, ...rest });
-        return { success: true };
-    } catch (err) {
-        return { success: false, message: err.message };
-    }
-};
-
 module.exports = {
+    EMAIL_IS_NOT_IN_USE_ERROR_MESSAGE,
+    NO_EMAIL_VERIFICATION_PIN_PROVIDED_ERROR_MESSAGE,
+    NO_EMAIL_IS_PROVIDED_ERROR_MESSAGE,
     EMAIL_IS_VERIFIED,
     EMAIL_IS_NOT_VERIFIED,
+    assertEmailVerificationPinIsProvided,
     getVerificationEmailOptions,
     sendEmail,
+    assertEmailIsProvided,
+    assertEmailIsInUse,
 };

@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
-const { NumberUtils, HumanUtils } = require("../utils/index");
-const MediaFile = require("../models/MediaFile");
 const config = require("../config/config");
-const { ProgressUtils } = require("../utils");
+const MediaFile = require("../models/MediaFile");
+const ProgressUtils = require("../utils/progressUtils");
+const NumberUtils = require("../utils/numberUtils");
+const HumanUtils = require("../utils/humanUtils");
 
 const { PROGRESS_TYPES } = ProgressUtils;
 const EMAIL_VERIFICATION_PIN_LENGTH = 5;
@@ -147,7 +148,12 @@ userSchema.statics.setUserProfilePicture = async function (
     }
 
     user.profilePicture = profilePicture._id;
-    user.save();
+    await user.save();
+};
+
+userSchema.statics.setUserIsVerified = async function (user, isVerified) {
+    user.emailVerification.isVerified ||= isVerified;
+    await user.save();
 };
 
 module.exports = mongoose.model("Users", userSchema);

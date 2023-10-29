@@ -1,7 +1,7 @@
 const ArrayUtils = require("./arrayUtils");
 const AssetUtils = require("./assetUtils");
 const DateUtils = require("./dateUtils");
-const emailUtils = require("./emailUtils");
+const EmailUtils = require("./emailUtils");
 const FoodUtils = require("./foodUtils");
 const HumanUtils = require("./humanUtils");
 const MeasurementUtils = require("./measurementUtils");
@@ -15,7 +15,7 @@ module.exports = {
     ArrayUtils,
     AssetUtils,
     DateUtils,
-    emailUtils,
+    EmailUtils,
     FoodUtils,
     HumanUtils,
     MeasurementUtils,

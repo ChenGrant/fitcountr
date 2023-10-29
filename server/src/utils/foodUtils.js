@@ -2,6 +2,17 @@ const axios = require("axios");
 const CloudmersiveBarcodeapiClient = require("cloudmersive-barcodeapi-client");
 const config = require("../config/config");
 
+const NO_FOOD_DATA_FROM_BARCODE_NUMBER_ERROR_MESSAGE =
+    "No food data found from barcode number";
+
+const NO_REQUEST_FILES_PROVIDED_ERROR_MESSAGE =
+    "Request has no files provided.";
+
+const NO_BARCODE_IMAGE_PROVIDED_ERROR_MESSAGE = "No barcode image provided.";
+
+const NO_BARCODE_NUMBER_FOUND_FROM_IMAGE_ERROR_MESSAGE =
+    "No barcode number found from image.";
+
 const UNITS = {
     KILOGRAM: "kg",
     GRAM: "g",
@@ -13,7 +24,15 @@ CloudmersiveBarcodeapiClient.ApiClient.instance.authentications[
 
 const apiInstance = new CloudmersiveBarcodeapiClient.BarcodeScanApi();
 
-const scanBarcodeImageCloudmersive = async (imageFileBuffer) => {
+const assertRequestFilesAreProvided = (requestFiles) => {
+    if (!requestFiles) throw new Error(NO_REQUEST_FILES_PROVIDED_ERROR_MESSAGE);
+};
+
+const assertBarcodeImageIsProvided = (barcodeImage) => {
+    if (!barcodeImage) throw new Error(NO_BARCODE_IMAGE_PROVIDED_ERROR_MESSAGE);
+};
+
+const getBarcodeNumberFromImageCloudmersive = async (imageFileBuffer) => {
     const scanBarcodeImageResponse = await new Promise((res, rej) => {
         apiInstance.barcodeScanImage(imageFileBuffer, (error, data) => {
             if (error) {
@@ -24,44 +43,34 @@ const scanBarcodeImageCloudmersive = async (imageFileBuffer) => {
         });
     });
 
-    const barcodeImageData = {
-        hasBarcodeNumber: scanBarcodeImageResponse.Successful,
-    };
+    if (!scanBarcodeImageResponse.Successful)
+        throw new Error(NO_BARCODE_NUMBER_FOUND_FROM_IMAGE_ERROR_MESSAGE);
 
-    if (barcodeImageData.hasBarcodeNumber) {
-        barcodeImageData["barcodeNumber"] = scanBarcodeImageResponse.RawText;
-    }
-
-    return barcodeImageData;
+    return scanBarcodeImageResponse.RawText;
 };
 
-const fetchFoodFromBarcodeNumberOpenFoodFacts = async (barcodeNumber) => {
+const getFoodFromBarcodeNumberOpenFoodFacts = async (barcodeNumber) => {
     const SERVING_SIZE_IN_GRAMS = 100;
 
     const fetchedFoodResponse = await axios.get(
         `https://world.openfoodfacts.org/api/v0/product/${barcodeNumber}.json`
     );
 
-    const barcodeNumberData = {
-        hasFoodData: fetchedFoodResponse.data.status !== 0,
+    if (fetchedFoodResponse.data.status === 0)
+        throw new Error(NO_FOOD_DATA_FROM_BARCODE_NUMBER_ERROR_MESSAGE);
+
+    return {
+        name: fetchedFoodResponse.data.product.product_name,
+        servingSize: {
+            value: SERVING_SIZE_IN_GRAMS,
+            unit: UNITS.GRAM,
+        },
+        nutrients: fetchedFoodResponse.data.product.nutriments,
+        barcodeNumber,
     };
-
-    if (barcodeNumberData.hasFoodData) {
-        barcodeNumberData["data"] = {
-            name: fetchedFoodResponse.data.product.product_name,
-            servingSize: {
-                value: SERVING_SIZE_IN_GRAMS,
-                unit: UNITS.GRAM,
-            },
-            nutrients: fetchedFoodResponse.data.product.nutriments,
-            barcodeNumber,
-        };
-    }
-
-    return barcodeNumberData;
 };
 
-const fetchFoodsFromQueryFoodDataCentral = async ({
+const getFoodsFromQueryFoodDataCentral = async ({
     query,
     pageNumber,
     pageSize,
@@ -80,13 +89,21 @@ const fetchFoodsFromQueryFoodDataCentral = async ({
         })
             .map(([key, value]) => `${key}=${value}`)
             .join("&");
-    const fetchedFoods = await axios.get(usdaApiUrl);
-    return fetchedFoods;
+
+    const fetchedFoodsResponse = await axios.get(usdaApiUrl);
+
+    return fetchedFoodsResponse.data;
 };
 
 module.exports = {
     UNITS,
-    fetchFoodFromBarcodeNumberOpenFoodFacts,
-    fetchFoodsFromQueryFoodDataCentral,
-    scanBarcodeImageCloudmersive,
+    NO_FOOD_DATA_FROM_BARCODE_NUMBER_ERROR_MESSAGE,
+    NO_BARCODE_IMAGE_PROVIDED_ERROR_MESSAGE,
+    NO_REQUEST_FILES_PROVIDED_ERROR_MESSAGE,
+    NO_BARCODE_NUMBER_FOUND_FROM_IMAGE_ERROR_MESSAGE,
+    assertRequestFilesAreProvided,
+    assertBarcodeImageIsProvided,
+    getFoodFromBarcodeNumberOpenFoodFacts,
+    getFoodsFromQueryFoodDataCentral,
+    getBarcodeNumberFromImageCloudmersive,
 };

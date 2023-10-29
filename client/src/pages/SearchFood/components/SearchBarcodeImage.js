@@ -111,7 +111,7 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
   const handleScan = async (file) => {
     const imageData = await scanBarcodeImage(file);
 
-    if (!imageData.hasBarcodeNumber) {
+    if (!imageData.barcodeNumber) {
       barcodeNumberDispatch({
         type: BARCODE_NUMBER_ACTIONS.SET_ERROR,
         payload: true,

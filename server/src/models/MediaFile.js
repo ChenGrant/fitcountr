@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { StringUtils } = require("../utils/");
+const { StringUtils } = require("../utils/stringUtils");
 
 const mediaFileSchema = new mongoose.Schema({
   firebasePath: {

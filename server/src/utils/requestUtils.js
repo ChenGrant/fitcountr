@@ -3,18 +3,34 @@ const RESOURCE_NOT_FOUND_STATUS_CODE = 404;
 const INTERNAL_SERVER_ERROR_STATUS_CODE = 500;
 
 class RequestError extends Error {
-    constructor(responseMessage, responseStatusCode) {
+    constructor(
+        responseMessage,
+        responseStatusCode = INTERNAL_SERVER_ERROR_STATUS_CODE
+    ) {
         super(responseMessage);
         this.responseMessage = responseMessage;
         this.responseStatusCode = responseStatusCode;
     }
+
+    setResponseStatusCode(responseStatusCode) {
+        this.responseStatusCode = responseStatusCode;
+    }
 }
 
-const sendErrorResponse = (res, err) => {
-    const responseStatusCode =
-        err.responseStatusCode || INTERNAL_SERVER_ERROR_STATUS_CODE;
-    const errorMessage = err.responseMessage || "";
-    res.status(responseStatusCode).json({ error: { message: errorMessage } });
+const sendErrorResponse = (
+    res,
+    errorMessage,
+    errorMessagesToResponseStatusCodes = {}
+) => {
+    let responseData = { error: true };
+    let responseStatusCode = INTERNAL_SERVER_ERROR_STATUS_CODE;
+
+    if (errorMessagesToResponseStatusCodes[errorMessage]) {
+        responseStatusCode = errorMessagesToResponseStatusCodes[errorMessage];
+        responseData["message"] = errorMessage;
+    }
+
+    res.status(responseStatusCode).json(responseData);
 };
 
 module.exports = {

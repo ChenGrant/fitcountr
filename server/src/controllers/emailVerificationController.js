@@ -1,5 +1,10 @@
 const User = require("../models/User");
-const { EmailUtils, NumberUtils, RequestUtils } = require("../utils/index");
+const {
+    EmailUtils,
+    NumberUtils,
+    RequestUtils,
+    UserUtils,
+} = require("../utils/index");
 
 // ************************************************************************************
 // ----------------------------------- CONTROLLERS ------------------------------------
@@ -131,7 +136,7 @@ const validateEmailVerificationPin = async (req, res) => {
 
         const pinIsValid = user.emailVerification.pin === pin;
 
-        await User.setUserIsVerified(user, pinIsValid);
+        if (pinIsValid) await UserUtils.updateUserIsVerified(user, pinIsValid);
 
         const responseMessage = pinIsValid ? "Pin is valid" : "Pin is invalid";
 

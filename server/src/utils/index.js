@@ -11,6 +11,7 @@ const ObjectUtils = require("./objectUtils");
 const ProgressUtils = require("./progressUtils");
 const RequestUtils = require("./requestUtils");
 const StringUtils = require("./stringUtils");
+const UserUtils = require("./userUtils");
 
 module.exports = {
     ArrayUtils,
@@ -26,4 +27,5 @@ module.exports = {
     ProgressUtils,
     RequestUtils,
     StringUtils,
+    UserUtils,
 };

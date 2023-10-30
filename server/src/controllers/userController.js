@@ -1,192 +1,132 @@
 const User = require("../models/User");
-const MediaFile = require("../models/MediaFile");
 const Progress = require("../models/Progress");
 const Food = require("../models/Food");
-const admin = require("firebase-admin");
-const { getStorage } = require("firebase-admin/storage");
-const {
-    DateUtils,
-    RequestUtils,
-    ProgressUtils,
-    emailUtils,
-} = require("../utils");
-
-const { INTERNAL_SERVER_ERROR_STATUS_CODE } = RequestUtils;
-
-// ------------------------------------ CONSTANTS ------------------------------------
-const EMAIL_PASSWORD_PROVIDER = "EMAIL_PASSWORD_PROVIDER";
-const GMAIL_PROVIDER = "GMAIL_PROVIDER";
-
-const bucket = getStorage().bucket();
-
-const verifyUserExists = async (user) => {
-    if (user === null) throw new Error("No user matched");
-};
+const { RequestUtils, ProgressUtils, UserUtils } = require("../utils");
 
 // ************************************************************************************
 // ----------------------------------- CONTROLLERS ------------------------------------
 // ************************************************************************************
-
-// ------------------------------- createUser -------------------------------
 const createUser = async (req, res) => {
     try {
         const { email, provider } = req.body;
         const { userUID } = req.params;
 
-        // verify userUID and email exists in firebase auth
-        await admin.auth().getUser(userUID);
-        await admin.auth().getUserByEmail(email);
+        UserUtils.assertProviderIsProvided(provider);
+        await UserUtils.assertUserIdIsInFirebase(userUID);
+        await UserUtils.assertEmailIsInFirebase(email);
 
-        if (!provider) throw new Error("No provider provided");
+        await UserUtils.createUserWithProvider(email, userUID, provider);
 
-        if (provider === EMAIL_PASSWORD_PROVIDER) {
-            // verify email does not already exist in mongodb atlas
-            if (await User.emailIsInUse(email))
-                return res.json({
-                    userIsCreated: false,
-                    message: "Email already in use",
-                });
-
-            // create user in mongodb atlas
-            const createdUser = await User.create({
-                _id: userUID,
-                userUID,
-                email,
-                emailVerification: {
-                    isVerified: false,
-                    provider: EMAIL_PASSWORD_PROVIDER,
-                },
-            });
-
-            const verificationEmailOptions =
-                emailUtils.getVerificationEmailOptions(
-                    createdUser.email,
-                    createdUser.emailVerification.pin
-                );
-
-            const sendEmailResponse = await emailUtils.sendEmail(
-                verificationEmailOptions
-            );
-
-            if (!sendEmailResponse.success)
-                throw new RequestUtils.RequestError(
-                    `Could not send verification email to ${createdUser.email}.`
-                );
-
-            // set user's profile picture to be the default profile picture
-            User.setUserProfilePicture(createdUser);
-
-            return res.json({ userIsCreated: true });
-        }
-
-        if (provider === GMAIL_PROVIDER) {
-            // if the email is already in use
-            if (await User.emailIsInUse(email)) {
-                const existingUser = await User.findUserByEmail(email);
-                // if the existing user's email provider is already gmail
-                if (
-                    existingUser.emailVerification.provider === GMAIL_PROVIDER
-                ) {
-                    return res.json({
-                        userIsCreated: true,
-                        message:
-                            "Email already in use, provider already uses Gmail",
-                    });
-                }
-                // if the existing user's email provider is not gmail
-                existingUser.emailVerification.isVerified = true;
-                existingUser.emailVerification.provider = GMAIL_PROVIDER;
-                await existingUser.save();
-                return res.json({
-                    userIsCreated: true,
-                    message:
-                        "Email already in use, provider overridden to now use Gmail",
-                });
-            }
-
-            // create user in mongodb atlas if no users with the same email exist
-            const createdUser = await User.create({
-                _id: userUID,
-                userUID,
-                email,
-                emailVerification: {
-                    isVerified: true,
-                    provider: GMAIL_PROVIDER,
-                },
-            });
-
-            User.setUserProfilePicture(createdUser);
-
-            return res.json({ userIsCreated: true });
-        }
-
-        throw new Error("No provider matched");
+        return res.json({ userIsCreated: true });
     } catch (err) {
-        console.log(err.message);
-        return res
-            .json({ error: { message: "Could not create user" } })
-            .status(INTERNAL_SERVER_ERROR_STATUS_CODE);
+        RequestUtils.sendErrorResponse(res, err.message, {
+            [UserUtils.NO_PROVIDER_PROVIDED_ERROR_MESSAGE]:
+                RequestUtils.BAD_REQUEST_STATUS_CODE,
+            [UserUtils.EMAIL_ALREADY_IN_USE_ERROR_MESSAGE]:
+                RequestUtils.BAD_REQUEST_STATUS_CODE,
+            [UserUtils.NO_PROVIDER_MATCHED_ERROR_MESSAGE]:
+                RequestUtils.BAD_REQUEST_STATUS_CODE,
+        });
     }
 };
 
 const getProfilePicture = async (req, res) => {
     try {
         const { userUID } = req.params;
+
         const user = await User.findUserByUserUID(userUID);
-        verifyUserExists(user);
 
-        const profilePicture = await MediaFile.findById(user.profilePicture);
+        await UserUtils.assertUserExists(user);
 
-        const response = await bucket
-            .file(profilePicture.firebasePath)
-            .getSignedUrl({
-                action: "read",
-                expires: DateUtils.addDays(new Date(), 7),
-            });
+        const profilePictureURL = await UserUtils.getProfilePictureUrl(user);
 
-        return res.json({ profilePictureURL: response[0] });
+        return res.json({ profilePictureURL });
     } catch (err) {
-        console.log(err);
-        res.json({
-            error: { message: "Could not retrieve profile picture" },
-        }).status(INTERNAL_SERVER_ERROR_STATUS_CODE);
+        RequestUtils.sendErrorResponse(res, err.message, {
+            [UserUtils.NO_USER_MATCHED_ERROR_MESSAGE]:
+                RequestUtils.RESOURCE_NOT_FOUND_STATUS_CODE,
+        });
     }
 };
 
 const getProfileData = async (req, res) => {
     try {
         const { userUID } = req.params;
+
         const user = await User.findUserByUserUID(userUID);
-        verifyUserExists(user);
 
-        const { sex, height, birthday } = user;
+        await UserUtils.assertUserExists(user);
 
-        const profileData = Object.fromEntries(
-            Object.entries({ sex, height, birthday }).filter(
-                ([key, val]) => val !== null
-            )
-        );
+        const profileData = UserUtils.getProfileData(user);
 
         return res.json(profileData);
     } catch (err) {
-        console.log(err);
-        res.json({
-            error: { message: "Could not retrieve profile data" },
-        }).status(INTERNAL_SERVER_ERROR_STATUS_CODE);
+        RequestUtils.sendErrorResponse(res, err.message, {
+            [UserUtils.NO_USER_MATCHED_ERROR_MESSAGE]:
+                RequestUtils.RESOURCE_NOT_FOUND_STATUS_CODE,
+        });
     }
 };
+
+const postProfileData = async (req, res) => {
+    try {
+        const { userUID } = req.params;
+
+        const user = await User.findUserByUserUID(userUID);
+
+        await UserUtils.assertUserExists(user);
+
+        const newProfileData = req.body;
+
+        await UserUtils.updateProfileData(user, newProfileData);
+
+        return res.json({ message: "Profile data updated" });
+    } catch (err) {
+        RequestUtils.sendErrorResponse(res, err.message, {
+            [UserUtils.NO_USER_MATCHED_ERROR_MESSAGE]:
+                RequestUtils.RESOURCE_NOT_FOUND_STATUS_CODE,
+        });
+    }
+};
+
+const postProfilePicture = async (req, res) => {
+    try {
+        const { userUID } = req.params;
+        const { profilePictureFile } = req.files;
+
+        const user = await User.findUserByUserUID(userUID);
+
+        await UserUtils.assertUserExists(user);
+
+        await UserUtils.updateUserProfilePicture(user, profilePictureFile);
+
+        return res.json({ message: "Profile picture updated" });
+    } catch (err) {
+        RequestUtils.sendErrorResponse(res, err.message, {
+            [UserUtils.NO_USER_MATCHED_ERROR_MESSAGE]:
+                RequestUtils.RESOURCE_NOT_FOUND_STATUS_CODE,
+        });
+    }
+};
+
+// ************************************************************************************
+// -------------------------------- ASasfdsafasfaNS ---------------------------------
+// ************************************************************************************
 
 const getGoals = async (req, res) => {
     try {
         const { userUID } = req.params;
+
         const user = await User.findUserByUserUID(userUID);
-        verifyUserExists(user);
+
+        await UserUtils.assertUserExists(user);
+
         return res.json(user.goals);
     } catch (err) {
         console.log(err);
         return res
             .json({ error: { message: "Could not get goals" } })
-            .status(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            .status(RequestUtils.INTERNAL_SERVER_ERROR_STATUS_CODE);
     }
 };
 
@@ -194,7 +134,8 @@ const getProgress = async (req, res) => {
     try {
         const { userUID } = req.params;
         const user = await User.findUserByUserUID(userUID);
-        verifyUserExists(user);
+
+        await UserUtils.assertUserExists(user);
 
         const progress = await Progress.find({ userUID }).sort({ date: -1 });
 
@@ -234,7 +175,7 @@ const getProgress = async (req, res) => {
         console.log(err);
         return res
             .json({ error: { message: "Could not get progress" } })
-            .status(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            .status(RequestUtils.INTERNAL_SERVER_ERROR_STATUS_CODE);
     }
 };
 
@@ -242,7 +183,8 @@ const getFoods = async (req, res) => {
     try {
         const { userUID } = req.params;
         const user = await User.findUserByUserUID(userUID);
-        verifyUserExists(user);
+
+        await UserUtils.assertUserExists(user);
 
         const foods = await Food.find({ userUID });
 
@@ -262,50 +204,7 @@ const getFoods = async (req, res) => {
         console.log(err);
         return res
             .json({ error: { message: "Could not get foods" } })
-            .status(INTERNAL_SERVER_ERROR_STATUS_CODE);
-    }
-};
-
-const postProfileData = async (req, res) => {
-    try {
-        const { userUID } = req.params;
-        const user = await User.findUserByUserUID(userUID);
-        verifyUserExists(user);
-
-        Object.entries(req.body).forEach(([key, value]) => (user[key] = value));
-
-        await user.save();
-        return res.json({ message: "Profile data updated" });
-    } catch (err) {
-        console.log(err);
-        res.json({ error: { message: "Could not post profile data" } }).status(
-            INTERNAL_SERVER_ERROR_STATUS_CODE
-        );
-    }
-};
-
-const postProfilePicture = async (req, res) => {
-    try {
-        const { userUID } = req.params;
-        const user = await User.findUserByUserUID(userUID);
-        verifyUserExists(user);
-
-        const { profilePictureFile } = req.files;
-
-        const storagePath = `assets/profile_picture/${userUID}`;
-
-        await bucket.file(storagePath).save(profilePictureFile.data, {
-            metadata: { contentType: profilePictureFile.mimetype },
-        });
-
-        User.setUserProfilePicture(user, storagePath);
-
-        return res.json({ message: "Profile picture updated" });
-    } catch (err) {
-        console.log(err);
-        return res
-            .json({ error: { message: "Could not update profile picture" } })
-            .status(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            .status(RequestUtils.INTERNAL_SERVER_ERROR_STATUS_CODE);
     }
 };
 
@@ -330,7 +229,7 @@ const postProgress = async (req, res) => {
         console.log(err);
         return res
             .json({ error: { message: "Could not post progress" } })
-            .status(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            .status(RequestUtils.INTERNAL_SERVER_ERROR_STATUS_CODE);
     }
 };
 
@@ -338,7 +237,8 @@ const postGoal = async (req, res) => {
     try {
         const { userUID } = req.params;
         const user = await User.findUserByUserUID(userUID);
-        verifyUserExists(user);
+
+        await UserUtils.assertUserExists(user);
 
         const goal = req.body;
         console.log(goal);
@@ -350,7 +250,7 @@ const postGoal = async (req, res) => {
         console.log(err);
         return res
             .json({ error: { message: "Could not add goal" } })
-            .status(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            .status(RequestUtils.INTERNAL_SERVER_ERROR_STATUS_CODE);
     }
 };
 
@@ -409,7 +309,7 @@ const postFood = async (req, res) => {
         console.log(err);
         return res
             .json({ error: { message: "Could not add food" } })
-            .status(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            .status(RequestUtils.INTERNAL_SERVER_ERROR_STATUS_CODE);
     }
 };
 
@@ -434,7 +334,7 @@ const editProgress = async (req, res) => {
         console.log(err);
         return res
             .json({ error: { message: "Could not edit progress" } })
-            .status(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            .status(RequestUtils.INTERNAL_SERVER_ERROR_STATUS_CODE);
     }
 };
 
@@ -447,7 +347,7 @@ const deleteProgress = async (req, res) => {
         console.log(err);
         return res
             .json({ error: { message: "Could not delete progress" } })
-            .status(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            .status(RequestUtils.INTERNAL_SERVER_ERROR_STATUS_CODE);
     }
 };
 
@@ -460,7 +360,7 @@ const deleteFood = async (req, res) => {
         console.log(err);
         return res
             .json({ error: { message: "Could not delete food" } })
-            .status(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            .status(RequestUtils.INTERNAL_SERVER_ERROR_STATUS_CODE);
     }
 };
 

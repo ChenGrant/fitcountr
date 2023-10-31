@@ -1,8 +1,10 @@
 const User = require("../models/User");
-const MediaFile =require("../models/MediaFile")
+const MediaFile = require("../models/MediaFile");
 const admin = require("firebase-admin");
 const { getStorage } = require("firebase-admin/storage");
 const DateUtils = require("./dateUtils");
+const config = require("../config/config");
+const EmailUtils = require("./emailUtils");
 
 // ************************************************************************************
 // --------------------------------- ERROR MESSAGES ----------------------------------
@@ -89,12 +91,12 @@ const createUserWithEmailPasswordProvider = async function (userUID, email) {
         },
     });
     updateUserProfilePicture(createdUser);
-    const verificationEmailOptions = emailUtils.getVerificationEmailOptions(
+    const verificationEmailOptions = EmailUtils.getVerificationEmailOptions(
         createdUser.email,
         createdUser.emailVerification.pin
     );
 
-    await emailUtils.sendEmail(verificationEmailOptions);
+    await EmailUtils.sendEmail(verificationEmailOptions);
 };
 
 const getProfilePictureUrl = async (user) => {
@@ -132,13 +134,15 @@ const updateUserIsVerified = async (user, isVerified) => {
 
 const updateUserProfilePicture = async (user, profilePictureFile = null) => {
     const firebaseStoragePath = profilePictureFile
-        ? `assets/profile_picture/${userUID}`
+        ? `assets/profile_picture/${user.userUID}`
         : config.ASSETS.PATH.DEFAULT_PROFILE_PICTURE;
 
-    // save profile picture to media storage
-    await bucket.file(firebaseStoragePath).save(profilePictureFile.data, {
-        metadata: { contentType: profilePictureFile.mimetype },
-    });
+    if (profilePictureFile) {
+        // save profile picture to media storage
+        await bucket.file(firebaseStoragePath).save(profilePictureFile.data, {
+            metadata: { contentType: profilePictureFile.mimetype },
+        });
+    }
 
     // find MediaFile schema instance that matches the storage path and
     // make the user's profile picture reference that MediaFile schema instance

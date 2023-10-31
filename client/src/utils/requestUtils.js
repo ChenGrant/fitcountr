@@ -43,7 +43,7 @@ export const fetchAssetURLFromAssetName = async (assetName) =>
 
 export const fetchProfilePictureURL = async (user) => {
   const userIdToken = await user.firebase.getIdToken();
-  return await fetchJSON(`/user/profilePicture/${user.firebase.uid}`, {
+  return await fetchJSON(`/profile/profilePicture/${user.firebase.uid}`, {
     headers: {
       "Content-Type": "application/json",
       authorization: userIdToken,
@@ -53,7 +53,7 @@ export const fetchProfilePictureURL = async (user) => {
 
 export const fetchUserProfile = async (user) => {
   const userIdToken = await user.firebase.getIdToken();
-  return await fetchJSON(`/user/${user.firebase.uid}`, {
+  return await fetchJSON(`/profile/${user.firebase.uid}`, {
     headers: {
       "Content-Type": "application/json",
       authorization: userIdToken,
@@ -63,7 +63,7 @@ export const fetchUserProfile = async (user) => {
 
 export const fetchGoals = async (user) => {
   const userIdToken = await user.firebase.getIdToken();
-  return await fetchJSON(`/user/goals/${user.firebase.uid}`, {
+  return await fetchJSON(`/goals/${user.firebase.uid}`, {
     headers: {
       "Content-Type": "application/json",
       authorization: userIdToken,
@@ -73,7 +73,7 @@ export const fetchGoals = async (user) => {
 
 export const fetchProgress = async (user) => {
   const userIdToken = await user.firebase.getIdToken();
-  return await fetchJSON(`/user/progress/${user.firebase.uid}`, {
+  return await fetchJSON(`/progress/${user.firebase.uid}`, {
     headers: {
       "Content-Type": "application/json",
       authorization: userIdToken,
@@ -83,7 +83,7 @@ export const fetchProgress = async (user) => {
 
 export const fetchFoods = async (user) => {
   const userIdToken = await user.firebase.getIdToken();
-  return await fetchJSON(`/user/foods/${user.firebase.uid}`, {
+  return await fetchJSON(`/foods/${user.firebase.uid}`, {
     headers: {
       "Content-Type": "application/json",
       authorization: userIdToken,
@@ -111,7 +111,7 @@ export const fetchValidatePin = async (email, pin) =>
 
 export const postSignupData = async (firebaseUser, provider) => {
   const userIdToken = await firebaseUser.getIdToken();
-  return await fetchJSON(`/user/signup/${firebaseUser.uid}`, {
+  return await fetchJSON(`/user/signUp/${firebaseUser.uid}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -137,7 +137,7 @@ export const postProfilePicture = async (user, profilePictureFile) => {
   const userIdToken = await user.firebase.getIdToken();
   const formData = new FormData();
   formData.append("profilePictureFile", profilePictureFile);
-  return await fetchJSON(`/user/profilePicture/${user.firebase.uid}`, {
+  return await fetchJSON(`/profile/profilePicture/${user.firebase.uid}`, {
     method: "POST",
     headers: {
       authorization: userIdToken,
@@ -158,7 +158,7 @@ export const postProfileData = async (user, profileData) => {
     delete profileDataCopy.profilePicture;
   }
 
-  return await fetchJSON(`/user/${user.firebase.uid}`, {
+  return await fetchJSON(`/profile/${user.firebase.uid}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -170,7 +170,7 @@ export const postProfileData = async (user, profileData) => {
 
 export const postProgress = async (user, progress) => {
   const userIdToken = await user.firebase.getIdToken();
-  return await fetchJSON(`/user/progress/${user.firebase.uid}`, {
+  return await fetchJSON(`/progress/${user.firebase.uid}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -182,7 +182,7 @@ export const postProgress = async (user, progress) => {
 
 export const postGoal = async (user, goal) => {
   const userIdToken = await user.firebase.getIdToken();
-  return await fetchJSON(`/user/goal/${user.firebase.uid}`, {
+  return await fetchJSON(`/goals/${user.firebase.uid}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -194,7 +194,7 @@ export const postGoal = async (user, goal) => {
 
 export const postFood = async (user, food) => {
   const userIdToken = await user.firebase.getIdToken();
-  return await fetchJSON(`/user/food/${user.firebase.uid}`, {
+  return await fetchJSON(`/foods/${user.firebase.uid}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -207,7 +207,7 @@ export const postFood = async (user, food) => {
 // ----------------------------------- PUT REQUESTS -----------------------------------
 export const editProgress = async (user, progress, progressID) => {
   const userIdToken = await user.firebase.getIdToken();
-  return await fetchJSON(`/user/progress/${user.firebase.uid}`, {
+  return await fetchJSON(`/progress/${user.firebase.uid}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -220,7 +220,7 @@ export const editProgress = async (user, progress, progressID) => {
 // --------------------------------- DELETE REQUESTS ---------------------------------
 export const deleteProgress = async (user, progressID) => {
   const userIdToken = await user.firebase.getIdToken();
-  return await fetchJSON(`/user/progress/${user.firebase.uid}`, {
+  return await fetchJSON(`/progress/${user.firebase.uid}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -232,7 +232,7 @@ export const deleteProgress = async (user, progressID) => {
 
 export const deleteFood = async (user, foodID) => {
   const userIdToken = await user.firebase.getIdToken();
-  return await fetchJSON(`/user/food/${user.firebase.uid}`, {
+  return await fetchJSON(`/foods/${user.firebase.uid}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

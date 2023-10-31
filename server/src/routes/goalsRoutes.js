@@ -1,14 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { createUser } = require("../controllers/userController");
 const { isAuthorized, PRIVATE } = require("../middleware/isAuthorized");
 const isAuthenticated = require("../middleware/isAuthenticated");
+const { getGoals, postGoal } = require("../controllers/goalsController");
 
-router.post(
-    "/signUp/:userUID",
-    isAuthenticated,
-    isAuthorized(PRIVATE),
-    createUser
-);
+router.get("/:userUID", isAuthenticated, isAuthorized(PRIVATE), getGoals);
+
+router.post("/:userUID", isAuthenticated, isAuthorized(PRIVATE), postGoal);
 
 module.exports = router;

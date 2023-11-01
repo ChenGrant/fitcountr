@@ -1,0 +1,7 @@
+const AUTHENTICATION_FAILED_ERROR_MESSAGE = "Authentication failed.";
+const AUTHORIZATION_FAILED_ERROR_MESSAGE = "Authorization failed";
+
+module.exports = {
+    AUTHENTICATION_FAILED_ERROR_MESSAGE,
+    AUTHORIZATION_FAILED_ERROR_MESSAGE,
+};

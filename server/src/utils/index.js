@@ -1,4 +1,5 @@
 const ArrayUtils = require("./arrayUtils");
+const AuthUtils = require("./authUtils");
 const DateUtils = require("./dateUtils");
 const EmailUtils = require("./emailUtils");
 const FirebaseUtils = require("./firebaseUtils");
@@ -14,6 +15,7 @@ const UserUtils = require("./userUtils");
 
 module.exports = {
     ArrayUtils,
+    AuthUtils,
     DateUtils,
     EmailUtils,
     FirebaseUtils,

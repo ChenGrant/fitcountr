@@ -1,4 +1,5 @@
 const admin = require("firebase-admin");
+const { RequestUtils, FirebaseUtils, AuthUtils } = require("../utils");
 const auth = admin.auth();
 
 const isAuthenticated = async (req, res, next) => {
@@ -11,10 +12,15 @@ const isAuthenticated = async (req, res, next) => {
 
         next();
     } catch (err) {
-        console.log(err);
-        return res
-            .json({ error: { message: "Could not authenticate" } })
-            .status(401);
+        if (
+            err.message === FirebaseUtils.FIREBASE_ID_TOKEN_FAILED_ERROR_MESSAGE
+        )
+            err.message = AuthUtils.AUTHENTICATION_FAILED_ERROR_MESSAGE;
+
+        RequestUtils.sendErrorResponse(res, err.message, {
+            [AuthUtils.AUTHENTICATION_FAILED_ERROR_MESSAGE]:
+                RequestUtils.UNAUTHORIZED_STATUS_CODE,
+        });
     }
 };
 

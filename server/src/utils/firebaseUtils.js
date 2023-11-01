@@ -1,12 +1,6 @@
-const FIREBASE_CLIENT_CONFIG_OBJECT_DOES_NOT_EXIST_ERROR_MESSAGE =
-    "Firebase client config object does not exist.";
-
-const assertFirebaseClientConfigObjectExists = (firebaseClientConfigObject) => {
-    if (firebaseClientConfigObject) return;
-    throw new Error(FIREBASE_CLIENT_CONFIG_OBJECT_DOES_NOT_EXIST_ERROR_MESSAGE);
-};
+const FIREBASE_ID_TOKEN_FAILED_ERROR_MESSAGE =
+    "Decoding Firebase ID token failed. Make sure you passed the entire string JWT which represents an ID token. See https://firebase.google.com/docs/auth/admin/verify-id-tokens for details on how to retrieve an ID token.";
 
 module.exports = {
-    FIREBASE_CLIENT_CONFIG_OBJECT_DOES_NOT_EXIST_ERROR_MESSAGE,
-    assertFirebaseClientConfigObjectExists,
+    FIREBASE_ID_TOKEN_FAILED_ERROR_MESSAGE,
 };

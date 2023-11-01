@@ -2,12 +2,13 @@ import { Typography } from "@mui/material";
 import React, { useContext, useState } from "react";
 import ErrorIcon from "@mui/icons-material/Error";
 import { useTheme } from "@emotion/react";
-import { fetchFoodFromBarcodeNumber, postFood } from "../../../utils";
 import CustomButton from "../../../components/ui/CustomButton";
 import { Box } from "@mui/system";
 import CustomCard from "../../../components/ui/CustomCard";
 import useScreenSize from "../../../hooks/useScreenSize";
 import {
+    fetchFoodFromBarcodeNumber,
+    postFood,
     capitalizeFirstCharacter,
     round,
     sortByNutrient,

@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
+const { isAuthorized, PRIVATE } = require("../middleware/isAuthorized");
+const isAuthenticated = require("../middleware/isAuthenticated");
 const {
     getProfilePicture,
     postProfileData,
     postProfilePicture,
     getProfileData,
 } = require("../controllers/profileController");
-const { isAuthorized, PRIVATE } = require("../middleware/isAuthorized");
-const isAuthenticated = require("../middleware/isAuthenticated");
 
 router.get("/:userUID", isAuthenticated, isAuthorized(PRIVATE), getProfileData);
 

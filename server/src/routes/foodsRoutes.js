@@ -1,3 +1,5 @@
+const { isAuthorized, PRIVATE } = require("../middleware/isAuthorized");
+const isAuthenticated = require("../middleware/isAuthenticated");
 const express = require("express");
 const router = express.Router();
 const {
@@ -5,8 +7,6 @@ const {
     postFood,
     deleteFood,
 } = require("../controllers/foodsController");
-const { isAuthorized, PRIVATE } = require("../middleware/isAuthorized");
-const isAuthenticated = require("../middleware/isAuthenticated");
 
 router.get("/:userUID", isAuthenticated, isAuthorized(PRIVATE), getFoods);
 

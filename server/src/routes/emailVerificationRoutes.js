@@ -9,8 +9,6 @@ const {
     sendVerificationEmail,
 } = require("../controllers/emailVerificationController");
 
-// -------------------------------------- ROUTES --------------------------------------
-
 router.get("/emailIsInUse/:email", getEmailIsInUse);
 
 router.get("/provider/:email", getEmailVerificationProvider);

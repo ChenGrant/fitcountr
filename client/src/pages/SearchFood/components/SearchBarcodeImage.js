@@ -109,9 +109,9 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
   };
 
   const handleScan = async (file) => {
-    const barcodeData = await scanBarcodeImage(file);
+    const imageData = await scanBarcodeImage(file);
 
-    if (!barcodeData.Successful) {
+    if (!imageData.barcodeNumber) {
       barcodeNumberDispatch({
         type: BARCODE_NUMBER_ACTIONS.SET_ERROR,
         payload: true,
@@ -123,7 +123,7 @@ const SearchBarcodeImage = ({ initialBarcodeImageFile }) => {
     setBarcodeConfirmPopupIsOpen(true);
     barcodeNumberDispatch({
       type: BARCODE_NUMBER_ACTIONS.SET_NUMBER,
-      payload: barcodeData.RawText,
+      payload: imageData.barcodeNumber,
     });
   };
 

@@ -26,29 +26,24 @@ const postFood = async (req, res) => {
         const food = req.body;
 
         let foodDocument = await FoodUtils.getFoodDocument(userUID, food);
-        let responseMessage = "";
 
-        if (foodDocument) {
-            foodDocument = await FoodUtils.updateFoodDocument(
-                foodDocument,
-                food
-            );
-            responseMessage = "Updated existing food";
-        } else {
-            foodDocument = await Food.create({
-                ...food,
-                userUID,
-            });
-            responseMessage = "Added food to progress";
-        }
+        const foodAlreadyExists = foodDocument !== null;
+
+        foodDocument = foodAlreadyExists
+            ? await FoodUtils.updateFoodDocument(foodDocument, food)
+            : await Food.create({ ...food, userUID });
 
         const clientFormattedFood = FoodUtils.formatFoodDocumentsForClient([
             foodDocument,
         ]);
 
+        const responseMessage = foodAlreadyExists
+            ? "Updated existing food"
+            : "Added food to progress";
+
         return res.json({
-            message: responseMessage,
             food: clientFormattedFood,
+            message: responseMessage,
         });
     } catch (err) {
         RequestUtils.sendErrorResponse(res, err.message);

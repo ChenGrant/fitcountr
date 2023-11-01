@@ -104,10 +104,11 @@ const editProgress = async (req, res) => {
 const deleteProgress = async (req, res) => {
     try {
         const { progressID } = req.body;
+
         await Progress.findByIdAndDelete(progressID);
+
         return res.json({ message: "Progress deleted" });
     } catch (err) {
-        console.log(err);
         return res
             .json({ error: { message: "Could not delete progress" } })
             .status(RequestUtils.INTERNAL_SERVER_ERROR_STATUS_CODE);

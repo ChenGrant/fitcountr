@@ -16,7 +16,6 @@ const createUser = async (req, res) => {
 
         return res.json({ userIsCreated: true });
     } catch (err) {
-        console.log(err)
         RequestUtils.sendErrorResponse(res, err.message, {
             [UserUtils.NO_PROVIDER_PROVIDED_ERROR_MESSAGE]:
                 RequestUtils.BAD_REQUEST_STATUS_CODE,

@@ -1,6 +1,6 @@
 const Food = require("../models/Food");
 const User = require("../models/User");
-const { RequestUtils, UserUtils } = require("../utils");
+const { RequestUtils, UserUtils, FoodUtils } = require("../utils");
 
 const getFoods = async (req, res) => {
     try {
@@ -11,23 +11,12 @@ const getFoods = async (req, res) => {
 
         const foods = await Food.find({ userUID });
 
-        const cleanFoods = Object.fromEntries(
-            foods.map((food) => [
-                food._id,
-                {
-                    name: food.name,
-                    nutrients: food.nutrients,
-                    servingSize: food.servingSize,
-                },
-            ])
-        );
+        const clientFormattedFoods =
+            FoodUtils.formatFoodDocumentsForClient(foods);
 
-        return res.json(cleanFoods);
+        return res.json(clientFormattedFoods);
     } catch (err) {
-        console.log(err);
-        return res
-            .json({ error: { message: "Could not get foods" } })
-            .status(RequestUtils.INTERNAL_SERVER_ERROR_STATUS_CODE);
+        RequestUtils.sendErrorResponse(res, err.message);
     }
 };
 
@@ -36,70 +25,45 @@ const postFood = async (req, res) => {
         const { userUID } = req.params;
         const food = req.body;
 
-        const existingFoodDoc =
-            (await Food.findOne({
-                userUID,
-                searchMethod: "BARCODE_SEARCH_METHOD",
-                barcodeNumber: food.barcodeNumber,
-            })) ||
-            (await Food.findOne({
-                userUID,
-                searchMethod: "FOOD_NAME_SEARCH_METHOD",
-                name: food.name,
-            }));
+        let foodDocument = await FoodUtils.getFoodDocument(userUID, food);
+        let responseMessage = "";
 
-        if (existingFoodDoc) {
-            Object.entries(food).forEach(
-                ([key, value]) => (existingFoodDoc[key] = value)
+        if (foodDocument) {
+            foodDocument = await FoodUtils.updateFoodDocument(
+                foodDocument,
+                food
             );
-
-            await existingFoodDoc.save();
-
-            const existingFoodDocCopy = Object.fromEntries(
-                Object.entries(existingFoodDoc._doc)
-                    .filter(([key]) => !["__v", "userUID"].includes(key))
-                    .map(([key, value]) => [key === "_id" ? "id" : key, value])
-            );
-
-            return res.send({
-                message: "Updated existing food",
-                food: existingFoodDocCopy,
+            responseMessage = "Updated existing food";
+        } else {
+            foodDocument = await Food.create({
+                ...food,
+                userUID,
             });
+            responseMessage = "Added food to progress";
         }
 
-        const createdFood = await Food.create({
-            ...food,
-            userUID,
-        });
-
-        const createdFoodCopy = Object.fromEntries(
-            Object.entries(createdFood._doc)
-                .filter(([key]) => !["__v", "userUID"].includes(key))
-                .map(([key, value]) => [key === "_id" ? "id" : key, value])
-        );
+        const clientFormattedFood = FoodUtils.formatFoodDocumentsForClient([
+            foodDocument,
+        ]);
 
         return res.json({
-            message: "Added food to progress",
-            food: createdFoodCopy,
+            message: responseMessage,
+            food: clientFormattedFood,
         });
     } catch (err) {
-        console.log(err);
-        return res
-            .json({ error: { message: "Could not add food" } })
-            .status(RequestUtils.INTERNAL_SERVER_ERROR_STATUS_CODE);
+        RequestUtils.sendErrorResponse(res, err.message);
     }
 };
 
 const deleteFood = async (req, res) => {
     try {
         const { foodID } = req.body;
+
         await Food.findByIdAndDelete(foodID);
+
         return res.json({ message: "Food deleted" });
     } catch (err) {
-        console.log(err);
-        return res
-            .json({ error: { message: "Could not delete food" } })
-            .status(RequestUtils.INTERNAL_SERVER_ERROR_STATUS_CODE);
+        RequestUtils.sendErrorResponse(res, err.message);
     }
 };
 

@@ -1,6 +1,7 @@
 const axios = require("axios");
 const CloudmersiveBarcodeapiClient = require("cloudmersive-barcodeapi-client");
 const config = require("../config/config");
+const Food = require("../models/Food");
 
 const NO_FOOD_DATA_FROM_BARCODE_NUMBER_ERROR_MESSAGE =
     "No food data found from barcode number";
@@ -95,6 +96,40 @@ const getFoodsFromQueryFoodDataCentral = async ({
     return fetchedFoodsResponse.data;
 };
 
+const formatFoodDocumentsForClient = (foodDocuments) =>
+    Object.fromEntries(
+        foodDocuments.map((food) => [
+            food._id,
+            {
+                name: food.name,
+                nutrients: food.nutrients,
+                servingSize: food.servingSize,
+            },
+        ])
+    );
+
+const updateFoodDocument = async (foodDocument, newFoodData) => {
+    Object.entries(newFoodData).forEach(
+        ([key, value]) => (foodDocument[key] = value)
+    );
+
+    await foodDocument.save();
+
+    return foodDocument;
+};
+
+const getFoodDocument = async (userUID, food) =>
+    (await Food.findOne({
+        userUID,
+        searchMethod: "BARCODE_SEARCH_METHOD",
+        barcodeNumber: food.barcodeNumber,
+    })) ||
+    (await Food.findOne({
+        userUID,
+        searchMethod: "FOOD_NAME_SEARCH_METHOD",
+        name: food.name,
+    }));
+
 module.exports = {
     UNITS,
     NO_FOOD_DATA_FROM_BARCODE_NUMBER_ERROR_MESSAGE,
@@ -106,4 +141,7 @@ module.exports = {
     getFoodFromBarcodeNumberOpenFoodFacts,
     getFoodsFromQueryFoodDataCentral,
     getBarcodeNumberFromImageCloudmersive,
+    formatFoodDocumentsForClient,
+    updateFoodDocument,
+    getFoodDocument,
 };

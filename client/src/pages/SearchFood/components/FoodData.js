@@ -47,9 +47,24 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
     const pageIsLoading = !foodData.hasFetched;
 
     const addFoodToProgress = async () => {
-        setIsPostingFood(true);
         const { name, nutrients, servingSize } = foodData.data;
 
+        const foodIsAlreadyAddedToProgress = Object.values(user.foods).some(
+            (food) => food.name === name
+        );
+
+        if (foodIsAlreadyAddedToProgress) {
+            customSnackbarDispatch({
+                type: CUSTOM_SNACKBAR_ACTIONS.OPEN,
+                payload: {
+                    severity: "error",
+                    message: "Food is already added to progress",
+                },
+            });
+            return;
+        }
+
+        setIsPostingFood(true);
         const response = await postFood(user, {
             name,
             nutrients,
@@ -66,7 +81,7 @@ const FoodData = ({ initialBarcodeNumber, initialFoodData }) => {
                 severity: response.error ? "error" : "success",
                 message: response.error
                     ? "Could not add food to progress"
-                    : response.message,
+                    : "Added food to progress",
             },
         });
 

@@ -5,6 +5,7 @@ const { RequestUtils, UserUtils, ProgressUtils } = require("../utils");
 const getProgress = async (req, res) => {
     try {
         const { userUID } = req.params;
+        
         const user = await User.findUserByUserUID(userUID);
 
         await UserUtils.assertUserExists(user);

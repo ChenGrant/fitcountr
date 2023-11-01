@@ -41,7 +41,7 @@ const CustomSnackbar = ({ children }) => {
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         open={snackbar.open}
-        autoHideDuration={4000}
+        autoHideDuration={2500}
         onClose={() =>
           snackbarDispatch({ type: CUSTOM_SNACKBAR_ACTIONS.CLOSE })
         }

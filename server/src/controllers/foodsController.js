@@ -25,26 +25,13 @@ const postFood = async (req, res) => {
         const { userUID } = req.params;
         const food = req.body;
 
-        let foodDocument = await FoodUtils.getFoodDocument(userUID, food);
-
-        const foodAlreadyExists = foodDocument !== null;
-
-        foodDocument = foodAlreadyExists
-            ? await FoodUtils.updateFoodDocument(foodDocument, food)
-            : await Food.create({ ...food, userUID });
+        const foodDocument = await Food.create({ ...food, userUID });
 
         const clientFormattedFood = FoodUtils.formatFoodDocumentsForClient([
             foodDocument,
         ]);
 
-        const responseMessage = foodAlreadyExists
-            ? "Updated existing food"
-            : "Added food to progress";
-
-        return res.json({
-            food: clientFormattedFood,
-            message: responseMessage,
-        });
+        return res.json({ food: clientFormattedFood });
     } catch (err) {
         RequestUtils.sendErrorResponse(res, err.message);
     }

@@ -6,7 +6,9 @@ const createUser = async (req, res) => {
         const { userUID } = req.params;
 
         UserUtils.assertProviderIsProvided(provider);
+        
         await UserUtils.assertUserIdIsInFirebase(userUID);
+
         await UserUtils.assertEmailIsInFirebase(email);
 
         await UserUtils.createUserWithProvider(email, userUID, provider);

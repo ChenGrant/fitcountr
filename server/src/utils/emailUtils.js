@@ -1,4 +1,3 @@
-const config = require("../config/config");
 const User = require("../models/User");
 const nodemailer = require("nodemailer");
 
@@ -16,8 +15,8 @@ const NO_EMAIL_IS_PROVIDED_ERROR_MESSAGE = "Email is not provided.";
 // ************************************************************************************
 const EMAIL_IS_VERIFIED = "Verified";
 const EMAIL_IS_NOT_VERIFIED = "Not verified";
-const GMAIL_USERNAME = config.NODEMAILER.GMAIL_USERNAME;
-const GMAIL_PASSWORD = config.NODEMAILER.GMAIL_PASSWORD;
+const GMAIL_USERNAME = process.env.NODEMAILER_GMAIL_USERNAME;
+const GMAIL_PASSWORD = process.env.NODEMAILER_GMAIL_PASSWORD;
 
 const transport = nodemailer.createTransport({
     service: "Gmail",
@@ -54,7 +53,7 @@ const getVerificationEmailOptions = (recipientEmail, emailVerificationPin) => ({
     html: `<p>Hi,</p>
       <br>
       <p>To complete the signup process, please verify your email with the following pin.</p>
-      <a href = '${config.WEBSITE}email-verification/${recipientEmail}' 
+      <a href = '${process.env.WEBSITE}email-verification/${recipientEmail}' 
       style = '
       display: block;
       width: max-content;

@@ -1,11 +1,8 @@
 const path = require("path");
-const config = require("./src/config/config");
 const cors = require("cors");
 const morgan = require("morgan");
 const fileupload = require("express-fileupload");
-require("./src/services/firebase/firebase");
 const express = require("express");
-const mongoose = require("mongoose");
 const app = express();
 const emailVerificationRoutes = require("./src/routes/emailVerificationRoutes");
 const searchFoodRoutes = require("./src/routes/searchFoodRoutes");
@@ -14,6 +11,17 @@ const foodsRoutes = require("./src/routes/foodsRoutes");
 const progressRoutes = require("./src/routes/progressRoutes");
 const goalsRoutes = require("./src/routes/goalsRoutes");
 const profileRoutes = require("./src/routes/profileRoutes");
+const {
+    loadEnvironmentVariables,
+    initializeFirebaseAdminSDK,
+    connectToDatabase,
+} = require("./src/config");
+
+// -------------------------------------- CONFIG --------------------------------------
+loadEnvironmentVariables();
+
+// ------------------------------- THIRD-PARTY SERVICES -------------------------------
+initializeFirebaseAdminSDK();
 
 // ------------------------------------ MIDDLEWARE ------------------------------------
 app.use(express.urlencoded({ extended: true }));
@@ -35,15 +43,6 @@ app.use((req, res) => {
     res.sendFile(path.join(__dirname, "../client/build/index.html"));
 });
 
-// ---------------------- MONGODB ATLAS CONNECTION, START SERVER ----------------------
-console.log(`NODE_ENV=${config.NODE_ENV}`);
-mongoose
-    .connect(config.MONGODB_ATLAS_URI)
-    .then(() => {
-        console.log("connected to mongodb atlas");
-        const PORT = process.env.PORT || 5000;
-        app.listen(PORT, () => {
-            console.log(`server started on port ${PORT}`);
-        });
-    })
-    .catch((err) => console.log("failed to connect to mongodb atlas ", err));
+// -------------------------------------- SERVER --------------------------------------
+connectToDatabase(app);
+

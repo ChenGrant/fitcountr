@@ -1,6 +1,5 @@
 const axios = require("axios");
 const CloudmersiveBarcodeapiClient = require("cloudmersive-barcodeapi-client");
-const config = require("../config/config");
 const Food = require("../models/Food");
 
 const NO_FOOD_DATA_FROM_BARCODE_NUMBER_ERROR_MESSAGE =
@@ -21,7 +20,7 @@ const UNITS = {
 
 CloudmersiveBarcodeapiClient.ApiClient.instance.authentications[
     "Apikey"
-].apiKey = config.BARCODE_API_KEY;
+].apiKey = process.env.CLOUDMERSIVE_BARCODE_API_KEY;
 
 const apiInstance = new CloudmersiveBarcodeapiClient.BarcodeScanApi();
 
@@ -81,7 +80,7 @@ const getFoodsFromQueryFoodDataCentral = async ({
     const usdaApiUrl =
         "https://api.nal.usda.gov/fdc/v1/foods/search?" +
         Object.entries({
-            api_key: config.FOOD_DATA_CENTRAL_API_KEY,
+            api_key: process.env.FOOD_DATA_CENTRAL_API_KEY,
             query,
             pageNumber,
             dataType,

@@ -1,10 +1,12 @@
 const admin = require("firebase-admin");
 const { RequestUtils, FirebaseUtils, AuthUtils } = require("../utils");
-const auth = admin.auth();
+const { getFirebaseAuth } = require("../config");
 
 const isAuthenticated = async (req, res, next) => {
     try {
         const idToken = req.headers.authorization;
+
+        const auth = getFirebaseAuth();
 
         const user = await auth.verifyIdToken(idToken);
 

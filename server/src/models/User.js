@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const config = require("../config/config");
 const ProgressUtils = require("../utils/progressUtils");
 const NumberUtils = require("../utils/numberUtils");
 const HumanUtils = require("../utils/humanUtils");

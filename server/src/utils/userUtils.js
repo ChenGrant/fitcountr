@@ -1,10 +1,9 @@
 const User = require("../models/User");
 const MediaFile = require("../models/MediaFile");
 const admin = require("firebase-admin");
-const { getStorage } = require("firebase-admin/storage");
 const DateUtils = require("./dateUtils");
-const config = require("../config/config");
 const EmailUtils = require("./emailUtils");
+const { getFirebaseStorageBucket } = require("../config");
 
 // ************************************************************************************
 // --------------------------------- ERROR MESSAGES ----------------------------------
@@ -18,8 +17,6 @@ const NO_USER_MATCHED_ERROR_MESSAGE = "No user matched";
 // ************************************************************************************
 // ------------------------------------ CONSTANTS -------------------------------------
 // ************************************************************************************
-
-const bucket = getStorage().bucket();
 
 const EMAIL_PASSWORD_PROVIDER = "EMAIL_PASSWORD_PROVIDER";
 const GMAIL_PROVIDER = "GMAIL_PROVIDER";
@@ -100,6 +97,8 @@ const createUserWithEmailPasswordProvider = async function (userUID, email) {
 };
 
 const getProfilePictureUrl = async (user) => {
+    const bucket = getFirebaseStorageBucket();
+
     const profilePicture = await MediaFile.findById(user.profilePicture);
 
     const signedUrl = await bucket
@@ -133,9 +132,11 @@ const updateUserIsVerified = async (user, isVerified) => {
 };
 
 const updateUserProfilePicture = async (user, profilePictureFile = null) => {
+    const bucket = getFirebaseStorageBucket();
+
     const firebaseStoragePath = profilePictureFile
         ? `assets/profile_picture/${user.userUID}`
-        : config.ASSETS.PATH.DEFAULT_PROFILE_PICTURE;
+        : process.env.DEFAULT_PROFILE_PICTURE_FIREBASE_STORAGE_PATH;
 
     if (profilePictureFile) {
         // save profile picture to media storage

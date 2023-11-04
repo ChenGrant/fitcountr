@@ -24,6 +24,7 @@ const sendErrorResponse = (
     errorMessage,
     errorMessagesToResponseStatusCodes = {}
 ) => {
+    console.log(errorMessage);
     let responseData = { error: true };
     let responseStatusCode = INTERNAL_SERVER_ERROR_STATUS_CODE;
 

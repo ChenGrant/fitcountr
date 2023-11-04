@@ -1,6 +1,6 @@
 # fitcountr
 
-Version: 1.0.4
+Version: 1.1.0
 
 Description: fitcountr is a calorie-tracking web app that graphically visualizes data about user-recorded foods, weights, and steps.
 
@@ -14,4 +14,4 @@ Demo Video: https://youtu.be/S56SCo2RQzY
 
 Technologies Used: Express.js, MongoDB, Firebase, React.js, Redux, Material UI, Formik
 
-Last Edited: September 26, 2023
+Last Edited: November 4, 2023

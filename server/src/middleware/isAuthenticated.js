@@ -1,4 +1,3 @@
-const admin = require("firebase-admin");
 const { RequestUtils, FirebaseUtils, AuthUtils } = require("../utils");
 const { getFirebaseAuth } = require("../config");
 

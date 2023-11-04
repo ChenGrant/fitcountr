@@ -1,19 +1,21 @@
 const Progress = require("../models/Progress");
 const User = require("../models/User");
-const { RequestUtils, UserUtils, ProgressUtils } = require("../utils");
+const UserService = require("../services/userService");
+const ProgressService = require("../services/progressService");
+const { RequestUtils } = require("../utils");
 
 const getProgress = async (req, res) => {
     try {
         const { userUID } = req.params;
-        
+
         const user = await User.findUserByUserUID(userUID);
 
-        await UserUtils.assertUserExists(user);
+        await UserService.assertUserExists(user);
 
         const progress = await Progress.find({ userUID }).sort({ date: -1 });
 
         const clientFormattedProgress =
-            ProgressUtils.formatProgressDocumentsForClient(progress);
+            ProgressService.formatProgressDocumentsForClient(progress);
 
         return res.json(clientFormattedProgress);
     } catch (err) {
@@ -32,7 +34,7 @@ const postProgress = async (req, res) => {
         });
 
         const clientFormattedProgress =
-            ProgressUtils.formatProgressDocumentForClient(progressDocument);
+            ProgressService.formatProgressDocumentForClient(progressDocument);
 
         return res.json(clientFormattedProgress);
     } catch (err) {
@@ -46,13 +48,13 @@ const editProgress = async (req, res) => {
 
         let progressDocument = await Progress.findById(progressID);
 
-        progressDocument = await ProgressUtils.updateProgressDocument(
+        progressDocument = await ProgressService.updateProgressDocument(
             progressDocument,
             progress
         );
 
         const clientFormattedProgress =
-            ProgressUtils.formatProgressDocumentForClient(progressDocument);
+            ProgressService.formatProgressDocumentForClient(progressDocument);
 
         return res.json(clientFormattedProgress);
     } catch (err) {

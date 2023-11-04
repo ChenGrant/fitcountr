@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const ProgressUtils = require("../utils/progressUtils");
+const ProgressUtils = require("../services/progressService");
 const NumberUtils = require("../utils/numberUtils");
 const HumanUtils = require("../utils/humanUtils");
 

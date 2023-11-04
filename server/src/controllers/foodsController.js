@@ -1,18 +1,20 @@
 const Food = require("../models/Food");
 const User = require("../models/User");
-const { RequestUtils, UserUtils, FoodUtils } = require("../utils");
+const userService = require("../services/userService");
+const FoodService = require("../services/foodService");
+const { RequestUtils } = require("../utils");
 
 const getFoods = async (req, res) => {
     try {
         const { userUID } = req.params;
         const user = await User.findUserByUserUID(userUID);
 
-        await UserUtils.assertUserExists(user);
+        await userService.assertUserExists(user);
 
         const foods = await Food.find({ userUID });
 
         const clientFormattedFoods =
-            FoodUtils.formatFoodDocumentsForClient(foods);
+            FoodService.formatFoodDocumentsForClient(foods);
 
         return res.json(clientFormattedFoods);
     } catch (err) {
@@ -27,7 +29,7 @@ const postFood = async (req, res) => {
 
         const foodDocument = await Food.create({ ...food, userUID });
 
-        const clientFormattedFood = FoodUtils.formatFoodDocumentsForClient([
+        const clientFormattedFood = FoodService.formatFoodDocumentsForClient([
             foodDocument,
         ]);
 

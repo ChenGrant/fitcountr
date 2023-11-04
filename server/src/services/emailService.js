@@ -15,16 +15,16 @@ const NO_EMAIL_IS_PROVIDED_ERROR_MESSAGE = "Email is not provided.";
 // ************************************************************************************
 const EMAIL_IS_VERIFIED = "Verified";
 const EMAIL_IS_NOT_VERIFIED = "Not verified";
-const GMAIL_USERNAME = process.env.NODEMAILER_GMAIL_USERNAME;
-const GMAIL_PASSWORD = process.env.NODEMAILER_GMAIL_PASSWORD;
 
-const transport = nodemailer.createTransport({
-    service: "Gmail",
-    auth: {
-        user: GMAIL_USERNAME,
-        pass: GMAIL_PASSWORD,
-    },
-});
+const getTransport = () => {
+    return nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+            user: process.env.NODEMAILER_GMAIL_USERNAME,
+            pass: process.env.NODEMAILER_GMAIL_PASSWORD,
+        },
+    });
+};
 
 // ************************************************************************************
 // -------------------------------- ASSERT FUNCTIONS ---------------------------------
@@ -43,7 +43,11 @@ const assertEmailVerificationPinIsProvided = (pin) => {
     if (!pin) throw new Error(NO_EMAIL_VERIFICATION_PIN_PROVIDED_ERROR_MESSAGE);
 };
 
-const sendEmail = async ({ from = GMAIL_USERNAME, ...rest }) => {
+const sendEmail = async ({
+    from = process.env.NODEMAILER_GMAIL_USERNAME,
+    ...rest
+}) => {
+    const transport = getTransport();
     await transport.sendMail({ from, ...rest });
 };
 

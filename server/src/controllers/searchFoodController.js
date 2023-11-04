@@ -1,17 +1,18 @@
-const { RequestUtils, FoodUtils } = require("../utils");
+const FoodService = require("../services/foodService");
+const { RequestUtils } = require("../utils");
 
 const getFoodFromBarcodeNumber = async (req, res) => {
     try {
         const { barcodeNumber } = req.params;
 
-        const food = await FoodUtils.getFoodFromBarcodeNumberOpenFoodFacts(
+        const food = await FoodService.getFoodFromBarcodeNumberOpenFoodFacts(
             barcodeNumber
         );
 
         return res.json(food);
     } catch (err) {
         RequestUtils.sendErrorResponse(res, err.message, {
-            [FoodUtils.NO_FOOD_DATA_FROM_BARCODE_NUMBER_ERROR_MESSAGE]:
+            [FoodService.NO_FOOD_DATA_FROM_BARCODE_NUMBER_ERROR_MESSAGE]:
                 RequestUtils.RESOURCE_NOT_FOUND_STATUS_CODE,
         });
     }
@@ -19,25 +20,26 @@ const getFoodFromBarcodeNumber = async (req, res) => {
 
 const scanBarcodeImage = async (req, res) => {
     try {
-        FoodUtils.assertRequestFilesAreProvided(req.files);
+        FoodService.assertRequestFilesAreProvided(req.files);
 
         const { barcodeImageFile } = req.files;
 
-        FoodUtils.assertBarcodeImageIsProvided(barcodeImageFile);
+        FoodService.assertBarcodeImageIsProvided(barcodeImageFile);
 
         const barcodeNumber =
-            await FoodUtils.getBarcodeNumberFromImageCloudmersive(
+            await FoodService.getBarcodeNumberFromImageCloudmersive(
                 barcodeImageFile.data
             );
 
         return res.json({ barcodeNumber });
     } catch (err) {
+        console.log(err)
         RequestUtils.sendErrorResponse(res, err.message, {
-            [FoodUtils.NO_BARCODE_IMAGE_PROVIDED_ERROR_MESSAGE]:
+            [FoodService.NO_BARCODE_IMAGE_PROVIDED_ERROR_MESSAGE]:
                 RequestUtils.BAD_REQUEST_STATUS_CODE,
-            [FoodUtils.NO_REQUEST_FILES_PROVIDED_ERROR_MESSAGE]:
+            [FoodService.NO_REQUEST_FILES_PROVIDED_ERROR_MESSAGE]:
                 RequestUtils.BAD_REQUEST_STATUS_CODE,
-            [FoodUtils.NO_BARCODE_NUMBER_FOUND_FROM_IMAGE_ERROR_MESSAGE]:
+            [FoodService.NO_BARCODE_NUMBER_FOUND_FROM_IMAGE_ERROR_MESSAGE]:
                 RequestUtils.RESOURCE_NOT_FOUND_STATUS_CODE,
         });
     }
@@ -47,7 +49,7 @@ const getFoodsFromQuery = async (req, res) => {
     try {
         const { query, pageNumber, pageSize } = req.params;
 
-        const foods = await FoodUtils.getFoodsFromQueryFoodDataCentral({
+        const foods = await FoodService.getFoodsFromQueryFoodDataCentral({
             query,
             pageNumber,
             pageSize,

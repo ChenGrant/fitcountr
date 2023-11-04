@@ -1,5 +1,6 @@
 const User = require("../models/User");
-const { UserUtils, RequestUtils } = require("../utils");
+const UserService = require("../services/userService");
+const { RequestUtils } = require("../utils");
 
 const getGoals = async (req, res) => {
     try {
@@ -7,7 +8,7 @@ const getGoals = async (req, res) => {
 
         const user = await User.findUserByUserUID(userUID);
 
-        await UserUtils.assertUserExists(user);
+        await UserService.assertUserExists(user);
 
         return res.json(user.goals);
     } catch (err) {
@@ -22,10 +23,10 @@ const postGoal = async (req, res) => {
 
         const user = await User.findUserByUserUID(userUID);
 
-        await UserUtils.assertUserExists(user);
+        await UserService.assertUserExists(user);
 
         user.goals = { ...user.goals._doc, ...goal };
-        
+
         await user.save();
 
         return res.json({ message: "Goal added" });

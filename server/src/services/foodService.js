@@ -18,12 +18,6 @@ const UNITS = {
     GRAM: "g",
 };
 
-CloudmersiveBarcodeapiClient.ApiClient.instance.authentications[
-    "Apikey"
-].apiKey = process.env.CLOUDMERSIVE_BARCODE_API_KEY;
-
-const apiInstance = new CloudmersiveBarcodeapiClient.BarcodeScanApi();
-
 const assertRequestFilesAreProvided = (requestFiles) => {
     if (!requestFiles) throw new Error(NO_REQUEST_FILES_PROVIDED_ERROR_MESSAGE);
 };
@@ -33,6 +27,12 @@ const assertBarcodeImageIsProvided = (barcodeImage) => {
 };
 
 const getBarcodeNumberFromImageCloudmersive = async (imageFileBuffer) => {
+    CloudmersiveBarcodeapiClient.ApiClient.instance.authentications[
+        "Apikey"
+    ].apiKey = process.env.CLOUDMERSIVE_BARCODE_API_KEY;
+
+    const apiInstance = new CloudmersiveBarcodeapiClient.BarcodeScanApi();
+    
     const scanBarcodeImageResponse = await new Promise((res, rej) => {
         apiInstance.barcodeScanImage(imageFileBuffer, (error, data) => {
             if (error) {

@@ -1,8 +1,8 @@
 const User = require("../models/User");
 const MediaFile = require("../models/MediaFile");
 const admin = require("firebase-admin");
-const DateUtils = require("./dateUtils");
-const EmailUtils = require("./emailUtils");
+const DateUtils = require("../utils/dateUtils");
+const EmailUtils = require("./emailService");
 const { getFirebaseStorageBucket } = require("../config");
 
 // ************************************************************************************
@@ -63,7 +63,11 @@ const createUserWithProvider = async (email, userUID, provider) => {
 
 const createUserWithGmailProvider = async function (userUID, email) {
     const emailIsInUse = await User.emailIsInUse(email);
-    if (emailIsInUse) return;
+    if (emailIsInUse) {
+        const user = await User.findUserByEmail(email);
+        await updateUserEmailProviderToGmail(user);
+        return;
+    }
     const createdUser = await User.create({
         _id: userUID,
         userUID,
@@ -73,7 +77,7 @@ const createUserWithGmailProvider = async function (userUID, email) {
             provider: GMAIL_PROVIDER,
         },
     });
-    updateUserProfilePicture(createdUser);
+    await updateUserProfilePicture(createdUser);
 };
 
 const createUserWithEmailPasswordProvider = async function (userUID, email) {
@@ -128,6 +132,14 @@ const updateProfileData = async (user, profileData) => {
 
 const updateUserIsVerified = async (user, isVerified) => {
     user.emailVerification.isVerified ||= isVerified;
+    await user.save();
+};
+
+const updateUserEmailProviderToGmail = async (user) => {
+    user.emailVerification = {
+        isVerified: true,
+        provider: GMAIL_PROVIDER,
+    };
     await user.save();
 };
 

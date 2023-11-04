@@ -131,7 +131,7 @@ const updateProfileData = async (user, profileData) => {
 };
 
 const updateUserIsVerified = async (user, isVerified) => {
-    user.emailVerification.isVerified ||= isVerified;
+    user.emailVerification.isVerified = user.emailVerification.isVerified || isVerified;
     await user.save();
 };
 
